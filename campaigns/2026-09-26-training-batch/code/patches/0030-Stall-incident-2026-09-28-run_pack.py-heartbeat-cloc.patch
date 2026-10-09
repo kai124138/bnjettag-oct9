@@ -1,0 +1,335 @@
+From a5e7866644dab1ba8af1d8365c82ae43e4745c01 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 23:38:10 -0700
+Subject: [PATCH 30/31] Stall incident 2026-09-28: run_pack.py heartbeat clock
+ starts at each attempt; a pod-wide stall (>= half the live arms, >= 2) is
+ POD_STALL, stopped together and not charged to per-arm retries (separate
+ budget, relaunch only with the arm's RSS free in the cgroup); POD_MEM (cgroup
+ memory.current/max/free, pressure, per-arm group RSS) every poll; exit 5 (RSS
+ gate) not retried; CPU tests
+
+---
+ run_pack.py            | 155 ++++++++++++++++++++++++++++++++++++++---
+ tests/test_run_pack.py |  82 +++++++++++++++++++++-
+ 2 files changed, 225 insertions(+), 12 deletions(-)
+
+diff --git a/run_pack.py b/run_pack.py
+index be36e6d..8ef7f49 100644
+--- a/run_pack.py
++++ b/run_pack.py
+@@ -8,6 +8,20 @@
+   and relaunches THAT arm only, from its own checkpoint, up to BNJ_ARM_RETRIES times;
+ - the pod exits 1 only if an arm still fails after its retries, and only after every other
+   arm has finished.
++Stall incident 2026-09-28 (review/INCIDENT_stall_20260928.md; the pod's memory cgroup filled and
++four arms stalled in one sweep):
++- each attempt's heartbeat clock starts at its own launch: age = now - max(latest.json and
++  activation_widths.jsonl mtimes, the attempt's wall-clock start), so a relaunched arm no
++  longer inherits the stale files of the attempt it replaces;
++- a pod-wide stall (at least BNJ_POD_STALL_FRACTION, default 0.5, of the live arms and at least
++  two of them past BNJ_STALL_SECONDS in the same sweep) is logged as POD_STALL; those arms are
++  stopped together and NOT charged to their per-arm retry budget. They are relaunched under a
++  separate budget (BNJ_POD_STALL_RETRIES, default 2) and only while the cgroup has at least that
++  arm's last RSS free (POD_RELAUNCH_WAIT otherwise);
++- every poll prints POD_MEM: cgroup memory.current / memory.max / free (MiB), memory.pressure
++  full avg10, and each live arm's RSS (sum over its process group), from /sys/fs/cgroup and /proc
++  (absent files print "na").
++Exit 5 from an arm is a memory-gate failure (ablation RSS gate): not retried, counted as failed.
+ Roots: BNJ_RUN_ROOT (runs/, logs/), default the 2026-09-22 screen root; BNJ_CAMPAIGN_DIR
+ (index.json, packs), default this directory.
+ """
+@@ -27,7 +41,12 @@ STALL_SECONDS = int(os.environ.get('BNJ_STALL_SECONDS', '1800'))
+ TAIL_LINES = int(os.environ.get('BNJ_TAIL_LINES', '80'))
+ STAGGER = float(os.environ.get('BNJ_STAGGER_SECONDS', '15'))
+ RETRY_DELAY = float(os.environ.get('BNJ_RETRY_DELAY_SECONDS', '30'))
++POD_STALL_FRACTION = float(os.environ.get('BNJ_POD_STALL_FRACTION', '0.5'))
++POD_STALL_RETRIES = int(os.environ.get('BNJ_POD_STALL_RETRIES', '2'))
++CGROUP = Path(os.environ.get('BNJ_CGROUP_DIR', '/sys/fs/cgroup'))
++PROC = Path(os.environ.get('BNJ_PROC_DIR', '/proc'))
+ EXIT_DIVERGED = 3
++EXIT_MEMORY_GATE = 5
+ children = []
+ 
+ 
+@@ -59,13 +78,97 @@ def launch(index, name, stop_after, attempt):
+     child = subprocess.Popen(command, stdout=handle, stderr=subprocess.STDOUT, start_new_session=True)
+     print('ARM_STARTED', index, name, 'pid', child.pid, 'attempt', attempt, flush=True)
+     return {'child': child, 'index': index, 'name': name, 'handle': handle, 'log': path,
+-            'started': time.monotonic(), 'attempt': attempt}
++            'started': time.monotonic(), 'started_wall': time.time(), 'attempt': attempt,
++            'pod_stalls': 0, 'rss_mib': None}
+ 
+ 
+ def heartbeat_age(entry):
++    """Seconds since this attempt last showed progress. The attempt's own launch time is a
++    floor, so a relaunch never inherits the previous attempt's stale file mtimes."""
+     run = ROOT / 'runs' / entry['name']
+     stamps = [p.stat().st_mtime for p in (run / 'latest.json', run / 'activation_widths.jsonl') if p.exists()]
+-    return time.time() - max(stamps) if stamps else time.monotonic() - entry['started']
++    return time.time() - max(stamps + [entry['started_wall']])
++
++
++def read_int(path):
++    try:
++        text = path.read_text().strip()
++    except OSError:
++        return None
++    return None if text == 'max' else int(text)
++
++
++def cgroup_memory():
++    """(current MiB, max MiB, free MiB, pressure 'full avg10'); None where unreadable."""
++    current, limit = read_int(CGROUP / 'memory.current'), read_int(CGROUP / 'memory.max')
++    full = None
++    try:
++        for line in (CGROUP / 'memory.pressure').read_text().splitlines():
++            if line.startswith('full'):
++                full = float(line.split()[1].split('=')[1])
++    except (OSError, IndexError, ValueError):
++        pass
++    mib = (lambda v: None if v is None else v / 2 ** 20)
++    free = None if current is None or limit is None else (limit - current) / 2 ** 20
++    return mib(current), mib(limit), free, full
++
++
++def group_rss_mib():
++    """RSS (MiB) summed per process group: each arm is its own session/group (start_new_session)."""
++    totals = {}
++    try:
++        entries = list(PROC.iterdir())
++    except OSError:
++        return totals
++    for entry in entries:
++        if not entry.name.isdigit():
++            continue
++        try:
++            stat = (entry / 'stat').read_text()
++            pgid = int(stat[stat.rindex(')') + 2:].split()[2])
++            for line in (entry / 'status').read_text().splitlines():
++                if line.startswith('VmRSS:'):
++                    totals[pgid] = totals.get(pgid, 0) + int(line.split()[1]) / 1024
++                    break
++        except (OSError, ValueError, IndexError):
++            continue
++    return totals
++
++
++def fmt(value):
++    return 'na' if value is None else f'{value:.0f}' if isinstance(value, float) and value > 100 else f'{value}'
++
++
++def log_memory(live):
++    current, limit, free, full = cgroup_memory()
++    rss = group_rss_mib()
++    parts = []
++    for entry in live:
++        value = rss.get(entry['child'].pid)
++        if value is not None:
++            entry['rss_mib'] = value
++        parts.append(f"{entry['name']}={fmt(value)}")
++    print('POD_MEM', time.strftime('%H:%M:%SZ', time.gmtime()), 'current_mib', fmt(current), 'max_mib', fmt(limit),
++          'free_mib', fmt(free), 'pressure_full_avg10', fmt(full), 'rss_mib', ' '.join(parts), flush=True)
++    return free
++
++
++def terminate(entries):
++    """SIGTERM every entry's group at once, then one shared 120 s grace, then SIGKILL."""
++    for entry in entries:
++        try:
++            os.killpg(entry['child'].pid, signal.SIGTERM)
++        except ProcessLookupError:
++            pass
++    deadline = time.monotonic() + 120
++    for entry in entries:
++        try:
++            entry['child'].wait(timeout=max(0.0, deadline - time.monotonic()))
++        except subprocess.TimeoutExpired:
++            try:
++                os.killpg(entry['child'].pid, signal.SIGKILL)
++            except ProcessLookupError:
++                pass
+ 
+ 
+ def main():
+@@ -86,19 +189,27 @@ def main():
+         # Avoid overlapping the largest calibration allocations during startup.
+         time.sleep(STAGGER)
+     failed, diverged = [], []
++    pending = []      # pod-stall relaunches waiting for free cgroup memory
+     last_gpu = 0
+-    while children:
++    while children or pending:
++        free = log_memory(children)
++        live = [e for e in children if e['child'].poll() is None]
++        stalled = [e for e in live if heartbeat_age(e) > STALL_SECONDS]
++        if len(stalled) >= 2 and len(stalled) >= POD_STALL_FRACTION * len(live):
++            print('POD_STALL', len(stalled), 'of', len(live), 'live arms:',
++                  ' '.join(f"{e['name']}={int(heartbeat_age(e))}s" for e in stalled),
++                  'free_mib', fmt(free), flush=True)
++            for entry in stalled:
++                entry['pod_stall'] = True
++            terminate(stalled)
++        elif stalled:
++            for entry in stalled:
++                print('ARM_STALLED_NO_PROGRESS', entry['name'], int(heartbeat_age(entry)), 's', flush=True)
++            terminate(stalled)
+         for entry in children[:]:
+             child, name = entry['child'], entry['name']
+             code = child.poll()
+             if code is None:
+-                if heartbeat_age(entry) > STALL_SECONDS:
+-                    print('ARM_STALLED_NO_PROGRESS', name, int(heartbeat_age(entry)), 's', flush=True)
+-                    os.killpg(child.pid, signal.SIGTERM)
+-                    try:
+-                        child.wait(timeout=120)
+-                    except subprocess.TimeoutExpired:
+-                        os.killpg(child.pid, signal.SIGKILL)
+                 continue
+             entry['handle'].close()
+             children.remove(entry)
+@@ -110,12 +221,36 @@ def main():
+                 tail(entry['log'], 20)
+                 continue
+             tail(entry['log'])
++            if code == EXIT_MEMORY_GATE:
++                print('ARM_MEMORY_GATE_FAILED', name, flush=True)
++                failed.append(name)
++                continue
++            if entry.get('pod_stall'):
++                if entry['pod_stalls'] < POD_STALL_RETRIES:
++                    print('POD_STALL_RELAUNCH_QUEUED', name, 'pod_stalls', entry['pod_stalls'] + 1,
++                          'attempt', entry['attempt'], '(not charged)', flush=True)
++                    pending.append(entry)
++                else:
++                    print('ARM_FAILED_AFTER_POD_STALLS', name, flush=True)
++                    failed.append(name)
++                continue
+             if entry['attempt'] < RETRIES:
+                 time.sleep(RETRY_DELAY)
+                 children.append(launch(entry['index'], name, stop_after, entry['attempt'] + 1))
+             else:
+                 print('ARM_FAILED_AFTER_RETRIES', name, flush=True)
+                 failed.append(name)
++        for entry in pending[:]:
++            need = entry['rss_mib']
++            _, _, free_now, _ = cgroup_memory()
++            if free_now is not None and need is not None and free_now < need:
++                print('POD_RELAUNCH_WAIT', entry['name'], 'free_mib', fmt(free_now), 'need_mib', fmt(need), flush=True)
++                continue
++            pending.remove(entry)
++            time.sleep(RETRY_DELAY)
++            new = launch(entry['index'], entry['name'], stop_after, entry['attempt'])
++            new['pod_stalls'] = entry['pod_stalls'] + 1
++            children.append(new)
+         if time.monotonic() - last_gpu > 60:
+             try:
+                 subprocess.run(['nvidia-smi', '--query-gpu=timestamp,name,utilization.gpu,memory.used,memory.total',
+diff --git a/tests/test_run_pack.py b/tests/test_run_pack.py
+index 7e4577d..882ee86 100644
+--- a/tests/test_run_pack.py
++++ b/tests/test_run_pack.py
+@@ -22,17 +22,25 @@ if name == 'ok': sys.exit(0)
+ if name == 'div': (run / 'DIVERGED.json').write_text('{}'); sys.exit(3)
+ if name == 'flaky': print('Traceback: boom', flush=True); sys.exit(0 if n >= 1 else 1)
+ if name == 'dead': print('Traceback: always', flush=True); sys.exit(1)
++if name == 'memgate': print('RSS_GATE_FAIL', flush=True); sys.exit(5)
++if name.startswith('stale'):
++    import time; time.sleep(1.5); sys.exit(0)
++if name.startswith('hang'):
++    import time
++    if n == 0: time.sleep(60)
++    sys.exit(0)
+ '''
+ 
+ 
+-def setup(tmp, names):
++def setup(tmp, names, **extra):
+     shutil.copy(HERE / 'run_pack.py', tmp / 'run_pack.py')
+     (tmp / 'run_study.py').write_text(FAKE)
+     (tmp / 'index.json').write_text(json.dumps({'runs': [{'name': n} for n in names]}))
+     (tmp / 'packs.json').write_text(json.dumps([list(range(len(names)))]))
+     env = dict(os.environ, JOB_COMPLETION_INDEX='0', BNJ_RUN_ROOT=str(tmp / 'root'),
+                BNJ_STAGGER_SECONDS='0', BNJ_RETRY_DELAY_SECONDS='0', BNJ_POLL_SECONDS='0.2',
+-               BNJ_ARM_RETRIES='2')
++               BNJ_ARM_RETRIES='2', BNJ_CGROUP_DIR=str(tmp / 'cgroup'), BNJ_PROC_DIR=str(tmp / 'proc'))
++    env.update(extra)
+     return env
+ 
+ 
+@@ -62,3 +70,73 @@ def test_unrecorded_failure_fails_pod_after_others(tmp_path):
+     assert r.returncode == 1
+     assert 'ARM_FAILED_AFTER_RETRIES dead' in r.stdout and 'ARM_EXIT ok 0' in r.stdout
+     assert (tmp_path / 'root' / 'runs' / 'dead' / 'attempts').read_text() == '3'
++
++
++def test_relaunch_starts_a_fresh_heartbeat_clock(tmp_path):
++    """Incident 2026-09-28: a new attempt must not inherit a previous attempt's stale files."""
++    env = setup(tmp_path, ['stale'], BNJ_STALL_SECONDS='3')
++    run_dir = tmp_path / 'root' / 'runs' / 'stale'
++    run_dir.mkdir(parents=True)
++    for f in ('latest.json', 'activation_widths.jsonl'):
++        (run_dir / f).write_text('{}')
++        os.utime(run_dir / f, (1, 1))            # decades old
++    r = run(tmp_path, env)
++    assert r.returncode == 0, r.stdout + r.stderr
++    assert 'ARM_STALLED_NO_PROGRESS' not in r.stdout and 'POD_STALL' not in r.stdout
++    assert 'ARM_EXIT stale 0 attempt 0' in r.stdout
++
++
++def test_pod_wide_stall_is_not_charged_to_retry_budgets(tmp_path):
++    """Two of two live arms stall in one sweep: POD_STALL, both relaunched with the same attempt
++    number and no per-arm retry spent (BNJ_ARM_RETRIES=0 would otherwise fail both)."""
++    env = setup(tmp_path, ['hang-a', 'hang-b'], BNJ_STALL_SECONDS='2', BNJ_ARM_RETRIES='0')
++    r = run(tmp_path, env)
++    assert r.returncode == 0, r.stdout + r.stderr
++    assert 'POD_STALL 2 of 2 live arms' in r.stdout
++    assert 'ARM_STALLED_NO_PROGRESS' not in r.stdout
++    assert r.stdout.count('POD_STALL_RELAUNCH_QUEUED') == 2 and '(not charged)' in r.stdout
++    assert 'ARM_FAILED' not in r.stdout
++    for n in ('hang-a', 'hang-b'):
++        assert (tmp_path / 'root' / 'runs' / n / 'attempts').read_text() == '2'
++        assert r.stdout.count(f'ARM_EXIT {n} 0 attempt 0') == 1
++
++
++def test_single_arm_stall_is_charged(tmp_path):
++    """One stalled arm among live ones is an arm problem: charged, as before."""
++    env = setup(tmp_path, ['hang-a', 'stale-b', 'stale-c'], BNJ_STALL_SECONDS='2', BNJ_ARM_RETRIES='1')
++    r = run(tmp_path, env)
++    assert r.returncode == 0, r.stdout + r.stderr
++    assert 'ARM_STALLED_NO_PROGRESS hang-a' in r.stdout and 'POD_STALL ' not in r.stdout
++    assert 'ARM_STARTED 0 hang-a pid' in r.stdout and 'attempt 1' in r.stdout
++
++
++def test_memory_gate_exit_is_not_retried(tmp_path):
++    env = setup(tmp_path, ['memgate', 'ok'])
++    r = run(tmp_path, env)
++    assert r.returncode == 1
++    assert 'ARM_MEMORY_GATE_FAILED memgate' in r.stdout
++    assert (tmp_path / 'root' / 'runs' / 'memgate' / 'attempts').read_text() == '1'
++
++
++def test_pod_mem_line_reads_cgroup_and_process_groups(tmp_path, monkeypatch):
++    """POD_MEM: cgroup v2 files and per-process-group VmRSS (fake /sys/fs/cgroup and /proc)."""
++    import importlib.util
++    cg, proc = tmp_path / 'cgroup', tmp_path / 'proc'
++    cg.mkdir()
++    (cg / 'memory.current').write_text(str(30 * 2 ** 30) + '\n')
++    (cg / 'memory.max').write_text(str(36 * 2 ** 30) + '\n')
++    (cg / 'memory.pressure').write_text('some avg10=1.00 avg60=0.50 avg300=0.10 total=1\n'
++                                        'full avg10=53.24 avg60=10.00 avg300=1.00 total=2\n')
++    for pid, pgid, kb in ((101, 101, 2048000), (102, 101, 1024), (201, 201, 4096000)):
++        (proc / str(pid)).mkdir(parents=True)
++        (proc / str(pid) / 'stat').write_text(f'{pid} (python (x)) S 1 {pgid} {pgid} 0 -1\n')
++        (proc / str(pid) / 'status').write_text(f'Name:\tpython\nVmRSS:\t{kb} kB\n')
++    monkeypatch.setenv('BNJ_CGROUP_DIR', str(cg))
++    monkeypatch.setenv('BNJ_PROC_DIR', str(proc))
++    spec = importlib.util.spec_from_file_location('run_pack_under_test', HERE / 'run_pack.py')
++    mod = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(mod)
++    current, limit, free, full = mod.cgroup_memory()
++    assert (current, limit, free, full) == (30 * 1024, 36 * 1024, 6 * 1024, 53.24)
++    rss = mod.group_rss_mib()
++    assert rss == {101: (2048000 + 1024) / 1024, 201: 4096000 / 1024}
+-- 
+2.50.1 (Apple Git-155)
+

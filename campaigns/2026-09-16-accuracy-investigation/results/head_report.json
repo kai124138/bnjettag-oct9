@@ -1,0 +1,295 @@
+{
+  "protocol": "100k train-only frozen features; two prespecified ridge strengths and final-head bit widths 4/8; select by full internal validation accuracy subject to native HGQ2 EBOPs <=350k. Test is never used for selection.",
+  "checkpoint_sha256": "d76050090655a68546e8bee51b695ef34c42083bcbd52832758b96f0e06f6e4c",
+  "n_train": 100000,
+  "n_validation": 124000,
+  "n_test": 260000,
+  "baseline_test": {
+    "accuracy": 0.5874307692307692,
+    "macro_auc": 0.8507946788448859,
+    "per_class_auc": [
+      0.804474125348822,
+      0.8519092009139414,
+      0.8526073758177561,
+      0.8405663703063192,
+      0.90441632183759
+    ],
+    "confusion": [
+      [
+        25072,
+        9014,
+        5564,
+        3413,
+        9341
+      ],
+      [
+        12429,
+        28225,
+        3713,
+        2335,
+        3766
+      ],
+      [
+        4498,
+        5216,
+        33533,
+        8327,
+        661
+      ],
+      [
+        3365,
+        4291,
+        15414,
+        26790,
+        2438
+      ],
+      [
+        2559,
+        546,
+        4534,
+        5844,
+        39112
+      ]
+    ],
+    "recall": [
+      0.47843676055262957,
+      0.5592652770072125,
+      0.6419642002488752,
+      0.512256682855941,
+      0.7436448331590455
+    ],
+    "class_counts": [
+      52404,
+      50468,
+      52235,
+      52298,
+      52595
+    ],
+    "predicted_counts": [
+      47923,
+      47292,
+      62758,
+      46709,
+      55318
+    ],
+    "top2_accuracy": 0.8078192307692308,
+    "nll": 1.067451000213623,
+    "tie_rate": 0.0
+  },
+  "baseline_validation_accuracy": 0.5888790322580645,
+  "baseline_ebops": 317890,
+  "candidates": [
+    {
+      "ridge": 0.0001,
+      "fit": {
+        "success": false,
+        "message": "STOP: TOTAL NO. OF ITERATIONS REACHED LIMIT",
+        "iterations": 150,
+        "final_objective": 1.0427327326867424
+      },
+      "excluded": "optimizer did not converge"
+    },
+    {
+      "name": "head_fc2_w4_r0p01",
+      "ridge": 0.01,
+      "bits": 4,
+      "integer_bits_excluding_sign": 2,
+      "fractional_bits": 1,
+      "validation_accuracy": 0.5848064516129032,
+      "ebops": 319870,
+      "feasible": true,
+      "fit": {
+        "success": true,
+        "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "iterations": 51,
+        "final_objective": 1.0586306267268377
+      },
+      "per_layer_ebops": {
+        "input_proj": 5376,
+        "bit_block_0_attn_Wq": 8192,
+        "bit_block_0_attn_Wk": 8448,
+        "bit_block_0_attn_scores": 3328,
+        "bit_block_0_attn_softmax": 42583,
+        "bit_block_0_attn_Wv": 11008,
+        "bit_block_0_attn_ctx": 27520,
+        "bit_block_0_attn_Wo": 10496,
+        "bit_block_0_ffn_fc1": 17920,
+        "bit_block_0_ffn_fc2": 23040,
+        "bit_block_1_attn_Wq": 8192,
+        "bit_block_1_attn_Wk": 11008,
+        "bit_block_1_attn_scores": 3968,
+        "bit_block_1_attn_softmax": 42583,
+        "bit_block_1_attn_Wv": 14080,
+        "bit_block_1_attn_ctx": 26240,
+        "bit_block_1_attn_Wo": 11264,
+        "bit_block_1_ffn_fc1": 17408,
+        "bit_block_1_ffn_fc2": 20736,
+        "head_fc1": 3840,
+        "head_fc2_w4_r0p01": 2640
+      }
+    },
+    {
+      "name": "head_fc2_w8_r0p01",
+      "ridge": 0.01,
+      "bits": 8,
+      "integer_bits_excluding_sign": 2,
+      "fractional_bits": 5,
+      "validation_accuracy": 0.5938709677419355,
+      "ebops": 322510,
+      "feasible": true,
+      "fit": {
+        "success": true,
+        "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+        "iterations": 51,
+        "final_objective": 1.0586306267268377
+      },
+      "per_layer_ebops": {
+        "input_proj": 5376,
+        "bit_block_0_attn_Wq": 8192,
+        "bit_block_0_attn_Wk": 8448,
+        "bit_block_0_attn_scores": 3328,
+        "bit_block_0_attn_softmax": 42583,
+        "bit_block_0_attn_Wv": 11008,
+        "bit_block_0_attn_ctx": 27520,
+        "bit_block_0_attn_Wo": 10496,
+        "bit_block_0_ffn_fc1": 17920,
+        "bit_block_0_ffn_fc2": 23040,
+        "bit_block_1_attn_Wq": 8192,
+        "bit_block_1_attn_Wk": 11008,
+        "bit_block_1_attn_scores": 3968,
+        "bit_block_1_attn_softmax": 42583,
+        "bit_block_1_attn_Wv": 14080,
+        "bit_block_1_attn_ctx": 26240,
+        "bit_block_1_attn_Wo": 11264,
+        "bit_block_1_ffn_fc1": 17408,
+        "bit_block_1_ffn_fc2": 20736,
+        "head_fc1": 3840,
+        "head_fc2_w8_r0p01": 5280
+      }
+    }
+  ],
+  "selected_checkpoint_sha256": "579d207239058282cbb54ff8321e61f51367331f6d367489849d452844fd26e4",
+  "selected": {
+    "name": "head_fc2_w8_r0p01",
+    "ridge": 0.01,
+    "bits": 8,
+    "integer_bits_excluding_sign": 2,
+    "fractional_bits": 5,
+    "validation_accuracy": 0.5938709677419355,
+    "ebops": 322510,
+    "feasible": true,
+    "fit": {
+      "success": true,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "iterations": 51,
+      "final_objective": 1.0586306267268377
+    },
+    "per_layer_ebops": {
+      "input_proj": 5376,
+      "bit_block_0_attn_Wq": 8192,
+      "bit_block_0_attn_Wk": 8448,
+      "bit_block_0_attn_scores": 3328,
+      "bit_block_0_attn_softmax": 42583,
+      "bit_block_0_attn_Wv": 11008,
+      "bit_block_0_attn_ctx": 27520,
+      "bit_block_0_attn_Wo": 10496,
+      "bit_block_0_ffn_fc1": 17920,
+      "bit_block_0_ffn_fc2": 23040,
+      "bit_block_1_attn_Wq": 8192,
+      "bit_block_1_attn_Wk": 11008,
+      "bit_block_1_attn_scores": 3968,
+      "bit_block_1_attn_softmax": 42583,
+      "bit_block_1_attn_Wv": 14080,
+      "bit_block_1_attn_ctx": 26240,
+      "bit_block_1_attn_Wo": 11264,
+      "bit_block_1_ffn_fc1": 17408,
+      "bit_block_1_ffn_fc2": 20736,
+      "head_fc1": 3840,
+      "head_fc2_w8_r0p01": 5280
+    }
+  },
+  "selected_test": {
+    "accuracy": 0.5913961538461538,
+    "macro_auc": 0.8559571707069289,
+    "per_class_auc": [
+      0.8090329085692985,
+      0.8568474116157802,
+      0.8610471679136588,
+      0.845300240151476,
+      0.9075581252844307
+    ],
+    "confusion": [
+      [
+        26312,
+        8586,
+        5787,
+        3037,
+        8682
+      ],
+      [
+        12799,
+        27493,
+        4259,
+        2305,
+        3612
+      ],
+      [
+        5264,
+        4103,
+        33998,
+        8496,
+        374
+      ],
+      [
+        4003,
+        3569,
+        15475,
+        27405,
+        1846
+      ],
+      [
+        3117,
+        425,
+        4606,
+        5892,
+        38555
+      ]
+    ],
+    "recall": [
+      0.5020990764063812,
+      0.5447610366965205,
+      0.6508662774002106,
+      0.5240162147692072,
+      0.7330544728586368
+    ],
+    "class_counts": [
+      52404,
+      50468,
+      52235,
+      52298,
+      52595
+    ],
+    "predicted_counts": [
+      51495,
+      44176,
+      64125,
+      47135,
+      53069
+    ],
+    "top2_accuracy": 0.8202576923076923,
+    "nll": 1.044033408164978,
+    "tie_rate": 0.0
+  },
+  "paired_improvement": {
+    "delta": 0.003965384615384615,
+    "ci95": [
+      0.0031908300771985557,
+      0.004739939153570676
+    ],
+    "corrected": 5796,
+    "broken": 4765,
+    "scope": "paired event-level normal interval; one seed, not training uncertainty"
+  },
+  "seconds": 25.391399079933763,
+  "limitation": "One seed,100k training subset; head weights are now mixed precision if selected. Native EBOPs verified; FPGA synthesis, accumulator/export equivalence and actual hardware latency remain unmeasured."
+}

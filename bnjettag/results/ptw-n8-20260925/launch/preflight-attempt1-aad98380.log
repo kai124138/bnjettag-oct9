@@ -1,0 +1,79 @@
+/cmcode/hgq2.tar.gz: OK
+/work/code/bnhgq2/train.py: OK
+/work/code/bnhgq2/pt_weights.py: OK
+[gate] archive aad983805cba + train.py + pt_weights.py + 3 arm configs verified
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+=== BNJetTag FINAL preflight (PVC-free) Sat Sep 26 01:18:49 UTC 2026 ===
+[deps] pinned install (mirror .venv-hgq2)
+--- data source reachability: Zenodo train tarball (HEAD, no download) ---
+  OK Zenodo train tarball reachable: 2725115104 bytes
+  PASS data-source
+--- build all 5 configs (CPU) + param counts + binary gate ---
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385531.282798      25 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1790385531.345955      25 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385533.179070      25 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1790385534.908888      25 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+  ptw-n8-20260925-base-w1a8 [d69a9f52] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ptw-n8-20260925-ptw5-w1a8 [5814ee26] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ptw-n8-20260925-ptwnc-w1a8 [87dba270] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  PASS build
+PREFLIGHT_ALL_PASS
+[data] 2026-09-26T01:18:58Z fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo
+[data] tarball bytes: 2725115104
+[data] DATA=/work/data/train (62 files) 2026-09-26T01:21:18Z
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385678.964291      54 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1790385679.028519      54 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385680.688640      54 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+=== ptw-n8-20260925-base-w1a8 [d69a9f52] ===
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 2 files, 20000 jets (16000 train / 4000 val), class counts [4141, 3852, 4019, 3909, 4079]
+[train] input_std ON: per-feature z-score from train split (|mu|max=89.57, sigma_max=85.18) -> input_std.json
+E0000 00:00:1790385684.425628      54 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[train] ptw-n8-20260925-base-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=trainable
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+Epoch 1/3
+  [epoch 0] val_macro_auc=0.51791 per_class=[0.6072, 0.4012, 0.525, 0.5069, 0.5492]
+  [epoch 0] new best -> saved /work/outputs/smoke-base/model_best.keras
+63/63 - 34s - 534ms/step - categorical_accuracy: 0.2292 - loss: 1.6169 - val_macro_auc: 0.5179 - learning_rate: 2.0000e-05
+Epoch 2/3
+  [epoch 1] val_macro_auc=0.52887 per_class=[0.6113, 0.4212, 0.5242, 0.4977, 0.5899]
+  [epoch 1] new best -> saved /work/outputs/smoke-base/model_best.keras
+63/63 - 8s - 127ms/step - categorical_accuracy: 0.2571 - loss: 1.6076 - val_macro_auc: 0.5289 - learning_rate: 1.0000e-05
+Epoch 3/3
+  [epoch 2] val_macro_auc=0.52887 per_class=[0.6113, 0.4212, 0.5242, 0.4977, 0.5899]
+63/63 - 7s - 110ms/step - categorical_accuracy: 0.2681 - loss: 1.6054 - val_macro_auc: 0.5289 - learning_rate: 0.0000e+00
+Restoring model weights from the end of the best epoch: 2.
+[train] trainable-scale grids moved at 0/23 sites during training (drift tracking)
+[train] DONE best_epoch=1 best_val_macro_auc=0.52887 in 49s
+[train] wrote /work/outputs/smoke-base/model_best.keras + /work/outputs/smoke-base/train_meta.json
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385741.106844     158 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1790385741.170342     158 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385742.771227     158 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+=== ptw-n8-20260925-ptw5-w1a8 [5814ee26] ===
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 2 files, 20000 jets (16000 train / 4000 val), class counts [4141, 3852, 4019, 3909, 4079]
+Traceback (most recent call last):
+  File "/work/code/run_stage.py", line 285, in <module>
+    main()
+  File "/work/code/run_stage.py", line 266, in main
+    stage_train(cfg, h, ctx, seed=a.seed, smoke=a.smoke)
+  File "/work/code/run_stage.py", line 49, in stage_train
+    meta = train(cfg, seed=seed, out_dir=out_dir, smoke=smoke, cfg_hash=h)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/code/bnhgq2/train.py", line 332, in train
+    ptwm.plot_pt_weights(ptw_info, CLASS_NICE, out_dir, tag)
+  File "/work/code/bnhgq2/pt_weights.py", line 126, in plot_pt_weights
+    import matplotlib
+ModuleNotFoundError: No module named 'matplotlib'

@@ -1,0 +1,1272 @@
+{
+  "fetched_at": "2026-09-11T02:23:49.039290+00:00",
+  "runs": [
+    {
+      "id": "zyj0gwkq",
+      "name": "ebops-n8-20260910-b25-w1a8-s1",
+      "state": "finished",
+      "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/zyj0gwkq",
+      "config": {
+        "lr": 2e-05,
+        "seed": 1,
+        "quant": {
+          "beta0": 1e-07,
+          "weight": "binary_absmean",
+          "calib_n": 8192,
+          "act_bits": 8,
+          "act_bw_l1": 1e-08,
+          "act_calib": "free",
+          "act_policy": "learned_per_tensor_width"
+        },
+        "smoke": false,
+        "params": 18657,
+        "weight": "binary_absmean",
+        "variant": "w1a8",
+        "act_bits": 8,
+        "arch_norm": "none",
+        "arch_pool": "gap",
+        "clip_mode": "value",
+        "arch_n_feat": 3,
+        "arch_n_part": 8,
+        "config_hash": "3817d3c8",
+        "train_ebops": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 10,
+            "max_beta": 0.001,
+            "min_beta": 1e-10,
+            "init_beta": 1e-07,
+            "target_ebops": 434795.5,
+            "damp_beta_on_target": 0
+          },
+          "sides": [
+            1,
+            -1
+          ],
+          "enable": true,
+          "metrics": [
+            "val_macro_auc",
+            "ebops"
+          ],
+          "front_dir": "front",
+          "threshold": 434795.5,
+          "controller": "pid",
+          "target_ratio": 0.25,
+          "beta_schedule": null,
+          "monitor_widths": true
+        },
+        "arch_d_model": 32,
+        "arch_ffn_act": "relu",
+        "arch_ffn_dim": 64,
+        "arch_n_heads": 4,
+        "arch_pos_enc": "learned",
+        "ebops_budget": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 10,
+            "max_beta": 0.001,
+            "min_beta": 1e-10,
+            "init_beta": 1e-07,
+            "target_ebops": 434795.5,
+            "damp_beta_on_target": 0
+          },
+          "controller": "pid",
+          "convention": "hgq2_trace_minmax",
+          "code_sha256": "9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1",
+          "target_ebops": 434795.5,
+          "initial_ebops": 1739182,
+          "initial_widths": {
+            "head_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "head_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "input_proj": {
+              "f": 4,
+              "i": 3,
+              "bits": 8,
+              "raw_f": 4,
+              "raw_i": 3,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wk": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wo": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wq": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wv": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wk": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wo": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wq": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wv": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc2": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_0_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_1_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            }
+          }
+        },
+        "arch_features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "arch_n_layers": 2,
+        "arch_input_std": true,
+        "arch_n_classes": 5,
+        "arch_softmax_free": false,
+        "arch_norm_placement": "per_linear"
+      },
+      "summary": {
+        "_runtime": 1015,
+        "_step": 100,
+        "_timestamp": 1789089714.192468,
+        "_wandb.runtime": 1015,
+        "activation_bits/bit_block_0_attn_Wk": 5,
+        "activation_bits/bit_block_0_attn_Wo": 5,
+        "activation_bits/bit_block_0_attn_Wq": 5,
+        "activation_bits/bit_block_0_attn_Wv": 5,
+        "activation_bits/bit_block_0_attn_ctx__in0": 10,
+        "activation_bits/bit_block_0_attn_ctx__in1": 6,
+        "activation_bits/bit_block_0_attn_scores__in0": 4,
+        "activation_bits/bit_block_0_attn_scores__in1": 5,
+        "activation_bits/bit_block_0_ffn_fc1": 5,
+        "activation_bits/bit_block_0_ffn_fc2": 5,
+        "activation_bits/bit_block_1_attn_Wk": 5,
+        "activation_bits/bit_block_1_attn_Wo": 5,
+        "activation_bits/bit_block_1_attn_Wq": 5,
+        "activation_bits/bit_block_1_attn_Wv": 5,
+        "activation_bits/bit_block_1_attn_ctx__in0": 10,
+        "activation_bits/bit_block_1_attn_ctx__in1": 5,
+        "activation_bits/bit_block_1_attn_scores__in0": 4,
+        "activation_bits/bit_block_1_attn_scores__in1": 5,
+        "activation_bits/bit_block_1_ffn_fc1": 5,
+        "activation_bits/bit_block_1_ffn_fc2": 5,
+        "activation_bits/head_fc1": 7,
+        "activation_bits/head_fc2": 8,
+        "activation_bits/input_proj": 8,
+        "activation_bits_mean": 5.333333333333333,
+        "activation_width_sites_changed": 19,
+        "best_epoch": 48,
+        "best_val_macro_auc": 0.8629018714414356,
+        "beta": 6.36784583530053e-06,
+        "budget_met": false,
+        "categorical_accuracy": 0.5979596972465515,
+        "checkpoint": "model_unconstrained.keras",
+        "checkpoint_ebops": 1177006,
+        "ebops": 1062318,
+        "ebops_fraction_initial": 0.6108147393429785,
+        "epoch": 100,
+        "learning_rate": 2.0000000233721948e-07,
+        "loss": 7.810005187988281,
+        "target_ebops": 434795.5,
+        "val_macro_auc": 0.8585773639878111
+      },
+      "artifacts": [
+        {
+          "name": "model-ebops-n8-20260910-b25-w1a8-s1:v0",
+          "type": "model",
+          "state": "COMMITTED",
+          "local_path": "/tmp/bnjettag-ebops-analysis/zyj0gwkq/artifact"
+        },
+        {
+          "name": "run-zyj0gwkq-history:v0",
+          "type": "wandb-history",
+          "state": "COMMITTED"
+        }
+      ]
+    },
+    {
+      "id": "mkvzt7ur",
+      "name": "ebops-n8-20260910-b50-w1a8-s1",
+      "state": "failed",
+      "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/mkvzt7ur",
+      "config": {
+        "lr": 2e-05,
+        "seed": 1,
+        "quant": {
+          "beta0": 1e-07,
+          "weight": "binary_absmean",
+          "calib_n": 8192,
+          "act_bits": 8,
+          "act_bw_l1": 1e-08,
+          "act_calib": "free",
+          "act_policy": "learned_per_tensor_width"
+        },
+        "smoke": false,
+        "params": 18657,
+        "weight": "binary_absmean",
+        "variant": "w1a8",
+        "act_bits": 8,
+        "arch_norm": "none",
+        "arch_pool": "gap",
+        "clip_mode": "value",
+        "arch_n_feat": 3,
+        "arch_n_part": 8,
+        "config_hash": "ccaa1033",
+        "train_ebops": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 10,
+            "max_beta": 0.001,
+            "min_beta": 1e-10,
+            "init_beta": 1e-07,
+            "target_ebops": 869591,
+            "damp_beta_on_target": 0
+          },
+          "sides": [
+            1,
+            -1
+          ],
+          "enable": true,
+          "metrics": [
+            "val_macro_auc",
+            "ebops"
+          ],
+          "front_dir": "front",
+          "threshold": 869591,
+          "controller": "pid",
+          "target_ratio": 0.5,
+          "beta_schedule": null,
+          "monitor_widths": true
+        },
+        "arch_d_model": 32,
+        "arch_ffn_act": "relu",
+        "arch_ffn_dim": 64,
+        "arch_n_heads": 4,
+        "arch_pos_enc": "learned",
+        "ebops_budget": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 10,
+            "max_beta": 0.001,
+            "min_beta": 1e-10,
+            "init_beta": 1e-07,
+            "target_ebops": 869591,
+            "damp_beta_on_target": 0
+          },
+          "controller": "pid",
+          "convention": "hgq2_trace_minmax",
+          "code_sha256": "9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1",
+          "target_ebops": 869591,
+          "initial_ebops": 1739182,
+          "initial_widths": {
+            "head_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "head_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "input_proj": {
+              "f": 4,
+              "i": 3,
+              "bits": 8,
+              "raw_f": 4,
+              "raw_i": 3,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wk": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wo": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wq": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wv": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wk": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wo": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wq": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wv": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc2": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_0_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_1_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            }
+          }
+        },
+        "arch_features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "arch_n_layers": 2,
+        "arch_input_std": true,
+        "arch_n_classes": 5,
+        "arch_softmax_free": false,
+        "arch_norm_placement": "per_linear"
+      },
+      "summary": {
+        "_runtime": 30,
+        "_wandb.runtime": 30
+      },
+      "artifacts": []
+    },
+    {
+      "id": "ed3piak8",
+      "name": "ebops-n8-20260910-control-w1a8-s1",
+      "state": "finished",
+      "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/ed3piak8",
+      "config": {
+        "lr": 2e-05,
+        "seed": 1,
+        "quant": {
+          "beta0": 0,
+          "weight": "binary_absmean",
+          "calib_n": 8192,
+          "act_bits": 8,
+          "act_bw_l1": 1e-08,
+          "act_calib": "free",
+          "act_policy": "learned_per_tensor_width"
+        },
+        "smoke": false,
+        "params": 18657,
+        "weight": "binary_absmean",
+        "variant": "w1a8",
+        "act_bits": 8,
+        "arch_norm": "none",
+        "arch_pool": "gap",
+        "clip_mode": "value",
+        "arch_n_feat": 3,
+        "arch_n_part": 8,
+        "config_hash": "6c498e72",
+        "train_ebops": {
+          "sides": [
+            1,
+            -1
+          ],
+          "enable": true,
+          "metrics": [
+            "val_macro_auc",
+            "ebops"
+          ],
+          "front_dir": "front",
+          "controller": "none",
+          "beta_schedule": null,
+          "monitor_widths": true
+        },
+        "arch_d_model": 32,
+        "arch_ffn_act": "relu",
+        "arch_ffn_dim": 64,
+        "arch_n_heads": 4,
+        "arch_pos_enc": "learned",
+        "ebops_budget": {
+          "pid": null,
+          "controller": "none",
+          "convention": "hgq2_trace_minmax",
+          "code_sha256": "9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1",
+          "target_ebops": null,
+          "initial_ebops": 1739182,
+          "initial_widths": {
+            "head_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "head_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "input_proj": {
+              "f": 4,
+              "i": 3,
+              "bits": 8,
+              "raw_f": 4,
+              "raw_i": 3,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wk": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wo": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wq": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wv": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wk": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wo": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wq": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wv": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc2": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_0_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_1_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            }
+          }
+        },
+        "arch_features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "arch_n_layers": 2,
+        "arch_input_std": true,
+        "arch_n_classes": 5,
+        "arch_softmax_free": false,
+        "arch_norm_placement": "per_linear"
+      },
+      "summary": {
+        "_runtime": 1675,
+        "_step": 100,
+        "_timestamp": 1789091139.1618488,
+        "_wandb.runtime": 1675,
+        "activation_bits/bit_block_0_attn_Wk": 8,
+        "activation_bits/bit_block_0_attn_Wo": 8,
+        "activation_bits/bit_block_0_attn_Wq": 8,
+        "activation_bits/bit_block_0_attn_Wv": 8,
+        "activation_bits/bit_block_0_attn_ctx__in0": 10,
+        "activation_bits/bit_block_0_attn_ctx__in1": 9,
+        "activation_bits/bit_block_0_attn_scores__in0": 8,
+        "activation_bits/bit_block_0_attn_scores__in1": 8,
+        "activation_bits/bit_block_0_ffn_fc1": 8,
+        "activation_bits/bit_block_0_ffn_fc2": 8,
+        "activation_bits/bit_block_1_attn_Wk": 8,
+        "activation_bits/bit_block_1_attn_Wo": 8,
+        "activation_bits/bit_block_1_attn_Wq": 8,
+        "activation_bits/bit_block_1_attn_Wv": 8,
+        "activation_bits/bit_block_1_attn_ctx__in0": 10,
+        "activation_bits/bit_block_1_attn_ctx__in1": 9,
+        "activation_bits/bit_block_1_attn_scores__in0": 8,
+        "activation_bits/bit_block_1_attn_scores__in1": 8,
+        "activation_bits/bit_block_1_ffn_fc1": 8,
+        "activation_bits/bit_block_1_ffn_fc2": 8,
+        "activation_bits/head_fc1": 8,
+        "activation_bits/head_fc2": 8,
+        "activation_bits/input_proj": 9,
+        "activation_bits_mean": 8.142857142857142,
+        "activation_width_sites_changed": 3,
+        "best_epoch": 90,
+        "best_val_macro_auc": 0.8716604564125753,
+        "categorical_accuracy": 0.6193265914916992,
+        "checkpoint": "model_best.keras",
+        "checkpoint_ebops": 1780910,
+        "ebops": 1780910,
+        "ebops_fraction_initial": 1.0239928886108527,
+        "epoch": 100,
+        "learning_rate": 2.0000000233721948e-07,
+        "loss": 1.002889633178711,
+        "val_macro_auc": 0.8687577688206496
+      },
+      "artifacts": [
+        {
+          "name": "model-ebops-n8-20260910-control-w1a8-s1:v0",
+          "type": "model",
+          "state": "COMMITTED",
+          "local_path": "/tmp/bnjettag-ebops-analysis/ed3piak8/artifact"
+        },
+        {
+          "name": "run-ed3piak8-history:v0",
+          "type": "wandb-history",
+          "state": "COMMITTED"
+        }
+      ]
+    },
+    {
+      "id": "3bynw2ra",
+      "name": "ebops-n8-20260910-b75-w1a8-s1",
+      "state": "finished",
+      "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/3bynw2ra",
+      "config": {
+        "lr": 2e-05,
+        "seed": 1,
+        "quant": {
+          "beta0": 1e-07,
+          "weight": "binary_absmean",
+          "calib_n": 8192,
+          "act_bits": 8,
+          "act_bw_l1": 1e-08,
+          "act_calib": "free",
+          "act_policy": "learned_per_tensor_width"
+        },
+        "smoke": false,
+        "params": 18657,
+        "weight": "binary_absmean",
+        "variant": "w1a8",
+        "act_bits": 8,
+        "arch_norm": "none",
+        "arch_pool": "gap",
+        "clip_mode": "value",
+        "arch_n_feat": 3,
+        "arch_n_part": 8,
+        "config_hash": "ac37330a",
+        "train_ebops": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 10,
+            "max_beta": 0.001,
+            "min_beta": 1e-10,
+            "init_beta": 1e-07,
+            "target_ebops": 1304386.5,
+            "damp_beta_on_target": 0
+          },
+          "sides": [
+            1,
+            -1
+          ],
+          "enable": true,
+          "metrics": [
+            "val_macro_auc",
+            "ebops"
+          ],
+          "front_dir": "front",
+          "threshold": 1304386.5,
+          "controller": "pid",
+          "target_ratio": 0.75,
+          "beta_schedule": null,
+          "monitor_widths": true
+        },
+        "arch_d_model": 32,
+        "arch_ffn_act": "relu",
+        "arch_ffn_dim": 64,
+        "arch_n_heads": 4,
+        "arch_pos_enc": "learned",
+        "ebops_budget": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 10,
+            "max_beta": 0.001,
+            "min_beta": 1e-10,
+            "init_beta": 1e-07,
+            "target_ebops": 1304386.5,
+            "damp_beta_on_target": 0
+          },
+          "controller": "pid",
+          "convention": "hgq2_trace_minmax",
+          "code_sha256": "9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1",
+          "target_ebops": 1304386.5,
+          "initial_ebops": 1739182,
+          "initial_widths": {
+            "head_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "head_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "input_proj": {
+              "f": 4,
+              "i": 3,
+              "bits": 8,
+              "raw_f": 4,
+              "raw_i": 3,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wk": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wo": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wq": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wv": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wk": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wo": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wq": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wv": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc2": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_0_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_1_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            }
+          }
+        },
+        "arch_features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "arch_n_layers": 2,
+        "arch_input_std": true,
+        "arch_n_classes": 5,
+        "arch_softmax_free": false,
+        "arch_norm_placement": "per_linear"
+      },
+      "summary": {
+        "_runtime": 1278,
+        "_step": 100,
+        "_timestamp": 1789091430.4296138,
+        "_wandb.runtime": 1278,
+        "activation_bits/bit_block_0_attn_Wk": 6,
+        "activation_bits/bit_block_0_attn_Wo": 6,
+        "activation_bits/bit_block_0_attn_Wq": 6,
+        "activation_bits/bit_block_0_attn_Wv": 6,
+        "activation_bits/bit_block_0_attn_ctx__in0": 10,
+        "activation_bits/bit_block_0_attn_ctx__in1": 7,
+        "activation_bits/bit_block_0_attn_scores__in0": 5,
+        "activation_bits/bit_block_0_attn_scores__in1": 6,
+        "activation_bits/bit_block_0_ffn_fc1": 6,
+        "activation_bits/bit_block_0_ffn_fc2": 6,
+        "activation_bits/bit_block_1_attn_Wk": 6,
+        "activation_bits/bit_block_1_attn_Wo": 5,
+        "activation_bits/bit_block_1_attn_Wq": 5,
+        "activation_bits/bit_block_1_attn_Wv": 6,
+        "activation_bits/bit_block_1_attn_ctx__in0": 10,
+        "activation_bits/bit_block_1_attn_ctx__in1": 7,
+        "activation_bits/bit_block_1_attn_scores__in0": 5,
+        "activation_bits/bit_block_1_attn_scores__in1": 6,
+        "activation_bits/bit_block_1_ffn_fc1": 5,
+        "activation_bits/bit_block_1_ffn_fc2": 6,
+        "activation_bits/head_fc1": 7,
+        "activation_bits/head_fc2": 8,
+        "activation_bits/input_proj": 9,
+        "activation_bits_mean": 6.142857142857143,
+        "activation_width_sites_changed": 20,
+        "best_epoch": 94,
+        "best_val_macro_auc": 0.8700535576440043,
+        "beta": 8.290186856700348e-08,
+        "budget_met": true,
+        "categorical_accuracy": 0.6171733736991882,
+        "checkpoint": "model_best.keras",
+        "checkpoint_ebops": 1263790,
+        "ebops": 1263790,
+        "ebops_fraction_initial": 0.7266577045990587,
+        "epoch": 100,
+        "learning_rate": 2.0000000233721948e-07,
+        "loss": 1.1132768392562866,
+        "target_ebops": 1304386.5,
+        "val_macro_auc": 0.8672502783550586
+      },
+      "artifacts": [
+        {
+          "name": "model-ebops-n8-20260910-b75-w1a8-s1:v0",
+          "type": "model",
+          "state": "COMMITTED",
+          "local_path": "/tmp/bnjettag-ebops-analysis/3bynw2ra/artifact"
+        },
+        {
+          "name": "run-3bynw2ra-history:v0",
+          "type": "wandb-history",
+          "state": "COMMITTED"
+        }
+      ]
+    }
+  ]
+}

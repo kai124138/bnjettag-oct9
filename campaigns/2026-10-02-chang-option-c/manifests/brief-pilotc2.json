@@ -1,0 +1,75 @@
+{
+  "amendment_ref": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md",
+  "approval_ref": "PENDING launch authorization; design decision local/2026-10-01-execution/chang-option-c-decision.json",
+  "changes": "Relative to pilot-b (42abed4b, A10 K5/K3): PID input traced-only with per_epoch integral (0032/0033), new names/group/run root/stage pilot-c, repacked to 3 pods for the 90 % GPU-memory rule, durable pid_telemetry.jsonl and notify-only monitor lines. Same data, split, gains, targets, schedules, seeds.",
+  "decision_ref": "local/2026-10-01-execution/chang-option-c-decision.json",
+  "expected_metrics": [
+    {
+      "expectation": "finite loss; A/D loss(10) < loss(1); traced(10) < traced(1); at one-based 11 a step with span 9 on the epoch-10 trace and a beta change by the HGQ2 formula (CANARY_* lines)",
+      "name": "canary (cadence-adjusted)",
+      "split": "training epochs 1-11 (one-based)"
+    },
+    {
+      "expectation": "CONTROLLER_AUDIT PASS: inputs equal traces (rel 1e-6), held epochs keep beta/integral",
+      "name": "controller audit",
+      "split": "every epoch 1-500"
+    },
+    {
+      "expectation": "reported, not predicted: budget met, feasible, degenerate-under-budget, Q/K 0-bit attention, beta at bounds",
+      "name": "at-target state",
+      "split": "validation n=62000, traced epochs"
+    }
+  ],
+  "limitations": [
+    "Historical 42abed runs, snapshots and readouts are evidence only; no historical checkpoint may initialize or resume these runs (config and code SHA guards).",
+    "Pilot validation values select no arm, alter no primary rule and support no performance claim.",
+    "The epoch-500 pause does not observe the first LR restart after epoch 500."
+  ],
+  "outputs": [
+    "/data/chang-n64-20260926/pilot-c-20261002/runs/chang1002c-a07-350-n64-s1",
+    "/data/chang-n64-20260926/pilot-c-20261002/runs/chang1002c-c-n64-s1",
+    "/data/chang-n64-20260926/pilot-c-20261002/logs",
+    "wandb://kayamaguchi-uc-san-diego/BNJetTag-ChangRecipe/chang-n64-20261002-c-pilot-c"
+  ],
+  "production_gate": {
+    "reference": "K1 triggered; option (c) selected 2026-10-01T06:00:02Z",
+    "status": "pending"
+  },
+  "purpose": "Replacement option-(c) pilot from initialization to the epoch-500 pause: does the traced-only PID consume only traces and hold between them, and what are budget, accuracy and attention state at the target.",
+  "runs": [
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json",
+      "name": "chang1002c-a07-350-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s1.json",
+      "name": "chang1002c-c-n64-s1"
+    }
+  ],
+  "scientific_gate": {
+    "reference": "campaigns/2026-10-02-chang-option-c/PREFLIGHT.md; amendment design PASS only (campaigns/2026-10-01-chang-traced-pid/REVIEW_DRAFT.md); K1 triggered, production blocked",
+    "status": "pending"
+  },
+  "stop_rules": [
+    {
+      "action": "existing-runner-guard",
+      "approval_ref": "run_pack/ablation guards in the frozen bundle; STUDY Resume",
+      "condition": "divergence, nonfinite metrics, RSS projection gate, epoch-0 all-diverged, fingerprint mismatch"
+    },
+    {
+      "action": "notify-only",
+      "approval_ref": "amendment canary/controller gate; operator stops at a checkpoint only with Kai",
+      "condition": "CANARY_* FAIL or CONTROLLER_AUDIT FAIL in a MONITOR line"
+    },
+    {
+      "action": "notify-only",
+      "approval_ref": "b5 readout VERIFY.md (diagnostic); no registered stop rule exists",
+      "condition": "NOTIFY_DEGENERATE_UNDER_BUDGET or NOTIFY_ATTENTION_QK_ZERO_BIT"
+    },
+    {
+      "action": "notify-only",
+      "approval_ref": "docs/infrastructure/gpu-selection-policy.md",
+      "condition": "GPU_SAMPLE memory above 90 % of the card"
+    }
+  ]
+}

@@ -1,0 +1,3600 @@
+{
+ "read_utc": "2026-09-29T07:39:45Z",
+ "source": "live kubectl get nodes -o json at 2026-09-29T07:39:45Z",
+ "cluster_nodes": 532,
+ "excluded_hostnames": {
+  "hcc-nrp-shor-c6017.unl.edu": "Delta REGRESSION_TICKET 2026-09-28 (epoch-0 NaN, fingerprint off)",
+  "k8s-chase-ci-07.calit2.optiputer.net": "training-batch pilot-b exclusion list (freeze.py BAD_NODES)",
+  "nautilus-ext-gpu01.fullerton.edu": "nrp_doctor KNOWN_BAD_NODES: 2026-09-17 UnexpectedAdmissionError: GPU is lost",
+  "ren-gp-argo-01.madren.org": "training-batch pilot-b exclusion list (freeze.py BAD_NODES)"
+ },
+ "schedulable_rule": "Ready=True, not cordoned, no NoSchedule/NoExecute taint, hostname not excluded",
+ "products": {
+  "NVIDIA-L40": {
+   "role": "candidate",
+   "nodes": 17,
+   "resource_keys": [
+    "nvidia.com/gpu"
+   ],
+   "card_mib_labels": [
+    46068
+   ],
+   "schedulable_nodes": 6,
+   "schedulable_gpus_allocatable": 24,
+   "schedulable_alloc_cpu": [
+    20.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    503.3
+   ],
+   "per_node": [
+    {
+     "node": "rci-tide-gpu-01.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "rci-tide-gpu-02.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "rci-tide-gpu-03.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "rci-tide-gpu-04.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "rci-tide-gpu-05.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "rci-tide-gpu-06.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "rci-tide-gpu-07.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-08.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-09.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-10.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-11.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-12.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-13.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-14.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-15.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-16.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    },
+    {
+     "node": "rci-tide-gpu-17.sdsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csu-tide",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csu-tide:NoSchedule"
+     ]
+    }
+   ]
+  },
+  "NVIDIA-L40S": {
+   "role": "candidate",
+   "nodes": 4,
+   "resource_keys": [
+    "nvidia.com/gpu"
+   ],
+   "card_mib_labels": [
+    46068
+   ],
+   "schedulable_nodes": 2,
+   "schedulable_gpus_allocatable": 8,
+   "schedulable_alloc_cpu": [
+    28.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    503.6
+   ],
+   "per_node": [
+    {
+     "node": "bak-hpc2.csub.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/issue",
+       "value": "1731",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 60.0,
+     "alloc_mem_gi": 125.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/issue=1731:NoSchedule"
+     ]
+    },
+    {
+     "node": "hcc-nrp-pki-c1703.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-pki-c1705.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "610.43.02",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "swan-interlink",
+     "ready": "False",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "virtual-node.interlink/workload",
+       "value": "swan",
+       "effect": "NoExecute"
+      },
+      {
+       "key": "virtual-node.interlink/no-schedule",
+       "value": "true",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/network-unavailable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/not-ready",
+       "value": "",
+       "effect": "NoExecute"
+      },
+      {
+       "key": "node.kubernetes.io/not-ready",
+       "value": "",
+       "effect": "NoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": null,
+     "driver_label": null,
+     "alloc_cpu": 56.0,
+     "alloc_mem_gi": 250.0,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=False",
+      "taint virtual-node.interlink/workload=swan:NoExecute, virtual-node.interlink/no-schedule=true:NoSchedule, node.kubernetes.io/network-unavailable=:NoSchedule, node.kubernetes.io/not-ready=:NoExecute, node.kubernetes.io/not-ready=:NoSchedule"
+     ]
+    }
+   ]
+  },
+  "NVIDIA-GeForce-RTX-4090": {
+   "role": "candidate",
+   "nodes": 4,
+   "resource_keys": [
+    "nvidia.com/gpu"
+   ],
+   "card_mib_labels": [
+    24564
+   ],
+   "schedulable_nodes": 3,
+   "schedulable_gpus_allocatable": 16,
+   "schedulable_alloc_cpu": [
+    28.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    251.5,
+    755.5
+   ],
+   "per_node": [
+    {
+     "node": "hcc-nrp-shor-c5226.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "24564",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5834.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "24564",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5934.unl.edu",
+     "ready": "Unknown",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoExecute"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "24564",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=Unknown",
+      "taint node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute"
+     ]
+    },
+    {
+     "node": "k8s-4090-01.calit2.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24564",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 755.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    }
+   ]
+  },
+  "NVIDIA-GeForce-RTX-3090": {
+   "role": "candidate",
+   "nodes": 49,
+   "resource_keys": [
+    "nvidia.com/gpu"
+   ],
+   "card_mib_labels": [
+    24576
+   ],
+   "schedulable_nodes": 30,
+   "schedulable_gpus_allocatable": 115,
+   "schedulable_alloc_cpu": [
+    12.0,
+    20.0,
+    24.0,
+    28.0,
+    60.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    31.2,
+    62.6,
+    94.1,
+    251.4,
+    251.5,
+    251.6,
+    251.7,
+    503.6
+   ],
+   "per_node": [
+    {
+     "node": "csusb-sci-103-11.csusb.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csusb",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csusb:NoSchedule"
+     ]
+    },
+    {
+     "node": "fiona-1.famu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 1
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 24.0,
+     "alloc_mem_gi": 251.4,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-02.csusb.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "csusb",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 7
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 24.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=csusb:NoSchedule"
+     ]
+    },
+    {
+     "node": "hcc-chase-shor-c4705.unl.edu",
+     "ready": "Unknown",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoExecute"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 251.7,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=Unknown",
+      "taint node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute"
+     ]
+    },
+    {
+     "node": "hcc-chase-shor-c4709.unl.edu",
+     "ready": "Unknown",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoExecute"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 251.7,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=Unknown",
+      "taint node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute"
+     ]
+    },
+    {
+     "node": "hcc-chase-shor-c4715.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 251.7,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hpc-nrp-g1.nmsu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "610.43.02",
+     "alloc_cpu": 60.0,
+     "alloc_mem_gi": 251.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "k8s-3090-01.usd.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 1
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "k8s-3090-02.clemson.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 24.0,
+     "alloc_mem_gi": 251.4,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "k8s-chase-ci-07.calit2.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 6
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 68.0,
+     "alloc_mem_gi": 187.4,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "excluded: training-batch pilot-b exclusion list (freeze.py BAD_NODES)"
+     ]
+    },
+    {
+     "node": "nautilus-ext-gpu01.fullerton.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 5
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 24.0,
+     "alloc_mem_gi": 251.4,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "excluded: nrp_doctor KNOWN_BAD_NODES: 2026-09-17 UnexpectedAdmissionError: GPU is lost"
+     ]
+    },
+    {
+     "node": "nautilus01.hsrn.nyu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 3
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "610.57.04",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "nrp-01.laccd.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 24.0,
+     "alloc_mem_gi": 251.4,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "nrp-fiona-001.sdmz.amnh.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 5
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "prp01.ifa.hawaii.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "osdf",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 15.0,
+     "alloc_mem_gi": 251.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=osdf:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-01.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "ry-gpu-02.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "ry-gpu-03.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "ry-gpu-04.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "ry-gpu-05.sdsc.optiputer.net",
+     "ready": "Unknown",
+     "unschedulable": true,
+     "taints": [
+      {
+       "key": "nautilus.io/issue",
+       "value": "1742",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoExecute"
+      },
+      {
+       "key": "node.kubernetes.io/unschedulable",
+       "value": "",
+       "effect": "NoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=Unknown",
+      "cordoned",
+      "taint nautilus.io/issue=1742:NoSchedule, nautilus.io/reservation=cogrob:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute, node.kubernetes.io/unschedulable=:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-06.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=cogrob:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-07.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=cogrob:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-08.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=cogrob:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-09.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "ry-gpu-10.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "ry-gpu-11.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=cogrob:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-12.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=cogrob:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-13.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 60.0,
+     "alloc_mem_gi": 755.1,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=cogrob:NoSchedule"
+     ]
+    },
+    {
+     "node": "ry-gpu-14.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "cogrob",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 60.0,
+     "alloc_mem_gi": 755.1,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=cogrob:NoSchedule"
+     ]
+    },
+    {
+     "node": "suncave-0",
+     "ready": "Unknown",
+     "unschedulable": true,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unschedulable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoExecute"
+      }
+     ],
+     "gpu_resources": {},
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=Unknown",
+      "cordoned",
+      "taint node.kubernetes.io/unschedulable=:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute",
+      "no nvidia.com/* allocatable"
+     ]
+    },
+    {
+     "node": "suncave-1",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-10",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-11",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 31.2,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-12",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 62.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-13",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 62.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-14",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 62.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-15",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 62.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-17",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 62.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-2",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-3",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-4",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-5",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/issue",
+       "value": "1641",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/issue=1641:NoSchedule"
+     ]
+    },
+    {
+     "node": "suncave-6",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-7",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-8",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-9",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 2
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "suncave-head",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "suncave",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 1
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 12.0,
+     "alloc_mem_gi": 94.1,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=suncave:NoSchedule"
+     ]
+    },
+    {
+     "node": "uicnrp-fiona.evl.uic.edu",
+     "ready": "True",
+     "unschedulable": true,
+     "taints": [
+      {
+       "key": "nautilus.io/issue",
+       "value": "1712",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unschedulable",
+       "value": "",
+       "effect": "NoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 4
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "610.43.02",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "cordoned",
+      "taint nautilus.io/issue=1712:NoSchedule, node.kubernetes.io/unschedulable=:NoSchedule"
+     ]
+    },
+    {
+     "node": "uicnrp-fiona2.evl.uic.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 5
+     },
+     "gpu_memory_label_mib": "24576",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 24.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    }
+   ]
+  },
+  "NVIDIA-RTX-A6000": {
+   "role": "candidate",
+   "nodes": 8,
+   "resource_keys": [
+    "nvidia.com/rtxa6000"
+   ],
+   "card_mib_labels": [
+    49140
+   ],
+   "schedulable_nodes": 5,
+   "schedulable_gpus_allocatable": 27,
+   "schedulable_alloc_cpu": [
+    20.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    251.5
+   ],
+   "per_node": [
+    {
+     "node": "cenic-nrp1.hpc.cpp.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "nautilus.io/testing",
+       "value": "true",
+       "effect": "NoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 4
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 28.0,
+     "alloc_mem_gi": 125.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/testing=true:NoSchedule"
+     ]
+    },
+    {
+     "node": "discover-nrp-01.sdccd.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "sdccd",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 8
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=sdccd:NoSchedule"
+     ]
+    },
+    {
+     "node": "gpu00.nrp.hpc.udel.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 4
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-prp-c5036.unl.edu",
+     "ready": "Unknown",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/issue",
+       "value": "1740",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoExecute"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 8
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.2,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=Unknown",
+      "taint nautilus.io/issue=1740:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute"
+     ]
+    },
+    {
+     "node": "k8s-a6000-01.csus.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 8
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "k8s-a6000-01.unm.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 1
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "nrp-01.csumb.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 8
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "nrp-a6000-01.csuchico.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/rtxa6000": 6
+     },
+     "gpu_memory_label_mib": "49140",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 251.5,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    }
+   ]
+  },
+  "NVIDIA-A40": {
+   "role": "candidate",
+   "nodes": 3,
+   "resource_keys": [
+    "nvidia.com/a40"
+   ],
+   "card_mib_labels": [
+    46068
+   ],
+   "schedulable_nodes": 2,
+   "schedulable_gpus_allocatable": 4,
+   "schedulable_alloc_cpu": [
+    44.0,
+    60.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    503.3,
+    503.6
+   ],
+   "per_node": [
+    {
+     "node": "bak-hpc1.csub.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/issue",
+       "value": "1731",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a40": 8
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 20.0,
+     "alloc_mem_gi": 503.5,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/issue=1731:NoSchedule"
+     ]
+    },
+    {
+     "node": "k8s-usra-01.calit2.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a40": 2
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 44.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "rci-nautilus01.msu.montana.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "true",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a40": 2
+     },
+     "gpu_memory_label_mib": "46068",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 60.0,
+     "alloc_mem_gi": 503.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    }
+   ]
+  },
+  "NVIDIA-A100-SXM4-80GB": {
+   "role": "candidate",
+   "nodes": 22,
+   "resource_keys": [
+    "nvidia.com/a100"
+   ],
+   "card_mib_labels": [
+    81920
+   ],
+   "schedulable_nodes": 16,
+   "schedulable_gpus_allocatable": 77,
+   "schedulable_alloc_cpu": [
+    124.0,
+    252.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    471.6,
+    503.6,
+    881.6,
+    1007.3
+   ],
+   "per_node": [
+    {
+     "node": "gp-engine.beocat.ksu.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gp-engine.hpc.okstate.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gp-engine.usd.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpengine-uams.areon.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpengine-uark.areon.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 3
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpn-fiona-mizzou-1.rnet.missouri.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "mizzou",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=mizzou:NoSchedule"
+     ]
+    },
+    {
+     "node": "gpn-fiona-mizzou-2.rnet.missouri.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "mizzou",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=mizzou:NoSchedule"
+     ]
+    },
+    {
+     "node": "gpn-fiona-mizzou-3.rnet.missouri.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpn-fiona-mizzou-4.rnet.missouri.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "610.43.02",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpn-fiona-mizzou-5.rnet.missouri.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpn-fiona-mizzou-6.rnet.missouri.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 3
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-gpengine-shor-c5303.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "node-1-1.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 471.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "node-1-2.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/hardware",
+       "value": "large-gpu",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/hardware=large-gpu:NoSchedule"
+     ]
+    },
+    {
+     "node": "node-1-3.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "node-1-4.sdsc.optiputer.net",
+     "ready": "Unknown",
+     "unschedulable": true,
+     "taints": [
+      {
+       "key": "nautilus.io/upgrading",
+       "value": "true",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nautilus.io/issue",
+       "value": "1685",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unschedulable",
+       "value": "",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "node.kubernetes.io/unreachable",
+       "value": "",
+       "effect": "NoExecute"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "Ready=Unknown",
+      "cordoned",
+      "taint nautilus.io/upgrading=true:NoSchedule, nautilus.io/issue=1685:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unschedulable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute"
+     ]
+    },
+    {
+     "node": "node-2-2.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 881.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "node-2-3.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "node-2-4.sdsc.optiputer.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "nautilus.io/hardware",
+       "value": "large-gpu",
+       "effect": "NoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/hardware=large-gpu:NoSchedule"
+     ]
+    },
+    {
+     "node": "pas.macc.net.internet2.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "nrp-llm",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 8
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 1007.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=nrp-llm:NoSchedule"
+     ]
+    },
+    {
+     "node": "sphinx.sdstate.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 3
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "tu.gp-engine.greatplains.net",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/a100": 4
+     },
+     "gpu_memory_label_mib": "81920",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 252.0,
+     "alloc_mem_gi": 1007.3,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    }
+   ]
+  },
+  "NVIDIA-A10": {
+   "role": "reference (no benchmark Job)",
+   "nodes": 35,
+   "resource_keys": [
+    "nvidia.com/gpu"
+   ],
+   "card_mib_labels": [
+    23028
+   ],
+   "schedulable_nodes": 30,
+   "schedulable_gpus_allocatable": 237,
+   "schedulable_alloc_cpu": [
+    124.0
+   ],
+   "schedulable_alloc_mem_gi": [
+    503.6
+   ],
+   "per_node": [
+    {
+     "node": "gpu-01.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/hardware",
+       "value": "large-gpu",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/hardware=large-gpu:NoSchedule"
+     ]
+    },
+    {
+     "node": "gpu-02.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/hardware",
+       "value": "large-gpu",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/hardware=large-gpu:NoSchedule"
+     ]
+    },
+    {
+     "node": "gpu-03.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "nrp-llm-test",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=nrp-llm-test:NoSchedule"
+     ]
+    },
+    {
+     "node": "gpu-04.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-05.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-06.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-07.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/reservation",
+       "value": "sage",
+       "effect": "NoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "taint nautilus.io/reservation=sage:NoSchedule"
+     ]
+    },
+    {
+     "node": "gpu-08.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nautilus.io/demo",
+       "value": "added-dynamically",
+       "effect": "PreferNoSchedule"
+      },
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-09.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "610.43.02",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-11.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-12.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-13.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-14.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 7
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-15.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-16.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-17.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "gpu-18.nrp.mghpcc.org",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 7
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5805.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5809.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5813.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5817.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5821.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5825.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5905.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5909.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5913.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5917.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5921.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c5925.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c6009.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c6013.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 7
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c6017.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": false,
+     "not_schedulable_because": [
+      "excluded: Delta REGRESSION_TICKET 2026-09-28 (epoch-0 NaN, fingerprint off)"
+     ]
+    },
+    {
+     "node": "hcc-nrp-shor-c6021.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c6025.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.71.05",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    },
+    {
+     "node": "hcc-nrp-shor-c6029.unl.edu",
+     "ready": "True",
+     "unschedulable": false,
+     "taints": [
+      {
+       "key": "nvidia.com/gpu",
+       "value": "Exists",
+       "effect": "PreferNoSchedule"
+      }
+     ],
+     "gpu_resources": {
+      "nvidia.com/gpu": 8
+     },
+     "gpu_memory_label_mib": "23028",
+     "driver_label": "595.91.07",
+     "alloc_cpu": 124.0,
+     "alloc_mem_gi": 503.6,
+     "schedulable_for_us": true,
+     "not_schedulable_because": []
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,95 @@
+{
+  "recorded_at_utc": "2026-09-19T20:00Z (cluster read 2026-09-19 ~19:30-20:00Z; first read 2026-09-19 05:07Z)",
+  "job": "kai-engram-screen-e100-a10364ed",
+  "job_status": "Failed (FailedIndexes)",
+  "completed_indexes": "2,3",
+  "failed_indexes": "0,1",
+  "training": "All four arms reached cumulative epoch 100; epoch-0100 checkpoints and W&B resume artifacts were committed before the failure.",
+  "failure_signature": "run_engram.py:275 np.testing.assert_allclose -> AssertionError: Not equal to tolerance rtol=0, atol=1e-07",
+  "what_the_check_does": "Reloads selected checkpoint (model_min_ebops.keras; no arm met the 350k budget), re-predicts validation, requires AUC and accuracy to equal the in-training values within 1e-7.",
+  "evidence_by_gpu": [
+    {
+      "pod": "0-bt22w",
+      "arm": "e00",
+      "gpu": "L40",
+      "same_pod_as_training": true,
+      "result": "FAIL",
+      "d_acc": -0.000177,
+      "d_auc": -3.5e-05
+    },
+    {
+      "pod": "0-pcwqh",
+      "arm": "e00",
+      "gpu": "L40S",
+      "result": "FAIL, ACTUAL bit-identical to L40"
+    },
+    {
+      "pod": "1-pzjjg",
+      "arm": "e01",
+      "gpu": "L40",
+      "same_pod_as_training": true,
+      "result": "FAIL",
+      "d_acc": 0.000266,
+      "d_auc": -2.7e-05
+    },
+    {
+      "pod": "1-glh7b",
+      "arm": "e01",
+      "gpu": "A10",
+      "result": "FAIL, ACTUAL bit-identical to L40"
+    },
+    {
+      "pod": "1-hk6wg",
+      "arm": "e01",
+      "gpu": "RTX 2080 Ti",
+      "result": "FAIL on AUC only (d_auc=-1.5e-6); accuracy reproduced exactly"
+    },
+    {
+      "pod": "1-jzj7q",
+      "arm": "e01",
+      "gpu": "unknown (logs no longer contain GPU line)",
+      "result": "FAIL"
+    },
+    {
+      "pod": "2-s79c4",
+      "arm": "e02",
+      "gpu": "RTX 2080 Ti",
+      "same_pod_as_training": true,
+      "result": "PASS"
+    },
+    {
+      "pod": "3-rzgjv",
+      "arm": "e03",
+      "gpu": "RTX 3090",
+      "same_pod_as_training": true,
+      "result": "FAIL",
+      "d_acc": -0.000129,
+      "d_auc": 1.6e-06
+    },
+    {
+      "pod": "3-rlp9b / 3-qvzb2",
+      "arm": "e03",
+      "gpu": "L40S / RTX 5000 Ada",
+      "result": "FAIL, ACTUAL bit-identical to 3090"
+    },
+    {
+      "pod": "3-fxxvs",
+      "arm": "e03",
+      "gpu": "Tesla V100-SXM2-16GB",
+      "result": "PASS (d_auc=4.8e-8)"
+    }
+  ],
+  "diagnosis": "Not a node lottery. FP32-only GPUs (Turing/Volta) reproduce the logged accuracy exactly; every Ampere/Ada GPU returns one identical, different value (|d_acc| 1.3e-4..2.7e-4 = 16..33 of 124,000 jets), even in the pod that trained the model. The saved model is therefore correct; the reload+predict path computes with different arithmetic on TF32-capable GPUs than the in-training evaluation did.",
+  "hypothesis_not_yet_tested": "TF32 matmul in the fresh load_model+predict path. Why the in-training predict on the same Ampere card matches FP32 hardware is NOT established.",
+  "secondary_finding": "atol=1e-7 on macro AUC is tighter than cross-architecture FP32 reproducibility (E01 on 2080 Ti missed by 1.5e-6 with accuracy exact; E03 on V100 passed by luck at 4.8e-8). Accuracy granularity is 1/124000 = 8.1e-6.",
+  "prepared_fix": {
+    "manifest": "local/engram-study/ops/gpu-job-finalize-r1.json",
+    "job": "kai-engram-finalize-e100-a10364ed-r1",
+    "shape": "same immutable bundle/configs/output roots; indexes 0,1 (e00,e01) only; resume_epoch=100 so finalize-only; NVIDIA_TF32_OVERRIDE=0; required GPU = NVIDIA-L40 (class that produced both selected checkpoints); backoffLimitPerIndex=0; 2 h deadline",
+    "verified": "nrp_doctor lint (2 deliberate WARNs: narrow pool, backoff 0); kubectl create --dry-run=server OK; old Job has 0 active pods (no second writer)",
+    "submitted": false,
+    "why_not": "kubectl create was denied by the session permission classifier (shared cluster mutation); awaiting the user."
+  },
+  "if_fix_fails": "Assertion precedes all report writes, so nothing is corrupted. The remaining route is a code change (tolerance or explicit TF32 control), which changes source_manifest sha256 -> trainer refuses the existing output root ('use a new output directory'). That is the scientific owner's decision.",
+  "no_cluster_objects_changed": true
+}

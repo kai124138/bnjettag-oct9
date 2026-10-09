@@ -1,0 +1,671 @@
+[
+ {
+  "product": "CPU-gate",
+  "slug": "cpu-gate",
+  "job_dir": "cpu-gate",
+  "shape": null,
+  "class": "E",
+  "phase": "p1-E-k2",
+  "k": 2,
+  "stop_after": 2,
+  "arms_parsed": 2,
+  "arms_completed": 2,
+  "all_arms_completed": false,
+  "s_d1": null,
+  "R_d1": null,
+  "steady_s_slowest_arm": null,
+  "untraced_median_s": 11.7,
+  "traced_median_s": null,
+  "n_untraced": 2,
+  "n_traced": 0,
+  "steady_s_per_epoch": null,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   11.5,
+   11.9
+  ],
+  "epoch1_median_s": 17.8,
+  "trace_seconds_median": null,
+  "completed_run_epochs": 4,
+  "host_rss_peak_mb": 2137,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 2,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 5,
+  "n_steady_samples": 1,
+  "gpu_util_mean_all": null,
+  "gpu_util_mean_steady": null,
+  "gpu_util_median_steady": null,
+  "gpu_mem_peak_mib": null,
+  "gpu_mem_total_mib": null,
+  "gpu_mem_peak_fraction": null,
+  "gpu_mem_over_90pct": null,
+  "proc_gpu_mem_peak_mib": null,
+  "cpu_cores_mean_all": null,
+  "cpu_cores_mean_steady": null,
+  "cpu_cores_per_arm_steady": null,
+  "cpu_pinned_cores_expected": 4,
+  "thread_cpus_union": null,
+  "threads_within_pinned": null,
+  "cgroup_mem_peak_mib": null,
+  "proc_rss_peak_mib": null,
+  "node": null,
+  "gpu_info": null,
+  "fingerprint": null,
+  "fingerprint_ok": null,
+  "fingerprints": [],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": null,
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [],
+  "bench_product": null,
+  "phase_wall_s": 57.1,
+  "outcomes": {
+   "ok": 2
+  },
+  "cpu_pin": "pinned",
+  "cpus_pinned": "0-3",
+  "cpus_pinned_n": 4,
+  "cpus_allowed_n": 10,
+  "pinned_physical_cores": null,
+  "pod_cpu_request": null,
+  "total_elapsed_s_per_run_epoch": 14.275,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [
+   "chang0926-a-n64-s1",
+   "chang0926-a-n64-s2"
+  ],
+  "no_R_reason": "s undefined (no traced or no untraced epoch in 2-21); 2 of 2 arms completed 2 epochs",
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": false,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 2,
+    "window": [
+     1,
+     2
+    ],
+    "steady_s": null,
+    "traced_epochs": [
+     1
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 17.8,
+    "host_rss_peak_mb": 1639,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "f7dc3cb254b8c32210b86d0ee490280f7d03d43ab02b2043d4c186e4177ad10d",
+     "x_val": "6045efc877e7cdd34101af91aa2f03ca0959d6c318c9abb6ed60f49fd6bd4315",
+     "y_train": "e54e08956a11d795783456c5ba9c9811b0b4ac954617299fcd9536b674d83c17",
+     "y_val": "474ae3658cdf83005d5eb78e9aceef96a51c4406a49c2bcde8c39249011458d2"
+    },
+    "arm_cpus": {
+     "n": null,
+     "requested": "0-3",
+     "seen": null,
+     "status": "unavailable"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 2,
+    "window": [
+     1,
+     2
+    ],
+    "steady_s": null,
+    "traced_epochs": [
+     1
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 17.8,
+    "host_rss_peak_mb": 2137,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "f7dc3cb254b8c32210b86d0ee490280f7d03d43ab02b2043d4c186e4177ad10d",
+     "x_val": "6045efc877e7cdd34101af91aa2f03ca0959d6c318c9abb6ed60f49fd6bd4315",
+     "y_train": "e54e08956a11d795783456c5ba9c9811b0b4ac954617299fcd9536b674d83c17",
+     "y_val": "474ae3658cdf83005d5eb78e9aceef96a51c4406a49c2bcde8c39249011458d2"
+    },
+    "arm_cpus": {
+     "n": null,
+     "requested": "0-3",
+     "seen": null,
+     "status": "unavailable"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 0,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [
+   "rule 5: 2 arm(s) did not confirm the pin (ARM_CPUS not OK); out of T"
+  ],
+  "findings": [
+   "CPU budget unverified: no steady sample pair"
+  ]
+ },
+ {
+  "product": "CPU-gate",
+  "slug": "cpu-gate",
+  "job_dir": "cpu-gate",
+  "shape": null,
+  "class": "A07",
+  "phase": "p2-A07-k2",
+  "k": 2,
+  "stop_after": 2,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": false,
+  "s_d1": null,
+  "R_d1": null,
+  "steady_s_slowest_arm": null,
+  "untraced_median_s": 15.3,
+  "traced_median_s": null,
+  "n_untraced": 1,
+  "n_traced": 0,
+  "steady_s_per_epoch": null,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   15.3,
+   15.3
+  ],
+  "epoch1_median_s": 24.6,
+  "trace_seconds_median": null,
+  "completed_run_epochs": 2,
+  "host_rss_peak_mb": 3122,
+  "oom": true,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 1,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 7,
+  "n_steady_samples": 0,
+  "gpu_util_mean_all": null,
+  "gpu_util_mean_steady": null,
+  "gpu_util_median_steady": null,
+  "gpu_mem_peak_mib": null,
+  "gpu_mem_total_mib": null,
+  "gpu_mem_peak_fraction": null,
+  "gpu_mem_over_90pct": null,
+  "proc_gpu_mem_peak_mib": null,
+  "cpu_cores_mean_all": null,
+  "cpu_cores_mean_steady": null,
+  "cpu_cores_per_arm_steady": null,
+  "cpu_pinned_cores_expected": 4,
+  "thread_cpus_union": null,
+  "threads_within_pinned": null,
+  "cgroup_mem_peak_mib": null,
+  "proc_rss_peak_mib": null,
+  "node": null,
+  "gpu_info": null,
+  "fingerprint": null,
+  "fingerprint_ok": null,
+  "fingerprints": [],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": null,
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [],
+  "bench_product": null,
+  "phase_wall_s": 72.2,
+  "outcomes": {
+   "ok": 1,
+   "oom": 1
+  },
+  "cpu_pin": "pinned",
+  "cpus_pinned": "0-3",
+  "cpus_pinned_n": 4,
+  "cpus_allowed_n": 10,
+  "pinned_physical_cores": null,
+  "pod_cpu_request": null,
+  "total_elapsed_s_per_run_epoch": 36.1,
+  "non_ok_arms": [
+   {
+    "name": "chang0926-c-n64-s2",
+    "outcome": "oom",
+    "exit_code": 7,
+    "signal": null,
+    "epochs_done": 0,
+    "verification": "none",
+    "verification_error": null
+   }
+  ],
+  "arm_cpus_unconfirmed": [
+   "chang0926-c-n64-s1"
+  ],
+  "no_R_reason": "s undefined (no traced or no untraced epoch in 2-21); 1 of 2 arms completed 2 epochs; non-ok: oom",
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": false,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 2,
+    "window": [
+     1,
+     2
+    ],
+    "steady_s": null,
+    "traced_epochs": [
+     1
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 24.6,
+    "host_rss_peak_mb": 3122,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "f7dc3cb254b8c32210b86d0ee490280f7d03d43ab02b2043d4c186e4177ad10d",
+     "x_val": "6045efc877e7cdd34101af91aa2f03ca0959d6c318c9abb6ed60f49fd6bd4315",
+     "y_train": "e54e08956a11d795783456c5ba9c9811b0b4ac954617299fcd9536b674d83c17",
+     "y_val": "474ae3658cdf83005d5eb78e9aceef96a51c4406a49c2bcde8c39249011458d2"
+    },
+    "arm_cpus": {
+     "n": null,
+     "requested": "0-3",
+     "seen": null,
+     "status": "unavailable"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 0,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [
+   "rule 1: OOM",
+   "rule 5: 1 arm(s) did not confirm the pin (ARM_CPUS not OK); out of T"
+  ],
+  "findings": [
+   "CPU budget unverified: no steady sample pair"
+  ]
+ },
+ {
+  "product": "CPU-gate",
+  "slug": "cpu-gate",
+  "job_dir": "cpu-gate",
+  "shape": null,
+  "class": "E",
+  "phase": "p3-E-k1",
+  "k": 1,
+  "stop_after": 2,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": false,
+  "s_d1": null,
+  "R_d1": null,
+  "steady_s_slowest_arm": null,
+  "untraced_median_s": 6.0,
+  "traced_median_s": null,
+  "n_untraced": 1,
+  "n_traced": 0,
+  "steady_s_per_epoch": null,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   6.0,
+   6.0
+  ],
+  "epoch1_median_s": 11.6,
+  "trace_seconds_median": null,
+  "completed_run_epochs": 2,
+  "host_rss_peak_mb": 1699,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 1,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 4,
+  "n_steady_samples": 1,
+  "gpu_util_mean_all": null,
+  "gpu_util_mean_steady": null,
+  "gpu_util_median_steady": null,
+  "gpu_mem_peak_mib": null,
+  "gpu_mem_total_mib": null,
+  "gpu_mem_peak_fraction": null,
+  "gpu_mem_over_90pct": null,
+  "proc_gpu_mem_peak_mib": null,
+  "cpu_cores_mean_all": null,
+  "cpu_cores_mean_steady": null,
+  "cpu_cores_per_arm_steady": null,
+  "cpu_pinned_cores_expected": 2,
+  "thread_cpus_union": null,
+  "threads_within_pinned": null,
+  "cgroup_mem_peak_mib": null,
+  "proc_rss_peak_mib": null,
+  "node": null,
+  "gpu_info": null,
+  "fingerprint": null,
+  "fingerprint_ok": null,
+  "fingerprints": [],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": null,
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [],
+  "bench_product": null,
+  "phase_wall_s": 40.1,
+  "outcomes": {
+   "ok": 1
+  },
+  "cpu_pin": "pinned",
+  "cpus_pinned": "0-1",
+  "cpus_pinned_n": 2,
+  "cpus_allowed_n": 10,
+  "pinned_physical_cores": null,
+  "pod_cpu_request": null,
+  "total_elapsed_s_per_run_epoch": 20.05,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [
+   "chang0926-a-n64-s1"
+  ],
+  "no_R_reason": "s undefined (no traced or no untraced epoch in 2-21); 1 of 1 arms completed 2 epochs",
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": false,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 2,
+    "window": [
+     1,
+     2
+    ],
+    "steady_s": null,
+    "traced_epochs": [
+     1
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 11.6,
+    "host_rss_peak_mb": 1699,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "f7dc3cb254b8c32210b86d0ee490280f7d03d43ab02b2043d4c186e4177ad10d",
+     "x_val": "6045efc877e7cdd34101af91aa2f03ca0959d6c318c9abb6ed60f49fd6bd4315",
+     "y_train": "e54e08956a11d795783456c5ba9c9811b0b4ac954617299fcd9536b674d83c17",
+     "y_val": "474ae3658cdf83005d5eb78e9aceef96a51c4406a49c2bcde8c39249011458d2"
+    },
+    "arm_cpus": {
+     "n": null,
+     "requested": "0-1",
+     "seen": null,
+     "status": "unavailable"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 0,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [
+   "rule 5: 1 arm(s) did not confirm the pin (ARM_CPUS not OK); out of T"
+  ],
+  "findings": [
+   "CPU budget unverified: no steady sample pair"
+  ]
+ },
+ {
+  "product": "NVIDIA-L40",
+  "slug": "l40",
+  "job_dir": "l40-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-L40",
+  "slug": "l40",
+  "job_dir": "l40-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-L40S",
+  "slug": "l40s",
+  "job_dir": "l40s-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40s-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-L40S",
+  "slug": "l40s",
+  "job_dir": "l40s-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40s-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-4090",
+  "slug": "geforce-rtx-4090",
+  "job_dir": "geforce-rtx-4090-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-geforce-rtx-4090-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-4090",
+  "slug": "geforce-rtx-4090",
+  "job_dir": "geforce-rtx-4090-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-geforce-rtx-4090-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-3090",
+  "slug": "geforce-rtx-3090",
+  "job_dir": "geforce-rtx-3090-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-geforce-rtx-3090-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-3090",
+  "slug": "geforce-rtx-3090",
+  "job_dir": "geforce-rtx-3090-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-geforce-rtx-3090-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-RTX-A6000",
+  "slug": "rtx-a6000",
+  "job_dir": "rtx-a6000-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-rtx-a6000-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-RTX-A6000",
+  "slug": "rtx-a6000",
+  "job_dir": "rtx-a6000-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-rtx-a6000-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A40",
+  "slug": "a40",
+  "job_dir": "a40-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a40-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A40",
+  "slug": "a40",
+  "job_dir": "a40-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a40-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A100-SXM4-80GB",
+  "slug": "a100-sxm4-80gb",
+  "job_dir": "a100-sxm4-80gb-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a100-sxm4-80gb-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A100-SXM4-80GB",
+  "slug": "a100-sxm4-80gb",
+  "job_dir": "a100-sxm4-80gb-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a100-sxm4-80gb-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10",
+  "job_dir": "a10-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a10-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10",
+  "job_dir": "a10-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a10-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ }
+]

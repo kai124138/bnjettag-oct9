@@ -1,0 +1,133 @@
+{
+  "analysis": "distribution only; full_dataset_diagnostic and training_only_seed1",
+  "seed": 1,
+  "validation_fraction": 0.2,
+  "classes": [
+    "j_g",
+    "j_q",
+    "j_w",
+    "j_z",
+    "j_t"
+  ],
+  "binary_mapping": "each class versus the other four, separately",
+  "pt_column": "j_pt",
+  "pt_unit": "GeV",
+  "log": "numpy.log (natural logarithm)",
+  "n_bins": 100,
+  "offset": 0.5,
+  "edges": "linspace(min(log(Pt)), max(log(Pt)), 101), independently per output split",
+  "intervals": "[left,right), except the final bin includes its right edge",
+  "ratio": "(signal_count + 0.5) / (background_count + 0.5)",
+  "hypothetical_weights": "background 1; signal its bin ratio; no class-factor multiplication",
+  "data_root": "/Users/kaiyamaguchi/Downloads/bnjettag-training-results/data",
+  "config": "bnjettag/code/hgq2/configs/r14-l1x3-n16-w1a8.json",
+  "source_code_sha256": {
+    "bnjettag/code/hgq2/configs/r14-l1x3-n16-w1a8.json": "ee44832204f7dcd6ba0354241e9846fa39004767dcbddcd2a49f6814dacb72a3",
+    "bnjettag/code/hgq2/bnhgq2/train.py": "d660eafc6105a0136258ec8c46f55104fa9853c09e267b093667e62439071a61",
+    "bnjettag/code/hgq2/bnhgq2/data.py": "a78e0870b74a098236c3e7011b1cfd76a2a334e552d41ca241153772559e89b4",
+    "bnjettag/code/hgq2/run_stage.py": "47f41a26c8d8667530ae3b068c01304cd72e58e491bea61e213153cd3cd394dd"
+  },
+  "versions": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "h5py": "3.14.0",
+    "matplotlib": "3.11.0",
+    "nbformat": "5.11.1",
+    "nbclient": "0.11.0",
+    "ipykernel": "7.3.0",
+    "jupyter_client": "8.10.0"
+  },
+  "python": "3.12.13",
+  "split_index_sha256": {
+    "training_only_seed1": "0ea6f497fce512084a49722df44286b6ea2547d557d4e1c326fd00bd747890cd",
+    "internal_validation_seed1": "99f58ca7d2114c2d03762f693504a41c33b7b07efbb84b787c7526b3705147a6"
+  },
+  "archive_coverage": [
+    {
+      "source_split": "train",
+      "archive": "/Users/kaiyamaguchi/Downloads/bnjettag-training-results/data/hls4ml_LHCjet_150p_train.tar.gz",
+      "h5_members": 62,
+      "names_and_sizes_match": true
+    },
+    {
+      "source_split": "val",
+      "archive": "/Users/kaiyamaguchi/Downloads/bnjettag-training-results/data/hls4ml_LHCjet_150p_val.tar.gz",
+      "h5_members": 26,
+      "names_and_sizes_match": true
+    }
+  ],
+  "executed_at_utc": "2026-09-25T06:40:19.988332+00:00",
+  "verification": "All assertions passed: archive coverage, labels/Pt, split partition, bin totals, row alignment, histogram totals, CSV round trip.",
+  "artifacts": [
+    {
+      "dataset_split": "full_dataset_diagnostic",
+      "signal_label": "j_g",
+      "table": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_g_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_g_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_g_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "full_dataset_diagnostic",
+      "signal_label": "j_q",
+      "table": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_q_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_q_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_q_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "full_dataset_diagnostic",
+      "signal_label": "j_w",
+      "table": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_w_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_w_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_w_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "full_dataset_diagnostic",
+      "signal_label": "j_z",
+      "table": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_z_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_z_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_z_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "full_dataset_diagnostic",
+      "signal_label": "j_t",
+      "table": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_t_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_t_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/full_dataset_diagnostic/full_dataset_diagnostic__j_t_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "training_only_seed1",
+      "signal_label": "j_g",
+      "table": "outputs/training_only_seed1/training_only_seed1__j_g_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/training_only_seed1/training_only_seed1__j_g_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/training_only_seed1/training_only_seed1__j_g_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "training_only_seed1",
+      "signal_label": "j_q",
+      "table": "outputs/training_only_seed1/training_only_seed1__j_q_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/training_only_seed1/training_only_seed1__j_q_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/training_only_seed1/training_only_seed1__j_q_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "training_only_seed1",
+      "signal_label": "j_w",
+      "table": "outputs/training_only_seed1/training_only_seed1__j_w_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/training_only_seed1/training_only_seed1__j_w_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/training_only_seed1/training_only_seed1__j_w_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "training_only_seed1",
+      "signal_label": "j_z",
+      "table": "outputs/training_only_seed1/training_only_seed1__j_z_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/training_only_seed1/training_only_seed1__j_z_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/training_only_seed1/training_only_seed1__j_z_vs_rest__hypothetical_weights.png"
+    },
+    {
+      "dataset_split": "training_only_seed1",
+      "signal_label": "j_t",
+      "table": "outputs/training_only_seed1/training_only_seed1__j_t_vs_rest__bins.csv",
+      "count_ratio_figure": "outputs/training_only_seed1/training_only_seed1__j_t_vs_rest__counts_ratio.png",
+      "weight_figure": "outputs/training_only_seed1/training_only_seed1__j_t_vs_rest__hypothetical_weights.png"
+    }
+  ]
+}

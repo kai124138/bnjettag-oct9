@@ -1,0 +1,115 @@
+{
+  "approval_ref": "PENDING launch authorization; program approval .claude/memory/decisions.md 2026-10-05 10:08 JST (PROGRAM.json not yet signed)",
+  "changes": "CPU only, TF32 off, no training. a26 entropy and certification scripts as in readout-c; monitor_p.py on each option-(c) snapshot telemetry; readout_pilot.py (patch 0039) assembles readout.json. New output directory.",
+  "decision_ref": ".claude/memory/decisions.md 2026-10-05 10:08 JST",
+  "expected_metrics": [
+    {
+      "expectation": "19 rows, exact field set; status per row; integrity fields threshold_c, labels_sha256",
+      "name": "readout.json",
+      "split": "validation n=62000; traced epochs < 500"
+    }
+  ],
+  "limitations": [
+    "Pilots are directional (STUDY.md): no pilot number is a result, enters verify.json or appears in outward text.",
+    "No historical checkpoint may initialize or resume these runs (config and code SHA guards).",
+    "The epoch-500 pause does not observe the first LR restart after epoch 500."
+  ],
+  "outputs": [
+    "/data/chang-n64-20260926/pilot-program-20261005/r1/readout-epoch-0500-1f7c4e-r1/readout.json"
+  ],
+  "production_gate": {
+    "reference": "STUDY.md \u00a79 production trigger; PROGRAM.json unsigned",
+    "status": "pending"
+  },
+  "purpose": "Round-1 readout: one readout.json row per arm with the STUDY.md \u00a75 fields, for the autopilot decision rule.",
+  "runs": [
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json",
+      "name": "pilot1005-h1-e-350k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s2.json",
+      "name": "pilot1005-h1-e-350k-c-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s1.json",
+      "name": "pilot1005-h1-e-350k-noc-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s2.json",
+      "name": "pilot1005-h1-e-350k-noc-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-250k-c-s1.json",
+      "name": "pilot1005-h2-e-250k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-500k-c-s1.json",
+      "name": "pilot1005-h2-e-500k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-750k-c-s1.json",
+      "name": "pilot1005-h2-e-750k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-1m-c-s1.json",
+      "name": "pilot1005-h2-e-1m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-2m-c-s1.json",
+      "name": "pilot1005-h2-e-2m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-5m-c-s1.json",
+      "name": "pilot1005-h2-e-5m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-350k-c-s1.json",
+      "name": "pilot1005-h2-a07-350k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-500k-c-s1.json",
+      "name": "pilot1005-h2-a07-500k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-1m-c-s1.json",
+      "name": "pilot1005-h2-a07-1m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-2m-c-s1.json",
+      "name": "pilot1005-h2-a07-2m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-5m-c-s1.json",
+      "name": "pilot1005-h2-a07-5m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s1.json",
+      "name": "pilot1005-h4-e-350k-c-w50-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s2.json",
+      "name": "pilot1005-h4-e-350k-c-w50-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json",
+      "name": "pilot1005-h4-e-350k-c-w150-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json",
+      "name": "pilot1005-h4-e-350k-c-w150-s2"
+    }
+  ],
+  "scientific_gate": {
+    "reference": "campaigns/2026-10-05-pilot-program/PREFLIGHT.md (build half, not reviewed); STUDY.md and PROGRAM.json drafts, not reviewed or signed",
+    "status": "pending"
+  },
+  "stop_rules": [
+    {
+      "action": "existing-runner-guard",
+      "approval_ref": "Job script exit status; activeDeadlineSeconds 28800",
+      "condition": "any script exit nonzero or deadline"
+    }
+  ],
+  "study_ref": "campaigns/2026-10-05-pilot-program/STUDY.md"
+}

@@ -1,0 +1,150 @@
+{
+  "plan": {
+    "product": "NVIDIA-A10",
+    "slug": "a10-klow",
+    "product_slug": "a10",
+    "shape": "klow",
+    "card_mib": 23028,
+    "stop_after": 21,
+    "pod_cpu_request": 6,
+    "phases": [
+      {
+        "phase": "p3-E-k3",
+        "class": "E",
+        "k": 3,
+        "names": [
+          "chang0926-a-n64-s1",
+          "chang0926-a-n64-s2",
+          "chang0926-a-n64-s3"
+        ]
+      },
+      {
+        "phase": "p4-A07-k1",
+        "class": "A07",
+        "k": 1,
+        "names": [
+          "chang0926-c-n64-s1"
+        ]
+      }
+    ]
+  },
+  "phases": [
+    {
+      "phase": "p3-E-k3",
+      "class": "E",
+      "k": 3,
+      "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3"
+      ],
+      "stop_after": 21,
+      "start_utc": "2026-09-29T10:32:19Z",
+      "end_utc": "2026-09-29T11:03:39Z",
+      "wall_seconds": 1880.3,
+      "cpu_pin": "pinned",
+      "cpus_allowed_n": 6,
+      "cpus_allowed": "9-11,73-75",
+      "cpus_pinned_n": 6,
+      "cpus_pinned": "9-11,73-75",
+      "pinned_physical_cores": 3,
+      "steady_cpu_cores": 1.7251674549168698,
+      "steady_cpu_pairs": 25,
+      "steady_cpu_cores_per_arm": 0.5750558183056232,
+      "cgroup_oom_kill_start": 0,
+      "cgroup_oom_kill_end": 0,
+      "arms": [
+        {
+          "name": "chang0926-a-n64-s1",
+          "pid": 403,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T10:32:19Z",
+          "ended_utc": "2026-09-29T11:02:49Z"
+        },
+        {
+          "name": "chang0926-a-n64-s2",
+          "pid": 537,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T10:32:34Z",
+          "ended_utc": "2026-09-29T11:03:34Z"
+        },
+        {
+          "name": "chang0926-a-n64-s3",
+          "pid": 671,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T10:32:49Z",
+          "ended_utc": "2026-09-29T11:03:34Z"
+        }
+      ],
+      "outcomes": {
+        "ok": 3
+      }
+    },
+    {
+      "phase": "p4-A07-k1",
+      "class": "A07",
+      "k": 1,
+      "names": [
+        "chang0926-c-n64-s1"
+      ],
+      "stop_after": 21,
+      "start_utc": "2026-09-29T11:03:39Z",
+      "end_utc": "2026-09-29T11:23:19Z",
+      "wall_seconds": 1180.1,
+      "cpu_pin": "pinned",
+      "cpus_allowed_n": 6,
+      "cpus_allowed": "9-11,73-75",
+      "cpus_pinned_n": 2,
+      "cpus_pinned": "9-10",
+      "pinned_physical_cores": 2,
+      "steady_cpu_cores": 0.5875434593631932,
+      "steady_cpu_pairs": 14,
+      "steady_cpu_cores_per_arm": 0.5875434593631932,
+      "cgroup_oom_kill_start": 0,
+      "cgroup_oom_kill_end": 0,
+      "arms": [
+        {
+          "name": "chang0926-c-n64-s1",
+          "pid": 2684,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T11:03:39Z",
+          "ended_utc": "2026-09-29T11:23:14Z"
+        }
+      ],
+      "outcomes": {
+        "ok": 1
+      }
+    }
+  ],
+  "samples": 52,
+  "driver_sha256": "5ede0778f716cb9299ca82c64547fb993c93d775572d33463a0fef4cbf676c45",
+  "end_utc": "2026-09-29T11:23:19Z"
+}

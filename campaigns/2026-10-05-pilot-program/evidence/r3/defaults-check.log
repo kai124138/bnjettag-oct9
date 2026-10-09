@@ -1,0 +1,6 @@
+freeze_p.py 25de26c0 (r2) -> 7af952c0 (r3). Defaults/r2 reproduction with the r3 tool, 2026-10-08, scratch manifests and scratch --prepared-out:
+- 98dd28 (sec 3c command, 20,800 s): 26/26 handoff dirs, record_sha256 and job_json_sha256 equal PREPARED.json; 55 manifest files: tarball, configmap, bundle-manifest and all 26 job.json byte-equal manifests-98dd28/; 25 brief files differ only in approval_ref + scientific_gate (manifests-98dd28/ holds the later gate-cleared briefs; the pending briefs match the pending handoff records)
+- r2 (18,000 s, freeze-r2-command.txt): 23/23 entries equal PREPARED-r2.json incl. gate/options/bundle fields; 49/49 files byte-equal manifests-98dd28-r2/
+- r2e cleared (12,000 s, 19 arms): 19/19 entries + all other record fields equal PREPARED-cleared-r2e.json; 41/41 files byte-equal manifests-98dd28-r2e/
+- r2a cleared (24,000 s, 4 arms): 4/4 entries + other fields equal PREPARED-cleared-r2a.json; 11/11 files byte-equal manifests-98dd28-r2a/
+- handoffs/: no new directory from the reproduction runs; every PREPARED*.json sha256 unchanged (sha256sum -c)

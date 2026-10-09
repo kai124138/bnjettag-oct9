@@ -1,0 +1,912 @@
+
+
+================================================================
+== Vitis HLS Report for 'einsum_dense_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_s'
+================================================================
+* Date:           Thu Aug 13 13:51:55 2026
+
+* Version:        2023.2 (Build 4023990 on Oct 11 2023)
+* Project:        myproject_prj
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: virtexuplus
+* Target device:  xcvu13p-flga2577-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+---------+----------+------------+
+    |  Clock |  Target | Estimated| Uncertainty|
+    +--------+---------+----------+------------+
+    |ap_clk  |  2.50 ns|  1.623 ns|     0.68 ns|
+    +--------+---------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +-------------------------------------------------------------------------------------+---------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |                                                                                     |                                                                     |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |                                       Instance                                      |                                Module                               |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +-------------------------------------------------------------------------------------+---------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_s_fu_122       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_s  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_1_fu_129       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_1  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_2_fu_136       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_2  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_3_fu_143       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_3  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_4_fu_150       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_4  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_5_fu_157       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_5  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_6_fu_164       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_6  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_7_fu_171       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_7  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |call_ret_transpose_ap_fixed_9_6_4_0_0_ap_fixed_9_6_4_0_0_config3_tpose_out_s_fu_178  |transpose_ap_fixed_9_6_4_0_0_ap_fixed_9_6_4_0_0_config3_tpose_out_s  |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        +-------------------------------------------------------------------------------------+---------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++---------------------+---------+-------+---------+---------+------+
+|         Name        | BRAM_18K|  DSP  |    FF   |   LUT   | URAM |
++---------------------+---------+-------+---------+---------+------+
+|DSP                  |        -|      -|        -|        -|     -|
+|Expression           |        -|      -|        -|        -|     -|
+|FIFO                 |        -|      -|        -|        -|     -|
+|Instance             |        -|      -|      564|    15225|     -|
+|Memory               |        -|      -|        -|        -|     -|
+|Multiplexer          |        -|      -|        -|     3584|     -|
+|Register             |        -|      -|     2305|        -|     -|
++---------------------+---------+-------+---------+---------+------+
+|Total                |        0|      0|     2869|    18809|     0|
++---------------------+---------+-------+---------+---------+------+
+|Available SLR        |     1344|   3072|   864000|   432000|   320|
++---------------------+---------+-------+---------+---------+------+
+|Utilization SLR (%)  |        0|      0|       ~0|        4|     0|
++---------------------+---------+-------+---------+---------+------+
+|Available            |     5376|  12288|  3456000|  1728000|  1280|
++---------------------+---------+-------+---------+---------+------+
+|Utilization (%)      |        0|      0|       ~0|        1|     0|
++---------------------+---------+-------+---------+---------+------+
+
++ Detail: 
+    * Instance: 
+    +-------------------------------------------------------------------------------------+---------------------------------------------------------------------+---------+----+----+------+-----+
+    |                                       Instance                                      |                                Module                               | BRAM_18K| DSP| FF |  LUT | URAM|
+    +-------------------------------------------------------------------------------------+---------------------------------------------------------------------+---------+----+----+------+-----+
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_1_fu_129       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_1  |        0|   0|  87|  1875|    0|
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_2_fu_136       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_2  |        0|   0|  75|  2020|    0|
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_3_fu_143       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_3  |        0|   0|  55|  1869|    0|
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_4_fu_150       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_4  |        0|   0|  56|  1870|    0|
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_5_fu_157       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_5  |        0|   0|  57|  1874|    0|
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_6_fu_164       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_6  |        0|   0|  76|  1884|    0|
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_7_fu_171       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_7  |        0|   0|  89|  1937|    0|
+    |grp_dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_s_fu_122       |dense_latency_ap_fixed_4_3_4_0_0_ap_fixed_9_6_4_0_0_config3_dense_s  |        0|   0|  69|  1896|    0|
+    |call_ret_transpose_ap_fixed_9_6_4_0_0_ap_fixed_9_6_4_0_0_config3_tpose_out_s_fu_178  |transpose_ap_fixed_9_6_4_0_0_ap_fixed_9_6_4_0_0_config3_tpose_out_s  |        0|   0|   0|     0|    0|
+    +-------------------------------------------------------------------------------------+---------------------------------------------------------------------+---------+----+----+------+-----+
+    |Total                                                                                |                                                                     |        0|   0| 564| 15225|    0|
+    +-------------------------------------------------------------------------------------+---------------------------------------------------------------------+---------+----+----+------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    N/A
+
+    * Multiplexer: 
+    +---------------+----+-----------+-----+-----------+
+    |      Name     | LUT| Input Size| Bits| Total Bits|
+    +---------------+----+-----------+-----+-----------+
+    |ap_return_0    |  14|          3|    9|         27|
+    |ap_return_1    |  14|          3|    9|         27|
+    |ap_return_10   |  14|          3|    9|         27|
+    |ap_return_100  |  14|          3|    9|         27|
+    |ap_return_101  |  14|          3|    9|         27|
+    |ap_return_102  |  14|          3|    9|         27|
+    |ap_return_103  |  14|          3|    9|         27|
+    |ap_return_104  |  14|          3|    9|         27|
+    |ap_return_105  |  14|          3|    9|         27|
+    |ap_return_106  |  14|          3|    9|         27|
+    |ap_return_107  |  14|          3|    9|         27|
+    |ap_return_108  |  14|          3|    9|         27|
+    |ap_return_109  |  14|          3|    9|         27|
+    |ap_return_11   |  14|          3|    9|         27|
+    |ap_return_110  |  14|          3|    9|         27|
+    |ap_return_111  |  14|          3|    9|         27|
+    |ap_return_112  |  14|          3|    9|         27|
+    |ap_return_113  |  14|          3|    9|         27|
+    |ap_return_114  |  14|          3|    9|         27|
+    |ap_return_115  |  14|          3|    9|         27|
+    |ap_return_116  |  14|          3|    9|         27|
+    |ap_return_117  |  14|          3|    9|         27|
+    |ap_return_118  |  14|          3|    9|         27|
+    |ap_return_119  |  14|          3|    9|         27|
+    |ap_return_12   |  14|          3|    9|         27|
+    |ap_return_120  |  14|          3|    9|         27|
+    |ap_return_121  |  14|          3|    9|         27|
+    |ap_return_122  |  14|          3|    9|         27|
+    |ap_return_123  |  14|          3|    9|         27|
+    |ap_return_124  |  14|          3|    9|         27|
+    |ap_return_125  |  14|          3|    9|         27|
+    |ap_return_126  |  14|          3|    9|         27|
+    |ap_return_127  |  14|          3|    9|         27|
+    |ap_return_128  |  14|          3|    9|         27|
+    |ap_return_129  |  14|          3|    9|         27|
+    |ap_return_13   |  14|          3|    9|         27|
+    |ap_return_130  |  14|          3|    9|         27|
+    |ap_return_131  |  14|          3|    9|         27|
+    |ap_return_132  |  14|          3|    9|         27|
+    |ap_return_133  |  14|          3|    9|         27|
+    |ap_return_134  |  14|          3|    9|         27|
+    |ap_return_135  |  14|          3|    9|         27|
+    |ap_return_136  |  14|          3|    9|         27|
+    |ap_return_137  |  14|          3|    9|         27|
+    |ap_return_138  |  14|          3|    9|         27|
+    |ap_return_139  |  14|          3|    9|         27|
+    |ap_return_14   |  14|          3|    9|         27|
+    |ap_return_140  |  14|          3|    9|         27|
+    |ap_return_141  |  14|          3|    9|         27|
+    |ap_return_142  |  14|          3|    9|         27|
+    |ap_return_143  |  14|          3|    9|         27|
+    |ap_return_144  |  14|          3|    9|         27|
+    |ap_return_145  |  14|          3|    9|         27|
+    |ap_return_146  |  14|          3|    9|         27|
+    |ap_return_147  |  14|          3|    9|         27|
+    |ap_return_148  |  14|          3|    9|         27|
+    |ap_return_149  |  14|          3|    9|         27|
+    |ap_return_15   |  14|          3|    9|         27|
+    |ap_return_150  |  14|          3|    9|         27|
+    |ap_return_151  |  14|          3|    9|         27|
+    |ap_return_152  |  14|          3|    9|         27|
+    |ap_return_153  |  14|          3|    9|         27|
+    |ap_return_154  |  14|          3|    9|         27|
+    |ap_return_155  |  14|          3|    9|         27|
+    |ap_return_156  |  14|          3|    9|         27|
+    |ap_return_157  |  14|          3|    9|         27|
+    |ap_return_158  |  14|          3|    9|         27|
+    |ap_return_159  |  14|          3|    9|         27|
+    |ap_return_16   |  14|          3|    9|         27|
+    |ap_return_160  |  14|          3|    9|         27|
+    |ap_return_161  |  14|          3|    9|         27|
+    |ap_return_162  |  14|          3|    9|         27|
+    |ap_return_163  |  14|          3|    9|         27|
+    |ap_return_164  |  14|          3|    9|         27|
+    |ap_return_165  |  14|          3|    9|         27|
+    |ap_return_166  |  14|          3|    9|         27|
+    |ap_return_167  |  14|          3|    9|         27|
+    |ap_return_168  |  14|          3|    9|         27|
+    |ap_return_169  |  14|          3|    9|         27|
+    |ap_return_17   |  14|          3|    9|         27|
+    |ap_return_170  |  14|          3|    9|         27|
+    |ap_return_171  |  14|          3|    9|         27|
+    |ap_return_172  |  14|          3|    9|         27|
+    |ap_return_173  |  14|          3|    9|         27|
+    |ap_return_174  |  14|          3|    9|         27|
+    |ap_return_175  |  14|          3|    9|         27|
+    |ap_return_176  |  14|          3|    9|         27|
+    |ap_return_177  |  14|          3|    9|         27|
+    |ap_return_178  |  14|          3|    9|         27|
+    |ap_return_179  |  14|          3|    9|         27|
+    |ap_return_18   |  14|          3|    9|         27|
+    |ap_return_180  |  14|          3|    9|         27|
+    |ap_return_181  |  14|          3|    9|         27|
+    |ap_return_182  |  14|          3|    9|         27|
+    |ap_return_183  |  14|          3|    9|         27|
+    |ap_return_184  |  14|          3|    9|         27|
+    |ap_return_185  |  14|          3|    9|         27|
+    |ap_return_186  |  14|          3|    9|         27|
+    |ap_return_187  |  14|          3|    9|         27|
+    |ap_return_188  |  14|          3|    9|         27|
+    |ap_return_189  |  14|          3|    9|         27|
+    |ap_return_19   |  14|          3|    9|         27|
+    |ap_return_190  |  14|          3|    9|         27|
+    |ap_return_191  |  14|          3|    9|         27|
+    |ap_return_192  |  14|          3|    9|         27|
+    |ap_return_193  |  14|          3|    9|         27|
+    |ap_return_194  |  14|          3|    9|         27|
+    |ap_return_195  |  14|          3|    9|         27|
+    |ap_return_196  |  14|          3|    9|         27|
+    |ap_return_197  |  14|          3|    9|         27|
+    |ap_return_198  |  14|          3|    9|         27|
+    |ap_return_199  |  14|          3|    9|         27|
+    |ap_return_2    |  14|          3|    9|         27|
+    |ap_return_20   |  14|          3|    9|         27|
+    |ap_return_200  |  14|          3|    9|         27|
+    |ap_return_201  |  14|          3|    9|         27|
+    |ap_return_202  |  14|          3|    9|         27|
+    |ap_return_203  |  14|          3|    9|         27|
+    |ap_return_204  |  14|          3|    9|         27|
+    |ap_return_205  |  14|          3|    9|         27|
+    |ap_return_206  |  14|          3|    9|         27|
+    |ap_return_207  |  14|          3|    9|         27|
+    |ap_return_208  |  14|          3|    9|         27|
+    |ap_return_209  |  14|          3|    9|         27|
+    |ap_return_21   |  14|          3|    9|         27|
+    |ap_return_210  |  14|          3|    9|         27|
+    |ap_return_211  |  14|          3|    9|         27|
+    |ap_return_212  |  14|          3|    9|         27|
+    |ap_return_213  |  14|          3|    9|         27|
+    |ap_return_214  |  14|          3|    9|         27|
+    |ap_return_215  |  14|          3|    9|         27|
+    |ap_return_216  |  14|          3|    9|         27|
+    |ap_return_217  |  14|          3|    9|         27|
+    |ap_return_218  |  14|          3|    9|         27|
+    |ap_return_219  |  14|          3|    9|         27|
+    |ap_return_22   |  14|          3|    9|         27|
+    |ap_return_220  |  14|          3|    9|         27|
+    |ap_return_221  |  14|          3|    9|         27|
+    |ap_return_222  |  14|          3|    9|         27|
+    |ap_return_223  |  14|          3|    9|         27|
+    |ap_return_224  |  14|          3|    9|         27|
+    |ap_return_225  |  14|          3|    9|         27|
+    |ap_return_226  |  14|          3|    9|         27|
+    |ap_return_227  |  14|          3|    9|         27|
+    |ap_return_228  |  14|          3|    9|         27|
+    |ap_return_229  |  14|          3|    9|         27|
+    |ap_return_23   |  14|          3|    9|         27|
+    |ap_return_230  |  14|          3|    9|         27|
+    |ap_return_231  |  14|          3|    9|         27|
+    |ap_return_232  |  14|          3|    9|         27|
+    |ap_return_233  |  14|          3|    9|         27|
+    |ap_return_234  |  14|          3|    9|         27|
+    |ap_return_235  |  14|          3|    9|         27|
+    |ap_return_236  |  14|          3|    9|         27|
+    |ap_return_237  |  14|          3|    9|         27|
+    |ap_return_238  |  14|          3|    9|         27|
+    |ap_return_239  |  14|          3|    9|         27|
+    |ap_return_24   |  14|          3|    9|         27|
+    |ap_return_240  |  14|          3|    9|         27|
+    |ap_return_241  |  14|          3|    9|         27|
+    |ap_return_242  |  14|          3|    9|         27|
+    |ap_return_243  |  14|          3|    9|         27|
+    |ap_return_244  |  14|          3|    9|         27|
+    |ap_return_245  |  14|          3|    9|         27|
+    |ap_return_246  |  14|          3|    9|         27|
+    |ap_return_247  |  14|          3|    9|         27|
+    |ap_return_248  |  14|          3|    9|         27|
+    |ap_return_249  |  14|          3|    9|         27|
+    |ap_return_25   |  14|          3|    9|         27|
+    |ap_return_250  |  14|          3|    9|         27|
+    |ap_return_251  |  14|          3|    9|         27|
+    |ap_return_252  |  14|          3|    9|         27|
+    |ap_return_253  |  14|          3|    9|         27|
+    |ap_return_254  |  14|          3|    9|         27|
+    |ap_return_255  |  14|          3|    9|         27|
+    |ap_return_26   |  14|          3|    9|         27|
+    |ap_return_27   |  14|          3|    9|         27|
+    |ap_return_28   |  14|          3|    9|         27|
+    |ap_return_29   |  14|          3|    9|         27|
+    |ap_return_3    |  14|          3|    9|         27|
+    |ap_return_30   |  14|          3|    9|         27|
+    |ap_return_31   |  14|          3|    9|         27|
+    |ap_return_32   |  14|          3|    9|         27|
+    |ap_return_33   |  14|          3|    9|         27|
+    |ap_return_34   |  14|          3|    9|         27|
+    |ap_return_35   |  14|          3|    9|         27|
+    |ap_return_36   |  14|          3|    9|         27|
+    |ap_return_37   |  14|          3|    9|         27|
+    |ap_return_38   |  14|          3|    9|         27|
+    |ap_return_39   |  14|          3|    9|         27|
+    |ap_return_4    |  14|          3|    9|         27|
+    |ap_return_40   |  14|          3|    9|         27|
+    |ap_return_41   |  14|          3|    9|         27|
+    |ap_return_42   |  14|          3|    9|         27|
+    |ap_return_43   |  14|          3|    9|         27|
+    |ap_return_44   |  14|          3|    9|         27|
+    |ap_return_45   |  14|          3|    9|         27|
+    |ap_return_46   |  14|          3|    9|         27|
+    |ap_return_47   |  14|          3|    9|         27|
+    |ap_return_48   |  14|          3|    9|         27|
+    |ap_return_49   |  14|          3|    9|         27|
+    |ap_return_5    |  14|          3|    9|         27|
+    |ap_return_50   |  14|          3|    9|         27|
+    |ap_return_51   |  14|          3|    9|         27|
+    |ap_return_52   |  14|          3|    9|         27|
+    |ap_return_53   |  14|          3|    9|         27|
+    |ap_return_54   |  14|          3|    9|         27|
+    |ap_return_55   |  14|          3|    9|         27|
+    |ap_return_56   |  14|          3|    9|         27|
+    |ap_return_57   |  14|          3|    9|         27|
+    |ap_return_58   |  14|          3|    9|         27|
+    |ap_return_59   |  14|          3|    9|         27|
+    |ap_return_6    |  14|          3|    9|         27|
+    |ap_return_60   |  14|          3|    9|         27|
+    |ap_return_61   |  14|          3|    9|         27|
+    |ap_return_62   |  14|          3|    9|         27|
+    |ap_return_63   |  14|          3|    9|         27|
+    |ap_return_64   |  14|          3|    9|         27|
+    |ap_return_65   |  14|          3|    9|         27|
+    |ap_return_66   |  14|          3|    9|         27|
+    |ap_return_67   |  14|          3|    9|         27|
+    |ap_return_68   |  14|          3|    9|         27|
+    |ap_return_69   |  14|          3|    9|         27|
+    |ap_return_7    |  14|          3|    9|         27|
+    |ap_return_70   |  14|          3|    9|         27|
+    |ap_return_71   |  14|          3|    9|         27|
+    |ap_return_72   |  14|          3|    9|         27|
+    |ap_return_73   |  14|          3|    9|         27|
+    |ap_return_74   |  14|          3|    9|         27|
+    |ap_return_75   |  14|          3|    9|         27|
+    |ap_return_76   |  14|          3|    9|         27|
+    |ap_return_77   |  14|          3|    9|         27|
+    |ap_return_78   |  14|          3|    9|         27|
+    |ap_return_79   |  14|          3|    9|         27|
+    |ap_return_8    |  14|          3|    9|         27|
+    |ap_return_80   |  14|          3|    9|         27|
+    |ap_return_81   |  14|          3|    9|         27|
+    |ap_return_82   |  14|          3|    9|         27|
+    |ap_return_83   |  14|          3|    9|         27|
+    |ap_return_84   |  14|          3|    9|         27|
+    |ap_return_85   |  14|          3|    9|         27|
+    |ap_return_86   |  14|          3|    9|         27|
+    |ap_return_87   |  14|          3|    9|         27|
+    |ap_return_88   |  14|          3|    9|         27|
+    |ap_return_89   |  14|          3|    9|         27|
+    |ap_return_9    |  14|          3|    9|         27|
+    |ap_return_90   |  14|          3|    9|         27|
+    |ap_return_91   |  14|          3|    9|         27|
+    |ap_return_92   |  14|          3|    9|         27|
+    |ap_return_93   |  14|          3|    9|         27|
+    |ap_return_94   |  14|          3|    9|         27|
+    |ap_return_95   |  14|          3|    9|         27|
+    |ap_return_96   |  14|          3|    9|         27|
+    |ap_return_97   |  14|          3|    9|         27|
+    |ap_return_98   |  14|          3|    9|         27|
+    |ap_return_99   |  14|          3|    9|         27|
+    +---------------+----+-----------+-----+-----------+
+    |Total          |3584|        768| 2304|       6912|
+    +---------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +-----------------------+----+----+-----+-----------+
+    |          Name         | FF | LUT| Bits| Const Bits|
+    +-----------------------+----+----+-----+-----------+
+    |ap_ce_reg              |   1|   0|    1|          0|
+    |ap_return_0_int_reg    |   9|   0|    9|          0|
+    |ap_return_100_int_reg  |   9|   0|    9|          0|
+    |ap_return_101_int_reg  |   9|   0|    9|          0|
+    |ap_return_102_int_reg  |   9|   0|    9|          0|
+    |ap_return_103_int_reg  |   9|   0|    9|          0|
+    |ap_return_104_int_reg  |   9|   0|    9|          0|
+    |ap_return_105_int_reg  |   9|   0|    9|          0|
+    |ap_return_106_int_reg  |   9|   0|    9|          0|
+    |ap_return_107_int_reg  |   9|   0|    9|          0|
+    |ap_return_108_int_reg  |   9|   0|    9|          0|
+    |ap_return_109_int_reg  |   9|   0|    9|          0|
+    |ap_return_10_int_reg   |   9|   0|    9|          0|
+    |ap_return_110_int_reg  |   9|   0|    9|          0|
+    |ap_return_111_int_reg  |   9|   0|    9|          0|
+    |ap_return_112_int_reg  |   9|   0|    9|          0|
+    |ap_return_113_int_reg  |   9|   0|    9|          0|
+    |ap_return_114_int_reg  |   9|   0|    9|          0|
+    |ap_return_115_int_reg  |   9|   0|    9|          0|
+    |ap_return_116_int_reg  |   9|   0|    9|          0|
+    |ap_return_117_int_reg  |   9|   0|    9|          0|
+    |ap_return_118_int_reg  |   9|   0|    9|          0|
+    |ap_return_119_int_reg  |   9|   0|    9|          0|
+    |ap_return_11_int_reg   |   9|   0|    9|          0|
+    |ap_return_120_int_reg  |   9|   0|    9|          0|
+    |ap_return_121_int_reg  |   9|   0|    9|          0|
+    |ap_return_122_int_reg  |   9|   0|    9|          0|
+    |ap_return_123_int_reg  |   9|   0|    9|          0|
+    |ap_return_124_int_reg  |   9|   0|    9|          0|
+    |ap_return_125_int_reg  |   9|   0|    9|          0|
+    |ap_return_126_int_reg  |   9|   0|    9|          0|
+    |ap_return_127_int_reg  |   9|   0|    9|          0|
+    |ap_return_128_int_reg  |   9|   0|    9|          0|
+    |ap_return_129_int_reg  |   9|   0|    9|          0|
+    |ap_return_12_int_reg   |   9|   0|    9|          0|
+    |ap_return_130_int_reg  |   9|   0|    9|          0|
+    |ap_return_131_int_reg  |   9|   0|    9|          0|
+    |ap_return_132_int_reg  |   9|   0|    9|          0|
+    |ap_return_133_int_reg  |   9|   0|    9|          0|
+    |ap_return_134_int_reg  |   9|   0|    9|          0|
+    |ap_return_135_int_reg  |   9|   0|    9|          0|
+    |ap_return_136_int_reg  |   9|   0|    9|          0|
+    |ap_return_137_int_reg  |   9|   0|    9|          0|
+    |ap_return_138_int_reg  |   9|   0|    9|          0|
+    |ap_return_139_int_reg  |   9|   0|    9|          0|
+    |ap_return_13_int_reg   |   9|   0|    9|          0|
+    |ap_return_140_int_reg  |   9|   0|    9|          0|
+    |ap_return_141_int_reg  |   9|   0|    9|          0|
+    |ap_return_142_int_reg  |   9|   0|    9|          0|
+    |ap_return_143_int_reg  |   9|   0|    9|          0|
+    |ap_return_144_int_reg  |   9|   0|    9|          0|
+    |ap_return_145_int_reg  |   9|   0|    9|          0|
+    |ap_return_146_int_reg  |   9|   0|    9|          0|
+    |ap_return_147_int_reg  |   9|   0|    9|          0|
+    |ap_return_148_int_reg  |   9|   0|    9|          0|
+    |ap_return_149_int_reg  |   9|   0|    9|          0|
+    |ap_return_14_int_reg   |   9|   0|    9|          0|
+    |ap_return_150_int_reg  |   9|   0|    9|          0|
+    |ap_return_151_int_reg  |   9|   0|    9|          0|
+    |ap_return_152_int_reg  |   9|   0|    9|          0|
+    |ap_return_153_int_reg  |   9|   0|    9|          0|
+    |ap_return_154_int_reg  |   9|   0|    9|          0|
+    |ap_return_155_int_reg  |   9|   0|    9|          0|
+    |ap_return_156_int_reg  |   9|   0|    9|          0|
+    |ap_return_157_int_reg  |   9|   0|    9|          0|
+    |ap_return_158_int_reg  |   9|   0|    9|          0|
+    |ap_return_159_int_reg  |   9|   0|    9|          0|
+    |ap_return_15_int_reg   |   9|   0|    9|          0|
+    |ap_return_160_int_reg  |   9|   0|    9|          0|
+    |ap_return_161_int_reg  |   9|   0|    9|          0|
+    |ap_return_162_int_reg  |   9|   0|    9|          0|
+    |ap_return_163_int_reg  |   9|   0|    9|          0|
+    |ap_return_164_int_reg  |   9|   0|    9|          0|
+    |ap_return_165_int_reg  |   9|   0|    9|          0|
+    |ap_return_166_int_reg  |   9|   0|    9|          0|
+    |ap_return_167_int_reg  |   9|   0|    9|          0|
+    |ap_return_168_int_reg  |   9|   0|    9|          0|
+    |ap_return_169_int_reg  |   9|   0|    9|          0|
+    |ap_return_16_int_reg   |   9|   0|    9|          0|
+    |ap_return_170_int_reg  |   9|   0|    9|          0|
+    |ap_return_171_int_reg  |   9|   0|    9|          0|
+    |ap_return_172_int_reg  |   9|   0|    9|          0|
+    |ap_return_173_int_reg  |   9|   0|    9|          0|
+    |ap_return_174_int_reg  |   9|   0|    9|          0|
+    |ap_return_175_int_reg  |   9|   0|    9|          0|
+    |ap_return_176_int_reg  |   9|   0|    9|          0|
+    |ap_return_177_int_reg  |   9|   0|    9|          0|
+    |ap_return_178_int_reg  |   9|   0|    9|          0|
+    |ap_return_179_int_reg  |   9|   0|    9|          0|
+    |ap_return_17_int_reg   |   9|   0|    9|          0|
+    |ap_return_180_int_reg  |   9|   0|    9|          0|
+    |ap_return_181_int_reg  |   9|   0|    9|          0|
+    |ap_return_182_int_reg  |   9|   0|    9|          0|
+    |ap_return_183_int_reg  |   9|   0|    9|          0|
+    |ap_return_184_int_reg  |   9|   0|    9|          0|
+    |ap_return_185_int_reg  |   9|   0|    9|          0|
+    |ap_return_186_int_reg  |   9|   0|    9|          0|
+    |ap_return_187_int_reg  |   9|   0|    9|          0|
+    |ap_return_188_int_reg  |   9|   0|    9|          0|
+    |ap_return_189_int_reg  |   9|   0|    9|          0|
+    |ap_return_18_int_reg   |   9|   0|    9|          0|
+    |ap_return_190_int_reg  |   9|   0|    9|          0|
+    |ap_return_191_int_reg  |   9|   0|    9|          0|
+    |ap_return_192_int_reg  |   9|   0|    9|          0|
+    |ap_return_193_int_reg  |   9|   0|    9|          0|
+    |ap_return_194_int_reg  |   9|   0|    9|          0|
+    |ap_return_195_int_reg  |   9|   0|    9|          0|
+    |ap_return_196_int_reg  |   9|   0|    9|          0|
+    |ap_return_197_int_reg  |   9|   0|    9|          0|
+    |ap_return_198_int_reg  |   9|   0|    9|          0|
+    |ap_return_199_int_reg  |   9|   0|    9|          0|
+    |ap_return_19_int_reg   |   9|   0|    9|          0|
+    |ap_return_1_int_reg    |   9|   0|    9|          0|
+    |ap_return_200_int_reg  |   9|   0|    9|          0|
+    |ap_return_201_int_reg  |   9|   0|    9|          0|
+    |ap_return_202_int_reg  |   9|   0|    9|          0|
+    |ap_return_203_int_reg  |   9|   0|    9|          0|
+    |ap_return_204_int_reg  |   9|   0|    9|          0|
+    |ap_return_205_int_reg  |   9|   0|    9|          0|
+    |ap_return_206_int_reg  |   9|   0|    9|          0|
+    |ap_return_207_int_reg  |   9|   0|    9|          0|
+    |ap_return_208_int_reg  |   9|   0|    9|          0|
+    |ap_return_209_int_reg  |   9|   0|    9|          0|
+    |ap_return_20_int_reg   |   9|   0|    9|          0|
+    |ap_return_210_int_reg  |   9|   0|    9|          0|
+    |ap_return_211_int_reg  |   9|   0|    9|          0|
+    |ap_return_212_int_reg  |   9|   0|    9|          0|
+    |ap_return_213_int_reg  |   9|   0|    9|          0|
+    |ap_return_214_int_reg  |   9|   0|    9|          0|
+    |ap_return_215_int_reg  |   9|   0|    9|          0|
+    |ap_return_216_int_reg  |   9|   0|    9|          0|
+    |ap_return_217_int_reg  |   9|   0|    9|          0|
+    |ap_return_218_int_reg  |   9|   0|    9|          0|
+    |ap_return_219_int_reg  |   9|   0|    9|          0|
+    |ap_return_21_int_reg   |   9|   0|    9|          0|
+    |ap_return_220_int_reg  |   9|   0|    9|          0|
+    |ap_return_221_int_reg  |   9|   0|    9|          0|
+    |ap_return_222_int_reg  |   9|   0|    9|          0|
+    |ap_return_223_int_reg  |   9|   0|    9|          0|
+    |ap_return_224_int_reg  |   9|   0|    9|          0|
+    |ap_return_225_int_reg  |   9|   0|    9|          0|
+    |ap_return_226_int_reg  |   9|   0|    9|          0|
+    |ap_return_227_int_reg  |   9|   0|    9|          0|
+    |ap_return_228_int_reg  |   9|   0|    9|          0|
+    |ap_return_229_int_reg  |   9|   0|    9|          0|
+    |ap_return_22_int_reg   |   9|   0|    9|          0|
+    |ap_return_230_int_reg  |   9|   0|    9|          0|
+    |ap_return_231_int_reg  |   9|   0|    9|          0|
+    |ap_return_232_int_reg  |   9|   0|    9|          0|
+    |ap_return_233_int_reg  |   9|   0|    9|          0|
+    |ap_return_234_int_reg  |   9|   0|    9|          0|
+    |ap_return_235_int_reg  |   9|   0|    9|          0|
+    |ap_return_236_int_reg  |   9|   0|    9|          0|
+    |ap_return_237_int_reg  |   9|   0|    9|          0|
+    |ap_return_238_int_reg  |   9|   0|    9|          0|
+    |ap_return_239_int_reg  |   9|   0|    9|          0|
+    |ap_return_23_int_reg   |   9|   0|    9|          0|
+    |ap_return_240_int_reg  |   9|   0|    9|          0|
+    |ap_return_241_int_reg  |   9|   0|    9|          0|
+    |ap_return_242_int_reg  |   9|   0|    9|          0|
+    |ap_return_243_int_reg  |   9|   0|    9|          0|
+    |ap_return_244_int_reg  |   9|   0|    9|          0|
+    |ap_return_245_int_reg  |   9|   0|    9|          0|
+    |ap_return_246_int_reg  |   9|   0|    9|          0|
+    |ap_return_247_int_reg  |   9|   0|    9|          0|
+    |ap_return_248_int_reg  |   9|   0|    9|          0|
+    |ap_return_249_int_reg  |   9|   0|    9|          0|
+    |ap_return_24_int_reg   |   9|   0|    9|          0|
+    |ap_return_250_int_reg  |   9|   0|    9|          0|
+    |ap_return_251_int_reg  |   9|   0|    9|          0|
+    |ap_return_252_int_reg  |   9|   0|    9|          0|
+    |ap_return_253_int_reg  |   9|   0|    9|          0|
+    |ap_return_254_int_reg  |   9|   0|    9|          0|
+    |ap_return_255_int_reg  |   9|   0|    9|          0|
+    |ap_return_25_int_reg   |   9|   0|    9|          0|
+    |ap_return_26_int_reg   |   9|   0|    9|          0|
+    |ap_return_27_int_reg   |   9|   0|    9|          0|
+    |ap_return_28_int_reg   |   9|   0|    9|          0|
+    |ap_return_29_int_reg   |   9|   0|    9|          0|
+    |ap_return_2_int_reg    |   9|   0|    9|          0|
+    |ap_return_30_int_reg   |   9|   0|    9|          0|
+    |ap_return_31_int_reg   |   9|   0|    9|          0|
+    |ap_return_32_int_reg   |   9|   0|    9|          0|
+    |ap_return_33_int_reg   |   9|   0|    9|          0|
+    |ap_return_34_int_reg   |   9|   0|    9|          0|
+    |ap_return_35_int_reg   |   9|   0|    9|          0|
+    |ap_return_36_int_reg   |   9|   0|    9|          0|
+    |ap_return_37_int_reg   |   9|   0|    9|          0|
+    |ap_return_38_int_reg   |   9|   0|    9|          0|
+    |ap_return_39_int_reg   |   9|   0|    9|          0|
+    |ap_return_3_int_reg    |   9|   0|    9|          0|
+    |ap_return_40_int_reg   |   9|   0|    9|          0|
+    |ap_return_41_int_reg   |   9|   0|    9|          0|
+    |ap_return_42_int_reg   |   9|   0|    9|          0|
+    |ap_return_43_int_reg   |   9|   0|    9|          0|
+    |ap_return_44_int_reg   |   9|   0|    9|          0|
+    |ap_return_45_int_reg   |   9|   0|    9|          0|
+    |ap_return_46_int_reg   |   9|   0|    9|          0|
+    |ap_return_47_int_reg   |   9|   0|    9|          0|
+    |ap_return_48_int_reg   |   9|   0|    9|          0|
+    |ap_return_49_int_reg   |   9|   0|    9|          0|
+    |ap_return_4_int_reg    |   9|   0|    9|          0|
+    |ap_return_50_int_reg   |   9|   0|    9|          0|
+    |ap_return_51_int_reg   |   9|   0|    9|          0|
+    |ap_return_52_int_reg   |   9|   0|    9|          0|
+    |ap_return_53_int_reg   |   9|   0|    9|          0|
+    |ap_return_54_int_reg   |   9|   0|    9|          0|
+    |ap_return_55_int_reg   |   9|   0|    9|          0|
+    |ap_return_56_int_reg   |   9|   0|    9|          0|
+    |ap_return_57_int_reg   |   9|   0|    9|          0|
+    |ap_return_58_int_reg   |   9|   0|    9|          0|
+    |ap_return_59_int_reg   |   9|   0|    9|          0|
+    |ap_return_5_int_reg    |   9|   0|    9|          0|
+    |ap_return_60_int_reg   |   9|   0|    9|          0|
+    |ap_return_61_int_reg   |   9|   0|    9|          0|
+    |ap_return_62_int_reg   |   9|   0|    9|          0|
+    |ap_return_63_int_reg   |   9|   0|    9|          0|
+    |ap_return_64_int_reg   |   9|   0|    9|          0|
+    |ap_return_65_int_reg   |   9|   0|    9|          0|
+    |ap_return_66_int_reg   |   9|   0|    9|          0|
+    |ap_return_67_int_reg   |   9|   0|    9|          0|
+    |ap_return_68_int_reg   |   9|   0|    9|          0|
+    |ap_return_69_int_reg   |   9|   0|    9|          0|
+    |ap_return_6_int_reg    |   9|   0|    9|          0|
+    |ap_return_70_int_reg   |   9|   0|    9|          0|
+    |ap_return_71_int_reg   |   9|   0|    9|          0|
+    |ap_return_72_int_reg   |   9|   0|    9|          0|
+    |ap_return_73_int_reg   |   9|   0|    9|          0|
+    |ap_return_74_int_reg   |   9|   0|    9|          0|
+    |ap_return_75_int_reg   |   9|   0|    9|          0|
+    |ap_return_76_int_reg   |   9|   0|    9|          0|
+    |ap_return_77_int_reg   |   9|   0|    9|          0|
+    |ap_return_78_int_reg   |   9|   0|    9|          0|
+    |ap_return_79_int_reg   |   9|   0|    9|          0|
+    |ap_return_7_int_reg    |   9|   0|    9|          0|
+    |ap_return_80_int_reg   |   9|   0|    9|          0|
+    |ap_return_81_int_reg   |   9|   0|    9|          0|
+    |ap_return_82_int_reg   |   9|   0|    9|          0|
+    |ap_return_83_int_reg   |   9|   0|    9|          0|
+    |ap_return_84_int_reg   |   9|   0|    9|          0|
+    |ap_return_85_int_reg   |   9|   0|    9|          0|
+    |ap_return_86_int_reg   |   9|   0|    9|          0|
+    |ap_return_87_int_reg   |   9|   0|    9|          0|
+    |ap_return_88_int_reg   |   9|   0|    9|          0|
+    |ap_return_89_int_reg   |   9|   0|    9|          0|
+    |ap_return_8_int_reg    |   9|   0|    9|          0|
+    |ap_return_90_int_reg   |   9|   0|    9|          0|
+    |ap_return_91_int_reg   |   9|   0|    9|          0|
+    |ap_return_92_int_reg   |   9|   0|    9|          0|
+    |ap_return_93_int_reg   |   9|   0|    9|          0|
+    |ap_return_94_int_reg   |   9|   0|    9|          0|
+    |ap_return_95_int_reg   |   9|   0|    9|          0|
+    |ap_return_96_int_reg   |   9|   0|    9|          0|
+    |ap_return_97_int_reg   |   9|   0|    9|          0|
+    |ap_return_98_int_reg   |   9|   0|    9|          0|
+    |ap_return_99_int_reg   |   9|   0|    9|          0|
+    |ap_return_9_int_reg    |   9|   0|    9|          0|
+    +-----------------------+----+----+-----+-----------+
+    |Total                  |2305|   0| 2305|          0|
+    +-----------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++---------------+-----+-----+------------+-------------------------------------------------------------------------+--------------+
+|   RTL Ports   | Dir | Bits|  Protocol  |                              Source Object                              |    C Type    |
++---------------+-----+-----+------------+-------------------------------------------------------------------------+--------------+
+|ap_clk         |   in|    1|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_rst         |   in|    1|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_0    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_1    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_2    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_3    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_4    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_5    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_6    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_7    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_8    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_9    |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_10   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_11   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_12   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_13   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_14   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_15   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_16   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_17   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_18   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_19   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_20   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_21   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_22   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_23   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_24   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_25   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_26   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_27   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_28   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_29   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_30   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_31   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_32   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_33   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_34   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_35   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_36   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_37   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_38   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_39   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_40   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_41   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_42   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_43   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_44   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_45   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_46   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_47   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_48   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_49   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_50   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_51   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_52   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_53   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_54   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_55   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_56   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_57   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_58   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_59   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_60   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_61   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_62   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_63   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_64   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_65   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_66   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_67   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_68   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_69   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_70   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_71   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_72   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_73   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_74   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_75   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_76   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_77   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_78   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_79   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_80   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_81   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_82   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_83   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_84   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_85   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_86   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_87   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_88   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_89   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_90   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_91   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_92   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_93   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_94   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_95   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_96   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_97   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_98   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_99   |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_100  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_101  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_102  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_103  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_104  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_105  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_106  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_107  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_108  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_109  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_110  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_111  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_112  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_113  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_114  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_115  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_116  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_117  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_118  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_119  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_120  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_121  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_122  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_123  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_124  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_125  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_126  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_127  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_128  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_129  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_130  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_131  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_132  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_133  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_134  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_135  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_136  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_137  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_138  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_139  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_140  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_141  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_142  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_143  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_144  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_145  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_146  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_147  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_148  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_149  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_150  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_151  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_152  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_153  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_154  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_155  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_156  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_157  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_158  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_159  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_160  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_161  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_162  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_163  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_164  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_165  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_166  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_167  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_168  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_169  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_170  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_171  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_172  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_173  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_174  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_175  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_176  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_177  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_178  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_179  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_180  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_181  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_182  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_183  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_184  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_185  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_186  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_187  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_188  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_189  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_190  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_191  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_192  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_193  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_194  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_195  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_196  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_197  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_198  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_199  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_200  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_201  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_202  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_203  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_204  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_205  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_206  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_207  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_208  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_209  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_210  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_211  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_212  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_213  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_214  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_215  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_216  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_217  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_218  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_219  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_220  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_221  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_222  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_223  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_224  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_225  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_226  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_227  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_228  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_229  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_230  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_231  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_232  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_233  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_234  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_235  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_236  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_237  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_238  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_239  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_240  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_241  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_242  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_243  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_244  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_245  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_246  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_247  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_248  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_249  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_250  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_251  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_252  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_253  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_254  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_return_255  |  out|    9|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|ap_ce          |   in|    1|  ap_ctrl_hs|  einsum_dense<ap_fixed<4, 3, 4, 0, 0>, ap_fixed<9, 6, 4, 0, 0>, config3>|  return value|
+|data_val1      |   in|   96|     ap_none|                                                                data_val1|        scalar|
++---------------+-----+-----+------------+-------------------------------------------------------------------------+--------------+
+

@@ -1,0 +1,64 @@
+{
+ "written": "2026-08-24T17:27:46",
+ "config": "r14-l1x3-n8-w8a8",
+ "config_hash": "9cc6e336",
+ "variant": "w8a8",
+ "seed": 3,
+ "tag": "r14n8",
+ "rf": 1,
+ "strategy": "Latency",
+ "backend": "Vitis",
+ "macos_local_csim": true,
+ "csim": {
+  "n": 128,
+  "max_abs_diff": 0.173828125,
+  "mean_abs_diff": 0.0233154296875,
+  "bit_exact": false,
+  "corr": 0.9998325475600043
+ },
+ "gate2_pass": true,
+ "gate2_threshold": 0.997,
+ "csim_extended": {
+  "n": 4096,
+  "corr_logits": 0.9998145932544874,
+  "corr_scores": 0.9996794812468359,
+  "max_abs_diff_logits": 0.412109375,
+  "mean_abs_diff_logits": 0.024849796667695045,
+  "argmax_agreement": 0.98779296875,
+  "paired_macro_ovr_auc": {
+   "export_keras": 0.883582605527671,
+   "hls_csim": 0.8837579603037529,
+   "delta_csim_minus_export": 0.00017535477608188188,
+   "per_class_export": [
+    0.8404034595788938,
+    0.8721203926282051,
+    0.9010148799216412,
+    0.8847398397071817,
+    0.9196344558024336
+   ],
+   "per_class_csim": [
+    0.8404710046139271,
+    0.8721605303780164,
+    0.9011949097333576,
+    0.8852135396945602,
+    0.919749817098903
+   ],
+   "note": "paired, same 4096 data/val jets \u2014 quantifies the not-bit-exact residue in AUC terms; NOT a headline AUC (wrong split/size)"
+  }
+ },
+ "bit_exactness_localization": {
+  "summary": "NOT bit-exact, unlike the binary comparator \u2014 the binary path's bit-exactness is a property of \u00b11 arithmetic, not of the pipeline. The residue is per-site 1-LSB quantization semantics on grids the binary export never carries into hls4ml; no saturation wraps, no lost grids.",
+  "method": "per-layer hls4ml trace vs keras export, n=128 (2026-08-24)",
+  "first_surviving_divergences": {
+   "bit_block_0_attn_softmax": "max|\u0394| 0.000976562 = exactly 2^-10, one LSB of the ufixed<10,1> attention grid; the QAT softmax exp-input grid is SIGNED (_static_act(10,6)) \u2014 a shape the binary export's unsigned build.py grids never ship",
+   "bit_block_0_attn_Wo": "max|\u0394| 15*2^-16 \u2248 2.3e-4 onto the residual bus"
+  },
+  "propagation": "upstream producer-output roundings wash out at the stream re-quantizers (scores maxD=0); the surviving LSBs accumulate along the residual stream to max|\u0394| 0.174 at logits of scale O(10)",
+  "snap_experiment": "2^-16 bias snap changed GATE2 by <1e-5 in corr and 0 in max|\u0394| (0.173828125 both) while dropping GATE1 from 1.000000 to 0.999802 \u2014 biases are NOT the residue source; raw biases ship"
+ },
+ "relu_sat_fix": "n=0 patched \u2014 n=0 is CORRECT here, not a silent failure: BitExact fused the downstream trained SAT grids into the relu output types (ufixed<7,i,RND_CONV,SAT>), so nothing needed repair",
+ "relu_parse_fix": false,
+ "widen_accum": false,
+ "widen_accum_note": "deliberately OFF: accumulator widening is the binary DSP-0 trick; this baseline exists to measure the real 8b*8b DSP mapping",
+ "bias_typing_note": "QAT biases are dummy-quantized fp32 (qat._dummy) and ship raw (snap OFF): hls4ml stores them on model_default fixed<24,12> (qinterval warns 'not a multiple of delta' \u2014 measured harmless: the snap experiment above shows the bias representation does not move GATE2)"
+}

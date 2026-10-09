@@ -1,0 +1,5947 @@
+From aaaa1d809759be74cf9a88e8607198c0be3ed779 Mon Sep 17 00:00:00 2001
+From: Kai <kayamaguchi@ucsd.edu>
+Date: Sun, 27 Sep 2026 08:50:41 -0700
+Subject: [PATCH 21/22] D21 (arbiter v3 fix 2, 3; PENDING STUDY): regenerated
+ chang0926 configs. A/B/D/R on E (no PE, pos_enc_none_consume_rng), F = E +
+ learned PE, C = A07 at 5M, A07-350 descriptive (8 seeds), 56 production;
+ pilot-only C-PRIME (A07, current quantizer, 5M) and E1 (E, 1 head, 350k).
+ Every config: D20 full-split trace, stored reload check, non-degeneracy block
+ with the arm's traced 0-bit floor (static_floors.json via trace_floors.py).
+ Seed-block packs {A,B,C,D,F,A07-350} x 8 + R on 2; pilot pack A-s1, A-s2,
+ D-s1, A07-350-s1, C-PRIME-s1, E1-s1. nondegenerate_threshold.py for PREFLIGHT
+
+---
+ campaigns/chang0926/cache_configs/n64.json    |  15 +-
+ campaigns/chang0926/canary_packs.json         |   2 +-
+ campaigns/chang0926/config_diff_a_s1.json     |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s1.json |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s2.json |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s3.json |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s4.json |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s5.json |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s6.json |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s7.json |  21 +-
+ .../chang0926/configs/chang0926-a-n64-s8.json |  21 +-
+ .../configs/chang0926-a07-350-n64-s1.json     | 138 ++++
+ ...-s2.json => chang0926-a07-350-n64-s2.json} |  26 +-
+ ...-s3.json => chang0926-a07-350-n64-s3.json} |  26 +-
+ ...-s4.json => chang0926-a07-350-n64-s4.json} |  26 +-
+ ...-s5.json => chang0926-a07-350-n64-s5.json} |  26 +-
+ ...-s6.json => chang0926-a07-350-n64-s6.json} |  26 +-
+ ...-s7.json => chang0926-a07-350-n64-s7.json} |  26 +-
+ ...-s8.json => chang0926-a07-350-n64-s8.json} |  26 +-
+ .../chang0926/configs/chang0926-b-n64-s1.json |  23 +-
+ .../chang0926/configs/chang0926-b-n64-s2.json |  23 +-
+ .../chang0926/configs/chang0926-b-n64-s3.json |  23 +-
+ .../chang0926/configs/chang0926-b-n64-s4.json |  23 +-
+ .../chang0926/configs/chang0926-b-n64-s5.json |  23 +-
+ .../chang0926/configs/chang0926-b-n64-s6.json |  23 +-
+ .../chang0926/configs/chang0926-b-n64-s7.json |  23 +-
+ .../chang0926/configs/chang0926-b-n64-s8.json |  23 +-
+ .../chang0926/configs/chang0926-c-n64-s1.json |  14 +-
+ .../chang0926/configs/chang0926-c-n64-s2.json |  14 +-
+ .../chang0926/configs/chang0926-c-n64-s3.json |  14 +-
+ .../chang0926/configs/chang0926-c-n64-s4.json |  14 +-
+ .../chang0926/configs/chang0926-c-n64-s5.json |  14 +-
+ .../chang0926/configs/chang0926-c-n64-s6.json |  14 +-
+ .../chang0926/configs/chang0926-c-n64-s7.json |  14 +-
+ .../chang0926/configs/chang0926-c-n64-s8.json |  14 +-
+ .../configs/chang0926-cprime-n64-s1.json      | 136 ++++
+ .../chang0926/configs/chang0926-d-n64-s1.json |  21 +-
+ .../chang0926/configs/chang0926-d-n64-s2.json |  21 +-
+ .../chang0926/configs/chang0926-d-n64-s3.json |  21 +-
+ .../chang0926/configs/chang0926-d-n64-s4.json |  21 +-
+ .../chang0926/configs/chang0926-d-n64-s5.json |  21 +-
+ .../chang0926/configs/chang0926-d-n64-s6.json |  21 +-
+ .../chang0926/configs/chang0926-d-n64-s7.json |  21 +-
+ .../chang0926/configs/chang0926-d-n64-s8.json |  21 +-
+ ...e-n64-s1.json => chang0926-e1-n64-s1.json} |  23 +-
+ .../chang0926/configs/chang0926-f-n64-s1.json |  21 +-
+ .../chang0926/configs/chang0926-f-n64-s2.json |  21 +-
+ .../chang0926/configs/chang0926-f-n64-s3.json |  21 +-
+ .../chang0926/configs/chang0926-f-n64-s4.json |  21 +-
+ .../chang0926/configs/chang0926-f-n64-s5.json |  21 +-
+ .../chang0926/configs/chang0926-f-n64-s6.json |  21 +-
+ .../chang0926/configs/chang0926-f-n64-s7.json |  21 +-
+ .../chang0926/configs/chang0926-f-n64-s8.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s1.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s2.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s3.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s4.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s5.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s6.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s7.json |  21 +-
+ .../chang0926/configs/chang0926-r-n64-s8.json |  21 +-
+ campaigns/chang0926/generate.py               | 142 +++-
+ campaigns/chang0926/index.json                | 759 ++++++++++++++----
+ .../chang0926/nondegenerate_threshold.py      |  45 ++
+ campaigns/chang0926/packs.json                |   2 +-
+ campaigns/chang0926/pilot_packs.json          |   1 +
+ campaigns/chang0926/static_floors.json        | 252 ++++++
+ campaigns/chang0926/trace_floors.py           |  52 ++
+ 68 files changed, 2201 insertions(+), 537 deletions(-)
+ create mode 100644 campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s2.json => chang0926-a07-350-n64-s2.json} (83%)
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s3.json => chang0926-a07-350-n64-s3.json} (83%)
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s4.json => chang0926-a07-350-n64-s4.json} (83%)
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s5.json => chang0926-a07-350-n64-s5.json} (83%)
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s6.json => chang0926-a07-350-n64-s6.json} (83%)
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s7.json => chang0926-a07-350-n64-s7.json} (83%)
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s8.json => chang0926-a07-350-n64-s8.json} (83%)
+ create mode 100644 campaigns/chang0926/configs/chang0926-cprime-n64-s1.json
+ rename campaigns/chang0926/configs/{chang0926-e-n64-s1.json => chang0926-e1-n64-s1.json} (85%)
+ create mode 100644 campaigns/chang0926/nondegenerate_threshold.py
+ create mode 100644 campaigns/chang0926/pilot_packs.json
+ create mode 100644 campaigns/chang0926/static_floors.json
+ create mode 100644 campaigns/chang0926/trace_floors.py
+
+diff --git a/campaigns/chang0926/cache_configs/n64.json b/campaigns/chang0926/cache_configs/n64.json
+index 95c6dfb..89881bc 100644
+--- a/campaigns/chang0926/cache_configs/n64.json
++++ b/campaigns/chang0926/cache_configs/n64.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -108,7 +112,7 @@
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +126,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 1,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/canary_packs.json b/campaigns/chang0926/canary_packs.json
+index 89c12b7..3d65fda 100644
+--- a/campaigns/chang0926/canary_packs.json
++++ b/campaigns/chang0926/canary_packs.json
+@@ -1 +1 @@
+-[[0, 1, 24, 25, 32, 8]]
++[[0, 1, 24, 48, 56, 57]]
+diff --git a/campaigns/chang0926/config_diff_a_s1.json b/campaigns/chang0926/config_diff_a_s1.json
+index 0ef5f51..c72980a 100644
+--- a/campaigns/chang0926/config_diff_a_s1.json
++++ b/campaigns/chang0926/config_diff_a_s1.json
+@@ -1,8 +1,20 @@
+ {
+   "changed": {
++    "arch.d_model": [
++      32,
++      24
++    ],
++    "arch.n_heads": [
++      4,
++      2
++    ],
++    "arch.pos_enc": [
++      "learned",
++      "none"
++    ],
+     "engram_study.question": [
+       "Matched architecture control",
+-      "chang0926 arm A: primary: Sun et al. recipe at 350k"
++      "chang0926 arm A: primary: Sun et al. recipe on E at 350k"
+     ],
+     "experiment.arm": [
+       "const0922-a07-n64-s1-fast50-fp32",
+@@ -69,8 +81,10 @@
+     "train.weight_decay": 0.01
+   },
+   "added": {
++    "arch.pos_enc_none_consume_rng": true,
+     "arch.pt_gate_gev": 2.0,
+     "campaign.arm": "A",
++    "campaign.production": true,
+     "campaign.seed": 1,
+     "campaign.source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "campaign.source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+@@ -79,9 +93,14 @@
+     "campaign.tf32_enabled": false,
+     "experiment.cost_before_auc": false,
+     "experiment.keep_auc_selected_feasible": true,
++    "experiment.nondegenerate.se_multiple": 5,
++    "experiment.nondegenerate.zero_floor_ebops": 171526,
+     "experiment.snapshot_every_epochs": 500,
+     "quant.act_overflow": "WRAP",
+     "quant.softmax_quant": "chang",
++    "train.ebops_reload_check": "stored",
++    "train.ebops_trace_batch": 2048,
++    "train.ebops_trace_sample": "train_full",
+     "train.lr_alpha": 1e-06,
+     "train.lr_alpha_epochs": 10,
+     "train.lr_cycle_epochs": 500,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s1.json b/campaigns/chang0926/configs/chang0926-a-n64-s1.json
+index aa9e38b..d2c8387 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s1.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 1,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s2.json b/campaigns/chang0926/configs/chang0926-a-n64-s2.json
+index a631f89..5ac2310 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s2.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 2,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s3.json b/campaigns/chang0926/configs/chang0926-a-n64-s3.json
+index 0a41b15..4bbef6a 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s3.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 3,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s4.json b/campaigns/chang0926/configs/chang0926-a-n64-s4.json
+index dc4c284..08264ee 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s4.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 4,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s5.json b/campaigns/chang0926/configs/chang0926-a-n64-s5.json
+index c5bf179..a6c87a8 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s5.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 5,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s6.json b/campaigns/chang0926/configs/chang0926-a-n64-s6.json
+index 7a3167c..9de3165 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s6.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 6,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s7.json b/campaigns/chang0926/configs/chang0926-a-n64-s7.json
+index 96156f1..18f0da2 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s7.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 7,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s8.json b/campaigns/chang0926/configs/chang0926-a-n64-s8.json
+index d2951f0..208abd7 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s8.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A: primary: Sun et al. recipe at 350k",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "A",
+     "seed": 8,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
+new file mode 100644
+index 0000000..e80fc00
+--- /dev/null
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
+@@ -0,0 +1,138 @@
++{
++  "name": "chang0926-a07-350-n64-s1",
++  "era": 2,
++  "arch": {
++    "n_part": 64,
++    "n_feat": 3,
++    "features": [
++      "pt",
++      "etarel",
++      "phirel"
++    ],
++    "d_model": 32,
++    "n_heads": 4,
++    "n_layers": 1,
++    "ffn_dim": 32,
++    "n_classes": 5,
++    "pool": "gap",
++    "ffn_act": "relu",
++    "norm": "none",
++    "norm_placement": "per_linear",
++    "pos_enc": "learned",
++    "softmax_free": false,
++    "input_std": true,
++    "pt_gate_gev": 2.0
++  },
++  "quant": {
++    "weight": "binary_absmean",
++    "act_bits": 8,
++    "act_policy": "learned_per_tensor_width",
++    "calib_n": 8192,
++    "act_calib": "free",
++    "act_bw_l1": 1e-08,
++    "beta0": 1e-07,
++    "act_granularity": "channel",
++    "softmax_out_bits": 10,
++    "softmax_out_i": 1,
++    "act_overflow": "WRAP",
++    "softmax_quant": "chang"
++  },
++  "train": {
++    "data": "data/train",
++    "validation_split": 0.1,
++    "epochs": 7000,
++    "batch": 2790,
++    "lr": 0.003,
++    "clip_mode": "value",
++    "clipnorm": 1.0,
++    "es_patience": 0,
++    "wandb_project": "BNJetTag-ChangRecipe",
++    "ebops": {
++      "enable": true,
++      "monitor_widths": true,
++      "controller": "pid",
++      "beta_schedule": null,
++      "front_dir": "front",
++      "metrics": [
++        "val_macro_auc",
++        "ebops"
++      ],
++      "sides": [
++        1,
++        -1
++      ],
++      "pid": {
++        "init_beta": 1e-07,
++        "p": 1.0,
++        "i": 0.05,
++        "d": 0.0,
++        "warmup": 1,
++        "log": true,
++        "min_beta": 1e-10,
++        "max_beta": 0.001,
++        "damp_beta_on_target": 0.0,
++        "target_ebops": 350000
++      },
++      "selection": "max_accuracy",
++      "stop_on_target": false
++    },
++    "jit_compile": false,
++    "split_seed": 1,
++    "order_seed": 2026092601,
++    "val_batch": 1024,
++    "lr_schedule": "chang_cosine_restarts",
++    "lr_cycle_epochs": 500,
++    "lr_t_mul": 1.0,
++    "lr_m_mul": 1.0,
++    "lr_alpha": 1e-06,
++    "lr_alpha_epochs": 10,
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
++  },
++  "hls": {
++    "backend": "Vitis",
++    "part": "xcvu13p-flga2577-2-e",
++    "clock_ns": 2.5,
++    "rf": 1,
++    "io": "io_parallel"
++  },
++  "experiment": {
++    "arm": "chang0926-a07-350-n64-s1",
++    "group": "chang-n64-20260926",
++    "seed": 1,
++    "selection_metric": "val_categorical_accuracy",
++    "cost_before_auc": false,
++    "keep_auc_selected_feasible": true,
++    "checkpoint_every_epochs": 25,
++    "snapshot_every_epochs": 500,
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
++  },
++  "engram_study": {
++    "module": null,
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
++    "memory_lr_multiplier": 5.0,
++    "memory_weight_decay": 0.0,
++    "wandb_entity": "kayamaguchi-uc-san-diego",
++    "wandb_project_access": "PRIVATE",
++    "max_logical_table_bytes": 65536,
++    "max_replicated_table_bytes": 2097152,
++    "cost_convention": "native_hgq2_plus_custom_estimate",
++    "status": "experimental; training ready, HLS unsupported"
++  },
++  "campaign": {
++    "study": "campaigns/2026-09-26-training-batch",
++    "arm": "A07-350",
++    "seed": 1,
++    "production": true,
++    "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
++    "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
++    "test_set_used_for_selection": false,
++    "tf32_enabled": false
++  }
++}
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s2.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
+similarity index 83%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s2.json
+rename to campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
+index b38e405..f5c4b51 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s2",
++  "name": "chang0926-a07-350-n64-s2",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 24,
+-    "n_heads": 2,
++    "d_model": 32,
++    "n_heads": 4,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,7 +18,7 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+     "pt_gate_gev": 2.0
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +99,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s2",
++    "arm": "chang0926-a07-350-n64-s2",
+     "group": "chang-n64-20260926",
+     "seed": 2,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +127,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "A07-350",
+     "seed": 2,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s3.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
+similarity index 83%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s3.json
+rename to campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
+index c350847..fd258ee 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s3",
++  "name": "chang0926-a07-350-n64-s3",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 24,
+-    "n_heads": 2,
++    "d_model": 32,
++    "n_heads": 4,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,7 +18,7 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+     "pt_gate_gev": 2.0
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +99,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s3",
++    "arm": "chang0926-a07-350-n64-s3",
+     "group": "chang-n64-20260926",
+     "seed": 3,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +127,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "A07-350",
+     "seed": 3,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s4.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
+similarity index 83%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s4.json
+rename to campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
+index 2753645..e71785e 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s4",
++  "name": "chang0926-a07-350-n64-s4",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 24,
+-    "n_heads": 2,
++    "d_model": 32,
++    "n_heads": 4,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,7 +18,7 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+     "pt_gate_gev": 2.0
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +99,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s4",
++    "arm": "chang0926-a07-350-n64-s4",
+     "group": "chang-n64-20260926",
+     "seed": 4,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +127,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "A07-350",
+     "seed": 4,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s5.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
+similarity index 83%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s5.json
+rename to campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
+index f40e4ab..57459c2 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s5",
++  "name": "chang0926-a07-350-n64-s5",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 24,
+-    "n_heads": 2,
++    "d_model": 32,
++    "n_heads": 4,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,7 +18,7 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+     "pt_gate_gev": 2.0
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +99,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s5",
++    "arm": "chang0926-a07-350-n64-s5",
+     "group": "chang-n64-20260926",
+     "seed": 5,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +127,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "A07-350",
+     "seed": 5,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s6.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
+similarity index 83%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s6.json
+rename to campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
+index fbd98e7..92cacb8 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s6",
++  "name": "chang0926-a07-350-n64-s6",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 24,
+-    "n_heads": 2,
++    "d_model": 32,
++    "n_heads": 4,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,7 +18,7 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+     "pt_gate_gev": 2.0
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +99,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s6",
++    "arm": "chang0926-a07-350-n64-s6",
+     "group": "chang-n64-20260926",
+     "seed": 6,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +127,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "A07-350",
+     "seed": 6,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s7.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
+similarity index 83%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s7.json
+rename to campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
+index 1da7488..31c7f1d 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s7",
++  "name": "chang0926-a07-350-n64-s7",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 24,
+-    "n_heads": 2,
++    "d_model": 32,
++    "n_heads": 4,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,7 +18,7 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+     "pt_gate_gev": 2.0
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +99,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s7",
++    "arm": "chang0926-a07-350-n64-s7",
+     "group": "chang-n64-20260926",
+     "seed": 7,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +127,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "A07-350",
+     "seed": 7,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s8.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
+similarity index 83%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s8.json
+rename to campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
+index c1aca82..0419801 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s8",
++  "name": "chang0926-a07-350-n64-s8",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 24,
+-    "n_heads": 2,
++    "d_model": 32,
++    "n_heads": 4,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,7 +18,7 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+     "pt_gate_gev": 2.0
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +99,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s8",
++    "arm": "chang0926-a07-350-n64-s8",
+     "group": "chang-n64-20260926",
+     "seed": 8,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +127,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "A07-350",
+     "seed": 8,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s1.json b/campaigns/chang0926/configs/chang0926-b-n64-s1.json
+index a1312a4..585bc19 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s1.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 1,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s2.json b/campaigns/chang0926/configs/chang0926-b-n64-s2.json
+index 9e556ce..5567bb2 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s2.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 2,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s3.json b/campaigns/chang0926/configs/chang0926-b-n64-s3.json
+index b960550..50f84e3 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s3.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 3,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s4.json b/campaigns/chang0926/configs/chang0926-b-n64-s4.json
+index 8656e04..b8673cd 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s4.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 4,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s5.json b/campaigns/chang0926/configs/chang0926-b-n64-s5.json
+index 04a2c56..5ce897d 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s5.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 5,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s6.json b/campaigns/chang0926/configs/chang0926-b-n64-s6.json
+index a1fc6ed..af5a9f3 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s6.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 6,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s7.json b/campaigns/chang0926/configs/chang0926-b-n64-s7.json
+index cbccab5..266bad1 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s7.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 7,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s8.json b/campaigns/chang0926/configs/chang0926-b-n64-s8.json
+index ef057c5..d636c1c 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s8.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -71,7 +72,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 175000
++        "target_ebops": 250000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm B: budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); A07 at 175k is STATIC_INFEASIBLE under every quantizer",
++    "question": "chang0926 arm B: budget ladder, lower limit (E at 250k)",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +130,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "B",
+     "seed": 8,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s1.json b/campaigns/chang0926/configs/chang0926-c-n64-s1.json
+index e523306..135896a 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s1.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 1,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s2.json b/campaigns/chang0926/configs/chang0926-c-n64-s2.json
+index 001760b..196207f 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s2.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 2,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s3.json b/campaigns/chang0926/configs/chang0926-c-n64-s3.json
+index 8df964c..d7c4078 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s3.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 3,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s4.json b/campaigns/chang0926/configs/chang0926-c-n64-s4.json
+index 8bcc7bd..9d2f6ac 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s4.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 4,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s5.json b/campaigns/chang0926/configs/chang0926-c-n64-s5.json
+index 50dd5da..de1a254 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s5.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 5,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s6.json b/campaigns/chang0926/configs/chang0926-c-n64-s6.json
+index a3c79e0..fb900ef 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s6.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 6,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s7.json b/campaigns/chang0926/configs/chang0926-c-n64-s7.json
+index 98bb81d..50164b7 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s7.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 7,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s8.json b/campaigns/chang0926/configs/chang0926-c-n64-s8.json
+index 46f1663..30748c2 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s8.json
+@@ -86,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -104,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 343053,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm C: budget ladder, 5M",
++    "question": "chang0926 arm C: budget ladder, A07 at 5M",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -122,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "C",
+     "seed": 8,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-cprime-n64-s1.json b/campaigns/chang0926/configs/chang0926-cprime-n64-s1.json
+new file mode 100644
+index 0000000..e401b76
+--- /dev/null
++++ b/campaigns/chang0926/configs/chang0926-cprime-n64-s1.json
+@@ -0,0 +1,136 @@
++{
++  "name": "chang0926-cprime-n64-s1",
++  "era": 2,
++  "arch": {
++    "n_part": 64,
++    "n_feat": 3,
++    "features": [
++      "pt",
++      "etarel",
++      "phirel"
++    ],
++    "d_model": 32,
++    "n_heads": 4,
++    "n_layers": 1,
++    "ffn_dim": 32,
++    "n_classes": 5,
++    "pool": "gap",
++    "ffn_act": "relu",
++    "norm": "none",
++    "norm_placement": "per_linear",
++    "pos_enc": "learned",
++    "softmax_free": false,
++    "input_std": true,
++    "pt_gate_gev": 2.0
++  },
++  "quant": {
++    "weight": "binary_absmean",
++    "act_bits": 8,
++    "act_policy": "learned_per_tensor_width",
++    "calib_n": 8192,
++    "act_calib": "free",
++    "act_bw_l1": 1e-08,
++    "beta0": 1e-07,
++    "act_granularity": "channel",
++    "softmax_out_bits": 10,
++    "softmax_out_i": 1
++  },
++  "train": {
++    "data": "data/train",
++    "validation_split": 0.1,
++    "epochs": 7000,
++    "batch": 2790,
++    "lr": 0.003,
++    "clip_mode": "value",
++    "clipnorm": 1.0,
++    "es_patience": 0,
++    "wandb_project": "BNJetTag-ChangRecipe",
++    "ebops": {
++      "enable": true,
++      "monitor_widths": true,
++      "controller": "pid",
++      "beta_schedule": null,
++      "front_dir": "front",
++      "metrics": [
++        "val_macro_auc",
++        "ebops"
++      ],
++      "sides": [
++        1,
++        -1
++      ],
++      "pid": {
++        "init_beta": 1e-07,
++        "p": 1.0,
++        "i": 0.05,
++        "d": 0.0,
++        "warmup": 1,
++        "log": true,
++        "min_beta": 1e-10,
++        "max_beta": 0.001,
++        "damp_beta_on_target": 0.0,
++        "target_ebops": 5000000
++      },
++      "selection": "max_accuracy",
++      "stop_on_target": false
++    },
++    "jit_compile": false,
++    "split_seed": 1,
++    "order_seed": 2026092601,
++    "val_batch": 1024,
++    "lr_schedule": "chang_cosine_restarts",
++    "lr_cycle_epochs": 500,
++    "lr_t_mul": 1.0,
++    "lr_m_mul": 1.0,
++    "lr_alpha": 1e-06,
++    "lr_alpha_epochs": 10,
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
++  },
++  "hls": {
++    "backend": "Vitis",
++    "part": "xcvu13p-flga2577-2-e",
++    "clock_ns": 2.5,
++    "rf": 1,
++    "io": "io_parallel"
++  },
++  "experiment": {
++    "arm": "chang0926-cprime-n64-s1",
++    "group": "chang-n64-20260926",
++    "seed": 1,
++    "selection_metric": "val_categorical_accuracy",
++    "cost_before_auc": false,
++    "keep_auc_selected_feasible": true,
++    "checkpoint_every_epochs": 25,
++    "snapshot_every_epochs": 500,
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 4580398,
++      "se_multiple": 5
++    }
++  },
++  "engram_study": {
++    "module": null,
++    "question": "chang0926 arm C-PRIME: pilot only: A07, Chang recipe, current quantizer, 5M",
++    "memory_lr_multiplier": 5.0,
++    "memory_weight_decay": 0.0,
++    "wandb_entity": "kayamaguchi-uc-san-diego",
++    "wandb_project_access": "PRIVATE",
++    "max_logical_table_bytes": 65536,
++    "max_replicated_table_bytes": 2097152,
++    "cost_convention": "native_hgq2_plus_custom_estimate",
++    "status": "experimental; training ready, HLS unsupported"
++  },
++  "campaign": {
++    "study": "campaigns/2026-09-26-training-batch",
++    "arm": "C-PRIME",
++    "seed": 1,
++    "production": false,
++    "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
++    "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
++    "test_set_used_for_selection": false,
++    "tf32_enabled": false
++  }
++}
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s1.json b/campaigns/chang0926/configs/chang0926-d-n64-s1.json
+index 01493e2..b26f9e4 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s1.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 1,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s2.json b/campaigns/chang0926/configs/chang0926-d-n64-s2.json
+index 525f19b..011a338 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s2.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 2,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s3.json b/campaigns/chang0926/configs/chang0926-d-n64-s3.json
+index 8232d29..12d2d4f 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s3.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 3,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s4.json b/campaigns/chang0926/configs/chang0926-d-n64-s4.json
+index 5b7a808..96057e6 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s4.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 4,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s5.json b/campaigns/chang0926/configs/chang0926-d-n64-s5.json
+index 33ac11b..bd57a9b 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s5.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 5,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s6.json b/campaigns/chang0926/configs/chang0926-d-n64-s6.json
+index 6c5e0e5..c0fb2ab 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s6.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 6,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s7.json b/campaigns/chang0926/configs/chang0926-d-n64-s7.json
+index 33783bb..3cd3ab9 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s7.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 7,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s8.json b/campaigns/chang0926/configs/chang0926-d-n64-s8.json
+index a4ae16e..8d019ce 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s8.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -89,7 +90,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -107,11 +111,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm D: optimizer control",
++    "question": "chang0926 arm D: optimizer control on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -125,6 +133,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "D",
+     "seed": 8,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-e-n64-s1.json b/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
+similarity index 85%
+rename from campaigns/chang0926/configs/chang0926-e-n64-s1.json
+rename to campaigns/chang0926/configs/chang0926-e1-n64-s1.json
+index 7a290af..4782675 100644
+--- a/campaigns/chang0926/configs/chang0926-e-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "chang0926-e-n64-s1",
++  "name": "chang0926-e1-n64-s1",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -10,7 +10,7 @@
+       "phirel"
+     ],
+     "d_model": 24,
+-    "n_heads": 2,
++    "n_heads": 1,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -86,7 +87,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -96,7 +100,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "chang0926-e-n64-s1",
++    "arm": "chang0926-e1-n64-s1",
+     "group": "chang-n64-20260926",
+     "seed": 1,
+     "selection_metric": "val_categorical_accuracy",
+@@ -104,11 +108,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 85763,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm E: Chang-sized architecture package",
++    "question": "chang0926 arm E1: pilot only: E with one head at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -120,8 +128,9 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-09-26-training-batch",
+-    "arm": "E",
++    "arm": "E1",
+     "seed": 1,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s1.json b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+index 21fc98d..b10b1a6 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 1,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s2.json b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+index cd5a970..ad702fe 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 2,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s3.json b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+index aab822d..61e2b98 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 3,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s4.json b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+index eb6b2b5..3b11e0f 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 4,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s5.json b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+index 705ddfc..91613c2 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 5,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s6.json b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+index 69a8b8f..191b6a3 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 6,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s7.json b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+index 4005717..7b25724 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 7,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s8.json b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+index f08cef0..786fcce 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,10 +18,9 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "none",
++    "pos_enc": "learned",
+     "softmax_free": false,
+     "input_std": true,
+-    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +86,10 @@
+     "lr_m_mul": 1.0,
+     "lr_alpha": 1e-06,
+     "lr_alpha_epochs": 10,
+-    "optimizer": "adam_default"
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +107,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm F: A07 without positional encoding",
++    "question": "chang0926 arm F: E with learned positional encoding",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +129,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "F",
+     "seed": 8,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s1.json b/campaigns/chang0926/configs/chang0926-r-n64-s1.json
+index 90d72af..5156e60 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s1.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 1,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s2.json b/campaigns/chang0926/configs/chang0926-r-n64-s2.json
+index 67c5721..a52b551 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s2.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 2,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s3.json b/campaigns/chang0926/configs/chang0926-r-n64-s3.json
+index 12083e6..a0dc501 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s3.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 3,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s4.json b/campaigns/chang0926/configs/chang0926-r-n64-s4.json
+index f3a3bfe..3c1e4b1 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s4.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 4,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s5.json b/campaigns/chang0926/configs/chang0926-r-n64-s5.json
+index 60b0137..68d50b1 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s5.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 5,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s6.json b/campaigns/chang0926/configs/chang0926-r-n64-s6.json
+index f47339d..726b6f4 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s6.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 6,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s7.json b/campaigns/chang0926/configs/chang0926-r-n64-s7.json
+index 2946ce0..7939e78 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s7.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 7,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s8.json b/campaigns/chang0926/configs/chang0926-r-n64-s8.json
+index b593e30..be03165 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s8.json
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -87,7 +88,10 @@
+     "optimizer": "adam_ours",
+     "beta2": 0.98,
+     "weight_decay": 0.01,
+-    "clipvalue": 1.0
++    "clipvalue": 1.0,
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored"
+   },
+   "hls": {
+     "backend": "Vitis",
+@@ -105,11 +109,15 @@
+     "keep_auc_selected_feasible": true,
+     "checkpoint_every_epochs": 25,
+     "snapshot_every_epochs": 500,
+-    "remote_every_epochs": 500
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 171526,
++      "se_multiple": 5
++    }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm R: recipe package control (our recipe)",
++    "question": "chang0926 arm R: recipe package control (our recipe) on E",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -123,6 +131,7 @@
+     "study": "campaigns/2026-09-26-training-batch",
+     "arm": "R",
+     "seed": 8,
++    "production": true,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/chang0926/generate.py b/campaigns/chang0926/generate.py
+index 7ab5aa6..069b141 100644
+--- a/campaigns/chang0926/generate.py
++++ b/campaigns/chang0926/generate.py
+@@ -1,15 +1,25 @@
+ #!/usr/bin/env python3
+ """Generate the 2026-09-26-training-batch configs (Sun et al. recipe at N=64, binary W1).
+ 
+-python campaigns/chang0926/generate.py            # writes configs/, index.json, packs, cache spec
++python campaigns/chang0926/generate.py [--no-floors]
+ 
+ Source: configs/const0922-a07-n64-s1-fast50-fp32.json (screen bundle 26f3cc40). Every arm is
+ that config plus the fields below; nothing else is edited. Generated files are never
+ hand-edited; change ARMS / COMMON here and regenerate. Writes only inside this directory.
+ 
+-Pending STUDY amendments (review v2, arbiter fix 1/3/4) are marked PENDING and flagged in
+-the campaign plan: the quantizer set [D19]/[A20], arm B's architecture and target, and the
+-canary pack.
++Arm set [D21] (arbiter v3 fix 2; PENDING the STUDY amendment, STUDY.md at da0e4ee still has
++the A07-primary table): the 350k ladder moves to the E architecture (d24, 2 heads, 1 block,
++FFN 32). A = E at 350k; B = E at 250k; C = A07 at 5M; D = E with our optimizer; F = E with a
++learned PE; R = our recipe on E; A07-350 = A07 at 350k (descriptive). Every no-PE E-family
++config draws the PE initializer ([A17] `pos_enc_none_consume_rng`) so A, B, D, R and F share
++kernels at each seed. Pilot-only rows (never production, never ROC-test): C-PRIME (A07,
++Chang recipe, current SAT/fixed-softmax quantizer, 5M) and E1 (E with 1 head, 350k).
++
++Every config: [D20] one full-training-split reset trace per epoch
++(`train.ebops_trace_sample` "train_full"), stored-variable reload check, and the
++non-degeneracy condition (arbiter v3 fix 1) with the arm's traced 0-bit floor read from
++static_floors.json (static_floor.py on the s1 configs; `--no-floors` writes configs without
++the block so the floors can be traced; cpu_gate re-traces and asserts the value).
+ """
+ from __future__ import annotations
+ 
+@@ -26,8 +36,9 @@ GROUP = 'chang-n64-20260926'
+ PROJECT = 'BNJetTag-ChangRecipe'
+ ORDER_SEED_BASE = 20260926          # [D9] order_seed = ORDER_SEED_BASE * 100 + s
+ 
+-# [D19]/[A20] (PENDING STUDY v3): the Chang quantizer set in every arm, arbiter default.
++# [D19]/[A20]: the Chang quantizer set in every production arm.
+ QUANT = {'act_overflow': 'WRAP', 'softmax_quant': 'chang'}
++CURRENT_QUANT = {}                   # C-PRIME: the screen's SAT / fixed-softmax quantizer
+ 
+ CHANG_SCHEDULE = {  # [D2]/[D4]: jsc150 run_train.py:67, 93, 104
+     'epochs': 7000, 'batch': 2790, 'lr': 3e-3, 'lr_schedule': 'chang_cosine_restarts',
+@@ -39,27 +50,38 @@ OUR_SCHEDULE = {    # [D4] arm R: the record recipe
+ }
+ CHANG_OPT = {'optimizer': 'adam_default'}                                            # [D3]
+ OUR_OPT = {'optimizer': 'adam_ours', 'beta2': 0.98, 'weight_decay': 0.01, 'clipvalue': 1.0}
++D20 = {'ebops_trace_sample': 'train_full', 'ebops_trace_batch': 2048,               # [D20]
++       'ebops_reload_check': 'stored'}
++SE_MULTIPLE = 5                                                                      # fix 1
+ 
+ A07 = {}
+-E_ARCH = {'d_model': 24, 'n_heads': 2, 'pos_enc': 'none'}   # [D18]; ffn 32, 1 block as A07
+-F_ARCH = {'pos_enc': 'none', 'pos_enc_none_consume_rng': True}   # [A17] same kernels as A at seed s
++E_ARCH = {'d_model': 24, 'n_heads': 2, 'pos_enc': 'none',                            # [D18]
++          'pos_enc_none_consume_rng': True}                                          # [A17]
++F_ARCH = {'d_model': 24, 'n_heads': 2, 'pos_enc': 'learned'}                         # E + PE
++E1_ARCH = {**E_ARCH, 'n_heads': 1}                                                   # fix 6
+ 
+-# arm: (optimizer, schedule, target, arch delta, question)
++# arm: (label, optimizer, schedule, target, arch delta, quant, production, question)
+ ARMS = {
+-    'a': (CHANG_OPT, CHANG_SCHEDULE, 350000, A07, 'primary: Sun et al. recipe at 350k'),
+-    'b': (CHANG_OPT, CHANG_SCHEDULE, 175000, A07,
+-          'budget ladder, lower limit. PENDING arbiter fix 4 (E architecture at 250k); '
+-          'A07 at 175k is STATIC_INFEASIBLE under every quantizer'),
+-    'c': (CHANG_OPT, CHANG_SCHEDULE, 5000000, A07, 'budget ladder, 5M'),
+-    'd': (OUR_OPT, CHANG_SCHEDULE, 350000, A07, 'optimizer control'),
+-    'e': (CHANG_OPT, CHANG_SCHEDULE, 350000, E_ARCH, 'Chang-sized architecture package'),
+-    'f': (CHANG_OPT, CHANG_SCHEDULE, 350000, F_ARCH, 'A07 without positional encoding'),
+-    'r': (OUR_OPT, OUR_SCHEDULE, 350000, A07, 'recipe package control (our recipe)'),
++    'a': ('A', CHANG_OPT, CHANG_SCHEDULE, 350000, E_ARCH, QUANT, True, 'primary: Sun et al. recipe on E at 350k'),
++    'b': ('B', CHANG_OPT, CHANG_SCHEDULE, 250000, E_ARCH, QUANT, True, 'budget ladder, lower limit (E at 250k)'),
++    'c': ('C', CHANG_OPT, CHANG_SCHEDULE, 5000000, A07, QUANT, True, 'budget ladder, A07 at 5M'),
++    'd': ('D', OUR_OPT, CHANG_SCHEDULE, 350000, E_ARCH, QUANT, True, 'optimizer control on E'),
++    'f': ('F', CHANG_OPT, CHANG_SCHEDULE, 350000, F_ARCH, QUANT, True, 'E with learned positional encoding'),
++    'r': ('R', OUR_OPT, OUR_SCHEDULE, 350000, E_ARCH, QUANT, True, 'recipe package control (our recipe) on E'),
++    'a07-350': ('A07-350', CHANG_OPT, CHANG_SCHEDULE, 350000, A07, QUANT, True,
++                'descriptive: our A07 at the paper budget; attention data-independent by construction'),
+ }
+-CHANG_ARMS = ('a', 'b', 'c', 'd', 'e', 'f')
+-# STUDY l. 364 canary: A-s1, A-s2, D-s1, D-s2, E-s1, B-s1. PENDING arbiter fix 3:
+-# A-s1, A-s2, D-s1, E-s1, E-s2, F-s1 (B-s1 out). Current STUDY text is used.
+-CANARY = [('a', 1), ('a', 2), ('d', 1), ('d', 2), ('e', 1), ('b', 1)]
++PILOT_ONLY = {
++    'cprime': ('C-PRIME', CHANG_OPT, CHANG_SCHEDULE, 5000000, A07, CURRENT_QUANT, False,
++               'pilot only: A07, Chang recipe, current quantizer, 5M'),
++    'e1': ('E1', CHANG_OPT, CHANG_SCHEDULE, 350000, E1_ARCH, QUANT, False,
++           'pilot only: E with one head at 350k'),
++}
++SEED_BLOCK = ('a', 'b', 'c', 'd', 'f', 'a07-350')      # K = 6 per pod, 8 pods
++# arbiter v3 fix 3: one pod, K = 6, epoch 500, validation only. E1-s1 takes the last slot
++# because its traced 0-bit floor leaves 264,237 EBOPs of headroom at 350k (plan.md, fix 6).
++PILOT = [('a', 1), ('a', 2), ('d', 1), ('a07-350', 1), ('cprime', 1), ('e1', 1)]
++FLOORS = HERE / 'static_floors.json'
+ 
+ TRAIN_DROP = ('warmup_epochs', 'decay_epochs', 'decay_power', 'beta2', 'weight_decay', 'clipvalue')
+ 
+@@ -68,18 +90,19 @@ def name_of(arm, seed):
+     return f'chang0926-{arm}-n64-s{seed}'
+ 
+ 
+-def build(source, arm, seed):
+-    opt, schedule, target, arch, question = ARMS[arm]
++def build(source, arm, seed, floors=None):
++    label, opt, schedule, target, arch, quant, production, question = {**ARMS, **PILOT_ONLY}[arm]
+     cfg = copy.deepcopy(source)
+     cfg['name'] = name_of(arm, seed)
+     cfg['arch'].update(arch)
+     cfg['arch']['pt_gate_gev'] = 2.0                                   # [D7]
+-    cfg['quant'].update(QUANT)
++    cfg['quant'].update(quant)
+     tr = cfg['train']
+     for key in TRAIN_DROP:                                             # set again below if used
+         tr.pop(key, None)
+     tr.update(schedule)
+     tr.update(opt)
++    tr.update(D20)
+     tr.update(validation_split=0.1, split_seed=1,                      # [D8], [A18]
+               order_seed=ORDER_SEED_BASE * 100 + seed,                 # [D9], [A18]
+               wandb_project=PROJECT)                                   # [A18]
+@@ -93,10 +116,14 @@ def build(source, arm, seed):
+         'snapshot_every_epochs': 500,                                  # [A6]
+         'remote_every_epochs': 500,                                    # [D14]
+     }
+-    cfg['engram_study'] = {**cfg['engram_study'], 'question': f'chang0926 arm {arm.upper()}: {question}'}
++    if floors is not None:                                             # arbiter v3 fix 1
++        cfg['experiment']['nondegenerate'] = {'zero_floor_ebops': floor_of(floors, arm, cfg),
++                                              'se_multiple': SE_MULTIPLE}
++    cfg['engram_study'] = {**cfg['engram_study'], 'question': f'chang0926 arm {label}: {question}'}
+     cfg.pop('constituent_study')                                       # [A18]
+     cfg['campaign'] = {
+-        'study': 'campaigns/2026-09-26-training-batch', 'arm': arm.upper(), 'seed': seed,
++        'study': 'campaigns/2026-09-26-training-batch', 'arm': label, 'seed': seed,
++        'production': production,
+         'source_config': SOURCE.name,
+         'source_config_sha256': hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
+         'test_set_used_for_selection': False, 'tf32_enabled': False,
+@@ -104,6 +131,23 @@ def build(source, arm, seed):
+     return cfg
+ 
+ 
++def floor_signature(cfg):
++    """What the static floor depends on: architecture and quantizer sections."""
++    keys = ('arch', 'quant')
++    return hashlib.sha256(json.dumps({k: cfg[k] for k in keys}, sort_keys=True).encode()).hexdigest()
++
++
++def floor_of(floors, arm, cfg):
++    entry = floors.get(arm)
++    if entry is None:
++        raise SystemExit(f'no traced floor for arm {arm}; run generate.py --no-floors, static_floor.py, then again')
++    probe = copy.deepcopy(cfg)
++    probe.get('experiment', {}).pop('nondegenerate', None)
++    if entry['floor_signature'] != floor_signature(probe):
++        raise SystemExit(f'static_floors.json is stale for arm {arm} (arch/quant changed); re-trace')
++    return int(entry['zero'])
++
++
+ def flatten(value, prefix=''):
+     if isinstance(value, dict):
+         out = {}
+@@ -121,29 +165,42 @@ def diff(a, b):
+ 
+ 
+ def main():
++    import argparse
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--no-floors', action='store_true')
++    args = parser.parse_args()
++    floors = None if args.no_floors else json.loads(FLOORS.read_text())['arms']
+     source = json.loads(SOURCE.read_text())
+     out = HERE / 'configs'
+     out.mkdir(exist_ok=True)
+     for old in out.glob('*.json'):
+         old.unlink()
+     rows = []
+-    for arm in ARMS:
+-        for seed in SEEDS:
+-            cfg = build(source, arm, seed)
+-            path = out / (cfg['name'] + '.json')
+-            path.write_text(json.dumps(cfg, indent=2) + '\n')
+-            rows.append({'index': len(rows), 'name': cfg['name'], 'arm': arm.upper(), 'seed': seed,
+-                         'n_part': 64, 'file': path.name,
+-                         'target_ebops': cfg['train']['ebops']['pid']['target_ebops'],
+-                         'config_sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
+-    assert len(rows) == 56 and len({r['name'] for r in rows}) == 56
++    plan = [(arm, seed) for arm in ARMS for seed in SEEDS] + [(arm, 1) for arm in PILOT_ONLY]
++    for arm, seed in plan:
++        cfg = build(source, arm, seed, floors)
++        path = out / (cfg['name'] + '.json')
++        path.write_text(json.dumps(cfg, indent=2) + '\n')
++        rows.append({'index': len(rows), 'name': cfg['name'], 'arm': cfg['campaign']['arm'], 'seed': seed,
++                     'n_part': 64, 'file': path.name, 'production': cfg['campaign']['production'],
++                     'target_ebops': cfg['train']['ebops']['pid']['target_ebops'],
++                     'zero_floor_ebops': cfg['experiment'].get('nondegenerate', {}).get('zero_floor_ebops'),
++                     'arch': {k: cfg['arch'][k] for k in ('d_model', 'n_heads', 'pos_enc')},
++                     'quant_set': 'chang' if cfg['quant'].get('act_overflow') == 'WRAP' else 'current',
++                     'config_sha256': hashlib.sha256(path.read_bytes()).hexdigest()})
++    production = [r for r in rows if r['production']]
++    assert len(production) == 56 and len({r['name'] for r in rows}) == len(rows) == 58
++    assert [r['index'] for r in production] == list(range(56))
+     index = {r['name']: r['index'] for r in rows}
+-    packs = [[index[name_of(arm, s)] for arm in CHANG_ARMS] for s in SEEDS]          # [D16] seed blocks
++    packs = [[index[name_of(arm, s)] for arm in SEED_BLOCK] for s in SEEDS]          # [D16] seed blocks
+     packs += [[index[name_of('r', s)] for s in (1, 2, 3, 4)], [index[name_of('r', s)] for s in (5, 6, 7, 8)]]
+-    canary = [[index[name_of(arm, s)] for arm, s in CANARY]]
+-    (HERE / 'index.json').write_text(json.dumps({'runs': rows, 'count': len(rows)}, indent=2) + '\n')
++    assert sorted(i for p in packs for i in p) == list(range(56))
++    pilot = [[index[name_of(arm, s)] for arm, s in PILOT]]
++    (HERE / 'index.json').write_text(json.dumps({'runs': rows, 'count': len(rows),
++                                                 'production_count': len(production)}, indent=2) + '\n')
+     (HERE / 'packs.json').write_text(json.dumps(packs) + '\n')
+-    (HERE / 'canary_packs.json').write_text(json.dumps(canary) + '\n')
++    (HERE / 'pilot_packs.json').write_text(json.dumps(pilot) + '\n')
++    (HERE / 'canary_packs.json').write_text(json.dumps(pilot) + '\n')   # canary = the pilot pod at --stop-after 2
+     # [A4] cache spec: gated, 90/10, order seed not pinned (one cache for all seeds)
+     spec = build(source, 'a', 1)
+     spec['name'] = 'chang0926-cache-n64'
+@@ -151,8 +208,9 @@ def main():
+     (HERE / 'cache_configs').mkdir(exist_ok=True)
+     (HERE / 'cache_configs' / 'n64.json').write_text(json.dumps(spec, indent=2) + '\n')
+     # [A18] every changed field of one generated config against the source
+-    (HERE / 'config_diff_a_s1.json').write_text(json.dumps(diff(source, build(source, 'a', 1)), indent=2) + '\n')
+-    print(f'Generated {len(rows)} configs, {len(packs)} packs, canary {canary[0]}')
++    (HERE / 'config_diff_a_s1.json').write_text(json.dumps(diff(source, build(source, 'a', 1, floors)), indent=2) + '\n')
++    print(f'Generated {len(rows)} configs ({len(production)} production), {len(packs)} packs, pilot {pilot[0]}'
++          + (' WITHOUT floors' if floors is None else ''))
+ 
+ 
+ if __name__ == '__main__':
+diff --git a/campaigns/chang0926/index.json b/campaigns/chang0926/index.json
+index b471c80..a370351 100644
+--- a/campaigns/chang0926/index.json
++++ b/campaigns/chang0926/index.json
+@@ -7,8 +7,16 @@
+       "seed": 1,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s1.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "bbfb3a91f5c12429e79a20abe8efd7df9d51db6b1b3f2b8e537f9661be25e28b"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "534947e0cbd08bcdfc8e18d4703e340c5ba2fe303840e37702bfbb918a81379c"
+     },
+     {
+       "index": 1,
+@@ -17,8 +25,16 @@
+       "seed": 2,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s2.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "2a9befdb885c20854068ab35f9d7d01fdd716abba1c02e328d7f123859d46ae1"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "61e1d7dee62ff92202065c41849ca674dcb1a4fc77f81344d1333a6b495be056"
+     },
+     {
+       "index": 2,
+@@ -27,8 +43,16 @@
+       "seed": 3,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s3.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "ab9ad9a2019784b508c4e8d4d51386e907de105283e883793d6be3a1da3d1f4d"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "24906d46e2b2e25c2cd87a5584fd2fdbb34dc093b8e7d911a5119a36686bce92"
+     },
+     {
+       "index": 3,
+@@ -37,8 +61,16 @@
+       "seed": 4,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s4.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "67d125a69c8433b39b8e1237f677cfac850b8709d446e56ff8b9f485bdda266b"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "930fc20cc519404e78f2e8a4267a570e334c63bc6a9ef820414daec090365e38"
+     },
+     {
+       "index": 4,
+@@ -47,8 +79,16 @@
+       "seed": 5,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s5.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "419f4ecfb4adf0600ff52bbcd7d6523a8fd73262a81690ba7abecb46adba73a0"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "f5a5089c5a17d4e3a56e0768505f7d98e2cc8a945e3b9e08ab26a8d43c505651"
+     },
+     {
+       "index": 5,
+@@ -57,8 +97,16 @@
+       "seed": 6,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s6.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "d2d4626bbce3aba17c44557e808b7c423714f0711f91e8a7e1741bf350ee5813"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "ce08766983a7e5a05e65816fbb3239944551df0124a23c3cdf29c760b980d611"
+     },
+     {
+       "index": 6,
+@@ -67,8 +115,16 @@
+       "seed": 7,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s7.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "3fdb0e07e5319eab0789992d4b0504ba5fe7ff6cba9010343c7c06049b96fd16"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "3e952e0800856afe497ddff0123e7f9ede63d0321e644a951a3e21072e7a51df"
+     },
+     {
+       "index": 7,
+@@ -77,8 +133,16 @@
+       "seed": 8,
+       "n_part": 64,
+       "file": "chang0926-a-n64-s8.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "43098e4fd38d30cc4c883788b07a23e1d5f0fedf49b56a215df69ace4741d1e1"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "89a616de057b7bd6961998be3ca64dbda8666f9941da528e01095c3dfec54f9d"
+     },
+     {
+       "index": 8,
+@@ -87,8 +151,16 @@
+       "seed": 1,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s1.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "3b0cd3fa35637c02b3f386aeaf5550ed5cff4ed9e347ef8fd0e1ca18ad73fcb9"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "b15054eb9bc63c5f79bcbc1313e1cadab02342e674dcfebf24c7010a73c0a411"
+     },
+     {
+       "index": 9,
+@@ -97,8 +169,16 @@
+       "seed": 2,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s2.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "846afe6599cdff9614ea890ee589d136c5d7bd342343ad03e391e42e2a817867"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "4328ca5c24550e2db28690c9d5ee44a054e748a7b3db796548e76f84817563d5"
+     },
+     {
+       "index": 10,
+@@ -107,8 +187,16 @@
+       "seed": 3,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s3.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "76098f1d12c54302edb4ed12071ff9dd727ba29f4b4bee0a9d0aa5bb86b941df"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "3ee0f199b61e51262ef3d1ca932ea226d3326a74f54c0972d54b897bddeb1c19"
+     },
+     {
+       "index": 11,
+@@ -117,8 +205,16 @@
+       "seed": 4,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s4.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "aa403e726b1d78c826be889bae9a5a28e36fc27dcdf736802478e61c61251346"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "9b0046f68482a5ed7d7deabc2b62668d90486ebf8bdfbb92cef7f2f03e7ca35d"
+     },
+     {
+       "index": 12,
+@@ -127,8 +223,16 @@
+       "seed": 5,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s5.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "13eb863125dd54f1adf474f02f6718e2542241988eeed5a1be2c0c2d5ad4e8ad"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "a046d991960bb1a6eeda78ac323929d59880e0524896eed3177ae5e709f2ce81"
+     },
+     {
+       "index": 13,
+@@ -137,8 +241,16 @@
+       "seed": 6,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s6.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "8facca774afa3e167efc3410be65f1d131f03be72055ce385a20d1473cb8c5b8"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "fe512c5b6f358d5518bf6e1a32023496b85057809124566674e02d7a91696428"
+     },
+     {
+       "index": 14,
+@@ -147,8 +259,16 @@
+       "seed": 7,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s7.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "143a0d8143ccf4a69ccccf24b835f1d465077548d5e31c4bd0ce6ed503fadd26"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "ba9e6c64f50093cc64ca038b289a69c87d1a4599bc942c8ef349791e6b884190"
+     },
+     {
+       "index": 15,
+@@ -157,8 +277,16 @@
+       "seed": 8,
+       "n_part": 64,
+       "file": "chang0926-b-n64-s8.json",
+-      "target_ebops": 175000,
+-      "config_sha256": "e70d51ab2eee756b153cd371d0aa44a8019977debef55a6099ce2f30d5275692"
++      "production": true,
++      "target_ebops": 250000,
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "179954763e52e68705026e7f6e6b25d4ecc7b9c97e0b22466e576808e054d02e"
+     },
+     {
+       "index": 16,
+@@ -167,8 +295,16 @@
+       "seed": 1,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s1.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "e22c22a5902bca40e9e5e11ae2af1e66029f9bace6465dad46b3181ea2f4166f"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "7f699ffe7bf8d642e599602597efce7a327be67edb7c5f13b9a067a852e79567"
+     },
+     {
+       "index": 17,
+@@ -177,8 +313,16 @@
+       "seed": 2,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s2.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "2213505213cb05175fd75142a443267f472f804e4ff56b76222b7fcadde43e8f"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "30a21bf12735752b3bf3dd2d845096ce445ac01ce4faef0267ee325fcca22524"
+     },
+     {
+       "index": 18,
+@@ -187,8 +331,16 @@
+       "seed": 3,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s3.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "d4d8d678e159ac446edd64d0e6a58399df6135514942c00eb261e2aa2dcd245a"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "5fff6d8f585b462337973b568612c8f823f1accbdc5cd005d5310c26882ac275"
+     },
+     {
+       "index": 19,
+@@ -197,8 +349,16 @@
+       "seed": 4,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s4.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "c1aa1c53330daf5834ccc5f3518fd5feb7a0e6956923aeac24e672e3f2756ec1"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "c18e5d34318b9b973f29012cb8daf4a84ad369c6a20b34c9db9cdb8088bcbe0f"
+     },
+     {
+       "index": 20,
+@@ -207,8 +367,16 @@
+       "seed": 5,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s5.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "c01bc3a0b2f65bb36c385d711d466aa069df79c348eee36bc32fd7a2f82524e0"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "5755b854578084009fca3790206d9804359fc3684008f47f959b434be3c552a2"
+     },
+     {
+       "index": 21,
+@@ -217,8 +385,16 @@
+       "seed": 6,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s6.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "9870713bcb60cde0980386ab8dfeef2bc2e3bf6f45a64dc954a995eb5d1c306d"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "c629858682dac4345eaa839645831986060d85888acbccf76f8d3d7d4da53f3d"
+     },
+     {
+       "index": 22,
+@@ -227,8 +403,16 @@
+       "seed": 7,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s7.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "fe4c2a4578bf37f7429127043e0c4c24c6975d1bf4dee25ae66d65d2b5ef8ead"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "a5b55cb64fae9ef48622249be2e8f946e647ef012c413a8397d5c7922c209da6"
+     },
+     {
+       "index": 23,
+@@ -237,8 +421,16 @@
+       "seed": 8,
+       "n_part": 64,
+       "file": "chang0926-c-n64-s8.json",
++      "production": true,
+       "target_ebops": 5000000,
+-      "config_sha256": "de5d96f7d2b2e980dd00d61c043b85cad15e1395cee1a3db2e07174d98a7515b"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "ee25bf7c0bcb05e63efaa5adac7c50bbf972dd7290586f3842c377e0026839be"
+     },
+     {
+       "index": 24,
+@@ -247,8 +439,16 @@
+       "seed": 1,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s1.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "4f45166d3c8cc780c285aa7c20cbd4278baec8c2c88df413139c6def192ff996"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "1ed2daf772f502ae1386832973c06a09c6fae104ca6600da3650f883aa423497"
+     },
+     {
+       "index": 25,
+@@ -257,8 +457,16 @@
+       "seed": 2,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s2.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "25acb01196829a7bd7a0600db745d05b881fa0c4e6933d631f0e7974b849dd17"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "d5eb5cfeb3ba6f148ad4e440befefed33849b43c800be408a4c6cffa8ccd00a0"
+     },
+     {
+       "index": 26,
+@@ -267,8 +475,16 @@
+       "seed": 3,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s3.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "8f481a51b1c306952d50f7b729eed3ce49d87df25f3d202e909d603b2db34f86"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "6ae1da0c8a7399de56b33660cd7df153b6192e7ad69f04984d151c1b2dccb81b"
+     },
+     {
+       "index": 27,
+@@ -277,8 +493,16 @@
+       "seed": 4,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s4.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "b76fcb933c6ae2417379d6eb6e24163708090462b2eeb383e7ebfeccb69d35d6"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "ef671b8f3b5aa1d3eebcfd490f209aa1d1c93bb402e316c7278c2eb6734f8e68"
+     },
+     {
+       "index": 28,
+@@ -287,8 +511,16 @@
+       "seed": 5,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s5.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "7dab0e16ac31316e60b9494f2f3ab55b3c1b9d4089a796555e53b73ec78ea20f"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "9fedd28e0fa2c7af2b19c3ad997ac5e565e626c49064f7d54d0ffde4a71a0867"
+     },
+     {
+       "index": 29,
+@@ -297,8 +529,16 @@
+       "seed": 6,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s6.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "eb25ad5d5183f5292ddb31e2286ae66158d87b017efd8072f6bb5ed6b5b302cc"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "b3f513ca9053f84728721b2550a6810e711199cb41fc263d0ebabae6b36b550a"
+     },
+     {
+       "index": 30,
+@@ -307,8 +547,16 @@
+       "seed": 7,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s7.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "76f8d4a1314c9fb63230b20e9afcc306831649a43c399aed9ad8f5ceda8236a7"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "4dd9018d7d34fb9c6a023c26e1846c816787a152f402666aaa501332d49313c4"
+     },
+     {
+       "index": 31,
+@@ -317,249 +565,486 @@
+       "seed": 8,
+       "n_part": 64,
+       "file": "chang0926-d-n64-s8.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "972dfd5d5f0b9694955e49af6ee91509e03c99a0d574de2d855b1da5ebfe987f"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "5c8a137b89f18d7fb3fa57641cc2848cea37263ffc9484f44903eed3c06120ba"
+     },
+     {
+       "index": 32,
+-      "name": "chang0926-e-n64-s1",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s1",
++      "arm": "F",
+       "seed": 1,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s1.json",
++      "file": "chang0926-f-n64-s1.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "f49eb2f8a1b699e9d3b30636d6da1580b0fb24a322256158096f0924fbb8157c"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "ed25287012543a12937874c19ca20e3e009e15465a76006564619c3fbefa708e"
+     },
+     {
+       "index": 33,
+-      "name": "chang0926-e-n64-s2",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s2",
++      "arm": "F",
+       "seed": 2,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s2.json",
++      "file": "chang0926-f-n64-s2.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "ef347f64918ff0d51da16da4b55d887c43d25699bbf0c7324bcddace883dc319"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "e1a7feb081a3c544b2f033a79da565c000157bdf11b9f08e9d6f457519304f83"
+     },
+     {
+       "index": 34,
+-      "name": "chang0926-e-n64-s3",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s3",
++      "arm": "F",
+       "seed": 3,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s3.json",
++      "file": "chang0926-f-n64-s3.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "536c0cbbe4099a8ada742ed490fada5525b5137d28cb9be822be9ae0e60ce470"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "293eebf08f5bbb55d28206c67457d95409d6ec262f99ff2b1d8a796e9e12defb"
+     },
+     {
+       "index": 35,
+-      "name": "chang0926-e-n64-s4",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s4",
++      "arm": "F",
+       "seed": 4,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s4.json",
++      "file": "chang0926-f-n64-s4.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "0aac4b0e72e6dedd77ce7e40250c16b8ac6354b1e62f5ff527527a727200a31b"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "d7a3c1acc24f6aaf3e53c53c76dde2d737f536368d1ff720563855ff81750350"
+     },
+     {
+       "index": 36,
+-      "name": "chang0926-e-n64-s5",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s5",
++      "arm": "F",
+       "seed": 5,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s5.json",
++      "file": "chang0926-f-n64-s5.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "1cca1abec2218d62b90a95c897a06a36470ff7b9ddd81cbf2b61729a0d21f3b3"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "362d43f84a4485afc2a127e9d05422b4214ca98b91b3868b370be122f5b7d585"
+     },
+     {
+       "index": 37,
+-      "name": "chang0926-e-n64-s6",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s6",
++      "arm": "F",
+       "seed": 6,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s6.json",
++      "file": "chang0926-f-n64-s6.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "f7fb0ec9269687cb8565ced18be084bd20f50e4759b31c4366c0c36409adb973"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "0184ab080b1a3a4f6588c99f9d949c2545dc124d84b4a347a9bf2b63ec4fd1a2"
+     },
+     {
+       "index": 38,
+-      "name": "chang0926-e-n64-s7",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s7",
++      "arm": "F",
+       "seed": 7,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s7.json",
++      "file": "chang0926-f-n64-s7.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "1cf5a85ecccd71a22bd5df3b0fbdc7ab0a84d9587982dec847c1c759b6691eca"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "e17b06f9df9a4386c35754415b38ade5c77c778c5e563c17fa4a067909b93dc4"
+     },
+     {
+       "index": 39,
+-      "name": "chang0926-e-n64-s8",
+-      "arm": "E",
++      "name": "chang0926-f-n64-s8",
++      "arm": "F",
+       "seed": 8,
+       "n_part": 64,
+-      "file": "chang0926-e-n64-s8.json",
++      "file": "chang0926-f-n64-s8.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "124d53d48c14c30d67070febb21ad10fabd496f58a26038ceac1b18fa0af31f4"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "74b9c0f081ea4b9267fce6a270dd23d73a014d36260ffc4051993d127abb0138"
+     },
+     {
+       "index": 40,
+-      "name": "chang0926-f-n64-s1",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s1",
++      "arm": "R",
+       "seed": 1,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s1.json",
++      "file": "chang0926-r-n64-s1.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "18eda4252c8f1a54a0455608bf50e8e8c093e8d8ba18d8d855ba07369b2077df"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "8575ccac024b221f1bf2271680a9ffc61c130f175769b1c474ff7c0adbe45f58"
+     },
+     {
+       "index": 41,
+-      "name": "chang0926-f-n64-s2",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s2",
++      "arm": "R",
+       "seed": 2,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s2.json",
++      "file": "chang0926-r-n64-s2.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "3aef280f4e9cfc336a807e2e91315e5a076e1688583f5f921168ddd479a8cee3"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "b9d70195d187136df2e6d4312ada793e5af2cfb9acb49aa8ed766d94ba3f8dd8"
+     },
+     {
+       "index": 42,
+-      "name": "chang0926-f-n64-s3",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s3",
++      "arm": "R",
+       "seed": 3,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s3.json",
++      "file": "chang0926-r-n64-s3.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "8421455c0078283b06b2e351ca0774a3c1b4f9fdf9ec915772e664ceb5228780"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "629607434a99ef33b1a333de6551c71653df938ade11e65504e9c5aa7d1060da"
+     },
+     {
+       "index": 43,
+-      "name": "chang0926-f-n64-s4",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s4",
++      "arm": "R",
+       "seed": 4,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s4.json",
++      "file": "chang0926-r-n64-s4.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "0daf5253475fd843dc334f2254e0457c0801c1017d74182cb59fc02c72e3ca19"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "907e43ce01a0a6c2cafdf332a569b1275ed78f37850db44dc9430e49e8237088"
+     },
+     {
+       "index": 44,
+-      "name": "chang0926-f-n64-s5",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s5",
++      "arm": "R",
+       "seed": 5,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s5.json",
++      "file": "chang0926-r-n64-s5.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "b9d84134fb485dacd5870ff7f27055c7c3d43c957a52d221c8d89fa7d12fbd94"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "21092911271f0af897e3a8f01dac78ea0f34fc5257049e1b33b89cc12392a223"
+     },
+     {
+       "index": 45,
+-      "name": "chang0926-f-n64-s6",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s6",
++      "arm": "R",
+       "seed": 6,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s6.json",
++      "file": "chang0926-r-n64-s6.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "08f1e4ef709facf63e069cbce23fe9961e9038ea90119c2aa50d90339c66732c"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "3fe0e958b9dd29757dd3384e5f5d9e079bcc094ebeaa201c1a5f1c4016bd82b3"
+     },
+     {
+       "index": 46,
+-      "name": "chang0926-f-n64-s7",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s7",
++      "arm": "R",
+       "seed": 7,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s7.json",
++      "file": "chang0926-r-n64-s7.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "8dd859d9790309625008e9c533e1bc5cd7e0a95b4968ee98844629fca37ff2c7"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "99b17ef14a8922e0ec23a6b409128a95f174e012c7d5710b04380b1cc8c62083"
+     },
+     {
+       "index": 47,
+-      "name": "chang0926-f-n64-s8",
+-      "arm": "F",
++      "name": "chang0926-r-n64-s8",
++      "arm": "R",
+       "seed": 8,
+       "n_part": 64,
+-      "file": "chang0926-f-n64-s8.json",
++      "file": "chang0926-r-n64-s8.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "124a6f9a524007c90a27fd7e1c468bc0c6baae61eec301cffe0fff31769d08cd"
++      "zero_floor_ebops": 171526,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "08c2ed6e8529e2731473cf1acae46071af94e541d3f09f4f1e4000010e569568"
+     },
+     {
+       "index": 48,
+-      "name": "chang0926-r-n64-s1",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s1",
++      "arm": "A07-350",
+       "seed": 1,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s1.json",
++      "file": "chang0926-a07-350-n64-s1.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "7d07b87e025274f796881e26977e5158499be44fd2a06d5984f39d1746d61700"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "35d1abe468ded4229fa7b0b4a52e95e5832539e8a91424e335d789ad370bd592"
+     },
+     {
+       "index": 49,
+-      "name": "chang0926-r-n64-s2",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s2",
++      "arm": "A07-350",
+       "seed": 2,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s2.json",
++      "file": "chang0926-a07-350-n64-s2.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "476dda4cc67c73bd5f1ab5bdf9313b8abf00d4d7869178c21231cb94564acaf4"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "82872db89f7f3bf6df0f5c0c136745a881c19012bb2ef191e7e1b71145d28c31"
+     },
+     {
+       "index": 50,
+-      "name": "chang0926-r-n64-s3",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s3",
++      "arm": "A07-350",
+       "seed": 3,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s3.json",
++      "file": "chang0926-a07-350-n64-s3.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "f870464affb91ba4df241146be6ce95ce0e370c97b4c62a35d1b8e2a5f234588"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "5b3fc9901267364a542f0353dd83cfbd501b6351aeeea14b1b6c6597b738486a"
+     },
+     {
+       "index": 51,
+-      "name": "chang0926-r-n64-s4",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s4",
++      "arm": "A07-350",
+       "seed": 4,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s4.json",
++      "file": "chang0926-a07-350-n64-s4.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "ef106aa71f4623b9eea631724661f716c6d23e453ad37d035204bd9a986934c6"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "497adbb3c01ae609b41673ed4bddd19969ba5e6276b42d40adc90963cbc7c05f"
+     },
+     {
+       "index": 52,
+-      "name": "chang0926-r-n64-s5",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s5",
++      "arm": "A07-350",
+       "seed": 5,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s5.json",
++      "file": "chang0926-a07-350-n64-s5.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "a7b8685b2d7b50f8a0a0bd42c404dcb4c7490415cd1f8575c5413c2d4f7f6fc7"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "451fc5e5f155fa0ba9e05bb4b95232fae74406ec16322de4b66b9ad288150809"
+     },
+     {
+       "index": 53,
+-      "name": "chang0926-r-n64-s6",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s6",
++      "arm": "A07-350",
+       "seed": 6,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s6.json",
++      "file": "chang0926-a07-350-n64-s6.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "0b36794b566209b2e5a745e303ad616c72a2febce3a985c25a287e2a7bfc4cfd"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "c6678cf2179ddc0e1612fd8722d02bbc6729ec66f364d519e789dd003a514e99"
+     },
+     {
+       "index": 54,
+-      "name": "chang0926-r-n64-s7",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s7",
++      "arm": "A07-350",
+       "seed": 7,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s7.json",
++      "file": "chang0926-a07-350-n64-s7.json",
++      "production": true,
+       "target_ebops": 350000,
+-      "config_sha256": "00ddb9d25c39cf8b0971b341504a043444ccc923ca14199366829d27ee39370e"
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "33246a0dbb88e2391f61de36203caa3775dedfe3444dbfaf864acb85a4ec93c6"
+     },
+     {
+       "index": 55,
+-      "name": "chang0926-r-n64-s8",
+-      "arm": "R",
++      "name": "chang0926-a07-350-n64-s8",
++      "arm": "A07-350",
+       "seed": 8,
+       "n_part": 64,
+-      "file": "chang0926-r-n64-s8.json",
++      "file": "chang0926-a07-350-n64-s8.json",
++      "production": true,
++      "target_ebops": 350000,
++      "zero_floor_ebops": 343053,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "chang",
++      "config_sha256": "93502b8432648fd736ca2005e25a6c5510d6d20aaa8adfdd3c39242ec317ba19"
++    },
++    {
++      "index": 56,
++      "name": "chang0926-cprime-n64-s1",
++      "arm": "C-PRIME",
++      "seed": 1,
++      "n_part": 64,
++      "file": "chang0926-cprime-n64-s1.json",
++      "production": false,
++      "target_ebops": 5000000,
++      "zero_floor_ebops": 4580398,
++      "arch": {
++        "d_model": 32,
++        "n_heads": 4,
++        "pos_enc": "learned"
++      },
++      "quant_set": "current",
++      "config_sha256": "f6acc476287eeb22b20f1925e0e6a460a30f09f367c614c839c4b4106c64634d"
++    },
++    {
++      "index": 57,
++      "name": "chang0926-e1-n64-s1",
++      "arm": "E1",
++      "seed": 1,
++      "n_part": 64,
++      "file": "chang0926-e1-n64-s1.json",
++      "production": false,
+       "target_ebops": 350000,
+-      "config_sha256": "aa0ace02d163ab4c32ed1541b2ebe9e7a8f9b2e3a3646aac9086f03f2b5f1e71"
++      "zero_floor_ebops": 85763,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 1,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "config_sha256": "6a8ffd1684e14dcda87eb64cd8a3ec0986e67ea7cca200fe78577268a9a939fd"
+     }
+   ],
+-  "count": 56
++  "count": 58,
++  "production_count": 56
+ }
+diff --git a/campaigns/chang0926/nondegenerate_threshold.py b/campaigns/chang0926/nondegenerate_threshold.py
+new file mode 100644
+index 0000000..959bc97
+--- /dev/null
++++ b/campaigns/chang0926/nondegenerate_threshold.py
+@@ -0,0 +1,45 @@
++#!/usr/bin/env python3
++"""Non-degeneracy threshold (arbiter v3 fix 1) from the gated 90/10 validation labels, for PREFLIGHT.
++
++python campaigns/chang0926/nondegenerate_threshold.py --cache /data/chang-n64-20260926/n64/data [--out PATH]
++
++Prints the validation class counts, p_maj, SE and p_maj + 5 SE exactly as
++`ablation.run_training` computes them at the start of every run (`ablation.majority_rule`),
++so the number is fixed before the canary. Every run re-derives it from the same y_val and
++records it in nondegenerate_rule.json; a mismatch there is a data defect. Reads y_val only.
++"""
++import argparse
++import json
++import os
++from pathlib import Path
++import sys
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE.parents[1]))
++
++
++def main():
++    import numpy as np
++    from bnhgq2.ablation import majority_rule
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--cache', type=Path, required=True)
++    parser.add_argument('--out', type=Path)
++    args = parser.parse_args()
++    rows = json.loads((HERE / 'index.json').read_text())['runs']
++    cfg = json.loads((HERE / 'configs' / rows[0]['file']).read_text())
++    info = json.loads((args.cache / 'data_info.json').read_text())
++    for key, value in (('pt_gate_gev', cfg['arch']['pt_gate_gev']), ('validation_split', cfg['train']['validation_split']),
++                       ('split_seed', cfg['train']['split_seed'])):
++        if info.get(key) != value:
++            raise SystemExit(f'cache {key} = {info.get(key)!r}, config {value!r}')
++    y_val = np.load(args.cache / 'y_val.npy', mmap_mode='r', allow_pickle=False)
++    rule = majority_rule(y_val, cfg['experiment']['nondegenerate']['se_multiple'])
++    rule.update(cache=str(args.cache), split='validation (gated 90/10)')
++    print('NONDEGENERATE_THRESHOLD', json.dumps(rule), flush=True)
++    if args.out:
++        args.out.write_text(json.dumps(rule, indent=2) + '\n')
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/campaigns/chang0926/packs.json b/campaigns/chang0926/packs.json
+index 36c2366..1212017 100644
+--- a/campaigns/chang0926/packs.json
++++ b/campaigns/chang0926/packs.json
+@@ -1 +1 @@
+-[[0, 8, 16, 24, 32, 40], [1, 9, 17, 25, 33, 41], [2, 10, 18, 26, 34, 42], [3, 11, 19, 27, 35, 43], [4, 12, 20, 28, 36, 44], [5, 13, 21, 29, 37, 45], [6, 14, 22, 30, 38, 46], [7, 15, 23, 31, 39, 47], [48, 49, 50, 51], [52, 53, 54, 55]]
++[[0, 8, 16, 24, 32, 48], [1, 9, 17, 25, 33, 49], [2, 10, 18, 26, 34, 50], [3, 11, 19, 27, 35, 51], [4, 12, 20, 28, 36, 52], [5, 13, 21, 29, 37, 53], [6, 14, 22, 30, 38, 54], [7, 15, 23, 31, 39, 55], [40, 41, 42, 43], [44, 45, 46, 47]]
+diff --git a/campaigns/chang0926/pilot_packs.json b/campaigns/chang0926/pilot_packs.json
+new file mode 100644
+index 0000000..3d65fda
+--- /dev/null
++++ b/campaigns/chang0926/pilot_packs.json
+@@ -0,0 +1 @@
++[[0, 1, 24, 48, 56, 57]]
+diff --git a/campaigns/chang0926/static_floors.json b/campaigns/chang0926/static_floors.json
+new file mode 100644
+index 0000000..648f318
+--- /dev/null
++++ b/campaigns/chang0926/static_floors.json
+@@ -0,0 +1,252 @@
++{
++  "sample": "synthetic standard normal, n=256, seed=0",
++  "tool": "static_floor.py",
++  "arms": {
++    "a": {
++      "config": "chang0926-a-n64-s1",
++      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "target_ebops": 350000,
++      "parameters": 31735,
++      "init_synthetic": 8913043,
++      "zero": 171526,
++      "one": 619198,
++      "attn_narrow": 368134,
++      "attn_full": 478726,
++      "headroom": {
++        "250000": {
++          "zero": 78474,
++          "one": -369198,
++          "attn_narrow": -118134,
++          "attn_full": -228726
++        },
++        "350000": {
++          "zero": 178474,
++          "one": -269198,
++          "attn_narrow": -18134,
++          "attn_full": -128726
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "b": {
++      "config": "chang0926-b-n64-s1",
++      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "target_ebops": 250000,
++      "parameters": 31735,
++      "init_synthetic": 8913043,
++      "zero": 171526,
++      "one": 619198,
++      "attn_narrow": 368134,
++      "attn_full": 478726,
++      "headroom": {
++        "250000": {
++          "zero": 78474,
++          "one": -369198,
++          "attn_narrow": -118134,
++          "attn_full": -228726
++        },
++        "350000": {
++          "zero": 178474,
++          "one": -269198,
++          "attn_narrow": -18134,
++          "attn_full": -128726
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "c": {
++      "config": "chang0926-c-n64-s1",
++      "floor_signature": "4c37552f6f3a63fc9218f834c1afe7adecd2eea2086c1518a59fe1fbe1662b48",
++      "target_ebops": 5000000,
++      "parameters": 61951,
++      "init_synthetic": 13182317,
++      "zero": 343053,
++      "one": 1005741,
++      "attn_narrow": 605197,
++      "attn_full": 801805,
++      "headroom": {
++        "250000": {
++          "zero": -93053,
++          "one": -755741,
++          "attn_narrow": -355197,
++          "attn_full": -551805
++        },
++        "350000": {
++          "zero": 6947,
++          "one": -655741,
++          "attn_narrow": -255197,
++          "attn_full": -451805
++        },
++        "5000000": {
++          "zero": 4656947,
++          "one": 3994259,
++          "attn_narrow": 4394803,
++          "attn_full": 4198195
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "d": {
++      "config": "chang0926-d-n64-s1",
++      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "target_ebops": 350000,
++      "parameters": 31735,
++      "init_synthetic": 8913043,
++      "zero": 171526,
++      "one": 619198,
++      "attn_narrow": 368134,
++      "attn_full": 478726,
++      "headroom": {
++        "250000": {
++          "zero": 78474,
++          "one": -369198,
++          "attn_narrow": -118134,
++          "attn_full": -228726
++        },
++        "350000": {
++          "zero": 178474,
++          "one": -269198,
++          "attn_narrow": -18134,
++          "attn_full": -128726
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "f": {
++      "config": "chang0926-f-n64-s1",
++      "floor_signature": "d3c1b025903c7f7d4d53e5aa17adaa1e73db62ae2d1faa46fcfc101efb9a9db3",
++      "target_ebops": 350000,
++      "parameters": 33271,
++      "init_synthetic": 9330878,
++      "zero": 171526,
++      "one": 619198,
++      "attn_narrow": 368134,
++      "attn_full": 478726,
++      "headroom": {
++        "250000": {
++          "zero": 78474,
++          "one": -369198,
++          "attn_narrow": -118134,
++          "attn_full": -228726
++        },
++        "350000": {
++          "zero": 178474,
++          "one": -269198,
++          "attn_narrow": -18134,
++          "attn_full": -128726
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "r": {
++      "config": "chang0926-r-n64-s1",
++      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "target_ebops": 350000,
++      "parameters": 31735,
++      "init_synthetic": 8913043,
++      "zero": 171526,
++      "one": 619198,
++      "attn_narrow": 368134,
++      "attn_full": 478726,
++      "headroom": {
++        "250000": {
++          "zero": 78474,
++          "one": -369198,
++          "attn_narrow": -118134,
++          "attn_full": -228726
++        },
++        "350000": {
++          "zero": 178474,
++          "one": -269198,
++          "attn_narrow": -18134,
++          "attn_full": -128726
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "a07-350": {
++      "config": "chang0926-a07-350-n64-s1",
++      "floor_signature": "4c37552f6f3a63fc9218f834c1afe7adecd2eea2086c1518a59fe1fbe1662b48",
++      "target_ebops": 350000,
++      "parameters": 61951,
++      "init_synthetic": 13182317,
++      "zero": 343053,
++      "one": 1005741,
++      "attn_narrow": 605197,
++      "attn_full": 801805,
++      "headroom": {
++        "250000": {
++          "zero": -93053,
++          "one": -755741,
++          "attn_narrow": -355197,
++          "attn_full": -551805
++        },
++        "350000": {
++          "zero": 6947,
++          "one": -655741,
++          "attn_narrow": -255197,
++          "attn_full": -451805
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "cprime": {
++      "config": "chang0926-cprime-n64-s1",
++      "floor_signature": "5fd0aff45bf9113389371394ed145c79f6ad23de7dffaf34e88d49aee55cf220",
++      "target_ebops": 5000000,
++      "parameters": 12788,
++      "init_synthetic": 24816782,
++      "zero": 4580398,
++      "one": 4580398,
++      "attn_narrow": 4580398,
++      "attn_full": 4580398,
++      "headroom": {
++        "250000": {
++          "zero": -4330398,
++          "one": -4330398,
++          "attn_narrow": -4330398,
++          "attn_full": -4330398
++        },
++        "350000": {
++          "zero": -4230398,
++          "one": -4230398,
++          "attn_narrow": -4230398,
++          "attn_full": -4230398
++        },
++        "5000000": {
++          "zero": 419602,
++          "one": 419602,
++          "attn_narrow": 419602,
++          "attn_full": 419602
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    },
++    "e1": {
++      "config": "chang0926-e1-n64-s1",
++      "floor_signature": "03b0202e473569c3b991cd027b79bbfeb33e88637830f2f590fe21654ad380ac",
++      "target_ebops": 350000,
++      "parameters": 19447,
++      "init_synthetic": 8175637,
++      "zero": 85763,
++      "one": 533435,
++      "attn_narrow": 282371,
++      "attn_full": 392963,
++      "headroom": {
++        "250000": {
++          "zero": 164237,
++          "one": -283435,
++          "attn_narrow": -32371,
++          "attn_full": -142963
++        },
++        "350000": {
++          "zero": 264237,
++          "one": -183435,
++          "attn_narrow": 67629,
++          "attn_full": -42963
++        }
++      },
++      "status": "STATIC_FEASIBLE"
++    }
++  }
++}
+diff --git a/campaigns/chang0926/trace_floors.py b/campaigns/chang0926/trace_floors.py
+new file mode 100644
+index 0000000..527919c
+--- /dev/null
++++ b/campaigns/chang0926/trace_floors.py
+@@ -0,0 +1,52 @@
++#!/usr/bin/env python3
++"""[A7] traced static floors of every chang0926 arm (seed 1 configs), for generate.py and PREFLIGHT.
++
++python campaigns/chang0926/generate.py --no-floors
++python campaigns/chang0926/trace_floors.py            # writes static_floors.json (+ --evidence PATH)
++python campaigns/chang0926/generate.py                 # configs now carry experiment.nondegenerate
++
++The floor depends on arch and quant only (static_floor.py docstring), so one trace per arm;
++`floor_signature` ties it to those sections and generate.py refuses a stale entry. CPU,
++synthetic sample; a structural trace, not a result.
++"""
++import argparse
++import json
++import os
++from pathlib import Path
++import sys
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '2')
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE.parents[1]))
++sys.path.insert(0, str(HERE))
++
++
++def main():
++    import generate
++    from static_floor import floors
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--evidence', type=Path, help='full per-layer output (static_floor.py format)')
++    args = parser.parse_args()
++    arms, full = {}, []
++    for arm in list(generate.ARMS) + list(generate.PILOT_ONLY):
++        cfg = json.loads((HERE / 'configs' / f'{generate.name_of(arm, 1)}.json').read_text())
++        cfg.get('experiment', {}).pop('nondegenerate', None)
++        r = floors(cfg)
++        full.append(r)
++        arms[arm] = {'config': cfg['name'], 'floor_signature': generate.floor_signature(cfg),
++                     'target_ebops': r['target_ebops'], 'parameters': r['parameters'],
++                     'init_synthetic': r['init']['total'],
++                     **{mode: r[mode]['total'] for mode in ('zero', 'one', 'attn_narrow', 'attn_full')},
++                     'headroom': r['headroom'], 'status': r['status']}
++        print('ARM_FLOOR', arm, 'zero', r['zero']['total'], 'one', r['one']['total'],
++              'attn_narrow', r['attn_narrow']['total'], 'attn_full', r['attn_full']['total'],
++              'target', r['target_ebops'], 'headroom', r['target_ebops'] - r['zero']['total'], r['status'], flush=True)
++    (HERE / 'static_floors.json').write_text(json.dumps(
++        {'sample': full[0]['sample'], 'tool': 'static_floor.py', 'arms': arms}, indent=2) + '\n')
++    if args.evidence:
++        args.evidence.write_text(json.dumps(full, indent=2) + '\n')
++
++
++if __name__ == '__main__':
++    main()
+-- 
+2.50.1 (Apple Git-155)
+

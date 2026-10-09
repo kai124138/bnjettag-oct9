@@ -1,0 +1,173 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-delta0926-canary-a07",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "delta-20260927",
+      "app": "kai-delta0926-canary-a07",
+      "bnjettag.io/arms-per-pod": "3"
+    },
+    "annotations": {
+      "bnjettag.io/placeholders": "kai-delta0926-code-705a554b8d, 705a554b8da0395bf015a60743a0ea97304ecb9261c3a43d8619404f5c4c6f98, 300be87bf0cde5fba95c7b9cf0798718475e2b2dd6a230ee44a58a22fa8d467c (filled)",
+      "bnjettag.io/packs": "/work/code/campaigns/delta0926/delta_canary_packs.json (pack index 2 only)",
+      "bnjettag.io/status": "memory canary A07-k3 only (STUDY launch gates 7/14, A07 class): one pod on NVIDIA-A10; E-k4 already measured (RUN.md 2026-09-28 yield), E-k5 not needed (K=5 > 90%% rule); phase A07-k3 (rep-C s1-s3, 3 arms), 110 epochs; output /data/delta-20260927/canary-a07/k_result.json",
+      "bnjettag.io/rss-gate": "per phase BNJ_RSS_GATE_LIMIT_MB = 2,100 + 5 x H of the replica configs, window 5:105",
+      "bnjettag.io/per-arm-memory": "36Gi = the largest phase (K x per-arm Gi)",
+      "bnjettag.io/gate15": "fingerprint_check.py (rep-A s1 initial_ebops == 11,559,681) before any ARM_STARTED; exit 9 mismatch, 8 no GPU; excludes hcc-nrp-shor-c6017.unl.edu (REGRESSION_TICKET 2026-09-28)"
+    }
+  },
+  "spec": {
+    "completionMode": "Indexed",
+    "completions": 1,
+    "parallelism": 1,
+    "backoffLimitPerIndex": 1,
+    "podReplacementPolicy": "Failed",
+    "ttlSecondsAfterFinished": 604800,
+    "podFailurePolicy": {
+      "rules": [
+        {
+          "action": "Ignore",
+          "onPodConditions": [
+            {
+              "type": "DisruptionTarget"
+            }
+          ]
+        }
+      ]
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "delta-20260927",
+          "app": "kai-delta0926-canary-a07",
+          "bnjettag.io/arms-per-pod": "3"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "hcc-nrp-shor-c6017.unl.edu",
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "containers": [
+          {
+            "name": "train",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '705a554b8da0395bf015a60743a0ea97304ecb9261c3a43d8619404f5c4c6f98  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\n# roots come from the dict-form packs file (run_pack.py, Delta patch 0038); never from the environment\nunset BNJ_DATA_ROOT BNJ_RUN_ROOT\nexport BNJ_CAMPAIGN_DIR=/work/code/campaigns/delta0926 BNJ_STAGE=canary BNJ_RSS_GATE_WINDOW=5:105\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nunset WANDB_PROJECT   # every config says train.wandb_project BNJetTag-Delta; run_engram checks env == config\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_MODE=online WANDB_TAGS=delta0926,wave2,memory-canary,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"300be87bf0cde5fba95c7b9cf0798718475e2b2dd6a230ee44a58a22fa8d467c\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true\ndf -h /data\npython - <<'PY'\nimport json, os, pathlib, sys\np = json.load(open(os.path.join(os.environ[\"BNJ_CAMPAIGN_DIR\"], \"delta_canary_packs.json\")))\nidx = range(len(p[\"packs\"])) if \"1\" == \"1\" else [int(os.environ[\"JOB_COMPLETION_INDEX\"])]\nbad = [(m[\"data_root\"], n) for i in idx for m in [p[\"pack_meta\"][i]] for n in m[\"n_parts\"]\n       if not pathlib.Path(m[\"data_root\"], f\"n{n}\", \"data\", \"READY.json\").is_file()]\nprint(\"CACHE_NOT_READY\" if bad else \"CACHE_READY\", bad or \"\"); sys.exit(1 if bad else 0)\nPY\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"GATE15_CACHE_NOT_READY /data/chang-n64-20260926\"; exit 9; }\npython -u /work/code/campaigns/delta0926/fingerprint_check.py --env-report --data-root /data/chang-n64-20260926 || { rc=$?; echo \"GATE15_FAIL exit $rc\"; exit $rc; }\necho GATE15_PASS\nCAN=/data/delta-20260927/canary-a07; mkdir -p $CAN; echo start > $CAN/phase\nFAIL=0\nexport BNJ_ARM_RETRIES=0 BNJ_POD_STALL_RETRIES=0   # an OOM or a stall is the measurement: never retried\n( set +e; while true; do P=$(cat $CAN/phase); T=$(date +%s); nvidia-smi --query-gpu=name,memory.total,memory.used --format=csv,noheader,nounits | sed \"s/^/$T,$P,gpu,/\" >> $CAN/gpu_samples.csv; nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits | sed \"s/^/$T,$P,app,/\" >> $CAN/gpu_samples.csv; sleep 10; done ) & SAMPLER=$!\necho A07-k3 > $CAN/phase; mkdir -p $CAN/A07-k3; BNJ_STAGE=canary BNJ_RSS_GATE_LIMIT_MB=12100 JOB_COMPLETION_INDEX=2 python -u /work/code/run_pack.py delta_canary_packs.json 110 2>&1 | tee $CAN/A07-k3/pack.log || { echo PHASE_EXIT_NONZERO A07-k3; FAIL=1; }   # pack.log keeps ARM_STARTED pids and POD_MEM lines\necho done > $CAN/phase; sleep 20; kill $SAMPLER || true\npython -u /work/code/campaigns/delta0926/canary_k.py --samples $CAN/gpu_samples.csv --packs /work/code/campaigns/delta0926/delta_canary_packs.json --run-root $CAN --out $CAN/k_result.json || echo CANARY_K_INCOMPLETE\ncat $CAN/k_result.json\ntest \"$FAIL\" = 0 || { echo CANARY_PHASES_FAILED; exit 7; }\n"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "kai-wandb",
+                    "key": "WANDB_API_KEY"
+                  }
+                }
+              },
+              {
+                "name": "NODE_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.nodeName"
+                  }
+                }
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "10",
+                "memory": "36Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "limits": {
+                "cpu": "10",
+                "memory": "36Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-delta0926-code-705a554b8d",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    },
+    "activeDeadlineSeconds": 57600
+  }
+}

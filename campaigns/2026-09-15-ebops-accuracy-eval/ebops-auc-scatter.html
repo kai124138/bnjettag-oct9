@@ -1,0 +1,215 @@
+<div id="ebops-auc-scatter" aria-label="Scatter plot of validation AUC against EBOPs for runs R0 through R6">
+  <h2>Validation AUC vs. EBOPs</h2>
+  <div class="chart-subtitle">Best reported checkpoints at or below 350k EBOPs</div>
+  <div class="chart-wrap"></div>
+  <div class="chart-note"><strong>R4</strong> — not plotted because it has not yet reached the 350k stage.</div>
+</div>
+
+<style>
+  #ebops-auc-scatter {
+    width: 100%;
+    color: var(--foreground);
+  }
+
+  #ebops-auc-scatter h2 {
+    margin: 0 0 2px;
+    font-weight: 500;
+  }
+
+  #ebops-auc-scatter .chart-subtitle,
+  #ebops-auc-scatter .chart-note {
+    color: var(--muted-foreground);
+  }
+
+  #ebops-auc-scatter .chart-wrap {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  #ebops-auc-scatter .chart-note {
+    margin-top: 6px;
+  }
+
+  #ebops-auc-scatter .axis text,
+  #ebops-auc-scatter .point-label,
+  #ebops-auc-scatter .axis-title {
+    fill: var(--foreground);
+    font-size: 12px;
+  }
+
+  #ebops-auc-scatter .axis-title {
+    font-weight: 500;
+  }
+
+  #ebops-auc-scatter .axis path,
+  #ebops-auc-scatter .axis line,
+  #ebops-auc-scatter rect[data-chart-frame] {
+    stroke: var(--border);
+  }
+
+  #ebops-auc-scatter .grid line {
+    stroke: var(--border);
+    stroke-opacity: 0.55;
+  }
+
+  #ebops-auc-scatter .grid path {
+    display: none;
+  }
+
+  #ebops-auc-scatter .point-label {
+    font-weight: 500;
+    paint-order: stroke;
+    stroke: var(--background);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+(() => {
+  const root = document.getElementById("ebops-auc-scatter");
+  const container = root.querySelector(".chart-wrap");
+
+  const data = [
+    { run: "R0", ebops: 348526, auc: 0.8453, kind: "baseline" },
+    { run: "R1", ebops: 317890, auc: 0.8519, kind: "variant" },
+    { run: "R2", ebops: 329838, auc: 0.8545, kind: "best" },
+    { run: "R3", ebops: 340174, auc: 0.8463, kind: "interrupted" },
+    { run: "R5", ebops: 349390, auc: 0.8410, kind: "variant" },
+    { run: "R6", ebops: 348366, auc: 0.8420, kind: "interim" }
+  ];
+
+  const labelLayout = {
+    R0: { dx: -10, dy: -11, anchor: "end", text: "R0 · baseline" },
+    R1: { dx: 10, dy: -11, anchor: "start", text: "R1" },
+    R2: { dx: 10, dy: -11, anchor: "start", text: "R2 · best AUC" },
+    R3: { dx: 10, dy: -11, anchor: "start", text: "R3 · interrupted" },
+    R5: { dx: -10, dy: 18, anchor: "end", text: "R5" },
+    R6: { dx: -10, dy: 18, anchor: "end", text: "R6 · interim" }
+  };
+
+  function draw() {
+    container.replaceChildren();
+    const width = Math.max(320, Math.round(container.getBoundingClientRect().width));
+    const height = width < 460 ? 430 : 455;
+    const margin = { top: 26, right: 24, bottom: 66, left: 72 };
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
+    const xExtent = d3.extent(data, d => d.ebops);
+    const yExtent = d3.extent(data, d => d.auc);
+    const xPadding = (xExtent[1] - xExtent[0]) * 0.08;
+    const yPadding = (yExtent[1] - yExtent[0]) * 0.18;
+
+    const x = d3.scaleLinear()
+      .domain([xExtent[0] - xPadding, xExtent[1] + xPadding])
+      .range([margin.left, margin.left + innerWidth]);
+
+    const y = d3.scaleLinear()
+      .domain([yExtent[0] - yPadding, yExtent[1] + yPadding])
+      .range([margin.top + innerHeight, margin.top]);
+
+    const svg = d3.select(container)
+      .append("svg")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("width", "100%")
+      .attr("role", "img")
+      .attr("aria-labelledby", "ebops-auc-title ebops-auc-desc");
+
+    svg.append("title")
+      .attr("id", "ebops-auc-title")
+      .text("Validation AUC versus EBOPs");
+
+    svg.append("desc")
+      .attr("id", "ebops-auc-desc")
+      .text("R2 has the highest reported AUC. R1 uses the fewest EBOPs. R4 is omitted because it has no checkpoint at or below 350 thousand EBOPs yet.");
+
+    svg.append("g")
+      .attr("class", "grid")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth).tickFormat(""));
+
+    svg.append("rect")
+      .attr("data-chart-frame", "")
+      .attr("x", margin.left)
+      .attr("y", margin.top)
+      .attr("width", innerWidth)
+      .attr("height", innerHeight)
+      .attr("fill", "none")
+      .attr("stroke-width", 1);
+
+    const xAxis = d3.axisBottom(x)
+      .ticks(width < 460 ? 4 : 6)
+      .tickFormat(d => d3.format(",.0f")(d));
+
+    const yAxis = d3.axisLeft(y)
+      .ticks(5)
+      .tickFormat(d3.format(".3f"));
+
+    svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", `translate(0,${margin.top + innerHeight})`)
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(yAxis);
+
+    svg.append("text")
+      .attr("class", "axis-title")
+      .attr("data-axis", "x")
+      .attr("x", margin.left + innerWidth / 2)
+      .attr("y", height - 14)
+      .attr("text-anchor", "middle")
+      .text("Effective bit operations (EBOPs)");
+
+    svg.append("text")
+      .attr("class", "axis-title")
+      .attr("data-axis", "y")
+      .attr("transform", `translate(18,${margin.top + innerHeight / 2}) rotate(-90)`)
+      .attr("text-anchor", "middle")
+      .text("Validation macro-OvR AUC");
+
+    function symbolType(d) {
+      if (d.kind === "interrupted") return d3.symbolDiamond;
+      if (d.kind === "interim") return d3.symbolTriangle;
+      return d3.symbolCircle;
+    }
+
+    function pointColor(d) {
+      if (d.kind === "best") return "var(--viz-series-3)";
+      if (d.kind === "baseline") return "var(--viz-series-2)";
+      return "var(--viz-series-1)";
+    }
+
+    const points = svg.append("g")
+      .selectAll("g")
+      .data(data)
+      .join("g")
+      .attr("transform", d => `translate(${x(d.ebops)},${y(d.auc)})`);
+
+    points.append("circle")
+      .attr("data-chart-hit", "")
+      .attr("r", 16)
+      .attr("fill", "transparent");
+
+    points.append("path")
+      .attr("d", d => d3.symbol().type(symbolType(d)).size(130)())
+      .attr("fill", d => pointColor(d))
+      .attr("stroke", d => pointColor(d))
+      .attr("stroke-width", 1.5);
+
+    points.append("text")
+      .attr("class", "point-label")
+      .attr("x", d => labelLayout[d.run].dx)
+      .attr("y", d => labelLayout[d.run].dy)
+      .attr("text-anchor", d => labelLayout[d.run].anchor)
+      .text(d => labelLayout[d.run].text);
+  }
+
+  draw();
+  new ResizeObserver(draw).observe(container);
+})();
+</script>

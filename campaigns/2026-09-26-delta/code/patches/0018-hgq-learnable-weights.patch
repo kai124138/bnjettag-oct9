@@ -1,0 +1,64 @@
+From 99c3b9cc0c446b3f983f063a2dd5f4d0bed96edc Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 08:40:28 -0700
+Subject: [PATCH 18/24] hgq-learnable-weights: quant.weight hgq_learnable, HGQ
+ kbi learnable weight widths (labelled baseline, M049)
+
+---
+ code/bnhgq2/delta_keys.py |  4 ++++
+ code/bnhgq2/qat.py        | 13 +++++++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 55f0393..a2c83f2 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -283,3 +283,7 @@ register('arch.pre_block_act', 'pre-block-tanh-lut', _one_of('tanh_lut'))
+ 
+ # ternary-absmean: LABELLED ternary {-g, 0, +g} baseline (card B14; M047). Billed 2 bits.
+ WEIGHT_SCHEMES.add('ternary_absmean')
++
++# hgq-learnable-weights: HGQ kbi learnable weight widths, labelled baseline (M049). This is the
++# branch `kbi_learnable` never had (code-surface §4 trap: that name trains W8A8 silently).
++WEIGHT_SCHEMES.add('hgq_learnable')
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 60cd010..c475253 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -509,6 +509,14 @@ def _ternary_kq():
+                            trainable=False, heterogeneous_axis=())
+ 
+ 
++def _hgq_learnable_kq(bw_l1: float):
++    """HGQ kbi learnable weight widths (labelled baseline, card THEORY 6.2; M049), the values of
++    Sun et al.'s transformer weight scope: b0 4, i0 0, SAT_SYM, MonoL1 on b and i, i_decay 1e-3."""
++    from hgq.regularizers import MonoL1
++    return QuantizerConfig("kbi", "weight", b0=4, i0=0, round_mode="RND", overflow_mode="SAT_SYM",
++                           trainable=True, br=MonoL1(bw_l1), ir=MonoL1(bw_l1), i_decay_speed=1e-3)
++
++
+ def _dummy(place="datalane"):
+     return QuantizerConfig("dummy", place)
+ 
+@@ -616,6 +624,9 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         elif lmode == "ternary_absmean":  # Delta: LABELLED ternary baseline
+             kq, iq = _ternary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
+             cls = BitQEinsumDense
++        elif lmode == "hgq_learnable":  # Delta: labelled HGQ learnable-width baseline
++            kq, iq = _hgq_learnable_kq(act_bw_l1), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            cls = QEinsumDense
+         else:  # w8a8
+             kq, iq = _static_w8(), act_iq()
+             cls = QEinsumDense
+@@ -640,6 +651,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             kq, iq, cls = _dummy("weight"), act_iq(), QDense
+         elif lmode == "ternary_absmean":  # Delta: LABELLED ternary baseline
+             kq, iq, cls = _ternary_kq(), act_iq(), BitQDense
++        elif lmode == "hgq_learnable":  # Delta: labelled HGQ learnable-width baseline
++            kq, iq, cls = _hgq_learnable_kq(act_bw_l1), act_iq(), QDense
+         else:
+             kq, iq, cls = _static_w8(), act_iq(), QDense
+         lbin = not fp32 and lmode == "binary_absmean"
+-- 
+2.50.1 (Apple Git-155)
+

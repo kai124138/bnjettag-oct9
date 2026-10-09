@@ -1,0 +1,15 @@
+diff --git a/tests/test_run_pack.py b/tests/test_run_pack.py
+index 882ee86..d8ce66a 100644
+--- a/tests/test_run_pack.py
++++ b/tests/test_run_pack.py
+@@ -37,7 +37,9 @@ def setup(tmp, names, **extra):
+     (tmp / 'run_study.py').write_text(FAKE)
+     (tmp / 'index.json').write_text(json.dumps({'runs': [{'name': n} for n in names]}))
+     (tmp / 'packs.json').write_text(json.dumps([list(range(len(names)))]))
+-    env = dict(os.environ, JOB_COMPLETION_INDEX='0', BNJ_RUN_ROOT=str(tmp / 'root'),
++    # BNJ_CAMPAIGN_DIR: the fixture dir, never an inherited campaign (CPU-gate regression
++    # 2026-10-05, campaigns/2026-10-02-chang-option-c/REGRESSION_TICKET.md)
++    env = dict(os.environ, JOB_COMPLETION_INDEX='0', BNJ_RUN_ROOT=str(tmp / 'root'), BNJ_CAMPAIGN_DIR=str(tmp),
+                BNJ_STAGGER_SECONDS='0', BNJ_RETRY_DELAY_SECONDS='0', BNJ_POLL_SECONDS='0.2',
+                BNJ_ARM_RETRIES='2', BNJ_CGROUP_DIR=str(tmp / 'cgroup'), BNJ_PROC_DIR=str(tmp / 'proc'))
+     env.update(extra)

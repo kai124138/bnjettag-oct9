@@ -1,0 +1,154 @@
+From 17bca070dbb4fdbe0c60964d26c880614500f886 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 00:42:02 -0700
+Subject: [PATCH 02/14] A7: static EBOPs floor tool (0-bit floor and
+ 1-bit-alive floor, asserted widths)
+
+---
+ static_floor.py | 134 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 134 insertions(+)
+ create mode 100644 static_floor.py
+
+diff --git a/static_floor.py b/static_floor.py
+new file mode 100644
+index 0000000..f2e48b2
+--- /dev/null
++++ b/static_floor.py
+@@ -0,0 +1,134 @@
++#!/usr/bin/env python3
++"""[A7] Static EBOPs floor of an architecture under its configured quantizers (CPU).
++
++python static_floor.py configs/<arm>.json [...] --out floors.json
++
++Two floors per config, both native HGQ2 EBOPs from `trace_minmax` on a fixed synthetic
++standard-normal sample (256 jets):
++  zero  every learnable activation / softmax width at its lower bound. KIF SAT:
++        i = ic.min, f = fc.min, so bits = relu(i+f) + k = k (1 bit, sign only). KIF WRAP:
++        f = fc.min; tracing sets i from the data (<= ic.max), so bits = relu(i+f) = 0.
++        KBI tables: b = bc.min (4 under quant.softmax_quant="chang").
++  one   "1-bit-alive": every learnable magnitude width at 1 bit. WRAP: f = 1 - i, iterated
++        with tracing until i is stable; SAT KIF at relu(i+f) = 0 (1 bit with k); tables at
++        bc.min. Every learnable width is asserted after the final trace, not assumed.
++Fixed-width quantizers (trainable=False) stay at their configured widths.
++
++Weights are binary (1 bit, fixed) and not touched. The floor depends on widths only, not
++on the sample, because EBOPs are priced from bit widths; the WRAP i that tracing sets is
++bounded by ic.max and does not enter relu(i + fc.min) = 0. STATIC_INFEASIBLE means the
++zero floor is at or above the arm's target (STUDY [A7]). Not a result; a structural trace.
++"""
++from __future__ import annotations
++
++import argparse
++import json
++import os
++from pathlib import Path
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '2')
++
++import numpy as np
++
++
++def _learnable(model):
++    from bnhgq2.ebops_target import activation_quantizers
++    for name, q in activation_quantizers(model):
++        if q.trainable:
++            yield name, q
++
++
++def _full(var, value):
++    var.assign(np.full(var.shape, value, dtype='float32'))
++
++
++def set_floor(model, mode, sample, max_iter=48):
++    from bnhgq2.ebops_calc import compute_ebops
++    for _, q in _learnable(model):
++        if hasattr(q, '_f'):
++            fmin = q.f_constraint.min_value
++            if q.overflow_mode == 'WRAP':
++                _full(q._f, fmin)
++            else:
++                _full(q._i, q.i_constraint.min_value)
++                _full(q._f, fmin)
++        else:
++            _full(q._b, q.b_constraint.min_value)
++    cost = compute_ebops(model, sample)
++    if mode == 'one':
++        for _ in range(max_iter):
++            changed = False
++            for _, q in _learnable(model):
++                if hasattr(q, '_f') and q.overflow_mode == 'WRAP':
++                    want = 1.0 - np.asarray(q.i)
++                    if not np.array_equal(np.asarray(q._f), want):
++                        q._f.assign(want.astype('float32'))
++                        changed = True
++            cost = compute_ebops(model, sample)
++            if not changed:
++                break
++    check = {}
++    for name, q in _learnable(model):
++        bits = np.asarray(q.bits).ravel()
++        if hasattr(q, '_f'):
++            expect = (0 if mode == 'zero' else 1) if q.overflow_mode == 'WRAP' else np.asarray(q.k).ravel()
++        else:
++            expect = q.b_constraint.min_value
++        ok = bool(np.all(bits == expect))
++        check[name] = {'bits_min': float(bits.min()), 'bits_max': float(bits.max()), 'ok': ok}
++        assert ok, (name, mode, bits.min(), bits.max())
++    return cost, check
++
++
++def floors(cfg, n_sample=256, seed=0):
++    import keras
++    from bnhgq2.compat import apply_keras_compat
++    from bnhgq2 import qat
++    from bnhgq2.ebops_calc import compute_ebops
++    apply_keras_compat()
++    A = cfg['arch']
++    sample = np.random.default_rng(seed).standard_normal((n_sample, A['n_part'], A['n_feat'])).astype('float32')
++    out = {'name': cfg['name'], 'target_ebops': cfg['train']['ebops']['pid']['target_ebops'],
++           'quant': {k: cfg['quant'].get(k) for k in ('act_overflow', 'softmax_quant', 'softmax_out_bits',
++                                                      'softmax_out_i', 'act_granularity', 'act_bits')},
++           'arch': {k: A[k] for k in ('n_part', 'd_model', 'n_heads', 'n_layers', 'ffn_dim', 'pos_enc')},
++           'sample': f'synthetic standard normal, n={n_sample}, seed={seed}'}
++    for mode in ('init', 'zero', 'one'):
++        keras.backend.clear_session()
++        model, taps = qat.build_qat_model(cfg, seed=1)
++        if mode == 'init':
++            qat.calibrate_activations(model, taps, sample, cfg['quant']['act_bits'])
++            cost, check = compute_ebops(model, sample), None
++        else:
++            cost, check = set_floor(model, mode, sample)
++        out[mode] = {'total': cost['total'], 'per_layer': cost['per_layer']}
++        if check is not None:
++            out[mode]['width_check'] = {'n_quantizers': len(check), 'all_ok': all(v['ok'] for v in check.values())}
++        out['parameters'] = int(model.count_params())
++        del model
++    target = out['target_ebops']
++    out['zero_floor_over_target'] = out['zero']['total'] / target
++    out['one_bit_alive_over_target'] = out['one']['total'] / target
++    out['headroom_at_zero_floor'] = target - out['zero']['total']
++    out['status'] = 'STATIC_INFEASIBLE' if out['zero']['total'] >= target else 'STATIC_FEASIBLE'
++    return out
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('configs', nargs='+', type=Path)
++    parser.add_argument('--out', type=Path)
++    args = parser.parse_args()
++    results = []
++    for path in args.configs:
++        r = floors(json.loads(path.read_text()))
++        results.append(r)
++        print('STATIC_FLOOR', r['name'], 'init', r['init']['total'], 'zero', r['zero']['total'],
++              'one_bit_alive', r['one']['total'], 'target', r['target_ebops'], r['status'], flush=True)
++    if args.out:
++        args.out.write_text(json.dumps(results, indent=2) + '\n')
++
++
++if __name__ == '__main__':
++    main()
+-- 
+2.50.1 (Apple Git-155)
+

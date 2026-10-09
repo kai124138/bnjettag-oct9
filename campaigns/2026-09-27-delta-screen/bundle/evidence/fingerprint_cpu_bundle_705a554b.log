@@ -1,0 +1,50 @@
+# gate 15 CPU test, 2026-09-28 (fixer). Not a result: initial_ebops is an integer fingerprint. Env tests_patches/pyenv.sh (TF 2.21.0, keras 3.15.0, hgq2 0.1.9, CPU, CUDA_VISIBLE_DEVICES=''), cache = local rebuild of /data/chang-n64-20260926 (x_train sha256 420ac79d..., REGRESSION_TICKET §1).
+# trees: pristine = 42abed4b anchor (campaigns/chang0926, anchor configs); deployed = e6fc6cd9 extraction; new = 705a554b extraction (script run from its shipped path campaigns/delta0926/)
+== pri-s1
+FINGERPRINT_TREE <scratch>/regr/pristine/code
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1
+FINGERPRINT_OK chang0926-a-n64-s1
+EXIT 0
+== pri-s2
+FINGERPRINT_TREE <scratch>/regr/pristine/code
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11295521 expected 11295521 chang0926-a-n64-s2
+FINGERPRINT_OK chang0926-a-n64-s2
+EXIT 0
+== dep-s1
+FINGERPRINT_TREE <scratch>/regr/deployed/code
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11559681 expected 11559681 delta0926-w2-rep-a-t350000-s1
+FINGERPRINT_OK delta0926-w2-rep-a-t350000-s1
+EXIT 0
+== dep-s2
+FINGERPRINT_TREE <scratch>/regr/deployed/code
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11295521 expected 11295521 delta0926-w2-rep-a-t350000-s2
+FINGERPRINT_OK delta0926-w2-rep-a-t350000-s2
+EXIT 0
+== new-s1
+FINGERPRINT_TREE <scratch>/new705/code
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11559681 expected 11559681 delta0926-w2-rep-a-t350000-s1
+FINGERPRINT_OK delta0926-w2-rep-a-t350000-s1
+EXIT 0
+== new-s2
+FINGERPRINT_TREE <scratch>/new705/code
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11295521 expected 11295521 delta0926-w2-rep-a-t350000-s2
+FINGERPRINT_OK delta0926-w2-rep-a-t350000-s2
+EXIT 0
+== nogpu
+FINGERPRINT_TREE <scratch>/new705/code
+FINGERPRINT_DEVICES CPU-only
+GPU_FINGERPRINT_NO_GPU
+EXIT 8
+== mismatch
+FINGERPRINT_TREE <scratch>/new705/code
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11559681 expected 1 delta0926-w2-rep-a-t350000-s1
+GPU_FINGERPRINT_MISMATCH 11559681
+EXIT 9
+== env-report path (CPU, --run nonexistent): ENV_REPORT_BEGIN..END printed; nvidia-smi/proc absent on macOS reported non-fatally; uv env has no pip (the pod's python:3.12 does); then AssertionError on the missing row (exit 1). No key/token/secret string in the output (grep -ci 0).

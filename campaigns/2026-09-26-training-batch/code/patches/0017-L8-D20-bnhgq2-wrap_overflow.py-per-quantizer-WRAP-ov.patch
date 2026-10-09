@@ -1,0 +1,152 @@
+From 6bb5ce7d85184ff7820e4afe9cb2b92ada1547d5 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:51:08 -0700
+Subject: [PATCH 17/22] L8/D20: bnhgq2/wrap_overflow.py, per-quantizer WRAP
+ overflow fraction of a saved model on given rows (diagnostic only)
+
+Counts, per WRAP datalane quantizer (names as width_snapshot), the live elements whose
+rounded input falls outside the stored [min, max]; 0-bit elements are reported as pruned.
+Runs with training=False through a temporary class-level call wrapper, so no range is
+touched and outputs are unchanged. Nothing imports it on the training path.
+Test: tests/test_wrap_overflow.py (0 on the traced rows, > 0 on a heavier superset,
+0 again after a full trace; weights and outputs unchanged).
+---
+ bnhgq2/wrap_overflow.py     | 82 +++++++++++++++++++++++++++++++++++++
+ tests/test_wrap_overflow.py | 36 ++++++++++++++++
+ 2 files changed, 118 insertions(+)
+ create mode 100644 bnhgq2/wrap_overflow.py
+ create mode 100644 tests/test_wrap_overflow.py
+
+diff --git a/bnhgq2/wrap_overflow.py b/bnhgq2/wrap_overflow.py
+new file mode 100644
+index 0000000..8c44e23
+--- /dev/null
++++ b/bnhgq2/wrap_overflow.py
+@@ -0,0 +1,82 @@
++"""[L8]/[D20] per-quantizer WRAP overflow fraction of a saved model on a data set.
++
++Diagnostic only (never selects anything). For every datalane quantizer in WRAP mode (the
++[A20] activation, Q/K/V-stream, softmax-output and softmax inv-input quantizers, nested ones
++included) it counts, on the rows given, the elements whose rounded input lies outside the
++quantizer's stored range [min, max]; those elements wrap at inference. The model is run
++with training=False, so no range (i, k) is touched: the ranges are the ones as saved.
++
++Elements of a 0-bit channel (b = relu(i + f) = 0) output 0 by design and are counted as
++`pruned`, not in the overflow denominator.
++"""
++from __future__ import annotations
++
++from contextlib import contextmanager
++
++import numpy as np
++
++
++def wrap_quantizers(model):
++    """[(name, quantizer)] named as `ebops_target.width_snapshot` names them (`layer`,
++    `layer__in<j>`, `layer__inv_iq`), so the two records join. Cross-checked against a
++    recursive walk, so no nested WRAP datalane quantizer is missed."""
++    from hgq.quantizer.internal.fixed_point_quantizer import FixedPointQuantizerBase
++    from .ebops_target import activation_quantizers
++
++    def is_wrap(q):
++        return (isinstance(q, FixedPointQuantizerBase) and q.overflow_mode == 'WRAP'
++                and not getattr(q, '_is_weight', False))
++    found = [(name, q) for name, q in activation_quantizers(model) if is_wrap(q)]
++    walked = {id(q) for q in model._flatten_layers(include_self=False, recursive=True) if is_wrap(q)}
++    if walked != {id(q) for _, q in found}:
++        raise AssertionError(f'WRAP quantizers outside activation_quantizers: {len(walked)} vs {len(found)}')
++    return found
++
++
++@contextmanager
++def _counting(quantizers):
++    from keras import ops
++    counts = {id(q): {'alive': 0, 'overflow': 0, 'pruned': 0} for _, q in quantizers}
++    originals = {}
++    for cls in {type(q) for _, q in quantizers}:
++        original = cls.call
++        originals[cls] = original
++
++        def call(self, inputs, training=None, _original=original):
++            c = counts.get(id(self))
++            if c is not None and not training:
++                shape = ops.shape(inputs)
++                f = self.bw_mapper.bw_to_x(self.f, shape)
++                xr = self.stateless_quantizer.round(inputs, f, False, self.seed_gen)
++                lo = self.bw_mapper.bw_to_x(self.min, shape)
++                hi = self.bw_mapper.bw_to_x(self.max, shape)
++                alive = self.bw_mapper.bw_to_x(self.b, shape) > 0
++                over = ops.logical_and(ops.logical_or(xr > hi, xr < lo), alive)
++                n_alive = int(ops.convert_to_numpy(ops.sum(ops.cast(alive, 'int64'))))
++                c['alive'] += n_alive
++                c['overflow'] += int(ops.convert_to_numpy(ops.sum(ops.cast(over, 'int64'))))
++                c['pruned'] += int(np.prod(ops.convert_to_numpy(shape))) - n_alive
++            return _original(self, inputs, training=training)
++
++        cls.call = call
++    try:
++        yield counts
++    finally:
++        for cls, original in originals.items():
++            cls.call = original
++
++
++def overflow_fractions(model, x, batch_size=4096):
++    """{quantizer: {alive, overflow, pruned, fraction}} over the rows of x (eager, CPU or GPU)."""
++    quantizers = wrap_quantizers(model)
++    with _counting(quantizers) as counts:
++        for start in range(0, len(x), batch_size):
++            model(np.asarray(x[start:start + batch_size], dtype=np.float32), training=False)
++    result = {}
++    for name, q in quantizers:
++        c = counts[id(q)]
++        result[name] = {**c, 'fraction': (c['overflow'] / c['alive']) if c['alive'] else None}
++    total_alive = sum(v['alive'] for v in result.values())
++    total_over = sum(v['overflow'] for v in result.values())
++    return {'per_quantizer': result, 'n_rows': int(len(x)), 'n_wrap_quantizers': len(result),
++            'overflow_fraction_all': (total_over / total_alive) if total_alive else None}
+diff --git a/tests/test_wrap_overflow.py b/tests/test_wrap_overflow.py
+new file mode 100644
+index 0000000..2f984f3
+--- /dev/null
++++ b/tests/test_wrap_overflow.py
+@@ -0,0 +1,36 @@
++"""[L8] WRAP overflow fraction: zero on the rows the ranges were traced on, positive on a
++heavier-tailed superset; the diagnostic neither changes outputs nor touches any range."""
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++
++from test_d20_trace import arrays
++from test_resume_cadence import tiny_cfg
++
++
++def test_overflow_fraction():
++    import keras
++    from bnhgq2 import ablation
++    from bnhgq2.compat import apply_keras_compat
++    from bnhgq2.wrap_overflow import overflow_fractions, wrap_quantizers
++    apply_keras_compat()
++    (xt, _, _, _), _ = arrays(n_train=4000)
++    keras.backend.clear_session()
++    model, _ = ablation.matching_initialization(tiny_cfg(), xt[:512], 1)
++    ablation.compute_ebops(model, xt[:256])
++    names = [n for n, _ in wrap_quantizers(model)]
++    from bnhgq2.ebops_target import width_snapshot
++    assert 'input_proj' in names and any(n.endswith('__inv_iq') for n in names), names
++    assert set(names) <= set(width_snapshot(model)), names
++    before = [np.asarray(v).copy() for v in model.weights]
++    out = np.asarray(model(xt[:64], training=False))
++    traced = overflow_fractions(model, xt[:256], batch_size=100)
++    assert traced['overflow_fraction_all'] == 0.0, traced
++    wider = overflow_fractions(model, xt, batch_size=1000)
++    assert wider['overflow_fraction_all'] > 0 and wider['n_rows'] == 4000
++    assert all(np.array_equal(a, np.asarray(b)) for a, b in zip(before, model.weights))
++    np.testing.assert_array_equal(np.asarray(model(xt[:64], training=False)), out)
++    # after a full-split trace, the full split no longer overflows
++    ablation.compute_ebops(model, xt)
++    assert overflow_fractions(model, xt, batch_size=1000)['overflow_fraction_all'] == 0.0
+-- 
+2.50.1 (Apple Git-155)
+

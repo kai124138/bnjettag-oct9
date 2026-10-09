@@ -1,0 +1,951 @@
+{
+ "apiVersion": "v1",
+ "items": [
+  {
+   "apiVersion": "batch/v1",
+   "kind": "Job",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "campaign": "engram-study-20260918"
+    },
+    "name": "kai-engram-screen-e100-a10364ed",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "activeDeadlineSeconds": 86400,
+    "backoffLimit": 2147483647,
+    "backoffLimitPerIndex": 3,
+    "completionMode": "Indexed",
+    "completions": 4,
+    "maxFailedIndexes": 3,
+    "parallelism": 4,
+    "podFailurePolicy": {
+     "rules": [
+      {
+       "action": "Ignore",
+       "onPodConditions": [
+        {
+         "status": "True",
+         "type": "DisruptionTarget"
+        }
+       ]
+      }
+     ]
+    },
+    "template": {
+     "spec": {
+      "containers": [
+       {
+        "name": "train",
+        "resources": {
+         "limits": {
+          "cpu": "4",
+          "ephemeral-storage": "24Gi",
+          "memory": "12Gi",
+          "nvidia.com/gpu": "1"
+         }
+        }
+       }
+      ]
+     }
+    }
+   },
+   "status": {
+    "completedIndexes": "2,3",
+    "conditions": [
+     {
+      "lastProbeTime": "2026-09-19T01:31:53Z",
+      "lastTransitionTime": "2026-09-19T01:31:53Z",
+      "message": "Job has failed indexes",
+      "reason": "FailedIndexes",
+      "status": "True",
+      "type": "FailureTarget"
+     },
+     {
+      "lastProbeTime": "2026-09-19T01:31:53Z",
+      "lastTransitionTime": "2026-09-19T01:31:53Z",
+      "message": "Job has failed indexes",
+      "reason": "FailedIndexes",
+      "status": "True",
+      "type": "Failed"
+     }
+    ],
+    "failed": 11,
+    "failedIndexes": "0,1",
+    "ready": 0,
+    "startTime": "2026-09-18T16:50:43Z",
+    "succeeded": 2,
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "0",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-0-bt22w",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T19:41:17Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T18:29:43Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T18:29:30Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "0",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-0-pcwqh",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T19:48:40Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T19:46:08Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T19:45:52Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "1",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-1-glh7b",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T21:14:02Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T21:11:21Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T21:11:11Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "1",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-1-hk6wg",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T20:16:41Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T20:13:26Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T20:13:20Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "1",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-1-jzj7q",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T21:39:59Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T21:37:27Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T21:37:22Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "1",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-1-pzjjg",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T19:59:25Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T18:35:43Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T18:35:32Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "2",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-2-s79c4",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": "PodCompleted",
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodCompleted",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodCompleted",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 0,
+        "finishedAt": "2026-09-18T23:05:40Z",
+        "reason": "Completed",
+        "startedAt": "2026-09-18T19:34:55Z"
+       }
+      }
+     }
+    ],
+    "phase": "Succeeded",
+    "reason": null,
+    "startTime": "2026-09-18T19:34:20Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "3",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-3-fxxvs",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": "PodCompleted",
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodCompleted",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodCompleted",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 0,
+        "finishedAt": "2026-09-19T01:31:51Z",
+        "reason": "Completed",
+        "startedAt": "2026-09-19T01:28:30Z"
+       }
+      }
+     }
+    ],
+    "phase": "Succeeded",
+    "reason": null,
+    "startTime": "2026-09-19T01:28:19Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "3",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-3-qvzb2",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T23:56:21Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T23:54:37Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T23:54:18Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "3",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-3-rlp9b",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T23:29:32Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T23:26:59Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T23:26:39Z"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-engram-screen",
+     "batch.kubernetes.io/job-completion-index": "3",
+     "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+     "campaign": "engram-study-20260918",
+     "job-name": "kai-engram-screen-e100-a10364ed"
+    },
+    "name": "kai-engram-screen-e100-a10364ed-3-rzgjv",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "train",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "24Gi",
+        "memory": "12Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "train",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-09-18T23:23:34Z",
+        "reason": "Error",
+        "startedAt": "2026-09-18T21:23:24Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-09-18T21:23:03Z"
+   }
+  }
+ ],
+ "kind": "List",
+ "provenance": {
+  "kind": "captured",
+  "note": "Indexed Job with podFailurePolicy; indexes 0,1 failed, 2,3 completed",
+  "sanitized": "status, policy, resource and job metadata only; env, images, volumes, IDs removed",
+  "source": "campaigns/2026-09-20-continuation-packed/cluster-before.json",
+  "source_sha256": "d22cbb87e1b88b2695b989f3e4f0c7a137800d5aee670394c8ba0be61e450409"
+ }
+}

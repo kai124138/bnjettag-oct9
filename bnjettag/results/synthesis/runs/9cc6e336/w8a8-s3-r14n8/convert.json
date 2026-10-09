@@ -1,0 +1,135 @@
+{
+ "written": "2026-08-24T17:27:46",
+ "config_hash": "9cc6e336",
+ "variant": "w8a8",
+ "seed": 3,
+ "tag": "r14n8",
+ "output_dir": "bnjettag/results/synthesis/runs/9cc6e336/w8a8-s3-r14n8/hls_prj_rf1",
+ "tarball": "bnjettag/results/synthesis/runs/9cc6e336/w8a8-s3-r14n8/hls_prj_rf1.tar.gz",
+ "rf": 1,
+ "strategy": "Latency",
+ "weight_mode": "int8_absmax",
+ "part": "xcvu13p-flga2577-2-e",
+ "clock_ns": 2.5,
+ "io": "io_parallel",
+ "firmware_audit": {
+  "model_default_t": "ap_fixed<24,12>",
+  "weight_typedefs": {
+   "input_proj": "ap_fixed<6,1>",
+   "bit_block_0_ffn_fc1": "ap_fixed<6,1>",
+   "bit_block_0_ffn_fc2": "ap_fixed<6,1>",
+   "bit_block_1_ffn_fc1": "ap_fixed<6,1>",
+   "bit_block_1_ffn_fc2": "ap_fixed<6,1>",
+   "head_fc1": "ap_fixed<6,1>",
+   "head_fc2": "ap_fixed<6,1>"
+  },
+  "n_weight_typedefs": 7,
+  "config_weight_t_kinds": [
+   "bit_block_0_ffn_fc1_weight_t",
+   "bit_block_0_ffn_fc2_weight_t",
+   "bit_block_1_ffn_fc1_weight_t",
+   "bit_block_1_ffn_fc2_weight_t",
+   "head_fc1_weight_t",
+   "head_fc2_weight_t",
+   "input_proj_weight_t",
+   "model_default_t"
+  ],
+  "n_model_default_weight_t": 8,
+  "weighted_cores": {
+   "input_proj": {
+    "core": "einsum_dense",
+    "weight_array": "w3",
+    "type": "input_proj_weight_t",
+    "n": 96
+   },
+   "bit_block_0_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w5",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w7",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w13",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w18",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w21",
+    "type": "bit_block_0_ffn_fc1_weight_t",
+    "n": 2048
+   },
+   "bit_block_0_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w24",
+    "type": "bit_block_0_ffn_fc2_weight_t",
+    "n": 2048
+   },
+   "bit_block_1_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w27",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w29",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w35",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w40",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w43",
+    "type": "bit_block_1_ffn_fc1_weight_t",
+    "n": 2048
+   },
+   "bit_block_1_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w46",
+    "type": "bit_block_1_ffn_fc2_weight_t",
+    "n": 2048
+   },
+   "head_fc1": {
+    "core": "dense",
+    "weight_array": "w50",
+    "type": "head_fc1_weight_t",
+    "n": 1024
+   },
+   "head_fc2": {
+    "core": "dense",
+    "weight_array": "w53",
+    "type": "head_fc2_weight_t",
+    "n": 160
+   }
+  },
+  "n_einsum_dense": 13,
+  "n_dense": 2
+ },
+ "dsp_story": "8-bit weights x 8-bit activations: the weighted-core multiplies are real 8bx8b products and are EXPECTED to map to DSP48 at csynth \u2014 that is the point of this baseline. No DSP count is claimed here; mulder csynth measures it.",
+ "mulder_cmd": "./mulder_csynth.sh hls_prj_rf1.tar.gz"
+}

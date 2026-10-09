@@ -1,0 +1,476 @@
+{
+ "QuantizerConfig(place=weight)": {
+  "k0": "True",
+  "b0": "4",
+  "i0": "0",
+  "round_mode": "'RND'",
+  "overflow_mode": "'SAT_SYM'",
+  "bc": "<hgq.constraints.MinMax object at 0x71ae9a3c3a10>",
+  "ic": "None",
+  "br": "<hgq.regularizers.MonoL1 object at 0x71ae9a3c3a40>",
+  "ir": "<hgq.regularizers.MonoL1 object at 0x71ae9a3924e0>",
+  "i_decay_speed": "0.001",
+  "homogeneous_axis": "()",
+  "heterogeneous_axis": "None",
+  "bw_mapper": "None",
+  "trainable": "True",
+  "is_weight": "True"
+ },
+ "q_type": "kbi",
+ "ffn_like": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    24,
+    32
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    24,
+    32
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    24,
+    32
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 23.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "ffn_like/bias": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    32
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    32
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    32
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 24.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "query": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 23.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "query/bias": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    2,
+    16
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    2,
+    16
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    2,
+    16
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 24.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "key": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 23.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "value": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    24,
+    2,
+    16
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 23.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "value/bias": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    2,
+    16
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    2,
+    16
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    2,
+    16
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 24.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "attention_output": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    2,
+    16,
+    24
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    2,
+    16,
+    24
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    2,
+    16,
+    24
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 23.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ },
+ "attention_output/bias": {
+  "class": "FixedPointQuantizerKBI",
+  "_k": {
+   "shape": [
+    24
+   ],
+   "unique": [
+    1.0
+   ],
+   "trainable": false
+  },
+  "_b": {
+   "shape": [
+    24
+   ],
+   "unique": [
+    4.0
+   ],
+   "trainable": true
+  },
+  "_i": {
+   "shape": [
+    24
+   ],
+   "unique": [
+    0.0
+   ],
+   "trainable": true
+  },
+  "overflow_mode": "SAT_SYM",
+  "round_mode": "RND",
+  "b_constraint": {
+   "type": "MinMax",
+   "min_value": 0.0,
+   "max_value": 24.0
+  },
+  "i_constraint": null,
+  "b_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "i_regularizer": {
+   "type": "MonoL1",
+   "l1": 1e-08
+  },
+  "bw_mapper": "DefaultBitwidthMapper"
+ }
+}

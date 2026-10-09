@@ -1,0 +1,14 @@
+r3 spend arithmetic (planning, not a result). Rates/setup from review/REGRESSION_TICKET_r2-resume.md §2 (n=1 arm each, r2 arm logs).
+worst case r3: 8 x (600+18000+180) = 150240 s = 41.73 GPU-h
+R1 worst total: 53-56 (ticket §6, INFERRED) + 41.73 = 94.73-97.73 of 144; headroom 46.27-49.27
+if every r3 arm also got one full disruption replacement (podFailurePolicy Ignore, not capped): +41.73 -> 136.47-139.47
+h1-e-350k-c-s2           start   0: expected   11562 s; at 2,215 s setup run_pack budget 15365 s vs need ~11562 s (margin 3803 s; tolerates 30.0 s/epoch = 1.34x)
+h4-e-350k-c-w100-s2      start   0: expected   11562 s; at 2,215 s setup run_pack budget 15365 s vs need ~11562 s (margin 3803 s; tolerates 30.0 s/epoch = 1.34x)
+h4-e-350k-c-w50-s1       start   0: expected   11562 s; at 2,215 s setup run_pack budget 15365 s vs need ~11562 s (margin 3803 s; tolerates 30.0 s/epoch = 1.34x)
+h4-e-350k-c-w50-s2       start   0: expected   11562 s; at 2,215 s setup run_pack budget 15365 s vs need ~11562 s (margin 3803 s; tolerates 30.0 s/epoch = 1.34x)
+h1-e-350k-noc-s2         start 400: expected    2583 s; at 2,215 s setup run_pack budget 15365 s vs need ~2583 s (margin 12782 s; tolerates 149.8 s/epoch = 6.82x)
+h2-e-500k-c-s1           start 475: expected     945 s; at 2,215 s setup run_pack budget 15365 s vs need ~945 s (margin 14420 s; tolerates 599.1 s/epoch = 26.81x)
+h3-e-450k-c-qkv1-s1      start 200: expected    7092 s; at 2,215 s setup run_pack budget 15365 s vs need ~7092 s (margin 8273 s; tolerates 49.9 s/epoch = 2.23x)
+h5-e-350k-c-nb-s1        start 175: expected    7650 s; at 2,215 s setup run_pack budget 15365 s vs need ~7650 s (margin 7715 s; tolerates 46.1 s/epoch = 2.06x)
+expected r3 total 64517 s = 17.92 GPU-h at ~300 s setup; +4.26 if all 8 hit 2,215 s setup -> 22.18
+R1 expected total 70.9-78.2 GPU-h of 144

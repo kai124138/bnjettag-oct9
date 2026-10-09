@@ -1,0 +1,162 @@
+{
+  "name": "head_fc2",
+  "trainable": true,
+  "dtype": {
+    "module": "keras",
+    "class_name": "DTypePolicy",
+    "config": {
+      "name": "float32"
+    },
+    "registered_name": null
+  },
+  "units": 5,
+  "activation": "linear",
+  "use_bias": true,
+  "kernel_initializer": {
+    "module": "keras.initializers",
+    "class_name": "GlorotUniform",
+    "config": {
+      "seed": null,
+      "input_axes": null,
+      "output_axes": null
+    },
+    "registered_name": null
+  },
+  "bias_initializer": {
+    "module": "keras.initializers",
+    "class_name": "Zeros",
+    "config": {},
+    "registered_name": null
+  },
+  "kernel_regularizer": null,
+  "bias_regularizer": null,
+  "kernel_constraint": null,
+  "bias_constraint": null,
+  "quantization_config": null,
+  "enable_ebops": true,
+  "ebops_factor": 1.0,
+  "beta0": {
+    "module": "keras.initializers",
+    "class_name": "Constant",
+    "config": {
+      "value": 1e-07
+    },
+    "registered_name": null
+  },
+  "enable_oq": false,
+  "enable_iq": true,
+  "oq_conf": null,
+  "iq_conf": {
+    "module": "hgq.quantizer.config",
+    "class_name": "QuantizerConfig",
+    "config": {
+      "q_type": "kif",
+      "place": "datalane",
+      "scaler": null,
+      "qnoise_factor": null,
+      "affine": null,
+      "k0": 1,
+      "i0": 4,
+      "f0": 3,
+      "round_mode": "RND_CONV",
+      "overflow_mode": "SAT",
+      "ic": {
+        "module": "hgq.constraints",
+        "class_name": "MinMax",
+        "config": {
+          "min_value": -8.0,
+          "max_value": 12.0
+        },
+        "registered_name": "hgq>MinMax"
+      },
+      "ir": {
+        "module": "bnhgq2.qat",
+        "class_name": "MeanMonoL1",
+        "config": {
+          "l1": 1e-08
+        },
+        "registered_name": "bnhgq2>MeanMonoL1"
+      },
+      "fc": {
+        "module": "hgq.constraints",
+        "class_name": "MinMax",
+        "config": {
+          "min_value": -8.0,
+          "max_value": 16.0
+        },
+        "registered_name": "hgq>MinMax"
+      },
+      "fr": {
+        "module": "bnhgq2.qat",
+        "class_name": "MeanMonoL1",
+        "config": {
+          "l1": 1e-08
+        },
+        "registered_name": "bnhgq2>MeanMonoL1"
+      },
+      "i_decay_speed": 0.01,
+      "homogeneous_axis": null,
+      "heterogeneous_axis": [
+        -1
+      ],
+      "bw_mapper": null,
+      "trainable": true,
+      "is_weight": false
+    },
+    "registered_name": "hgq>QuantizerConfig"
+  },
+  "kq_conf": {
+    "module": "hgq.quantizer.config",
+    "class_name": "QuantizerConfig",
+    "config": {
+      "q_type": "kbi",
+      "place": "weight",
+      "scaler": null,
+      "qnoise_factor": null,
+      "affine": null,
+      "k0": 1,
+      "b0": 1,
+      "i0": 1,
+      "round_mode": "RND",
+      "overflow_mode": "SAT_SYM",
+      "bc": {
+        "module": "hgq.constraints",
+        "class_name": "MinMax",
+        "config": {
+          "min_value": 0.0,
+          "max_value": 23.0
+        },
+        "registered_name": "hgq>MinMax"
+      },
+      "ic": null,
+      "br": {
+        "module": "hgq.regularizers",
+        "class_name": "MonoL1",
+        "config": {
+          "l1": 1e-08
+        },
+        "registered_name": "hgq>MonoL1"
+      },
+      "ir": null,
+      "i_decay_speed": Infinity,
+      "homogeneous_axis": null,
+      "heterogeneous_axis": [],
+      "bw_mapper": null,
+      "trainable": false,
+      "is_weight": true
+    },
+    "registered_name": "hgq>QuantizerConfig"
+  },
+  "bq_conf": {
+    "module": "hgq.quantizer.config",
+    "class_name": "QuantizerConfig",
+    "config": {
+      "q_type": "dummy",
+      "place": "bias",
+      "scaler": null,
+      "qnoise_factor": null,
+      "affine": null
+    },
+    "registered_name": "hgq>QuantizerConfig"
+  }
+}

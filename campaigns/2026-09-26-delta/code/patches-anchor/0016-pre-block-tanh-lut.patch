@@ -1,0 +1,73 @@
+From 246ad9ca36a41c2354fb500ee012e8957998045f Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 08:39:09 -0700
+Subject: [PATCH 16/38] pre-block-tanh-lut: arch.pre_block_act tanh_lut, hgq2
+ LUT before attention and FFN (M016); export blocked
+
+---
+ code/bnhgq2/delta_keys.py |  4 ++++
+ code/bnhgq2/qat.py        | 22 ++++++++++++++++++++++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 840a2da..ed340c0 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -276,3 +276,7 @@ def _head_dims(value, cfg):
+ 
+ 
+ register('arch.head_dims', 'head-dims', _head_dims)
++
++# pre-block-tanh-lut: hgq2 QAffinedUnaryFunctionLUT('tanh') before attention and before the FFN
++# (Chang; cards Q09, A14; M016). Its table EBOPs are traced at W1; no HLS export path yet.
++register('arch.pre_block_act', 'pre-block-tanh-lut', _one_of('tanh_lut'))
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 4368b6e..42347fc 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -693,6 +693,24 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+     def stream_iq():
+         return _dummy("datalane") if fp32 else act_iq(6, axes=(-2, -1))  # shared over particles and batch
+ 
++    pre_act = A.get("pre_block_act")  # Delta: "tanh_lut" before attention and before the FFN
++
++    def lut(name, x):
++        """hgq2 QAffinedUnaryFunctionLUT('tanh'): input on our activation grid, output on a
++        trainable kbi SAT_SYM table (b0 7, i0 0, b >= 4 as Chang's table scope; SAT_SYM, not WRAP,
++        so a tanh near +-1 cannot wrap), MonoL1 on b and i like the activation widths."""
++        from hgq.layers import QAffinedUnaryFunctionLUT
++        from hgq.constraints import Min
++        from hgq.regularizers import MonoL1
++        if fp32:
++            return QAffinedUnaryFunctionLUT("tanh", iq_conf=_dummy(), oq_conf=_dummy("table"), name=name)(x)
++        taps[name] = x
++        axes = (-1,) if cfg["quant"].get("act_granularity", "tensor") == "channel" else ()
++        table = QuantizerConfig("kbi", "table", k0=1, b0=7, i0=0, round_mode="RND", overflow_mode="SAT_SYM",
++                                trainable=True, heterogeneous_axis=axes, bc=Min(4),
++                                br=MonoL1(act_bw_l1), ir=MonoL1(act_bw_l1))
++        return QAffinedUnaryFunctionLUT("tanh", iq_conf=act_iq(), oq_conf=table, name=name)(x)
++
+     def einsum(name, equation, xs, iqs):
+         if not fp32:
+             for i, x in enumerate(xs):
+@@ -757,6 +775,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             blk = f"bit_block_{li}"
+             # ---- attention ----
+             ln = norm(f"ln_{blk}_attn_qkv")(h)
++            if pre_act == "tanh_lut":
++                ln = lut(f"{blk}_attn_tanh", ln)
+             q = dense_einsum(f"{blk}_attn_Wq", "btd,dhe->bthe", (T, H, E), ln)
+             k = dense_einsum(f"{blk}_attn_Wk", "btd,dhe->bthe", (T, H, E), ln)
+             v = dense_einsum(f"{blk}_attn_Wv", "btd,dhe->bthe", (T, H, E), ln)
+@@ -790,6 +810,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+ 
+             # ---- FFN ----
+             ln = norm(f"ln_{blk}_ffn_fc1")(h)
++            if pre_act == "tanh_lut":
++                ln = lut(f"{blk}_ffn_tanh", ln)
+             f1 = dense_einsum(f"{blk}_ffn_fc1", "btd,df->btf", (T, FFN), ln,
+                               bias_axes="f")
+             f1 = keras.layers.ReLU(name=f"{blk}_ffn_act")(f1)
+-- 
+2.50.1 (Apple Git-155)
+

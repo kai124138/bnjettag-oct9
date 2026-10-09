@@ -1,0 +1,179 @@
+From a1b5446dbd968750e86ff6d67725fa0b7d399dad Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:07 -0700
+Subject: [PATCH 06/14] A15/A5/A6: honour experiment.checkpoint_every_epochs,
+ boundary snapshots (experiment.snapshot_every_epochs), drop ghost snapshots
+ on resume; CPU resume test
+
+---
+ bnhgq2/ablation.py           | 46 ++++++++++++++++++--
+ tests/test_resume_cadence.py | 82 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 125 insertions(+), 3 deletions(-)
+ create mode 100644 tests/test_resume_cadence.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index c2a054f..f27799d 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -264,6 +264,28 @@ def save_checkpoint(out, model, optimizer, state):
+     return final
+ 
+ 
++def save_snapshot(out, state):
++    """[A6] out/snapshots/epoch-EEEE/: the selected files and state as of the end of epoch
++    E (one-based), written once, atomically."""
++    out = Path(out)
++    root = out / 'snapshots'
++    root.mkdir(exist_ok=True)
++    leaf = f"epoch-{state['completed_epochs']:04d}"
++    temp = root / ('.' + leaf)
++    if temp.exists():
++        shutil.rmtree(temp)
++    temp.mkdir()
++    for name in SELECTED_FILES:
++        if (out / name).exists():
++            shutil.copyfile(out / name, temp / name)
++    atomic_json(temp / 'state.json', state)
++    final = root / leaf
++    if final.exists():
++        shutil.rmtree(final)
++    os.replace(temp, final)
++    return final
++
++
+ def restore_checkpoint(out, cfg, dataset_info):
+     out = Path(out)
+     pointer = out / 'latest.json'
+@@ -287,6 +309,11 @@ def restore_checkpoint(out, cfg, dataset_info):
+             shutil.copyfile(directory / name, target)
+         elif target.exists():
+             target.unlink()
++    # [A5] Replayed epochs are not bit-exact on GPU: drop every trace of the abandoned
++    # trajectory past the resume point (selected files were restored above).
++    for snap in sorted((out / 'snapshots').glob('epoch-*')) if (out / 'snapshots').exists() else []:
++        if int(snap.name.split('-')[1]) > state['completed_epochs']:
++            shutil.rmtree(snap)
+     history = out / 'activation_widths.jsonl'
+     lines = history.read_text().splitlines() if history.exists() else []
+     kept = [line for line in lines if json.loads(line)['epoch'] < state['completed_epochs']]
+@@ -525,13 +552,26 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             f.write(json.dumps(record, allow_nan=False) + '\n')
+             f.flush()
+             os.fsync(f.fileno())
+-        saved = save_checkpoint(out, model, optimizer, state)
+-        print(f"[epoch {epoch + 1}/{epochs}] EBOPs={cost['total']} target={final_target} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name}", flush=True)
++        # [A15] Full (model + optimizer + PID + selection) checkpoint every
++        # `experiment.checkpoint_every_epochs` (absent => 1, the historical cadence), and
++        # always at a pause (stop_after) and at the last epoch. The per-epoch candidate
++        # save, reload, validation and feasibility test above are unchanged.
++        pause = stop_after is not None and epoch + 1 >= stop_after
++        every = int(cfg['experiment'].get('checkpoint_every_epochs', 1))
++        saved = None
++        if (epoch + 1) % every == 0 or epoch + 1 == epochs or pause:
++            saved = save_checkpoint(out, model, optimizer, state)
++        # [A6] boundary snapshot: best-feasible-as-of-E files plus state, never rewritten.
++        snapshot_every = cfg['experiment'].get('snapshot_every_epochs')
++        if snapshot_every and (epoch + 1) % int(snapshot_every) == 0:
++            assert saved is not None, 'snapshot_every_epochs must be a multiple of checkpoint_every_epochs'
++            save_snapshot(out, state)
++        print(f"[epoch {epoch + 1}/{epochs}] EBOPs={cost['total']} target={final_target} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name if saved else '-'}", flush=True)
+         if wandb_run:
+             import wandb
+             wandb_run.log(logs, step=epoch + 1)
+             wandb_run.summary.update(training_status_summary(state, selection_metric, stop_after))
+-            if (epoch + 1) % cfg['experiment']['remote_every_epochs'] == 0:
++            if saved is not None and (epoch + 1) % cfg['experiment']['remote_every_epochs'] == 0:
+                 from .wandb_util import log_files_artifact
+                 log_files_artifact(wandb_run, name='resume-' + cfg['name'], type='checkpoint', files=[str(saved)], metadata={'completed_epochs': epoch + 1})
+         if stop_after is not None and epoch + 1 >= stop_after:
+diff --git a/tests/test_resume_cadence.py b/tests/test_resume_cadence.py
+new file mode 100644
+index 0000000..c8c8d0b
+--- /dev/null
++++ b/tests/test_resume_cadence.py
+@@ -0,0 +1,82 @@
++"""[A15] checkpoint cadence, [A5] rollback to the resume point, [A6] snapshots, [A19] copy.
++Runs ablation.run_training on CPU with a tiny model and synthetic data (seconds)."""
++import copy
++import hashlib
++import json
++import os
++from pathlib import Path
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++HERE = Path(__file__).resolve().parents[1]
++BASE = json.loads((HERE / 'configs' / 'const0922-a07-n64-s1-fast50-fp32.json').read_text())
++
++
++def tiny_cfg():
++    cfg = copy.deepcopy(BASE)
++    cfg['name'] = 'unit-resume'
++    cfg['arch'].update(n_part=8, d_model=8, n_heads=2, ffn_dim=8)
++    cfg['quant'].update(act_overflow='WRAP', softmax_quant='chang')
++    cfg['train'].update(epochs=5, batch=32, lr=3e-3, optimizer='adam_default',
++                        lr_schedule='chang_cosine_restarts', lr_cycle_epochs=4, lr_alpha=1e-6,
++                        lr_alpha_epochs=1, val_batch=64)
++    cfg['train']['ebops']['pid']['target_ebops'] = 10 ** 9
++    cfg['experiment'].update(checkpoint_every_epochs=2, snapshot_every_epochs=2,
++                             cost_before_auc=False, keep_auc_selected_feasible=True)
++    return cfg
++
++
++def data(seed=0):
++    rng = np.random.default_rng(seed)
++    xt = rng.standard_normal((128, 8, 3)).astype('float32')
++    xv = rng.standard_normal((64, 8, 3)).astype('float32')
++    yt = np.eye(5, dtype='float32')[rng.integers(0, 5, 128)]
++    yv = np.eye(5, dtype='float32')[np.arange(64) % 5]
++    return (xt, yt, xv, yv), {'unit': True, 'input_std': {'mu': [0, 0, 0], 'sigma': [1, 1, 1]}}
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++class Crash(RuntimeError):
++    pass
++
++
++def test_cadence_rollback_resume(tmp_path):
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    arrays, info = data()
++
++    def crash_at_3(model, sample, epoch):
++        if epoch == 2:                       # third epoch, after selection, before its record
++            raise Crash()
++        return {}
++    with pytest.raises(Crash):
++        ablation.run_training(cfg, arrays, info, tmp_path, epoch_observer=crash_at_3)
++    assert json.loads((tmp_path / 'latest.json').read_text())['checkpoint'] == 'epoch-0002'
++    assert sorted(p.name for p in (tmp_path / 'checkpoints').glob('epoch-*')) == ['epoch-0002']
++    assert (tmp_path / 'snapshots' / 'epoch-0002' / 'state.json').exists()
++    ckpt = tmp_path / 'checkpoints' / 'epoch-0002'
++    # ghost trajectory: selected files and a later snapshot from abandoned epochs
++    (tmp_path / 'model_best.keras').write_bytes(b'ghost')
++    (tmp_path / 'snapshots' / 'epoch-0004').mkdir()
++    model, optimizer, state = ablation.restore_checkpoint(tmp_path, cfg, info)
++    assert state['completed_epochs'] == 2
++    assert sha(tmp_path / 'model_best.keras') == sha(ckpt / 'model_best.keras')
++    assert sha(tmp_path / 'model_best_auc_feasible.keras') == sha(ckpt / 'model_best_auc_feasible.keras')
++    assert not (tmp_path / 'snapshots' / 'epoch-0004').exists()
++    assert len((tmp_path / 'activation_widths.jsonl').read_text().splitlines()) == 2
++    del model, optimizer
++    final = ablation.run_training(cfg, arrays, info, tmp_path)
++    assert final['completed_epochs'] == 5
++    assert sorted(p.name for p in (tmp_path / 'checkpoints').glob('epoch-*')) == ['epoch-0004', 'epoch-0005']
++    assert sorted(p.name for p in (tmp_path / 'snapshots').glob('epoch-*')) == ['epoch-0002', 'epoch-0004']
++    budget = json.loads((tmp_path / 'ebops_budget.json').read_text())
++    assert budget['checkpoint'] == 'model_best.keras' and budget['auc_selected_checkpoint'] == 'model_best_auc_feasible.keras'
++    lines = [json.loads(l) for l in (tmp_path / 'activation_widths.jsonl').read_text().splitlines()]
++    assert [l['epoch'] for l in lines] == [0, 1, 2, 3, 4]
++    assert lines[0]['learning_rate'] == pytest.approx(3e-3) and lines[3]['learning_rate'] == pytest.approx(1e-6)
++    assert 'bit_block_0_attn_softmax__exp_oq' in lines[-1]['widths']
+-- 
+2.50.1 (Apple Git-155)
+

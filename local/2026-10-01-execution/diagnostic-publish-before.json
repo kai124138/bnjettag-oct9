@@ -1,0 +1,1201 @@
+{
+  "md": "# Results and next steps \u2014 1 October 2026\n\nThe completed pT-weighting experiment gives a negative result for its tested recipe. The earlier architecture campaign produced feasible candidates. The separate twelve-run confirmation queue remains incomplete, with its saved checkpoint generations now recovered. Chang will use option (c), traced-cost PID, subject to the missing b5 readout and a new pilot; Delta has resource-canary evidence but no screen result.\n\nThis update preserves the scientific records through 29 September and adds reviewed cluster observations, a verified 253-file storage recovery, the option-(c) decision and bounded code-compatibility checks. The [provenance JSON](results-status-20261001.json) records source dates and hashes alongside operational observations. Recovered logs and state metadata are diagnostic evidence; no new scientific metric was computed.\n\n## Completed training and held-out results\n\nThe pT-weighting campaign completed 24 runs: unweighted BASE, capped weighting PTW5 and uncapped weighting PTWNC, each with seeds 1\u20138. All use N=8, `l1x3` inputs and W1A8, with a 101-epoch maximum and early stopping. The following macro one-vs-rest AUC values use the same 260,000-jet held-out archive. Spreads are sample standard deviations across eight seeds.\n\n| Training weights | Held-out macro AUC, mean \u00b1 sd | Paired change from BASE, 95% t-interval |\n|---|---:|---:|\n| Unweighted BASE | 0.8711 \u00b1 0.0013 | Reference |\n| pT weighting, cap 5 | 0.8603 \u00b1 0.0019 | \u22120.0108 [\u22120.0124, \u22120.0093] |\n| pT weighting, uncapped | 0.8587 \u00b1 0.0020 | \u22120.0125 [\u22120.0148, \u22120.0101] |\n\nBoth weighted arms are lower on all eight matched seeds. The intervals use seven degrees of freedom. The primary metric, paired comparison rule and pT-sextile analysis were post hoc. These values quote the 26 September verification from saved predictions; no new recomputation was performed. Source: `pt_weighting_verify` in the [source record](results-status-20261001.json).\n\nThe [architecture and attention continuations](TRAINING_RESULTS_20260923.md) completed all 27 training loops at 1,000 epochs. Five of the 12 architecture runs recorded checkpoints within their configured budgets; none of the 15 attention runs met the 350k eBOP target. Feasibility is trainer-recorded; the architecture study used one seed.\n\nThe [24 September record](CONFIRMATION_RUNS_20260924.md) reports deterministic reloads for A02 and A11. These are previously reported seed-1 measurements on 260,000 held-out jets, not freshly verified results.\n\n| Candidate | Budget | Selected checkpoint eBOPs | Held-out accuracy | Held-out macro-OvR AUC |\n|---|---:|---:|---:|---:|\n| A02, N=8, seed 1 | 350,000 | 349,298 | 60.7850% | 0.860432 |\n| A11, N=8, seed 1 | 500,000 | 479,462 | 62.3335% | 0.873813 |\n\nThese candidates have different budgets. Their values do not establish a same-budget advantage or training-seed robustness.\n\nAll four N16 [Engram loops](ENGRAM_STUDY.md) reached 1,000 epochs. E00 passed outer validation; E01\u2013E03 failed selected-checkpoint metric reproduction. None had a feasible checkpoint under the augmented 350k target. The exploratory [N8/N64 screen](CONSTITUENT_SCREEN_20260923.md) produced no feasible checkpoint under its tested selection rule.\n\n## Incomplete campaigns and operational evidence\n\n| Workstream | Latest saved evidence | Remaining gate |\n|---|---|---|\n| Twelve-run confirmation queue | The Job has `Failed=True`, reason `FailedIndexes`, at `2026-09-26T07:24:11Z`. All twelve current checkpoint generations, including model, optimizer and state files, are recovered. Saved progress is 280\u2013318 of 1,000 epochs. | Diagnose selected-checkpoint reload failures and verify resumability. The exact final queue trigger is not established. `status.failed=5` is a Kubernetes counter, not five failed scientific arms. |\n| Chang regime-B pilot | The `b3` readout certified four primary/sensitivity checkpoints for C-s1 and F-s1; A07-350-s1 had no feasible checkpoint. K1 fired. All five `b5` snapshot states record 500 completed epochs; final logs contain stored-cost reload verification passes. | The named certification and entropy outputs are missing. Recover controller histories and complete the full rule analysis. Option (c) is selected, but the amendment, new freeze and replacement pilot remain required; production stays blocked. |\n| Delta | Resource canaries ran. E at K=4 reached roughly 100 epochs with finite training and acceptable recorded RSS before stopping to yield the GPU. A07 at K=3 ran out of GPU memory on A10; its two surviving arms completed 110 epochs and passed the host-RSS gate. | No completed Delta screen result. Product, packing and the frozen study's resource conditions require resolution before launch. |\n| GPU-product benchmark | Of 16 Jobs, nine completed and seven did not schedule within the allowed window. All 70 executed arm-runs completed 21 epochs and passed checkpoint verification. | Product choice is pending. Actual schedulable GPU counts were not measured; the chosen product still needs its 110-epoch canary and cost certification. |\n\nThe original Job-specific pod queries were empty, so the cluster capture recovered no container logs. The subsequent storage reader recovered 37 saved arm logs. Some logs contain multiple process attempts, earlier CUDA/nonfinite errors and later reload assertions without absolute timestamps. They support failure diagnoses but do not uniquely identify the scientific arm that caused the final Job failure. The recovered current generations supersede the earlier handoff's approximate progress ranges; no automatic resume is implied.\n\nNRP authentication succeeded. One authorized CPU-only reader accessed `kai-data` read-only and transferred 253 files totaling 63,514,020 bytes. Independent review checked every accepted file through the transport and export hash chain. The reader exited zero without a restart at `2026-10-01T05:54:10Z`; its Job completed at `05:54:59Z`. All seventeen run pointers and their selected current generations are preserved. The 150 missing entries include optional checkpoint variants and are not a failed-run count. Cache metadata matches the three historical identities; dataset arrays were not rehashed and models were not loaded in this recovery.\n\nBoth b5 readout JSON files are missing from the expected output path. The exact readout Job query also returned no Job; neither observation proves that the readout never ran elsewhere. The five recovered snapshots have feasible-selected model records for A-s2 and D-s1, while A-s1, C\u2032-s1 and E1-s1 have no such record. These are stored selection states, not fresh certification. The recovery scope did not include `activation_widths.jsonl`, which is still needed for the controller analysis. Saved eBOP stdout must not be substituted for actual in-training cost. Legacy training Jobs still lack immutable-handoff context; new diagnostic provenance cannot retroactively supply it.\n\nChang's readout is a pilot diagnostic. On 1 October, Kai selected **option (c): feed traced eBOPs directly to the PID**. The decision is recorded separately from historical runs. It requires a dated amendment, a new frozen revision and the applicable preflight and replacement-pilot checks. It does not clear K1 or production.\n\nThe GPU benchmark is operational telemetry. Its projections assume available GPU counts and use one node per Job shape; they do not establish the fastest deployable campaign. Source records: `confirmation_later_status`, `chang_run`, `chang_b3_rules`, `delta_run` and `gpu_benchmark_verify` in the [provenance JSON](results-status-20261001.json).\n\nThe [code-compatibility update at the reviewed commit](https://github.com/kai124138/BinaryTransfomerJettager/blob/e56fd7361f0299c1721aa053506d1eabc092cdba/docs/current-work/CODE_COMPATIBILITY_20261001.md) records a bounded engineering PASS: 217 passing comparisons comprising 21 interface/behavior contracts, 100 configuration builds and 96 checkpoint-reload combinations. The work is available in [draft pull request #1](https://github.com/kai124138/BinaryTransfomerJettager/pull/1) and is not merged into main. Synthetic reload differences were zero within the `1e-7` tolerance. Historical metric reproduction, calibrated-width remeasurement and attribution of 74 checkpoint paths remain pending. This does not establish full historical compatibility or hardware readiness; uncovered historical entry points remain retained.\n\n## Work remaining, in dependency order\n\n1. Diagnose the recovered confirmation logs and checkpoints, verify resumability, and retain the uncertainty about the final queue trigger. Recover the b5 controller histories omitted from the initial storage scope.\n2. Complete the missing Chang certification, entropy and rule readout. Implement the selected option (c) in a dated revision, then repeat the required freeze, CPU checks and replacement pilot. K1 remains triggered until the remedy passes its gates.\n3. Choose the GPU product and packing from measured throughput and current capacity. Complete the selected product's 110-epoch memory/RSS canary, cost certification and decision-time checks. Resolve Delta's resource conditions and remaining preflight and fingerprint gates.\n4. Launch or resume only with explicit action-time authority, a validated immutable run handoff, a passing manifest check and cleared scientific gates. Saved pilot progress alone does not authorize production.\n5. After full schedules finish, validate selected checkpoints and report matched-seed comparisons with intervals. Evaluate fixed selections on the held-out archive; retain separate N8/N64 budgets and native versus augmented cost conventions. Diagnose Engram's metric-reproduction failure before using its final results.\n6. Review the bounded code-compatibility change in draft PR #1, recover missing historical associations and complete applicable metric and calibrated-width checks. Synthesize selected, validated candidates separately from training. The earlier [R4 synthesis attempt](R4_HARDWARE_SYNTHESIS.md) stopped at a Vitis frontend failure; it supplies no current-candidate hardware result.\n\nThe completed [60-model fixed-precision baseline](../../README.md#pre-conference-fixed-precision-study) remains the reference. FPGA resources, latency, initiation interval and timing closure for current candidates still require hardware measurements.\n\n[Current-work index](README.md) \u00b7 [Historical experiment index](EXPERIMENT_INDEX_20260923.md)\n",
+  "status": {
+    "schema_version": 1,
+    "record_date": "2026-10-01",
+    "evidence_scope": {
+      "method": "Reconciliation of saved scientific records, reviewed cluster observations, independently verified storage recovery and bounded engineering checks; no new scientific computation.",
+      "latest_campaign_evidence_date": "2026-09-29",
+      "live_cluster_observed_at_utc": "2026-10-01T05:13:12.975881+00:00",
+      "live_cluster_status": "Confirmation Job failed; its twelve current generations are recovered. Five b5 epoch-500 snapshots are recovered; full readout remains incomplete.",
+      "source_hashes_measured_on": "2026-10-01",
+      "training_launched_for_this_update": false,
+      "latest_operational_evidence_date": "2026-10-01",
+      "scientific_gates_cleared_by_this_update": false,
+      "reader_workload_launched_for_this_update": true,
+      "reader_workload_completed_for_this_update": true
+    },
+    "pt_weighting": {
+      "status": "completed; quoted from prior verification",
+      "source_ids": [
+        "pt_weighting_verify"
+      ],
+      "verification_date": "2026-09-26",
+      "runs_completed": 24,
+      "configuration": {
+        "constituents": 8,
+        "input_set": "l1x3",
+        "precision": "W1A8",
+        "maximum_epochs": 101,
+        "early_stopping_patience": 15
+      },
+      "metric": "macro one-vs-rest AUC",
+      "split": "held-out ROC-test archive",
+      "n_events": 260000,
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "spread": "sample standard deviation, ddof=1",
+      "values_rounded_as_source": true,
+      "arms": {
+        "BASE": {
+          "mean": 0.8711,
+          "sample_sd": 0.0013
+        },
+        "PTW5": {
+          "mean": 0.8603,
+          "sample_sd": 0.0019
+        },
+        "PTWNC": {
+          "mean": 0.8587,
+          "sample_sd": 0.002
+        }
+      },
+      "paired_comparisons": [
+        {
+          "comparison": "PTW5 - BASE",
+          "mean_delta": -0.0108,
+          "confidence_interval_95": [
+            -0.0124,
+            -0.0093
+          ],
+          "interval_method": "paired t",
+          "degrees_of_freedom": 7,
+          "seeds_lower": 8,
+          "seed_pairs": 8
+        },
+        {
+          "comparison": "PTWNC - BASE",
+          "mean_delta": -0.0125,
+          "confidence_interval_95": [
+            -0.0148,
+            -0.0101
+          ],
+          "interval_method": "paired t",
+          "degrees_of_freedom": 7,
+          "seeds_lower": 8,
+          "seed_pairs": 8
+        }
+      ],
+      "limitations": [
+        "Primary metric, paired comparison rule, falsifier and pT-sextile analysis were post hoc.",
+        "Numbers quote the source verification; this update did not independently recompute event-level predictions.",
+        "Conclusion applies to the tested N8 W1A8 l1x3 recipe."
+      ]
+    },
+    "architecture_attention": {
+      "source_ids": [
+        "architecture_attention_results",
+        "architecture_attention_report"
+      ],
+      "status": "training loops completed; trainer-recorded feasibility",
+      "epochs": 1000,
+      "metric_scope": {
+        "split": "internal validation",
+        "n_events": 124000
+      },
+      "architecture": {
+        "runs": 12,
+        "completed": 12,
+        "feasible_checkpoints_found": 5,
+        "seeds": [
+          1
+        ],
+        "budgets": "Configured per arm; A11 has a separate 500000 target."
+      },
+      "attention": {
+        "runs": 15,
+        "completed": 15,
+        "feasible_checkpoints_found": 0,
+        "seeds": [
+          4,
+          5,
+          6
+        ],
+        "target_ebops": 350000
+      }
+    },
+    "selected_checkpoint_evaluation": {
+      "status": "previously reported; not freshly verified",
+      "source_ids": [
+        "confirmation_public_snapshot"
+      ],
+      "split": "held-out ROC-test archive",
+      "n_events": 260000,
+      "seed": 1,
+      "deterministic_reload_max_abs_logit_difference_reported": 0.0,
+      "runs": [
+        {
+          "arm": "A02",
+          "constituents": 8,
+          "selected_epoch_one_based": 913,
+          "target_ebops": 350000,
+          "selected_ebops": 349298,
+          "held_out_accuracy": 0.60785,
+          "held_out_macro_ovr_auc": 0.8604315531
+        },
+        {
+          "arm": "A11",
+          "constituents": 8,
+          "selected_epoch_one_based": 789,
+          "target_ebops": 500000,
+          "selected_ebops": 479462,
+          "held_out_accuracy": 0.6233346154,
+          "held_out_macro_ovr_auc": 0.8738126864
+        }
+      ],
+      "limitations": [
+        "Single-seed evaluation.",
+        "A02 and A11 have different budgets; no same-budget or matched-seed superiority claim."
+      ]
+    },
+    "confirmation": {
+      "source_ids": [
+        "confirmation_public_snapshot",
+        "confirmation_later_status",
+        "cluster_capture_receipt",
+        "cluster_capture_review",
+        "pvc_transport_review",
+        "pvc_readout_review",
+        "pvc_readout_inventory"
+      ],
+      "declared_runs": 12,
+      "epochs_per_run": 1000,
+      "seeds": [
+        2,
+        3
+      ],
+      "families": [
+        {
+          "constituents": 8,
+          "arms": [
+            "A00",
+            "A02",
+            "A03"
+          ],
+          "target_ebops": 350000
+        },
+        {
+          "constituents": 64,
+          "arms": [
+            "A07",
+            "E02",
+            "E05"
+          ],
+          "target_ebops": 5000000
+        }
+      ],
+      "last_public_observation_utc": "2026-09-24T21:45:42Z",
+      "later_local_report": {
+        "status": "failed; not relaunched at the handoff",
+        "failure_date_approximate": "2026-09-26",
+        "diagnosed_date": "2026-09-27",
+        "source_handoff_utc": "2026-09-29T00:32:00Z",
+        "reported_epoch_ranges": {
+          "N8": [
+            281,
+            300
+          ],
+          "N64": [
+            240,
+            280
+          ]
+        },
+        "reported_failure_mechanism": "The queue runner exits the entire pod when one arm exits.",
+        "checkpoint_resumability": "reported resumable; not independently rechecked"
+      },
+      "current_status": "Incomplete: Job FailedIndexes; twelve current checkpoint generations recovered at 280\u2013318 of 1000 epochs. Recorded reload failures require diagnosis; exact final triggering arm unresolved.",
+      "final_confirmation_results_available": false,
+      "limitations": [
+        "Recovered per-run committed epochs supersede the earlier approximate progress ranges; copied bytes and internal metadata consistency do not establish resumability.",
+        "N8 and N64 use separate budgets.",
+        "The N64 5M target was chosen after the exploratory screen, not pre-registered before that screen.",
+        "status.failed=5 counts Kubernetes failures; it does not establish five failed scientific arms."
+      ],
+      "operational_evidence_ref": "operational_evidence.cluster_capture.jobs.confirmation",
+      "recovered_runs": [
+        {
+          "name": "confirm0923-a00-s2-e1000",
+          "generation": "epoch-0298",
+          "completed_epochs": 298,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a00-s2-e1000/latest.json",
+            "sha256": "4149b161c9af5493730690286644e9ff150621d0ee02b137b68e5b2f09117efd",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a00-s2-e1000/checkpoints/epoch-0298/state.json",
+            "sha256": "17f25099fc61a4224a254c564499c75253e362c4c8ecf7771e7cba690e3d9405",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0923-a02-s2-e1000",
+          "generation": "epoch-0281",
+          "completed_epochs": 281,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s2-e1000/latest.json",
+            "sha256": "abbec871c0818472bd530e8a278dd2117abddb7b483f5c5216dab0f101f10dcc",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s2-e1000/checkpoints/epoch-0281/state.json",
+            "sha256": "d0460bf5e79ec2122a456a7e0b3cd7a197478c440f79f0ff3a9fffecd643a0a8",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0923-a03-s2-e1000",
+          "generation": "epoch-0286",
+          "completed_epochs": 286,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s2-e1000/latest.json",
+            "sha256": "76d0734d7e97f530c183b3645f137b5e13b1b80ffddfe7fb11a7d474fbcca497",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s2-e1000/checkpoints/epoch-0286/state.json",
+            "sha256": "93bfb092a16265cd260c28099fd698b8e9ab3a5f581fd170fb29b7bfd7229adf",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0923-a00-s3-e1000",
+          "generation": "epoch-0318",
+          "completed_epochs": 318,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a00-s3-e1000/latest.json",
+            "sha256": "53712ad51f4f9c81e46dfe4cd683e8f3ebec6c45d73926a11a865ed3f543ddb2",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a00-s3-e1000/checkpoints/epoch-0318/state.json",
+            "sha256": "8297a269b6d4d322acfa1ecbb519d78221d527ca0d381c8d7c8abcf2ebd7a12d",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0923-a02-s3-e1000",
+          "generation": "epoch-0300",
+          "completed_epochs": 300,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/latest.json",
+            "sha256": "d184d8e1543a919b7368c7bb4602cddf2dd33cbdfb42448344ecc54e93910c0d",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/checkpoints/epoch-0300/state.json",
+            "sha256": "f88745ae5a857a923813182507285b4a791f618d0dfd0744f939baea9bea9435",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0923-a03-s3-e1000",
+          "generation": "epoch-0300",
+          "completed_epochs": 300,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/latest.json",
+            "sha256": "d184d8e1543a919b7368c7bb4602cddf2dd33cbdfb42448344ecc54e93910c0d",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/checkpoints/epoch-0300/state.json",
+            "sha256": "bf1779cd3131cd4dee53d92cdd0847edc545b23366cdbf97d448ea97c2526e51",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0924-a07-n64-s2-e1000-5m",
+          "generation": "epoch-0300",
+          "completed_epochs": 300,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/latest.json",
+            "sha256": "d184d8e1543a919b7368c7bb4602cddf2dd33cbdfb42448344ecc54e93910c0d",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/checkpoints/epoch-0300/state.json",
+            "sha256": "0e03c55b0d6eef55e2b3c09d6af5db763a5e58fc2712a011c8e491d7ba92219f",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0924-e02-n64-s2-e1000-5m",
+          "generation": "epoch-0300",
+          "completed_epochs": 300,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/latest.json",
+            "sha256": "d184d8e1543a919b7368c7bb4602cddf2dd33cbdfb42448344ecc54e93910c0d",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/checkpoints/epoch-0300/state.json",
+            "sha256": "e89d04838d7c8a5279ac549f38504686b342240961f532bbaa2effad09006556",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0924-e05-n64-s2-e1000-5m",
+          "generation": "epoch-0280",
+          "completed_epochs": 280,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s2-e1000-5m/latest.json",
+            "sha256": "d0948be38be3238e198f6cc223eb680d48fd6042df6863076b31d9cb9a9eae5a",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s2-e1000-5m/checkpoints/epoch-0280/state.json",
+            "sha256": "bbbaf0b57e194665c434f2c34b5d00f91f5d103e0e71634ae03f35eca61de597",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0924-a07-n64-s3-e1000-5m",
+          "generation": "epoch-0300",
+          "completed_epochs": 300,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s3-e1000-5m/latest.json",
+            "sha256": "d184d8e1543a919b7368c7bb4602cddf2dd33cbdfb42448344ecc54e93910c0d",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s3-e1000-5m/checkpoints/epoch-0300/state.json",
+            "sha256": "cf16511338ececac7a180406e3bbd96c7f6ffdea7b77f5e8e317213c7a610a87",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0924-e02-n64-s3-e1000-5m",
+          "generation": "epoch-0280",
+          "completed_epochs": 280,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s3-e1000-5m/latest.json",
+            "sha256": "d0948be38be3238e198f6cc223eb680d48fd6042df6863076b31d9cb9a9eae5a",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s3-e1000-5m/checkpoints/epoch-0280/state.json",
+            "sha256": "df843575d944fbad8857e6c1219a30089af31c25d8ad3d6dd6c1f0f0a56936cd",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        },
+        {
+          "name": "confirm0924-e05-n64-s3-e1000-5m",
+          "generation": "epoch-0280",
+          "completed_epochs": 280,
+          "configured_epochs": 1000,
+          "pointer": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s3-e1000-5m/latest.json",
+            "sha256": "d0948be38be3238e198f6cc223eb680d48fd6042df6863076b31d9cb9a9eae5a",
+            "line": 2
+          },
+          "state": {
+            "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s3-e1000-5m/checkpoints/epoch-0280/state.json",
+            "sha256": "d5af74ed10c59dd5819f81170e7f7b263109377b2f02a35b9719dad5c414a46e",
+            "line": 5
+          },
+          "checkpoint_reload_validity": "not established by this inventory",
+          "full_schedule_complete": false
+        }
+      ],
+      "failure_diagnosis": {
+        "recorded_mechanisms": [
+          "Selected-checkpoint reload metric assertions in four final saved logs (rtol=0, atol=1e-7).",
+          "Earlier CUDA illegal-address errors and nonfinite training have later resumed output."
+        ],
+        "exact_final_job_triggering_arm": "unresolved; final assertion blocks lack absolute timestamps and the terminal queue/pod log was not recovered."
+      }
+    },
+    "engram": {
+      "source_ids": [
+        "engram_report",
+        "engram_status"
+      ],
+      "status": "training loops completed; final metric reproduction failed for three arms",
+      "constituents": 16,
+      "runs": 4,
+      "epochs_completed_per_run": 1000,
+      "outer_validation_pass": [
+        "E00"
+      ],
+      "selected_checkpoint_metric_reproduction_failed": [
+        "E01",
+        "E02",
+        "E03"
+      ],
+      "feasible_checkpoints_found": 0,
+      "target_augmented_cost": 350000,
+      "held_out_final_results_verified": false
+    },
+    "constituent_screen": {
+      "source_ids": [
+        "constituent_screen_report"
+      ],
+      "status": "historical exploratory screen",
+      "declared_comparisons": 38,
+      "completed_50_epochs": 28,
+      "partial_33_to_40_epochs": 7,
+      "two_epoch_canary_only": 2,
+      "static_rejection": 1,
+      "feasible_checkpoints_found": 0
+    },
+    "chang": {
+      "source_ids": [
+        "chang_run",
+        "chang_b3_rules",
+        "chang_b3_certification",
+        "confirmation_later_status",
+        "cluster_capture_receipt",
+        "cluster_capture_review",
+        "pvc_readout_review",
+        "pvc_readout_inventory",
+        "chang_option_c_decision"
+      ],
+      "status": "Option c selected; original b5 readout and new revision/pilot pending; production blocked.",
+      "b3": {
+        "status": "epoch-500 pause and readout completed",
+        "arms": [
+          "A07-350-s1",
+          "C-s1",
+          "F-s1"
+        ],
+        "certified_primary_and_sensitivity_checkpoint_count": 4,
+        "arms_with_certified_checkpoints": [
+          "C-s1",
+          "F-s1"
+        ],
+        "arms_without_feasible_checkpoint": [
+          "A07-350-s1"
+        ]
+      },
+      "b5": {
+        "last_saved_status": "Four of five arms paused; C-prime still training at last recorded observation.",
+        "terminal_readout_available": false,
+        "current_status": "All five current and snapshot states record 500 completed epochs, with saved stored-cost reload verification passes; certification and entropy outputs are missing at the expected path.",
+        "operational_evidence_ref": "operational_evidence.cluster_capture.jobs.chang_b5",
+        "readout_job_current_observation": "Exact-name query with user=kai returned no Job; prior execution and artifacts remain unknown.",
+        "recovered_runs": [
+          {
+            "name": "chang0926-a-n64-s1",
+            "generation": "epoch-0500",
+            "completed_epochs": 500,
+            "configured_epochs": 7000,
+            "snapshot": {
+              "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s1/snapshots/epoch-0500/state.json",
+              "sha256": "f809dfa2a19a2b234dc36db0e697ac2ada7ba48029dfe9c6293cf7dc82849166",
+              "line": 5
+            },
+            "snapshot_equals_current_state": true,
+            "snapshot_files": [
+              "model_min_ebops.keras",
+              "model_unconstrained.keras",
+              "state.json"
+            ],
+            "trainer_recorded_best_feasible_present": false,
+            "trainer_recorded_auc_sensitivity_present": false
+          },
+          {
+            "name": "chang0926-a-n64-s2",
+            "generation": "epoch-0500",
+            "completed_epochs": 500,
+            "configured_epochs": 7000,
+            "snapshot": {
+              "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s2/snapshots/epoch-0500/state.json",
+              "sha256": "3e79806ae33eeeb6f3c029c5470ef2a70b1b5635847c9998d9062e4a47e68f5b",
+              "line": 5
+            },
+            "snapshot_equals_current_state": true,
+            "snapshot_files": [
+              "model_best.keras",
+              "model_best_auc_feasible.keras",
+              "model_min_ebops.keras",
+              "model_unconstrained.keras",
+              "state.json"
+            ],
+            "trainer_recorded_best_feasible_present": true,
+            "trainer_recorded_auc_sensitivity_present": true
+          },
+          {
+            "name": "chang0926-d-n64-s1",
+            "generation": "epoch-0500",
+            "completed_epochs": 500,
+            "configured_epochs": 7000,
+            "snapshot": {
+              "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-d-n64-s1/snapshots/epoch-0500/state.json",
+              "sha256": "4060b5d6d185239d0572ccb049e3030b3a570c18fc05c08fa9ea988bcd596420",
+              "line": 5
+            },
+            "snapshot_equals_current_state": true,
+            "snapshot_files": [
+              "model_best.keras",
+              "model_best_auc_feasible.keras",
+              "model_min_ebops.keras",
+              "model_unconstrained.keras",
+              "state.json"
+            ],
+            "trainer_recorded_best_feasible_present": true,
+            "trainer_recorded_auc_sensitivity_present": true
+          },
+          {
+            "name": "chang0926-cprime-n64-s1",
+            "generation": "epoch-0500",
+            "completed_epochs": 500,
+            "configured_epochs": 7000,
+            "snapshot": {
+              "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-cprime-n64-s1/snapshots/epoch-0500/state.json",
+              "sha256": "c1319f9fa7353af9cfe9274def1c92bd90a4001d8232ebd83726aee3ff719638",
+              "line": 5
+            },
+            "snapshot_equals_current_state": true,
+            "snapshot_files": [
+              "model_min_ebops.keras",
+              "model_unconstrained.keras",
+              "state.json"
+            ],
+            "trainer_recorded_best_feasible_present": false,
+            "trainer_recorded_auc_sensitivity_present": false
+          },
+          {
+            "name": "chang0926-e1-n64-s1",
+            "generation": "epoch-0500",
+            "completed_epochs": 500,
+            "configured_epochs": 7000,
+            "snapshot": {
+              "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-e1-n64-s1/snapshots/epoch-0500/state.json",
+              "sha256": "4e9308bee66c24b210872d3adbfecb90463ec92db95cc771f0a0c3abd059be26",
+              "line": 5
+            },
+            "snapshot_equals_current_state": true,
+            "snapshot_files": [
+              "model_min_ebops.keras",
+              "model_unconstrained.keras",
+              "state.json"
+            ],
+            "trainer_recorded_best_feasible_present": false,
+            "trainer_recorded_auc_sensitivity_present": false
+          }
+        ],
+        "readout_evidence": [
+          {
+            "path": "/data/chang-n64-20260926/pilot-b/readout-epoch-0500-42abed-b5/certify-snapshot-0500.json",
+            "status": "missing"
+          },
+          {
+            "path": "/data/chang-n64-20260926/pilot-b/readout-epoch-0500-42abed-b5/a26-entropy-epoch-0500.json",
+            "status": "missing"
+          },
+          {
+            "path": "/data/chang-n64-20260926/pilot-b/runs/<each b5 run>/activation_widths.jsonl",
+            "status": "not included in transport/export scope; source existence not established here",
+            "needed_for": "Per-epoch widths and genuine in-training/traced telemetry, subject to field inspection; exact W&B history may also be needed."
+          }
+        ]
+      },
+      "scientific_gate": {
+        "K1": "fired; not cleared",
+        "approval_of_option_c_or_d": "c explicitly selected",
+        "decision_recorded_at_utc": "2026-10-01T06:00:02.706672+00:00",
+        "required": "Complete original b5 readout; dated option-c amendment, new frozen revision/handoff, preflight and replacement pilot before production."
+      },
+      "pilot_tagging_metrics_promoted": false
+    },
+    "delta": {
+      "source_ids": [
+        "delta_run"
+      ],
+      "status": "resource canaries only; no completed screen result",
+      "E_A10_K4": {
+        "status": "finite training with acceptable recorded RSS; stopped to yield GPU",
+        "epochs_approximate": [
+          99,
+          100
+        ],
+        "full_110_epoch_phase_completed": false
+      },
+      "A07_A10_K3": {
+        "status": "failed GPU memory gate",
+        "oom": true
+      },
+      "A07_A10_two_survivors": {
+        "completed_epochs": 110,
+        "host_rss_gate": "both passed",
+        "packing_approval": "pending product and study resource conditions"
+      },
+      "launch_status": "pending preflight and resource gates"
+    },
+    "gpu_benchmark": {
+      "source_ids": [
+        "gpu_benchmark_verify"
+      ],
+      "status": "verified operational telemetry; hardware choice pending",
+      "jobs_applied": 16,
+      "jobs_completed": 9,
+      "jobs_not_scheduled_within_window": 7,
+      "executed_arm_runs": 70,
+      "epochs_per_arm_run": 21,
+      "checkpoint_verification_passes": 70,
+      "actual_schedulable_gpu_counts_measured": false,
+      "cross_product_node_spread_measured": false,
+      "selected_product": null,
+      "remaining_gates": [
+        "Product and packing choice using current capacity.",
+        "Chosen-product 110-epoch memory/RSS canary and eBOP certification.",
+        "Decision-time A10 comparison and registered falsifier checks."
+      ],
+      "physics_result": false
+    },
+    "code_and_hardware": {
+      "source_ids": [
+        "code_merge_study",
+        "legacy_r4_synthesis",
+        "code_compatibility_report"
+      ],
+      "code_merge_status": "MERGE_ENGINEERING_PASS for bounded local coverage; draft pull request #1, not merged into main.",
+      "merge_gates": [
+        "Historical selected-checkpoint metric reproduction remains pending.",
+        "Calibrated-width remeasurement remains pending.",
+        "Attribution of 74 checkpoint paths and remaining historical config/source associations remains pending.",
+        "Retain uncovered historical entry points until their applicable gates pass."
+      ],
+      "current_candidate_hardware_measurements_available": false,
+      "legacy_R4_status": "Stopped after Vitis frontend failures; no RTL or Vivado model synthesis result in cited snapshot.",
+      "engineering_checks": {
+        "total_passed": 217,
+        "interface_and_behavior_contracts": 21,
+        "config_build_comparisons": 100,
+        "checkpoint_reload_combinations": 96,
+        "probe_type": "deterministic synthetic inputs",
+        "max_abs_output_difference": 0.0,
+        "required_absolute_tolerance": 1e-07,
+        "scientific_accuracy_result": false
+      },
+      "historical_coverage": {
+        "attributed_checkpoint_paths": 206,
+        "config_seed_name_pairs": 94,
+        "research_configurations": 29,
+        "checkpoint_paths_without_attributable_metadata": 74,
+        "research_configurations_without_established_historical_coverage": 9,
+        "exact_renamed_public_config_historical_coverage": "not established",
+        "full_historical_compatibility": "not established"
+      },
+      "draft_pull_request": {
+        "number": 1,
+        "url": "https://github.com/kai124138/BinaryTransfomerJettager/pull/1",
+        "status": "draft; not merged",
+        "reviewed_commit": "e56fd7361f0299c1721aa053506d1eabc092cdba"
+      }
+    },
+    "next_steps": [
+      {
+        "order": 1,
+        "action": "Diagnose recovered confirmation reload failures and validate checkpoint resumability; recover remaining b5 controller histories and missing readout evidence.",
+        "recovery_status": "Initial 253-file storage transfer and independent hash review complete; exact final confirmation trigger remains uncertain."
+      },
+      {
+        "order": 2,
+        "action": "Complete original b5 certification, entropy and registered rule analysis. Implement selected option c in a dated revision, refreeze and repeat required checks and replacement pilot.",
+        "scientific_gate": "pending; option c chosen, K1 not cleared"
+      },
+      {
+        "order": 3,
+        "action": "Select GPU product and K; complete resource/certification checks and remaining Delta preflight and fingerprint gates."
+      },
+      {
+        "order": 4,
+        "action": "Launch/resume only with action-time authority, cleared scientific gates, validated immutable handoff and manifest lint.",
+        "source_ids": [
+          "run_handoff_workflow"
+        ]
+      },
+      {
+        "order": 5,
+        "action": "Complete schedules and checkpoint reproduction, then matched-seed intervals and fixed-selection held-out evaluation."
+      },
+      {
+        "order": 6,
+        "action": "Review draft code-compatibility PR #1; recover historical associations and complete applicable metric and calibrated-width checks, then separately synthesize validated candidates."
+      }
+    ],
+    "sources": {
+      "pt_weighting_verify": {
+        "local_path_relative_to_lab": "campaigns/2026-09-25-pt-weighting/VERIFY.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-26",
+        "sha256": "dac6c0c1d6c2fd28505e7113a92986337a2003efeaed183af144ccfcf2fe8171",
+        "bytes": 26259,
+        "scope": "Verification recomputed from held-out prediction artifacts on the stated source date."
+      },
+      "architecture_attention_results": {
+        "local_path_relative_to_lab": "publication/docs/current-work/training-results-20260923.json",
+        "public_repo_path": "docs/current-work/training-results-20260923.json",
+        "source_record_date": "2026-09-23T22:53:27.294311+00:00",
+        "sha256": "e4672910b281b4cf970b0bf73d9316b1ce113cf3276ac3d258d4958ef3372377",
+        "bytes": 21705,
+        "scope": "Saved trainer summaries and Job completion evidence."
+      },
+      "architecture_attention_report": {
+        "local_path_relative_to_lab": "publication/docs/current-work/TRAINING_RESULTS_20260923.md",
+        "public_repo_path": "docs/current-work/TRAINING_RESULTS_20260923.md",
+        "source_record_date": "2026-09-23",
+        "sha256": "c3e19d4f49655f5fb30ec61ceff29d5d94ddcdae400cf93ff883d29bc062b2f7",
+        "bytes": 5624,
+        "scope": "Existing public report; internal validation, n=124000."
+      },
+      "confirmation_public_snapshot": {
+        "local_path_relative_to_lab": "publication/docs/current-work/confirmation-status-20260924.json",
+        "public_repo_path": "docs/current-work/confirmation-status-20260924.json",
+        "source_record_date": "2026-09-24T21:45:42Z",
+        "sha256": "3904dcf99bfa4b86015e8ff6ffc176b27a9dc2137d8c8e4f376c59054c5a1377",
+        "bytes": 3344,
+        "scope": "Historical progress and selected seed-1 checkpoint evaluation."
+      },
+      "confirmation_later_status": {
+        "local_path_relative_to_lab": "campaigns/2026-09-26-training-batch/ONBOARDING.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-29T00:32:00Z",
+        "sha256": "581530e84da44d7ac13794e74c29e9a4a842350f30ba7e3f10fb44ab0caf6112",
+        "bytes": 16817,
+        "scope": "Section 10 reports failure around September 26, diagnosed September 27, with no relaunch at the handoff. Approximate epoch ranges are not reconciled against checkpoint files."
+      },
+      "engram_report": {
+        "local_path_relative_to_lab": "publication/docs/current-work/ENGRAM_STUDY.md",
+        "public_repo_path": "docs/current-work/ENGRAM_STUDY.md",
+        "source_record_date": "2026-09-23T22:53:00Z",
+        "sha256": "0ebecf021a9804a2db9215ab956dd577a4af703cdde1b6f5ec7681c28943c4fe",
+        "bytes": 6599,
+        "scope": "Completed training loops with final metric-reproduction failures for E01-E03."
+      },
+      "engram_status": {
+        "local_path_relative_to_lab": "publication/results/engram/status-20260923.json",
+        "public_repo_path": "results/engram/status-20260923.json",
+        "source_record_date": "2026-09-23",
+        "sha256": "ca4d9fc2a834c2a9d5034e6403e6a8326ce5a2852cbec2df630b33c843222b34",
+        "bytes": 4642,
+        "scope": "Existing machine-readable Engram status."
+      },
+      "constituent_screen_report": {
+        "local_path_relative_to_lab": "publication/docs/current-work/CONSTITUENT_SCREEN_20260923.md",
+        "public_repo_path": "docs/current-work/CONSTITUENT_SCREEN_20260923.md",
+        "source_record_date": "2026-09-23",
+        "sha256": "7bc0c0286482e17a32b057805c46a25ffa0934315f426c6367956f77f1e25015",
+        "bytes": 5897,
+        "scope": "Exploratory short screen, with later September 24 follow-up note.",
+        "public_counterpart_note": "SHA256 and byte count identify the local lab record, whose interpretation includes later edits not present in the linked historical public report. The screen counts quoted here agree in both versions.",
+        "public_counterpart_at_commit": "b2e2f7b48baa1b60e678a0a00b0e065f67a23d37",
+        "public_counterpart_sha256": "7b63cf77fd413f9fc59a478aa5e5f8393910204d8a40a13d653b4b9a8c747936"
+      },
+      "chang_run": {
+        "local_path_relative_to_lab": "campaigns/2026-09-26-training-batch/RUN.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-29",
+        "sha256": "98b0aefaca95ea19e7c30cc8d41ce6e99992268b9cde91441173588c05684b3c",
+        "bytes": 79389,
+        "scope": "Latest saved entry concerns the b5 pilot at 18:30-18:48Z, with telemetry read at 18:54Z; terminal b5 evidence is absent from this update."
+      },
+      "chang_b3_rules": {
+        "local_path_relative_to_lab": "campaigns/2026-09-26-training-batch/readout/b3/rules-b3.txt",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-29",
+        "sha256": "8137874f9245681bec7ff0feebddd107d1ef209312a6ade246cf29196d265fab",
+        "bytes": 26152,
+        "scope": "Saved analysis of the b3 epoch-500 pilot; K1 threshold fires for A07-350-s1."
+      },
+      "chang_b3_certification": {
+        "local_path_relative_to_lab": "campaigns/2026-09-26-training-batch/readout/b3/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-29",
+        "sha256": "9948e7b233dc6d09255beac5ad3bea461d1fa0cef7645362a444202eebca4eb9",
+        "bytes": 3627,
+        "scope": "Four checkpoint certifications passed across C-s1 and F-s1; A07-350-s1 had no feasible checkpoint."
+      },
+      "delta_run": {
+        "local_path_relative_to_lab": "campaigns/2026-09-27-delta-screen/RUN.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-29",
+        "sha256": "68192b9cea331571567e1616c21c3434b22873b661aba3b3a8ce919f3ba7d618",
+        "bytes": 39476,
+        "scope": "Latest entry at 06:08Z records A07 canary completion, with deletion at 06:09:28Z before its second pod ran."
+      },
+      "gpu_benchmark_verify": {
+        "local_path_relative_to_lab": "campaigns/2026-09-29-gpu-benchmark/VERIFY.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-29",
+        "sha256": "8ca574da1c31cb8f3a01eb90af91f4f177179f295b403e472513b250fbfd5fd9",
+        "bytes": 64659,
+        "scope": "Telemetry verification; source states data read 17:20-18:30Z; assumed available GPU counts, one node per shape."
+      },
+      "code_merge_study": {
+        "local_path_relative_to_lab": "campaigns/2026-09-26-code-line-merge/STUDY.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-09-26",
+        "sha256": "723347766ae8341e2490856959dd43fb4716618a651f235b1285678ca152361d",
+        "bytes": 9511,
+        "scope": "Study remains scratch with no result; records required CPU build and checkpoint-reload gates."
+      },
+      "legacy_r4_synthesis": {
+        "local_path_relative_to_lab": "publication/docs/current-work/R4_HARDWARE_SYNTHESIS.md",
+        "public_repo_path": "docs/current-work/R4_HARDWARE_SYNTHESIS.md",
+        "source_record_date": "2026-09-17T18:11:40+00:00",
+        "sha256": "0ddbb7b95ad51177ccc1be5000f5102ac6aa1c6f8a6a2755765e723ccb499097",
+        "bytes": 3651,
+        "scope": "Legacy synthesis attempt stopped in Vitis frontend before RTL generation."
+      },
+      "run_handoff_workflow": {
+        "local_path_relative_to_lab": "docs/infrastructure/run-handoff.md",
+        "public_repo_path": null,
+        "source_record_date": null,
+        "sha256": "d09fbbd0f27a3638456c06ced31ad6a1dc9f0e4e1311000874ecc60b0b4e6ffc",
+        "bytes": 8607,
+        "scope": "Current local workflow as read on 2026-10-01; source has no document date."
+      },
+      "cluster_capture_receipt": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/cluster-20261001T0513Z/receipt.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01T05:13:12.975881+00:00",
+        "sha256": "c29c16132fd07d5e7b2ad46f19d4533452b601ac2a0add70d9ea7988b3aa93e4",
+        "bytes": 3894,
+        "scope": "Receipt for three exact-name Job queries and two Job/owner-filtered pod queries; all operations exited zero. Raw stdout is not retained."
+      },
+      "cluster_capture_review": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/LIVE_CAPTURE_REVIEW.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "84406f768346097cbcb383b098c4f54068b2db3d666d4647dbec06772fc18750",
+        "bytes": 4619,
+        "scope": "Independent PASS for saved observations only; confirms five stored hashes and limits Job conditions to operational evidence."
+      },
+      "cluster_collector": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/recover.py",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "23b0f0aa781e8955332c650244ec450a06ef1d9d73a8647119e2852aaa3a0f1d",
+        "bytes": 24397,
+        "scope": "Reviewed and operator-reported executed collector identity; hash separately verified against the local file, not embedded in the capture receipt."
+      },
+      "pvc_status_capture": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/access-20261001T0518Z/pvc.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01T05:17:47.601818+00:00",
+        "sha256": "2f8bfacac33e84b25e9142ab5ef7b2c82b45d7cf9b36182961efccc4b558fcd7",
+        "bytes": 589,
+        "scope": "One-shot saved PVC metadata: Bound, 100Gi, ReadWriteMany; no data or checkpoint inspection."
+      },
+      "pvc_mount_capture": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/access-20261001T0518Z/mounts.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01T05:17:48.902193+00:00",
+        "sha256": "e977ae123b4cf1b4248c8de090e28990b34f4f1f93de0994eda144fc0626e08b",
+        "bytes": 506,
+        "scope": "One-shot namespace pod listing filtered to kai-data PVC mounts; zero matches at this observation."
+      },
+      "access_capture_receipt": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/access-20261001T0518Z/receipt.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "d3d2b5b61ce893e95fe21c86a6182a3a9870b22c10f6f99abb7d126c47a9f889",
+        "bytes": 966,
+        "scope": "Supplemental access receipt; this summary uses only PVC and mount observations, whose stored hashes were verified. Receipt has no single collection timestamp."
+      },
+      "code_compatibility_report": {
+        "local_path_relative_to_lab": "publication/docs/current-work/CODE_COMPATIBILITY_20261001.md",
+        "public_repo_path": "docs/current-work/CODE_COMPATIBILITY_20261001.md",
+        "source_record_date": "2026-10-01",
+        "sha256": "8e01d86a35736b19d3e2a86879065f98e2157424fbf495615a9551ea3e8d5685",
+        "bytes": 2403,
+        "scope": "Bounded engineering coverage only; historical metrics, calibrated widths, missing attribution and current-candidate hardware remain pending.",
+        "public_commit": "e56fd7361f0299c1721aa053506d1eabc092cdba",
+        "public_url": "https://github.com/kai124138/BinaryTransfomerJettager/blob/e56fd7361f0299c1721aa053506d1eabc092cdba/docs/current-work/CODE_COMPATIBILITY_20261001.md"
+      },
+      "pvc_transport_manifest": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/reader-run-20261001T0540Z/transfer-localfix-01/transport-manifest.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "1ce0c4fd969f03b84e1753c7274611d0e17669caaf22874b7baa0bcba862a41f",
+        "bytes": 199773,
+        "scope": "Recorded original PVC source and stored hashes; exact bounded scope."
+      },
+      "pvc_transfer_receipt": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/reader-run-20261001T0540Z/transfer-localfix-01/transfer-receipt.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "ef5cf9a7316b8c068299dcca5297d28eae699658f931a64dc0fb4c7904ab90f1",
+        "bytes": 61308,
+        "scope": "Verified local transfer, 253 files, finish204; no model deserialization."
+      },
+      "pvc_export_receipt": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/export-receipt.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "f2527c2327a0be249a1b2de268f1df258fb06dd345466aca935f794ea20a268b",
+        "bytes": 151417,
+        "scope": "Preserved local export; missing paths explicit, no resumability certificate."
+      },
+      "pvc_transport_review": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/PVC_TRANSPORT_REVIEW.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "f5e715fa481232df1ef819994dce58232956bedb83aa6378408d7e93ee4bee33",
+        "bytes": 5661,
+        "scope": "Independent PASS for all accepted byte hashes, pointer bindings and reader terminal identity."
+      },
+      "pvc_readout_review": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/PVC_READOUT_REVIEW.md",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "e48d42ec05c5d229c17569a76941adb88ff87970085df64ac1cdccdaa99c3d28",
+        "bytes": 12546,
+        "scope": "Metadata and saved-log inventory; no scientific recomputation or checkpoint reload."
+      },
+      "pvc_readout_inventory": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/pvc-readout-status-20261001.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "db951ac29fef37dc74c7254006ea579c79e90d989876c31510334e171aae39aa",
+        "bytes": 74157,
+        "scope": "Source-cited inventory of all seventeen runs and remaining evidence."
+      },
+      "recovery_reader_terminal_receipt": {
+        "local_path_relative_to_lab": "campaigns/2026-10-01-recovery/captures/reader-run-20261001T0540Z/observation-05-terminal/receipt.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "e87ca6aa2b055795cf7eb069e9533de64752d55f69a62fd0ea995e6f3f2ea8a0",
+        "bytes": 652,
+        "scope": "Same owned recovery Job completed; Pod exit0 without restart."
+      },
+      "chang_option_c_decision": {
+        "local_path_relative_to_lab": "local/2026-10-01-execution/chang-option-c-decision.json",
+        "public_repo_path": null,
+        "source_record_date": "2026-10-01",
+        "sha256": "bccbc0adc43ec0063aeae15da7ecfabdb2f6b2fc7c498eb86391d9d6d5a5918b",
+        "bytes": 744,
+        "scope": "Explicit current-session user selection of traced-cost PID; production gates remain pending."
+      }
+    },
+    "operational_evidence": {
+      "scope": "Sanitized portable summary of saved observations; no raw Job specifications, command environments or credentials.",
+      "cluster_capture": {
+        "source_ids": [
+          "cluster_capture_receipt",
+          "cluster_capture_review",
+          "cluster_collector"
+        ],
+        "observed_at_utc": "2026-10-01T05:13:12.975881+00:00",
+        "namespace": "cms-ml",
+        "owner_selector": "user=kai",
+        "authentication": "successful for the recorded queries",
+        "review_verdict": "PASS \u2014 saved observations only",
+        "receipt_sha256": "c29c16132fd07d5e7b2ad46f19d4533452b601ac2a0add70d9ea7988b3aa93e4",
+        "collector_sha256": "23b0f0aa781e8955332c650244ec450a06ef1d9d73a8647119e2852aaa3a0f1d",
+        "collector_identity_basis": "Independent review and operator-reported executed identity; collector hash is not embedded in the receipt.",
+        "hash_verification_scope": "All five stored hashes verified; raw stdout was not retained, so recorded raw-source hashes and sanitization transformation were not independently reproduced.",
+        "artifacts": [
+          {
+            "file": "kai-confirm-onegpu-0924-e0c0a3-r2.job.json",
+            "exit_code": 0,
+            "stored_sha256": "efc7bc841ee5cdf810b4d6e7e12ec0b410e80bbccf0e4a2c52b5a2def1286583",
+            "recorded_source_stdout_sha256": "af44708ec56e3f42bc438e13a6666c6dcba24521c32b63b08ddaa0102a83cde9"
+          },
+          {
+            "file": "kai-confirm-onegpu-0924-e0c0a3-r2.pods.json",
+            "exit_code": 0,
+            "stored_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+            "recorded_source_stdout_sha256": "7a779468a2dde976a9b896541df1e4ef805e813093bd5edb40ef1a6eea588edf"
+          },
+          {
+            "file": "kai-chang0926-pilotb5-42abed.job.json",
+            "exit_code": 0,
+            "stored_sha256": "ea0fbc66b13ca4f31112dee7448dbd7491b2246f299a4d82cc2312d4d4622afe",
+            "recorded_source_stdout_sha256": "25ac5947c14bd155812c0c379cae6644c36b1609951f4379094f41d13ff8c37d"
+          },
+          {
+            "file": "kai-chang0926-pilotb5-42abed.pods.json",
+            "exit_code": 0,
+            "stored_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+            "recorded_source_stdout_sha256": "7a779468a2dde976a9b896541df1e4ef805e813093bd5edb40ef1a6eea588edf"
+          },
+          {
+            "file": "kai-chang0926-readoutb5-42abed.job.json",
+            "exit_code": 0,
+            "stored_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+            "recorded_source_stdout_sha256": "7a779468a2dde976a9b896541df1e4ef805e813093bd5edb40ef1a6eea588edf"
+          }
+        ],
+        "jobs": {
+          "confirmation": {
+            "name": "kai-confirm-onegpu-0924-e0c0a3-r2",
+            "uid": "1a00632f-62d5-4bd0-aa4e-4a9afb13c54f",
+            "observed": "present",
+            "condition": {
+              "type": "Failed",
+              "status": "True",
+              "reason": "FailedIndexes",
+              "last_transition_time_utc": "2026-09-26T07:24:11Z"
+            },
+            "status_failed": 5,
+            "failed_indexes": "0",
+            "counter_interpretation": "Kubernetes status counter; not the number of failed scientific arms.",
+            "pods": {
+              "selector": "user=kai,job-name=kai-confirm-onegpu-0924-e0c0a3-r2",
+              "observed_count": 0
+            },
+            "logs_recovered": false
+          },
+          "chang_b5": {
+            "name": "kai-chang0926-pilotb5-42abed",
+            "uid": "d1821ce8-49fd-4389-95ba-a59bc78ec4f8",
+            "observed": "present",
+            "condition": {
+              "type": "Complete",
+              "status": "True",
+              "reason": "CompletionsReached",
+              "last_transition_time_utc": "2026-09-29T20:52:06Z"
+            },
+            "completion_time_utc": "2026-09-29T20:52:06Z",
+            "status_succeeded": 1,
+            "completed_indexes": "0",
+            "interpretation": "Kubernetes Job completion; not certification of the five pilot arms or checkpoints.",
+            "pods": {
+              "selector": "user=kai,job-name=kai-chang0926-pilotb5-42abed",
+              "observed_count": 0
+            },
+            "logs_recovered": false
+          },
+          "chang_b5_readout": {
+            "name": "kai-chang0926-readoutb5-42abed",
+            "uid": null,
+            "observed": "absent from exact-name query with user=kai selector",
+            "dependent_pod_and_log_collection": "skipped",
+            "prior_execution_or_artifacts": "unknown; current absence does not establish whether the readout ran or produced outputs."
+          }
+        },
+        "immutable_handoff": {
+          "binding_annotations": "absent from captured Jobs",
+          "context": "context unavailable"
+        },
+        "checkpoint_validity_established": false,
+        "scientific_gate_cleared": false
+      },
+      "pvc_access": {
+        "source_ids": [
+          "pvc_status_capture",
+          "pvc_mount_capture",
+          "access_capture_receipt"
+        ],
+        "pvc": {
+          "name": "kai-data",
+          "uid": "c5be55ec-3362-40a9-b283-f8d0750dcf95",
+          "phase": "Bound",
+          "capacity": {
+            "storage": "100Gi"
+          },
+          "accessModes": [
+            "ReadWriteMany"
+          ],
+          "observed_at_utc": "2026-10-01T05:17:47.601818+00:00",
+          "stored_sha256": "2f8bfacac33e84b25e9142ab5ef7b2c82b45d7cf9b36182961efccc4b558fcd7",
+          "recorded_source_stdout_sha256": "16926d2ceaa01ac54bb551d141aceb2052f54f7b9bd1bf344931384e62c6a75b"
+        },
+        "mounts": {
+          "observed_at_utc": "2026-10-01T05:17:48.902193+00:00",
+          "namespace": "cms-ml",
+          "filter": "all returned namespace pods filtered to persistentVolumeClaim.claimName=kai-data",
+          "observed_count": 0,
+          "stored_sha256": "e977ae123b4cf1b4248c8de090e28990b34f4f1f93de0994eda144fc0626e08b",
+          "recorded_source_stdout_sha256": "f63e1c1014448cd1c203cc45e1e466fbb5f5f7c842cbf552a1ae218a71bfd50a"
+        },
+        "receipt_sha256": "d3d2b5b61ce893e95fe21c86a6182a3a9870b22c10f6f99abb7d126c47a9f889",
+        "reader_route": "Subsequently completed one authorized read-only reader; see storage_recovery. PVC and mount-query observations retain their original 05:17 timestamps.",
+        "pvc_contents_exported": true,
+        "checkpoint_validity_established": false,
+        "subsequent_recovery_ref": "operational_evidence.storage_recovery"
+      },
+      "storage_recovery": {
+        "source_ids": [
+          "pvc_transport_manifest",
+          "pvc_transfer_receipt",
+          "pvc_export_receipt",
+          "pvc_transport_review",
+          "pvc_readout_review",
+          "pvc_readout_inventory",
+          "recovery_reader_terminal_receipt"
+        ],
+        "status": "byte-integrity review PASS; scientific validation pending",
+        "source_pvc_readonly": true,
+        "gpu_count": 0,
+        "files_verified": 253,
+        "bytes_verified": 63514020,
+        "file_types": {
+          "json": 118,
+          "logs": 37,
+          "keras": 81,
+          "optimizer_npz": 17
+        },
+        "missing_entries": 150,
+        "missing_entries_are_failed_run_count": false,
+        "refused_entries": 0,
+        "pointer_selected_current_generations": 17,
+        "confirmation_generations": 12,
+        "b5_epoch_500_snapshot_states": 5,
+        "all_current_generations_have_state_model_optimizer": true,
+        "cache_metadata_identities_match": 3,
+        "dataset_arrays_rehashed": false,
+        "models_loaded": false,
+        "reader": {
+          "job_name": "kai-recovery-ro-1001-cbb3dec6a6",
+          "job_uid": "5acf637b-db47-42a0-a3b4-fbd5c2f012f0",
+          "pod_uid": "09bf9a9f-405e-42b7-b8df-cde90e236fe9",
+          "container_finished_at_utc": "2026-10-01T05:54:10Z",
+          "job_completed_at_utc": "2026-10-01T05:54:59Z",
+          "exit_code": 0,
+          "restart_count": 0
+        },
+        "remaining_limitations": [
+          "Not an atomic cross-file snapshot or checkpoint-validity certificate.",
+          "Legacy training immutable-handoff context remains unavailable.",
+          "Source log hashes are reader observations; all stored transport/export bytes were independently rehashed.",
+          "Full controller history and original b5 readout remain pending."
+        ]
+      }
+    }
+  }
+}

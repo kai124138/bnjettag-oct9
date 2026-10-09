@@ -1,0 +1,28 @@
+$ python3 nrp-lab/nrp_doctor.py lint campaigns/2026-09-26-training-batch/manifests/pilot-job.json
+
+== campaigns/2026-09-26-training-batch/manifests/pilot-job.json :: kai-chang0926-pilot-77f1ca ==
+  note   required pool = 4 products / 109 nodes cluster-wide
+  note   no activeDeadlineSeconds (NRP has no universal 6 h cap — fine if deliberate)
+  note   [rule PACK] 6 arms per pod declared.
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+exit=0
+$ python3 nrp-lab/nrp_doctor.py lint campaigns/2026-09-26-training-batch/manifests/readout-job.json
+
+== campaigns/2026-09-26-training-batch/manifests/readout-job.json :: kai-chang0926-readout-77f1ca ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+exit=0
+$ python3 nrp-lab/nrp_doctor.py lint campaigns/2026-09-26-training-batch/manifests/cache-job.json
+
+== campaigns/2026-09-26-training-batch/manifests/cache-job.json :: kai-chang0926-cache-77f1ca ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+exit=0

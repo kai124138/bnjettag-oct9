@@ -1,0 +1,98 @@
+From a07cedbcb855bf8660ba7f0687b014512e3325f7 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:37:31 -0700
+Subject: [PATCH 31/38] qk-stream-min-bits: quant.qk_min_bits projects the Q/K
+ stream f to i + f >= floor at init and after every optimizer step (M007)
+
+---
+ code/bnhgq2/ablation.py   |  7 +++++++
+ code/bnhgq2/delta_keys.py | 19 +++++++++++++++++++
+ code/bnhgq2/qat.py        | 16 ++++++++++++++++
+ 3 files changed, 42 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index dbd3470..d358d20 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -172,6 +172,9 @@ def matching_initialization(cfg, sample, seed):
+     act_f0 = cfg['quant'].get('act_f0')  # Delta (act-init-f0): fixed initial f, i as calibrated
+     if act_f0 is not None:
+         f0_sites = qat.set_act_f0(model, act_f0)
++    if cfg['quant'].get('qk_min_bits'):  # Delta (qk-stream-min-bits): the floor holds from epoch 0
++        for quantizer in qat.qk_stream_quantizers(model):
++            quantizer._f.assign(np.maximum(quantizer._f.numpy(), float(cfg['quant']['qk_min_bits']) - quantizer._i.numpy()))
+     evidence = {'matched_weight_paths': copied,
+                 'matched_projection_count': matched_kernels,
+                 'equivalent_to_weight_reference': equivalent_to_weight_reference,
+@@ -468,6 +471,8 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_
+         placer = tf.constant(np.eye(xt.shape[-1], dtype='float32')[columns])   # (k, F)
+     latent_clip = cfg['quant'].get('latent_clip')  # Delta: clip binary latents after each step
+     clip_vars = [ly._kernel for ly in model.layers if isinstance(ly, (qat.BitQEinsumDense, qat.BitQDense))] if latent_clip else []
++    qk_min_bits = cfg['quant'].get('qk_min_bits')  # Delta (qk-stream-min-bits): post-step width floor
++    qk_quantizers = qat.qk_stream_quantizers(model) if qk_min_bits else []
+ 
+     @tf.function(jit_compile=False)
+     def epoch_step(order, frozen=False, signs=None):
+@@ -503,6 +508,8 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_
+             optimizer.apply_gradients(pairs)
+             for variable in clip_vars:
+                 variable.assign(tf.clip_by_value(variable, -float(latent_clip), float(latent_clip)))
++            for quantizer in qk_quantizers:
++                quantizer._f.assign(tf.maximum(quantizer._f, float(qk_min_bits) - quantizer._i))
+             if latent_ema is not None:
+                 latent_ema.update()
+             count = tf.cast(tf.shape(idx)[0], tf.float32)
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index ae3a85b..b3e353d 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -580,3 +580,22 @@ def _group_weight(value, cfg):
+ 
+ 
+ register('quant.ebops_group_weight', 'ebops-group-weight', _group_weight, export_ok=True)
++
++# qk-stream-min-bits (anchor tree only; M007, M055, M056, M059): width floor on the Q and K
++# streams (inputs of bit_block_<i>_attn_scores). f is projected to f >= qk_min_bits - i at init
++# and after every optimizer step, so i + f >= qk_min_bits holds on the i of that moment. Under
++# [A20] WRAP i is data-tracked by the forward (only f trains), so between steps the tracked i
++# can move and the floor is re-imposed at the next step; it is a projection, not a constraint on
++# a trainable i. V and the A.V inputs are untouched.
++UNWIRED.pop('quant.qk_min_bits', None)
++_DEEPSETS_EXCLUSIVE += ('quant.qk_min_bits',)
++
++
++def _qk_min_bits(value, cfg):
++    if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= 16:
++        return 'must be an int in [1, 16]'
++    if lookup(cfg, 'quant.act_calib') != 'free':
++        return "needs quant.act_calib 'free' (learned stream widths)"
++
++
++register('quant.qk_min_bits', 'qk-stream-min-bits', _qk_min_bits, export_ok=True)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index de3031d..0e2cbee 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -1023,3 +1023,19 @@ def set_act_f0(model, f0) -> list:
+     if not sites:
+         raise ValueError(f"{model.name}: quant.act_f0 set but no trainable datalane quantizer")
+     return sites
++
++
++def qk_stream_quantizers(model) -> list:
++    """Delta (qk-stream-min-bits): the Q and K stream quantizers (both inputs of every
++    bit_block_<i>_attn_scores QEinsum; V and the A.V inputs are not included)."""
++    out = []
++    for layer in model.layers:
++        if layer.name.startswith("bit_block_") and layer.name.endswith("_attn_scores"):
++            for iq in layer.iq:
++                q = iq.quantizer
++                if not (q.trainable and hasattr(q, "_f") and hasattr(q, "_i")):
++                    raise ValueError(f"{layer.name}: qk_min_bits needs learned-width Q/K stream quantizers")
++                out.append(q)
++    if not out:
++        raise ValueError(f"{model.name}: qk_min_bits set but the model has no attn_scores layer")
++    return out
+-- 
+2.50.1 (Apple Git-155)
+

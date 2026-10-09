@@ -1,0 +1,136 @@
+{
+ "rule_fraction": 0.9,
+ "k_by_class": {
+  "A07": 2
+ },
+ "phases": {
+  "E-k4": {
+   "class": "E",
+   "k_tested": 4,
+   "n_samples": 0,
+   "oom": false,
+   "per_arm": {
+    "delta0926-w2-rep-a-t350000-s1": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    },
+    "delta0926-w2-rep-a-t350000-s2": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    },
+    "delta0926-w2-rep-a-t350000-s3": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    },
+    "delta0926-w2-rep-a-t350000-s4": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    }
+   },
+   "pod_host_peak_mib": 13057.0,
+   "rss_gate_all_pass": false,
+   "arm_logs": [
+    "delta0926-w2-rep-a-t350000-s1-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-rep-a-t350000-s2-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-rep-a-t350000-s3-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-rep-a-t350000-s4-kai-delta0926-canary-v2-0.log"
+   ],
+   "k_accepted": null,
+   "error": "no nvidia-smi samples for this phase"
+  },
+  "E-k5": {
+   "class": "E",
+   "k_tested": 5,
+   "n_samples": 0,
+   "oom": false,
+   "per_arm": {
+    "delta0926-w2-p-350-t350000-s1": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    },
+    "delta0926-w2-p-350-t350000-s2": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    },
+    "delta0926-w2-p-350-t350000-s3": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    },
+    "delta0926-w2-p-350-t350000-s4": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    },
+    "delta0926-w2-rep-a-t350000-s5": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    }
+   },
+   "pod_host_peak_mib": 7446.0,
+   "rss_gate_all_pass": false,
+   "arm_logs": [
+    "delta0926-w2-p-350-t350000-s1-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-p-350-t350000-s2-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-p-350-t350000-s3-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-p-350-t350000-s4-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-rep-a-t350000-s5-kai-delta0926-canary-v2-0.log"
+   ],
+   "k_accepted": null,
+   "error": "no nvidia-smi samples for this phase"
+  },
+  "A07-k3": {
+   "class": "A07",
+   "k_tested": 3,
+   "n_samples": 1009,
+   "oom": true,
+   "per_arm": {
+    "delta0926-w2-rep-c-t5000000-s1": {
+     "gpu_peak_mib": null,
+     "rss_gate": {
+      "verdict": "PASS",
+      "slope_mb_per_epoch": 0.457,
+      "baseline_mb": 2530.0,
+      "projection_mb": 3444.0,
+      "at_epoch": 2000,
+      "limit_mb": 12100.0
+     }
+    },
+    "delta0926-w2-rep-c-t5000000-s2": {
+     "gpu_peak_mib": null,
+     "rss_gate": {
+      "verdict": "PASS",
+      "slope_mb_per_epoch": 0.515,
+      "baseline_mb": 2524.0,
+      "projection_mb": 3555.0,
+      "at_epoch": 2000,
+      "limit_mb": 12100.0
+     }
+    },
+    "delta0926-w2-rep-c-t5000000-s3": {
+     "gpu_peak_mib": null,
+     "rss_gate": null
+    }
+   },
+   "pod_host_peak_mib": 7445.0,
+   "rss_gate_all_pass": false,
+   "arm_logs": [
+    "delta0926-w2-rep-c-t5000000-s1-kai-delta0926-canary-a07-0.log",
+    "delta0926-w2-rep-c-t5000000-s1-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-rep-c-t5000000-s2-kai-delta0926-canary-a07-0.log",
+    "delta0926-w2-rep-c-t5000000-s2-kai-delta0926-canary-v2-0.log",
+    "delta0926-w2-rep-c-t5000000-s3-kai-delta0926-canary-a07-0.log",
+    "delta0926-w2-rep-c-t5000000-s3-kai-delta0926-canary-v2-0.log"
+   ],
+   "gpu_product": [
+    "NVIDIA A10"
+   ],
+   "card_mib": 23028.0,
+   "per_process_peak_mib": 8446.0,
+   "pod_peak_mib": 22545.0,
+   "pod_peak_over_card": 0.979,
+   "k_rule": 2,
+   "pod_within_90": false,
+   "k_accepted": 2
+  }
+ },
+ "note": "memory canary; sizes packs, not a result"
+}

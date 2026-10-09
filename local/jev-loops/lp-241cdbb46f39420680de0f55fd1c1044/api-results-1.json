@@ -1,0 +1,828 @@
+[
+  {
+    "tool": "jev_triage_logs",
+    "result": {
+      "audit_id": "jv-e1f63b3f2c09437d939f118630da3da8",
+      "model": "jev-1.13.0",
+      "answers": {
+        "memory": {
+          "type": "choice",
+          "choice": "gpu_memory",
+          "confidence": 1.0,
+          "probabilities": {
+            "gpu_memory": 1.0,
+            "environment": 0.0,
+            "numerical": 0.0,
+            "unknown": 0.0,
+            "dataset": 0.0,
+            "infrastructure": 0.0
+          }
+        },
+        "package": {
+          "type": "choice",
+          "choice": "environment",
+          "confidence": 1.0,
+          "probabilities": {
+            "infrastructure": 0.0,
+            "environment": 1.0,
+            "numerical": 0.0,
+            "dataset": 0.0,
+            "unknown": 0.0,
+            "gpu_memory": 0.0
+          }
+        },
+        "unclear": {
+          "type": "choice",
+          "choice": "unknown",
+          "confidence": 1.0,
+          "probabilities": {
+            "infrastructure": 0.0,
+            "environment": 0.0,
+            "numerical": 0.0,
+            "dataset": 0.0,
+            "unknown": 1.0,
+            "gpu_memory": 0.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 1025,
+        "output_tokens": 191
+      },
+      "latency_seconds": 0.328,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "results": [
+        {
+          "id": "memory",
+          "type": "choice",
+          "choice": "gpu_memory",
+          "confidence": 1.0,
+          "probabilities": {
+            "gpu_memory": 1.0,
+            "environment": 0.0,
+            "numerical": 0.0,
+            "unknown": 0.0,
+            "dataset": 0.0,
+            "infrastructure": 0.0
+          },
+          "disposition": "suggestion"
+        },
+        {
+          "id": "package",
+          "type": "choice",
+          "choice": "environment",
+          "confidence": 1.0,
+          "probabilities": {
+            "infrastructure": 0.0,
+            "environment": 1.0,
+            "numerical": 0.0,
+            "dataset": 0.0,
+            "unknown": 0.0,
+            "gpu_memory": 0.0
+          },
+          "disposition": "suggestion"
+        },
+        {
+          "id": "unclear",
+          "type": "choice",
+          "choice": "unknown",
+          "confidence": 1.0,
+          "probabilities": {
+            "infrastructure": 0.0,
+            "environment": 0.0,
+            "numerical": 0.0,
+            "dataset": 0.0,
+            "unknown": 1.0,
+            "gpu_memory": 0.0
+          },
+          "disposition": "review"
+        }
+      ],
+      "thresholds": {
+        "confidence": 0.8,
+        "margin": 0.25,
+        "status": "heuristic; not validated on lab data"
+      }
+    }
+  },
+  {
+    "tool": "jev_rank_snippets",
+    "result": {
+      "audit_id": "jv-048484e30a0c416bb29b9bbd68c1ec69",
+      "model": "jev-1.13.0",
+      "answers": {
+        "selection": {
+          "type": "score",
+          "score": 2.63,
+          "confidence": 0.63,
+          "legend": {
+            "0": "Unrelated",
+            "1": "Background only",
+            "2": "Useful partial evidence",
+            "3": "Directly answers the query"
+          },
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.01,
+            "2": 0.21,
+            "3": 0.73
+          }
+        },
+        "unrelated": {
+          "type": "score",
+          "score": 0.0,
+          "confidence": 1.0,
+          "legend": {
+            "0": "Unrelated",
+            "1": "Background only",
+            "2": "Useful partial evidence",
+            "3": "Directly answers the query"
+          },
+          "probabilities": {
+            "0": 1.0,
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 523,
+        "output_tokens": 32
+      },
+      "latency_seconds": 0.233,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "results": [
+        {
+          "id": "selection",
+          "type": "score",
+          "score": 2.63,
+          "confidence": 0.63,
+          "legend": {
+            "0": "Unrelated",
+            "1": "Background only",
+            "2": "Useful partial evidence",
+            "3": "Directly answers the query"
+          },
+          "probabilities": {
+            "0": 0.05,
+            "1": 0.01,
+            "2": 0.21,
+            "3": 0.73
+          },
+          "disposition": "review"
+        },
+        {
+          "id": "unrelated",
+          "type": "score",
+          "score": 0.0,
+          "confidence": 1.0,
+          "legend": {
+            "0": "Unrelated",
+            "1": "Background only",
+            "2": "Useful partial evidence",
+            "3": "Directly answers the query"
+          },
+          "probabilities": {
+            "0": 1.0,
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          },
+          "disposition": "suggestion"
+        }
+      ]
+    }
+  },
+  {
+    "tool": "jev_triage_review",
+    "result": {
+      "audit_id": "jv-f3ec57a657044402b4076e3e1e32585d",
+      "model": "jev-1.13.0",
+      "answers": {
+        "bug": {
+          "type": "choice",
+          "choice": "likely_bug",
+          "confidence": 0.84,
+          "probabilities": {
+            "insufficient_evidence": 0.12,
+            "likely_bug": 0.88,
+            "style": 0.0,
+            "maintainability": 0.0
+          }
+        },
+        "style": {
+          "type": "choice",
+          "choice": "style",
+          "confidence": 1.0,
+          "probabilities": {
+            "insufficient_evidence": 0.0,
+            "likely_bug": 0.0,
+            "style": 1.0,
+            "maintainability": 0.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 641,
+        "output_tokens": 108
+      },
+      "latency_seconds": 0.197,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "results": [
+        {
+          "id": "bug",
+          "type": "choice",
+          "choice": "likely_bug",
+          "confidence": 0.84,
+          "probabilities": {
+            "insufficient_evidence": 0.12,
+            "likely_bug": 0.88,
+            "style": 0.0,
+            "maintainability": 0.0
+          },
+          "disposition": "mandatory_review",
+          "severity": "A"
+        },
+        {
+          "id": "style",
+          "type": "choice",
+          "choice": "style",
+          "confidence": 1.0,
+          "probabilities": {
+            "insufficient_evidence": 0.0,
+            "likely_bug": 0.0,
+            "style": 1.0,
+            "maintainability": 0.0
+          },
+          "disposition": "suggestion"
+        }
+      ],
+      "thresholds": {
+        "confidence": 0.8,
+        "margin": 0.25,
+        "status": "heuristic; not validated on lab data"
+      }
+    }
+  },
+  {
+    "tool": "jev_screen_papers",
+    "result": {
+      "audit_id": "jv-37000d3dbd47488a8ab14418d94e808e",
+      "model": "jev-1.13.0",
+      "answers": {
+        "paper__binary_networks": {
+          "type": "score",
+          "score": 2.98,
+          "confidence": 0.98,
+          "legend": {
+            "0": "No evidence of relevance",
+            "1": "Peripheral relevance",
+            "2": "Relevant",
+            "3": "Central topic"
+          },
+          "probabilities": {
+            "0": 0.0,
+            "1": 0.0,
+            "2": 0.01,
+            "3": 0.99
+          }
+        },
+        "paper__fpga_deployment": {
+          "type": "score",
+          "score": 3.0,
+          "confidence": 1.0,
+          "legend": {
+            "0": "No evidence of relevance",
+            "1": "Peripheral relevance",
+            "2": "Relevant",
+            "3": "Central topic"
+          },
+          "probabilities": {
+            "0": 0.0,
+            "1": 0.0,
+            "2": 0.0,
+            "3": 1.0
+          }
+        },
+        "paper__jet_tagging": {
+          "type": "score",
+          "score": 2.82,
+          "confidence": 0.82,
+          "legend": {
+            "0": "No evidence of relevance",
+            "1": "Peripheral relevance",
+            "2": "Relevant",
+            "3": "Central topic"
+          },
+          "probabilities": {
+            "0": 0.0,
+            "1": 0.01,
+            "2": 0.16,
+            "3": 0.83
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 554,
+        "output_tokens": 57
+      },
+      "latency_seconds": 0.189,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "results": [
+        {
+          "id": "paper",
+          "dimensions": {
+            "binary_networks": {
+              "type": "score",
+              "score": 2.98,
+              "confidence": 0.98,
+              "legend": {
+                "0": "No evidence of relevance",
+                "1": "Peripheral relevance",
+                "2": "Relevant",
+                "3": "Central topic"
+              },
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.0,
+                "2": 0.01,
+                "3": 0.99
+              }
+            },
+            "fpga_deployment": {
+              "type": "score",
+              "score": 3.0,
+              "confidence": 1.0,
+              "legend": {
+                "0": "No evidence of relevance",
+                "1": "Peripheral relevance",
+                "2": "Relevant",
+                "3": "Central topic"
+              },
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.0,
+                "2": 0.0,
+                "3": 1.0
+              }
+            },
+            "jet_tagging": {
+              "type": "score",
+              "score": 2.82,
+              "confidence": 0.82,
+              "legend": {
+                "0": "No evidence of relevance",
+                "1": "Peripheral relevance",
+                "2": "Relevant",
+                "3": "Central topic"
+              },
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.01,
+                "2": 0.16,
+                "3": 0.83
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "tool": "jev_check_claims",
+    "result": {
+      "audit_id": "jv-a52f2e118c934c72a94404e661812972",
+      "model": "jev-1.13.0",
+      "answers": {
+        "claim": {
+          "type": "choice",
+          "choice": "overstated",
+          "confidence": 1.0,
+          "probabilities": {
+            "overstated": 1.0,
+            "absent": 0.0,
+            "unclear": 0.0,
+            "supported": 0.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 475,
+        "output_tokens": 51
+      },
+      "latency_seconds": 0.197,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "results": [
+        {
+          "id": "claim",
+          "type": "choice",
+          "choice": "overstated",
+          "confidence": 1.0,
+          "probabilities": {
+            "overstated": 1.0,
+            "absent": 0.0,
+            "unclear": 0.0,
+            "supported": 0.0
+          },
+          "disposition": "suggestion"
+        }
+      ],
+      "thresholds": {
+        "confidence": 0.8,
+        "margin": 0.25,
+        "status": "heuristic; not validated on lab data"
+      }
+    }
+  },
+  {
+    "tool": "jev_route_task",
+    "result": {
+      "audit_id": "jv-98d1ef4adcf7437995c31534d1c0718c",
+      "model": "jev-1.13.0",
+      "answers": {
+        "task": {
+          "type": "choice",
+          "choice": "cluster_ops",
+          "confidence": 0.84,
+          "probabilities": {
+            "physics_researcher": 0.0,
+            "results_analyst": 0.0,
+            "review_panel": 0.0,
+            "unknown": 0.03,
+            "ml_engineer": 0.1,
+            "cluster_ops": 0.87,
+            "paper_writer": 0.0,
+            "experiment_designer": 0.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 546,
+        "output_tokens": 89
+      },
+      "latency_seconds": 0.194,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "results": [
+        {
+          "id": "task",
+          "type": "choice",
+          "choice": "cluster_ops",
+          "confidence": 0.84,
+          "probabilities": {
+            "physics_researcher": 0.0,
+            "results_analyst": 0.0,
+            "review_panel": 0.0,
+            "unknown": 0.03,
+            "ml_engineer": 0.1,
+            "cluster_ops": 0.87,
+            "paper_writer": 0.0,
+            "experiment_designer": 0.0
+          },
+          "disposition": "suggestion"
+        }
+      ],
+      "thresholds": {
+        "confidence": 0.8,
+        "margin": 0.25,
+        "status": "heuristic; not validated on lab data"
+      }
+    }
+  },
+  {
+    "tool": "jev_check_methods",
+    "result": {
+      "audit_id": "jv-9b4f690b9b9f486bba75e1e0dd61a329",
+      "model": "jev-1.13.0",
+      "answers": {
+        "metrics": {
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 0.96,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 0.97,
+            "consistent": 0.0,
+            "missing": 0.03
+          }
+        },
+        "authority": {
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 1.0,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 1.0,
+            "missing": 0.0,
+            "consistent": 0.0
+          }
+        },
+        "selection": {
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 1.0,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 1.0,
+            "consistent": 0.0,
+            "missing": 0.0
+          }
+        },
+        "comparability": {
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 0.35,
+          "probabilities": {
+            "not_applicable": 0.01,
+            "conflict": 0.51,
+            "missing": 0.48,
+            "consistent": 0.0
+          }
+        },
+        "uncertainty": {
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 1.0,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 1.0,
+            "missing": 0.0,
+            "consistent": 0.0
+          }
+        },
+        "provenance": {
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 0.88,
+          "probabilities": {
+            "not_applicable": 0.01,
+            "conflict": 0.91,
+            "consistent": 0.0,
+            "missing": 0.08
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 5965,
+        "output_tokens": 292
+      },
+      "latency_seconds": 0.239,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "policy_sha256": "e8a26bf55100e6026dc28366574ce5cea3b0888a95dc5f3604498720eea39760",
+      "results": [
+        {
+          "rule": "metrics",
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 0.96,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 0.97,
+            "consistent": 0.0,
+            "missing": 0.03
+          },
+          "disposition": "mandatory_review"
+        },
+        {
+          "rule": "authority",
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 1.0,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 1.0,
+            "missing": 0.0,
+            "consistent": 0.0
+          },
+          "disposition": "mandatory_review"
+        },
+        {
+          "rule": "selection",
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 1.0,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 1.0,
+            "consistent": 0.0,
+            "missing": 0.0
+          },
+          "disposition": "mandatory_review"
+        },
+        {
+          "rule": "comparability",
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 0.35,
+          "probabilities": {
+            "not_applicable": 0.01,
+            "conflict": 0.51,
+            "missing": 0.48,
+            "consistent": 0.0
+          },
+          "disposition": "mandatory_review"
+        },
+        {
+          "rule": "uncertainty",
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 1.0,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 1.0,
+            "missing": 0.0,
+            "consistent": 0.0
+          },
+          "disposition": "mandatory_review"
+        },
+        {
+          "rule": "provenance",
+          "type": "choice",
+          "choice": "conflict",
+          "confidence": 0.88,
+          "probabilities": {
+            "not_applicable": 0.01,
+            "conflict": 0.91,
+            "consistent": 0.0,
+            "missing": 0.08
+          },
+          "disposition": "mandatory_review"
+        }
+      ],
+      "scientific_gate": "not_evaluated",
+      "launch_authorized": false
+    }
+  },
+  {
+    "tool": "jev_check_methods",
+    "result": {
+      "audit_id": "jv-ea88efbb5dd64a52b018288905663d6f",
+      "model": "jev-1.13.0",
+      "answers": {
+        "selection": {
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.99,
+          "probabilities": {
+            "missing": 0.0,
+            "conflict": 0.01,
+            "not_applicable": 0.0,
+            "consistent": 0.99
+          }
+        },
+        "comparability": {
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.43,
+          "probabilities": {
+            "missing": 0.42,
+            "conflict": 0.01,
+            "not_applicable": 0.0,
+            "consistent": 0.57
+          }
+        },
+        "uncertainty": {
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.97,
+          "probabilities": {
+            "missing": 0.02,
+            "conflict": 0.0,
+            "not_applicable": 0.0,
+            "consistent": 0.98
+          }
+        },
+        "provenance": {
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.98,
+          "probabilities": {
+            "missing": 0.01,
+            "conflict": 0.0,
+            "not_applicable": 0.0,
+            "consistent": 0.99
+          }
+        },
+        "metrics": {
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.99,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 0.0,
+            "missing": 0.01,
+            "consistent": 0.99
+          }
+        },
+        "authority": {
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 1.0,
+          "probabilities": {
+            "missing": 0.0,
+            "conflict": 0.0,
+            "not_applicable": 0.0,
+            "consistent": 1.0
+          }
+        }
+      },
+      "usage": {
+        "input_tokens": 6074,
+        "output_tokens": 286
+      },
+      "latency_seconds": 0.229,
+      "catalog_sha256": "dd6593d73e1b4ada3ac7270d2ae31cabde7ad659061d88c516969bef81d9c905",
+      "advisory_only": true,
+      "policy_sha256": "e8a26bf55100e6026dc28366574ce5cea3b0888a95dc5f3604498720eea39760",
+      "results": [
+        {
+          "rule": "selection",
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.99,
+          "probabilities": {
+            "missing": 0.0,
+            "conflict": 0.01,
+            "not_applicable": 0.0,
+            "consistent": 0.99
+          },
+          "disposition": "suggestion"
+        },
+        {
+          "rule": "comparability",
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.43,
+          "probabilities": {
+            "missing": 0.42,
+            "conflict": 0.01,
+            "not_applicable": 0.0,
+            "consistent": 0.57
+          },
+          "disposition": "review"
+        },
+        {
+          "rule": "uncertainty",
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.97,
+          "probabilities": {
+            "missing": 0.02,
+            "conflict": 0.0,
+            "not_applicable": 0.0,
+            "consistent": 0.98
+          },
+          "disposition": "suggestion"
+        },
+        {
+          "rule": "provenance",
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.98,
+          "probabilities": {
+            "missing": 0.01,
+            "conflict": 0.0,
+            "not_applicable": 0.0,
+            "consistent": 0.99
+          },
+          "disposition": "suggestion"
+        },
+        {
+          "rule": "metrics",
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 0.99,
+          "probabilities": {
+            "not_applicable": 0.0,
+            "conflict": 0.0,
+            "missing": 0.01,
+            "consistent": 0.99
+          },
+          "disposition": "suggestion"
+        },
+        {
+          "rule": "authority",
+          "type": "choice",
+          "choice": "consistent",
+          "confidence": 1.0,
+          "probabilities": {
+            "missing": 0.0,
+            "conflict": 0.0,
+            "not_applicable": 0.0,
+            "consistent": 1.0
+          },
+          "disposition": "suggestion"
+        }
+      ],
+      "scientific_gate": "not_evaluated",
+      "launch_authorized": false
+    }
+  }
+]

@@ -1,0 +1,369 @@
+From 2733b95fdbe71488cc284450bda77e62f039728b Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 15:12:48 -0700
+Subject: [PATCH 27/29] D20 regime B: opt-in train.ebops_trace_every k
+ (full-split reset trace at zero-based epoch 0, at (epoch+1) % k == 0 and at
+ the last epoch; BetaPID reads the in-training EBOPs on untraced epochs;
+ feasibility and all selected files at traced epochs only; snapshot cadence a
+ multiple of k); [D20] log line carries ebops_trace_seconds,
+ ebops_trace_over_epoch and train loss (physics v9 B2); verify_selected skips
+ a pause before the first traced epoch; CPU tests
+
+---
+ bnhgq2/ablation.py        |  84 +++++++++++++++++---
+ run_study.py              |   6 ++
+ tests/test_trace_every.py | 159 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 238 insertions(+), 11 deletions(-)
+ create mode 100644 tests/test_trace_every.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 14c89ad..4c87622 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -458,6 +458,37 @@ def ebops_trace_batch(cfg):
+     return int(cfg['train'].get('ebops_trace_batch', 2048))
+ 
+ 
++def ebops_trace_every(cfg):
++    """[D20] regime B (Kai, 2026-09-27): `train.ebops_trace_every: k` runs the full-split reset
++    trace only at traced epochs (see `is_traced_epoch`). Absent: None, one trace per epoch
++    (regime A, byte-identical to the runner before this key). Requires the [D20] trace sample
++    and the stored reload check, and a snapshot cadence that is a multiple of k, so every
++    snapshot (the epoch-500 readout) falls on a traced epoch."""
++    k = cfg['train'].get('ebops_trace_every')
++    if k is None:
++        return None
++    if isinstance(k, bool) or not isinstance(k, int) or k < 1:
++        raise ValueError(f'train.ebops_trace_every must be a positive int, got {k!r}')
++    if cfg['train'].get('ebops_trace_sample') is None:
++        raise ValueError('train.ebops_trace_every needs train.ebops_trace_sample ([D20])')
++    if cfg['train'].get('ebops_reload_check', 'retrace') != 'stored':
++        raise ValueError('train.ebops_trace_every needs train.ebops_reload_check "stored": a retrace '
++                         'on an untraced epoch would compare a reset trace with in-training EBOPs')
++    snapshot = cfg['experiment'].get('snapshot_every_epochs')
++    if snapshot and int(snapshot) % k:
++        raise ValueError(f'snapshot_every_epochs {snapshot} is not a multiple of ebops_trace_every {k}')
++    return k
++
++
++def is_traced_epoch(cfg, epoch):
++    """Zero-based `epoch` is traced iff epoch == 0, (epoch + 1) % k == 0, or it is the last epoch.
++    The epoch-0 trace is not needed to initialize the ranges (the reset trace before training,
++    `initial_ebops`, does that); it is there so the canary reads a traced end of epoch 1
++    against the end of epoch 10 (STUDY slot T, arbiter v9)."""
++    k = ebops_trace_every(cfg)
++    return k is None or epoch == 0 or (epoch + 1) % k == 0 or epoch + 1 == cfg['train']['epochs']
++
++
+ def model_ebops(model):
+     """The EBOPs sum BetaPID reads (`BaseBetaPID.get_ebops`, hgq2 0.1.9): the stored
+     `layer.ebops` of the top-level layers, whatever pass wrote them last."""
+@@ -574,6 +605,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         raise ValueError("train.ebops_reload_check must be 'retrace' or 'stored'")
+     trace_rows = ebops_trace_sample(cfg, xt)
+     trace_batch = ebops_trace_batch(cfg)
++    trace_every = ebops_trace_every(cfg)   # [D20] regime B; None => every epoch (regime A)
+ 
+     def traced_ebops(m):
+         return compute_ebops(m, trace_rows, batch_size=trace_batch)
+@@ -654,8 +686,14 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         # [D20] the in-training EBOPs (what HGQ2's FreeEBOPs would log: the stored
+         # layer.ebops of the last training step), read before the trace overwrites it.
+         in_training_ebops = model_ebops(model) if d20 else None
++        # [D20] regime B: untraced epochs run no trace; the model keeps its in-training
++        # ranges and stored EBOPs, and nothing below may select or test feasibility on them.
++        traced = is_traced_epoch(cfg, epoch)
+         trace_start = time.monotonic()
+-        cost = traced_ebops(model)
++        if traced:
++            cost = traced_ebops(model)
++        else:
++            cost = {'total': saved_ebops(model), 'per_layer': None}
+         trace_seconds = time.monotonic() - trace_start
+         # Evaluate exactly the serialized artifact. Live compiled-model inference
+         # and fresh-load inference can choose different floating-point kernels.
+@@ -680,11 +718,15 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         widths = width_snapshot(model)
+         if state['recovery_frozen']:
+             assert raw_widths(model) == state['freeze_widths'], 'Frozen activation grids moved'
+-        budget_met = cost['total'] <= final_target
+-        feasible = budget_met
++        # [D20] regime B: the budget, feasibility and every selection below exist only on a
++        # traced epoch; an untraced epoch is validated and logged, never a candidate.
++        budget_met = cost['total'] <= final_target if traced else None
++        feasible = budget_met if traced else False
+         point = {'epoch': epoch, 'val_macro_auc': auc,
+                  'val_categorical_accuracy': val_accuracy, 'ebops': cost['total']}
+-        if rule is not None:
++        if rule is not None and not traced:
++            above_floor = nondegenerate = None
++        elif rule is not None:
+             # [ND, arbiter v3 fix 1] feasible = budget met AND above the 0-bit floor AND above the majority rule.
+             above_floor = cost['total'] - rule['zero_floor_ebops']
+             nondegenerate = above_floor > 0 and val_accuracy > rule['val_accuracy_threshold']
+@@ -699,10 +741,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                               {'loss': loss, 'train_categorical_accuracy': accuracy,
+                                'val_categorical_accuracy': val_accuracy}, wandb_run)
+             raise Diverged('Nonfinite validation AUC')
+-        if state['lowest'] is None or cost['total'] < state['lowest']['ebops']:
++        if traced and (state['lowest'] is None or cost['total'] < state['lowest']['ebops']):
+             shutil.copy2(candidate, out / 'model_min_ebops.keras')
+             state['lowest'] = point
+-        if state['best_auc'] is None or auc > state['best_auc']['val_macro_auc']:
++        if traced and (state['best_auc'] is None or auc > state['best_auc']['val_macro_auc']):
+             shutil.copy2(candidate, out / 'model_unconstrained.keras')
+             state['best_auc'] = point
+         previous = state['best_feasible']
+@@ -722,12 +764,17 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             state.update(recovery_frozen=True, freeze_epoch=epoch + 1, freeze_widths=raw_widths(model))
+             print(f'[recovery] freeze at end of epoch {epoch + 1}; Adam slots and LR preserved', flush=True)
+         pid.on_epoch_end(epoch, {})
+-        if d20:
++        if d20 and traced:
+             # [D20] BetaPID reads the stored layer.ebops at on_epoch_end, which the trace
+             # above wrote last: the PID is driven by the traced EBOPs, the same number the
+             # feasibility test uses. Enforced here, not left to call order.
+             assert abs(pid._ebops - cost['total']) <= 1e-6 * max(cost['total'], 1), \
+                 ('BetaPID EBOPs differs from the traced EBOPs', pid._ebops, cost['total'])
++        elif d20:
++            # [D20] regime B, untraced epoch: no trace ran, so the PID reads the in-training
++            # EBOPs of the last training step (the number jsc150's FreeEBOPs logs).
++            assert pid._ebops == in_training_ebops, \
++                ('BetaPID EBOPs differs from the in-training EBOPs', pid._ebops, in_training_ebops)
+         state['pid'] = {'beta': pid.beta, 'ebops': pid._ebops,
+                         'integral': pid.pid.integral, 'prev_error': pid.pid.prev_error}
+         elapsed = time.monotonic() - start
+@@ -742,10 +789,13 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                 'activation_bits_mean': float(np.mean(np.concatenate(free))),
+                 'recovery_frozen': int(state['recovery_frozen']), 'epoch_seconds': elapsed,
+                 **{f'val_auc_{i}': v for i, v in enumerate(per_auc)}}
+-        if rule is not None:
++        if rule is not None and traced:
+             logs.update(ebops_budget_met=int(budget_met), ebops_above_floor=above_floor,
+                         nondegenerate=int(nondegenerate), feasible_degenerate=int(budget_met and not nondegenerate),
+                         val_accuracy_threshold=rule['val_accuracy_threshold'])
++        elif rule is not None:
++            logs.update(ebops_budget_met=None, ebops_above_floor=None, nondegenerate=None,
++                        feasible_degenerate=None, val_accuracy_threshold=rule['val_accuracy_threshold'])
+         if d20:
+             logs.update(ebops_in_training=in_training_ebops, pid_ebops=float(pid._ebops),
+                         ebops_in_training_over_traced=in_training_ebops / max(cost['total'], 1),
+@@ -753,6 +803,12 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                         # [D20] the trace's share of s_e, measured by every run (canary included)
+                         ebops_trace_seconds=trace_seconds, ebops_reload_check_seconds=reload_check_seconds,
+                         ebops_trace_over_epoch=(trace_seconds + reload_check_seconds) / max(elapsed, 1e-9))
++        if trace_every is not None:
++            # [D20] regime B: `ebops` and `budget_met` are traced quantities; null on an
++            # untraced epoch (the in-training value is `ebops_in_training`).
++            logs['ebops_traced'] = int(traced)
++            if not traced:
++                logs.update(ebops=None, budget_met=None, ebops_in_training_over_traced=None)
+         if epoch_observer is not None:
+             diagnostics = epoch_observer(model, sample, epoch)
+             if set(diagnostics) & set(logs):
+@@ -779,11 +835,17 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         if snapshot_every and (epoch + 1) % int(snapshot_every) == 0:
+             assert saved is not None, 'snapshot_every_epochs must be a multiple of checkpoint_every_epochs'
+             save_snapshot(out, state)
+-        floor_text = '' if rule is None else f" above_floor={above_floor} feasible={int(feasible)} degenerate={int(budget_met and not nondegenerate)}"
+-        print(f"[epoch {epoch + 1}/{epochs}] EBOPs={cost['total']} target={final_target}{floor_text} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name if saved else '-'}", flush=True)
++        floor_text = '' if rule is None or not traced else f" above_floor={above_floor} feasible={int(feasible)} degenerate={int(budget_met and not nondegenerate)}"
++        ebops_text = cost['total'] if traced else f"untraced in_training_ebops={cost['total']}"
++        # physics v9 B2: under [D20] the line carries the s_e split and the train loss, so the
++        # canary can be read from the arm log without W&B.
++        d20_text = '' if not d20 else (f" ebops_trace_seconds={trace_seconds:.2f}"
++                                       f" ebops_trace_over_epoch={logs['ebops_trace_over_epoch']:.3f} loss={loss:.6f}")
++        print(f"[epoch {epoch + 1}/{epochs}] EBOPs={ebops_text} target={final_target}{floor_text} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name if saved else '-'}{d20_text}", flush=True)
+         if wandb_run:
+             import wandb
+-            wandb_run.log(logs, step=epoch + 1)
++            wandb_run.log(logs if trace_every is None else {k: v for k, v in logs.items() if v is not None},
++                          step=epoch + 1)
+             wandb_run.summary.update(training_status_summary(state, selection_metric, stop_after))
+             if saved is not None and (epoch + 1) % cfg['experiment']['remote_every_epochs'] == 0:
+                 from .wandb_util import log_files_artifact
+diff --git a/run_study.py b/run_study.py
+index 27dd446..1e0bdc0 100644
+--- a/run_study.py
++++ b/run_study.py
+@@ -160,6 +160,12 @@ def verify_selected(cfg, row, out, state, arrays, info, source, start):
+     ablation, engram = run_engram.runtime()
+     import keras
+     selected = state['best_feasible'] or state['lowest']
++    if selected is None:
++        # [D20] regime B: a pause before the first traced epoch has no candidate yet (every
++        # selection is made at traced epochs only). Nothing to verify; never a failure.
++        print('CHECKPOINT_VERIFICATION_SKIPPED', json.dumps({'run': cfg['name'],
++              'completed_epochs': state['completed_epochs'], 'reason': 'no traced epoch yet'}), flush=True)
++        return None
+     filename = 'model_best.keras' if state['best_feasible'] else 'model_min_ebops.keras'
+     model = keras.models.load_model(out / filename, compile=False)
+     trace = ablation.selected_checkpoint_ebops(cfg, model, arrays[0])
+diff --git a/tests/test_trace_every.py b/tests/test_trace_every.py
+new file mode 100644
+index 0000000..19caab6
+--- /dev/null
++++ b/tests/test_trace_every.py
+@@ -0,0 +1,159 @@
++"""[D20] regime B (Kai, 2026-09-27): `train.ebops_trace_every: k`. The full-split reset trace runs
++only at traced epochs (e == 0, (e + 1) % k == 0, or the last epoch); BetaPID reads the in-training EBOPs
++on untraced epochs; feasibility and every selected file come from traced epochs only; the
++selected file retraces to its logged EBOPs; a resume across an untraced pause replays the same
++trajectory; an absent key traces every epoch and logs nothing new. CPU, tiny model, synthetic."""
++import copy
++import json
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_d20_trace import arrays, records
++from test_resume_cadence import tiny_cfg
++
++TIMING = ('epoch_seconds', 'ebops_trace_seconds', 'ebops_reload_check_seconds', 'ebops_trace_over_epoch')
++
++
++def regime_b(epochs=7, k=3):
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=epochs, ebops_trace_sample='train_full', ebops_reload_check='stored',
++                        ebops_trace_every=k)
++    # checkpoint cadence deliberately not a multiple of k (production: 25 against 10)
++    cfg['experiment'].update(checkpoint_every_epochs=2, snapshot_every_epochs=6)
++    return cfg
++
++
++def test_key_semantics():
++    from bnhgq2.ablation import ebops_trace_every, is_traced_epoch
++    cfg = tiny_cfg()
++    assert ebops_trace_every(cfg) is None
++    assert all(is_traced_epoch(cfg, e) for e in range(cfg['train']['epochs']))
++    cfg = regime_b(epochs=7, k=3)
++    assert ebops_trace_every(cfg) == 3
++    assert [e for e in range(7) if is_traced_epoch(cfg, e)] == [0, 2, 5, 6]  # 0: canary; 6: last
++    prod = regime_b(epochs=7000, k=10)
++    prod['experiment']['snapshot_every_epochs'] = 500
++    traced = [e for e in range(7000) if is_traced_epoch(prod, e)]
++    assert len(traced) == 701 and traced[:2] == [0, 9]
++    # STUDY slot T: the ends of epochs 1, 10, 500, 1,000, 2,000, 4,000 and 7,000 are traced
++    assert all(e - 1 in traced for e in (1, 10, 500, 1000, 2000, 4000, 7000))
++    for bad in (0, -1, True, 2.5, '10'):
++        c = regime_b()
++        c['train']['ebops_trace_every'] = bad
++        with pytest.raises(ValueError):
++            ebops_trace_every(c)
++    c = regime_b()
++    del c['train']['ebops_trace_sample']
++    with pytest.raises(ValueError):
++        ebops_trace_every(c)
++    c = regime_b()
++    c['train']['ebops_reload_check'] = 'retrace'
++    with pytest.raises(ValueError):
++        ebops_trace_every(c)
++    c = regime_b()
++    c['experiment']['snapshot_every_epochs'] = 4
++    with pytest.raises(ValueError):
++        ebops_trace_every(c)
++
++
++def test_regime_b_selection_and_pid(tmp_path, capsys):
++    import keras
++    from bnhgq2 import ablation
++    cfg = regime_b()
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    recs = records(tmp_path)
++    assert [r['ebops_traced'] for r in recs] == [1, 0, 1, 0, 0, 1, 1]
++    for r in recs:
++        if r['ebops_traced']:
++            assert r['ebops'] is not None and r['budget_met'] in (0, 1) and r['per_layer']
++            assert r['pid_ebops'] == pytest.approx(r['ebops'], rel=1e-6)
++            assert r['ebops_trace_seconds'] > 0
++        else:
++            # (a) untraced: no trace ran, BetaPID read the in-training EBOPs
++            assert r['ebops'] is None and r['budget_met'] is None and r['per_layer'] is None
++            assert r['pid_ebops'] == r['ebops_in_training'] > 0
++            assert r['ebops_trace_seconds'] < 0.05 and r['ebops_in_training_over_traced'] is None
++            assert np.isfinite(r['val_macro_auc'])            # validated every epoch
++    state = json.loads((tmp_path / 'checkpoints' / 'epoch-0007' / 'state.json').read_text())
++    for key in ('best_feasible', 'best_feasible_auc', 'lowest', 'best_auc'):
++        assert state[key]['epoch'] in (0, 2, 5, 6), (key, state[key])
++    # (c) every selected file is a traced candidate and retraces (reset, same rows) to its log
++    for name, key in (('model_best.keras', 'best_feasible'), ('model_min_ebops.keras', 'lowest'),
++                      ('model_best_auc_feasible.keras', 'best_feasible_auc')):
++        loaded = keras.models.load_model(tmp_path / name, compile=False)
++        assert ablation.saved_ebops(loaded) == state[key]['ebops']
++        assert ablation.compute_ebops(loaded, xt)['total'] == state[key]['ebops']
++    snap = json.loads((tmp_path / 'snapshots' / 'epoch-0006' / 'state.json').read_text())
++    assert snap['best_feasible']['epoch'] in (0, 2, 5)       # snapshots fall on traced epochs
++    budget = json.loads((tmp_path / 'ebops_budget.json').read_text())
++    assert budget['selected']['epoch'] in (0, 2, 5, 6)
++    out = capsys.readouterr().out
++    assert '[epoch 2/7] EBOPs=untraced in_training_ebops=' in out and '[epoch 1/7] EBOPs=untraced' not in out
++    assert ' ebops_trace_seconds=' in out and ' ebops_trace_over_epoch=' in out and ' loss=' in out
++
++
++def test_degenerate_counter_counts_traced_epochs_only(tmp_path):
++    from bnhgq2 import ablation
++    cfg = regime_b()
++    # 64 validation rows: threshold p_maj + 5 SE = 0.2 + 5 * 0.05 = 0.45, above a tiny model's
++    # accuracy, so every traced epoch is feasible-degenerate
++    cfg['experiment']['nondegenerate'] = {'zero_floor_ebops': 0, 'se_multiple': 5}
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    recs = records(tmp_path)
++    state = json.loads((tmp_path / 'checkpoints' / 'epoch-0007' / 'state.json').read_text())
++    traced_degenerate = sum(1 for r in recs if r['ebops_traced'] and r['feasible_degenerate'])
++    assert state['feasible_degenerate_epochs'] == traced_degenerate
++    assert state['feasible_degenerate_epochs'] <= 4
++    for r in recs:
++        if not r['ebops_traced']:
++            assert r['ebops_above_floor'] is None and r['nondegenerate'] is None
++            assert r['feasible_degenerate'] is None and r['ebops_budget_met'] is None
++
++
++def test_resume_across_untraced_pause_replays(tmp_path):
++    """Pause at epoch 4 (untraced), resume to 7: the same records (minus wall time) and the
++    same selected-file weights as an uninterrupted run (CPU)."""
++    import keras
++    from bnhgq2 import ablation
++    cfg = regime_b()
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'straight')
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'paused', stop_after=4)
++    # (c) the checkpoint written at an untraced epoch carries the last traced selection
++    ck = tmp_path / 'paused' / 'checkpoints' / 'epoch-0004'
++    assert json.loads((ck / 'state.json').read_text())['best_feasible']['epoch'] in (0, 2)
++    assert (ck / 'model_best.keras').read_bytes() == (tmp_path / 'paused' / 'model_best.keras').read_bytes()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'paused')
++
++    def strip(rs):
++        return [{k: v for k, v in r.items() if k not in TIMING} for r in rs]
++    assert strip(records(tmp_path / 'straight')) == strip(records(tmp_path / 'paused'))
++    for name in ('model_best.keras', 'model_min_ebops.keras'):
++        a = keras.models.load_model(tmp_path / 'straight' / name, compile=False)
++        b = keras.models.load_model(tmp_path / 'paused' / name, compile=False)
++        for va, vb in zip(a.weights, b.weights):
++            assert np.asarray(va).tobytes() == np.asarray(vb).tobytes(), va.path
++
++
++def test_absent_key_traces_every_epoch(tmp_path):
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=3, ebops_trace_sample='train_full', ebops_reload_check='stored')
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    for r in records(tmp_path):
++        assert 'ebops_traced' not in r and r['ebops'] is not None and r['per_layer']
++        assert r['pid_ebops'] == pytest.approx(r['ebops'], rel=1e-6)
++
++
++def test_pause_before_first_trace_skips_verification(tmp_path, capsys):
++    import run_study
++    cfg = regime_b()
++    state = {'best_feasible': None, 'lowest': None, 'completed_epochs': 2}
++    assert run_study.verify_selected(cfg, {}, tmp_path, state, None, None, None, 0.) is None
++    assert 'CHECKPOINT_VERIFICATION_SKIPPED' in capsys.readouterr().out
+-- 
+2.50.1 (Apple Git-155)
+

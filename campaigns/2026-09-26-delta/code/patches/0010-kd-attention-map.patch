@@ -1,0 +1,88 @@
+From 1be08e7282e53dfb6c9faf2359318cc55fbb391e Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:41:33 -0700
+Subject: [PATCH 10/24] kd-attention-map:
+ experiment.distillation.attention_coefficient, KL on the softmax maps (M036)
+
+---
+ code/bnhgq2/ablation.py   | 24 ++++++++++++++++++++++--
+ code/bnhgq2/delta_keys.py | 16 ++++++++++++++++
+ 2 files changed, 38 insertions(+), 2 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 6852a8b..3aa2802 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -206,6 +206,20 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_
+     distillation = cfg['experiment'].get('distillation')
+     temperature = float(distillation['temperature']) if distillation else 2.
+     coefficient = float(distillation['coefficient']) if distillation else 0.
++    attention_coefficient = float(distillation.get('attention_coefficient', 0.)) if distillation else 0.
++    if attention_coefficient:  # Delta (kd-attention-map): probe the softmax outputs
++        assert teacher_model is not None, 'attention-map KD needs the teacher model'
++        maps = [ly.name for ly in model.layers if ly.name.endswith('_attn_softmax')]
++        student_probe = keras.Model(model.inputs, [model.outputs[0]] + [model.get_layer(n).output for n in maps])
++        teacher_probe = keras.Model(teacher_model.inputs, [teacher_model.outputs[0]] + [teacher_model.get_layer(n).output for n in maps])
++        assert [tuple(t.shape[1:]) for t in student_probe.outputs] == [tuple(t.shape[1:]) for t in teacher_probe.outputs], 'teacher attention maps differ in shape'
++
++    def forward(xb):
++        if attention_coefficient:
++            logits, *student_maps = student_probe(xb, training=True)
++            teacher_logits_b, *teacher_maps = teacher_probe(xb, training=False)
++            return logits, teacher_logits_b, student_maps, teacher_maps
++        return model(xb, training=True), None, [], []
+     all_vars = tuple(model.trainable_variables)
+     width_ids = {id(v) for _, q in activation_quantizers(model) if q.trainable and hasattr(q, '_f') for v in (q._i, q._f)}
+     weight_vars = tuple(v for v in all_vars if id(v) not in width_ids)
+@@ -222,9 +236,11 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_
+             idx = order[start:tf.minimum(start + batch, n)]
+             xb, yb = tf.gather(x, idx), tf.gather(y, idx)
+             with tf.GradientTape() as tape:
+-                logits = model(xb, training=True)
++                logits, teacher_logits_b, student_maps, teacher_maps = forward(xb)
+                 ce = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=yb, logits=logits))
+-                if teacher_model is not None:  # Delta: teacher forward on this batch
++                if attention_coefficient:
++                    teacher_logp = tf.nn.log_softmax(teacher_logits_b / temperature)
++                elif teacher_model is not None:  # Delta: teacher forward on this batch
+                     teacher_logp = tf.nn.log_softmax(teacher_model(xb, training=False) / temperature)
+                 else:
+                     teacher_logp = tf.nn.log_softmax(tf.gather(teacher, idx) / temperature)
+@@ -232,6 +248,10 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_
+                 kd = temperature ** 2 * tf.reduce_mean(tf.reduce_sum(tf.exp(teacher_logp) * (teacher_logp - student_logp), axis=-1)) if distillation else tf.constant(0.)
+                 resource_loss = tf.add_n(model.losses) if model.losses else tf.constant(0.)
+                 loss = ce + coefficient * kd + resource_loss
++                if attention_coefficient:  # KL(teacher map || student map) over keys, mean over b, h, t
++                    kl = [tf.reduce_mean(tf.reduce_sum(t * (tf.math.log(tf.maximum(t, 1e-9)) - tf.math.log(tf.maximum(s, 1e-9))), axis=-1))
++                          for t, s in zip(teacher_maps, student_maps)]
++                    loss = loss + attention_coefficient * tf.add_n(kl) / len(kl)
+             gradients = tape.gradient(loss, variables)
+             pairs = [(g, v) for g, v in zip(gradients, variables) if g is not None]
+             optimizer.apply_gradients(pairs)
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 852b68e..561755f 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -183,3 +183,19 @@ def _distillation(value, cfg):
+ 
+ 
+ register('experiment.distillation', 'kd-unblock-s-runner', _distillation, export_ok=True)
++
++# kd-attention-map: attention-map distillation term (card R09; M036). Needs a teacher with the
++# same heads and N. The term enters the loss only; the logged distillation_loss stays logit KD.
++DISTILLATION_KEYS.add('attention_coefficient')
++
++
++def _distillation_with_maps(value, cfg):
++    message = _distillation(value, cfg)
++    if message:
++        return message
++    coef = value.get('attention_coefficient', 0.)
++    if not isinstance(coef, (int, float)) or coef < 0:
++        return 'attention_coefficient must be >= 0'
++
++
++REGISTRY['experiment.distillation']['check'] = _distillation_with_maps
+-- 
+2.50.1 (Apple Git-155)
+

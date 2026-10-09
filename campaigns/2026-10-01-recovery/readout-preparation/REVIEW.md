@@ -1,0 +1,28 @@
+# Historical b5 readout preparation: critical review
+
+Verdict: **PASS — diagnostic preparation only**. All findings in [REVIEW_findings.md](REVIEW_findings.md) are resolved. This is readiness for the historical readout, not a successful readout or K1/production clearance. No remote action, model/array loading or scientific computation was performed by this reviewer.
+
+The reviewed pending-gate handoff is `rh-4a8b192840deadfff570106a`. Exact identities:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| Immutable `record.json` | `4a8b192840deadfff570106a1c1e94e74b42abe3c34387d3effecca37fe7b68e` |
+| Generated `job.json` | `5f14905c54c724e31044fc3b55b4ad343c34ba8db2f1ff89b3186c8b4d0ad10b` |
+| Historical compressed source | `42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0` |
+| `driver.py` | `3c89aea04665002e18c4e9579e3611dfa1071596ddca0dc8a7f8844d152b9a46` |
+| `receive.py` | `29421107d2a9507e701d76561eed4620a65979fd8bb3bc34f83f424eb85ae1c5` |
+| Input scope | `c330367a8073f5b17b72d99f0a1e88b8c4fd5b88606999792d655f5281880ca3` |
+
+All ten hashes in [REVIEW_INPUTS.json](REVIEW_INPUTS.json) were independently reproduced. Driver and scope bytes are embedded and checked in the exact Job command. The compressed source equals the original frozen ConfigMap payload byte for byte; the five original index/config associations are unchanged. All 41 positive input identities match the recovered export receipt. Five expected-absent `DIVERGED.json` markers, selected source inputs and copied telemetry are checked before/after analysis. The commands write only new diagnostic outputs; the optional model-writing certification argument is absent. The writable PVC mount is honestly disclosed: source protection relies on the reviewed commands and hash checks, not mount-level write prevention.
+
+The registered CPU computations, full training certification split and full validation entropy split are retained. Certification covers the feasible primary/AUC selections; the three arms without feasible selections do not acquire fallback certification. Entropy retains its original labelled fallback. The wrapper copies five bounded telemetry histories without computing new rule arithmetic. The original package-dependent source-manifest check remains; the incorrect `hgq` lookup is corrected to `hgq2`. TF32 wording distinguishes explicit certification disabling from unchanged CPU-only entropy. The shape remains 8 CPU, 24 GiB memory, 12 GiB ephemeral storage, no GPU, four-hour deadline, no retries and no service-account token mount, plus the standard handoff init.
+
+The receiver now checks sensitive Job/Pod execution fields, resources, volumes and mounts exactly, with only explicit harmless defaults and `NVIDIA_VISIBLE_DEVICES=void` normalization. Init environment/arguments, mount subpaths, unreviewed lifecycle/probe hooks and ephemeral containers are rejected. Its required eleven artifact entries cannot disappear silently. Envelope identities, ordered chunks, hashes, bounded gzip expansion and exclusive output creation bind the accepted bytes to the captured owned Pod and immutable handoff; transport status remains separate from scientific validity. Missing/refused outputs, nonzero computations and incomplete telemetry produce nonzero wrapper status. Aggregate export exhaustion stops further reads. The final local receiver strengthening was re-read and all ten tests rerun successfully; Job, driver and scope bytes stayed unchanged.
+
+Independent verification: all ten final synthetic transport tests pass; all 18 existing handoff tests pass. Three additional complete-wrapper synthetic exercises pass: successful mocked diagnostics produce eleven verified files and exit zero; a missing certification output produces ten files, eleven explicit entries and exit one; a changed input produces exit one with the input-change failure recorded. Subprocess computations were stubbed in these exercises. Final `validate` and offline-default `launch` both pass without cluster calls.
+
+[Live lint receipt](live-lint-rh-4a8b1928.json) records exit zero at `2026-10-01T06:18:00.009937Z` for the exact reviewed Job, with no errors or warnings. Its log SHA-256 `8446f2152ecd0f2ce15b6c720bff831af76f123369f8ead738fc343f004f308d` matches the saved bytes. All three hashes in [live-prerequisites-01/receipt.json](live-prerequisites-01/receipt.json) match: the same historical b5 UID is Complete, the matching Pod query is empty and the new readout Job is absent at the recorded 06:17:14Z observations. Combined with the recovered five epoch-500 snapshot states, these support the readout-only B3 prerequisite. They do not establish successful checkpoint reload or runtime availability of every input.
+
+**Remaining action boundary:** the current record intentionally has a pending scientific gate. The orchestrator may prepare a new brief-only identity that cites this review and the concrete original finish-readout authorization, clearing only the historical diagnostic prerequisite. Preserve the separate pending production gate and revalidate/re-lint that final exact identity before supported submission. Kai's existing instruction already authorizes finishing the readout; this review introduces no repeated-permission requirement. K1 remains fired, option (c) requires a separate amendment/freeze/pilot, full A/C′/K1 and matched-regime analysis remain pending, and legacy training context remains unavailable.
+
+Final findings: **A: none open. B: none open. C: none open.** Actual execution, dependency installation, data/checkpoint readability, complete log retention and scientific outcomes remain unproven until the new run supplies reviewed evidence.

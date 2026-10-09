@@ -1,0 +1,427 @@
+[
+  {
+    "name": "a07-current",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": null,
+      "softmax_quant": null,
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 32,
+      "n_heads": 4,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "learned"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 24816782,
+      "per_layer": {
+        "input_proj": 49152,
+        "bit_block_0_attn_Wq": 524288,
+        "bit_block_0_attn_Wk": 524288,
+        "bit_block_0_attn_scores": 8388608,
+        "bit_block_0_attn_softmax": 2738062,
+        "bit_block_0_attn_Wv": 524288,
+        "bit_block_0_attn_ctx": 10485760,
+        "bit_block_0_attn_Wo": 524288,
+        "bit_block_0_ffn_fc1": 524288,
+        "bit_block_0_ffn_fc2": 524288,
+        "head_fc1": 8192,
+        "head_fc2": 1280
+      }
+    },
+    "parameters": 12788,
+    "zero": {
+      "total": 4580398,
+      "per_layer": {
+        "input_proj": 6144,
+        "bit_block_0_attn_Wq": 65536,
+        "bit_block_0_attn_Wk": 65536,
+        "bit_block_0_attn_scores": 131072,
+        "bit_block_0_attn_softmax": 2738062,
+        "bit_block_0_attn_Wv": 65536,
+        "bit_block_0_attn_ctx": 1310720,
+        "bit_block_0_attn_Wo": 65536,
+        "bit_block_0_ffn_fc1": 65536,
+        "bit_block_0_ffn_fc2": 65536,
+        "head_fc1": 1024,
+        "head_fc2": 160
+      },
+      "width_check": {
+        "n_quantizers": 12,
+        "all_ok": true
+      }
+    },
+    "one": {
+      "total": 4580398,
+      "per_layer": {
+        "input_proj": 6144,
+        "bit_block_0_attn_Wq": 65536,
+        "bit_block_0_attn_Wk": 65536,
+        "bit_block_0_attn_scores": 131072,
+        "bit_block_0_attn_softmax": 2738062,
+        "bit_block_0_attn_Wv": 65536,
+        "bit_block_0_attn_ctx": 1310720,
+        "bit_block_0_attn_Wo": 65536,
+        "bit_block_0_ffn_fc1": 65536,
+        "bit_block_0_ffn_fc2": 65536,
+        "head_fc1": 1024,
+        "head_fc2": 160
+      },
+      "width_check": {
+        "n_quantizers": 12,
+        "all_ok": true
+      }
+    },
+    "zero_floor_over_target": 13.086851428571428,
+    "one_bit_alive_over_target": 13.086851428571428,
+    "headroom_at_zero_floor": -4230398,
+    "status": "STATIC_INFEASIBLE"
+  },
+  {
+    "name": "a07-chang",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": "WRAP",
+      "softmax_quant": "chang",
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 32,
+      "n_heads": 4,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "learned"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 13182317,
+      "per_layer": {
+        "input_proj": 47104,
+        "bit_block_0_attn_Wq": 458752,
+        "bit_block_0_attn_Wk": 458752,
+        "bit_block_0_attn_scores": 6004736,
+        "bit_block_0_attn_softmax": 2741837,
+        "bit_block_0_attn_Wv": 458752,
+        "bit_block_0_attn_ctx": 2359296,
+        "bit_block_0_attn_Wo": 131072,
+        "bit_block_0_ffn_fc1": 262144,
+        "bit_block_0_ffn_fc2": 253952,
+        "head_fc1": 5120,
+        "head_fc2": 800
+      }
+    },
+    "parameters": 61951,
+    "zero": {
+      "total": 343053,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 0,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 0,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true
+      }
+    },
+    "one": {
+      "total": 1005741,
+      "per_layer": {
+        "input_proj": 6144,
+        "bit_block_0_attn_Wq": 65536,
+        "bit_block_0_attn_Wk": 65536,
+        "bit_block_0_attn_scores": 131072,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 65536,
+        "bit_block_0_attn_ctx": 131072,
+        "bit_block_0_attn_Wo": 65536,
+        "bit_block_0_ffn_fc1": 65536,
+        "bit_block_0_ffn_fc2": 65536,
+        "head_fc1": 1024,
+        "head_fc2": 160
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true
+      }
+    },
+    "zero_floor_over_target": 0.9801514285714286,
+    "one_bit_alive_over_target": 2.873545714285714,
+    "headroom_at_zero_floor": 6947,
+    "status": "STATIC_FEASIBLE"
+  },
+  {
+    "name": "e-chang",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": "WRAP",
+      "softmax_quant": "chang",
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 24,
+      "n_heads": 2,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "none"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 8965267,
+      "per_layer": {
+        "input_proj": 35328,
+        "bit_block_0_attn_Wq": 258048,
+        "bit_block_0_attn_Wk": 258048,
+        "bit_block_0_attn_scores": 4485120,
+        "bit_block_0_attn_softmax": 1373435,
+        "bit_block_0_attn_Wv": 258048,
+        "bit_block_0_attn_ctx": 1843200,
+        "bit_block_0_attn_Wo": 73728,
+        "bit_block_0_ffn_fc1": 198656,
+        "bit_block_0_ffn_fc2": 178176,
+        "head_fc1": 2880,
+        "head_fc2": 600
+      }
+    },
+    "parameters": 31735,
+    "zero": {
+      "total": 171526,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 0,
+        "bit_block_0_attn_softmax": 171526,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 0,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true
+      }
+    },
+    "one": {
+      "total": 619198,
+      "per_layer": {
+        "input_proj": 4608,
+        "bit_block_0_attn_Wq": 36864,
+        "bit_block_0_attn_Wk": 36864,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 171526,
+        "bit_block_0_attn_Wv": 36864,
+        "bit_block_0_attn_ctx": 98304,
+        "bit_block_0_attn_Wo": 36864,
+        "bit_block_0_ffn_fc1": 49152,
+        "bit_block_0_ffn_fc2": 49152,
+        "head_fc1": 576,
+        "head_fc2": 120
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true
+      }
+    },
+    "zero_floor_over_target": 0.49007428571428574,
+    "one_bit_alive_over_target": 1.769137142857143,
+    "headroom_at_zero_floor": 178474,
+    "status": "STATIC_FEASIBLE"
+  },
+  {
+    "name": "e-current",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": null,
+      "softmax_quant": null,
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 24,
+      "n_heads": 2,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "none"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 17533319,
+      "per_layer": {
+        "input_proj": 36864,
+        "bit_block_0_attn_Wq": 294912,
+        "bit_block_0_attn_Wk": 294912,
+        "bit_block_0_attn_scores": 6291456,
+        "bit_block_0_attn_softmax": 1369031,
+        "bit_block_0_attn_Wv": 294912,
+        "bit_block_0_attn_ctx": 7864320,
+        "bit_block_0_attn_Wo": 294912,
+        "bit_block_0_ffn_fc1": 393216,
+        "bit_block_0_ffn_fc2": 393216,
+        "head_fc1": 4608,
+        "head_fc2": 960
+      }
+    },
+    "parameters": 7148,
+    "zero": {
+      "total": 2701439,
+      "per_layer": {
+        "input_proj": 4608,
+        "bit_block_0_attn_Wq": 36864,
+        "bit_block_0_attn_Wk": 36864,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 1369031,
+        "bit_block_0_attn_Wv": 36864,
+        "bit_block_0_attn_ctx": 983040,
+        "bit_block_0_attn_Wo": 36864,
+        "bit_block_0_ffn_fc1": 49152,
+        "bit_block_0_ffn_fc2": 49152,
+        "head_fc1": 576,
+        "head_fc2": 120
+      },
+      "width_check": {
+        "n_quantizers": 12,
+        "all_ok": true
+      }
+    },
+    "one": {
+      "total": 2701439,
+      "per_layer": {
+        "input_proj": 4608,
+        "bit_block_0_attn_Wq": 36864,
+        "bit_block_0_attn_Wk": 36864,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 1369031,
+        "bit_block_0_attn_Wv": 36864,
+        "bit_block_0_attn_ctx": 983040,
+        "bit_block_0_attn_Wo": 36864,
+        "bit_block_0_ffn_fc1": 49152,
+        "bit_block_0_ffn_fc2": 49152,
+        "head_fc1": 576,
+        "head_fc2": 120
+      },
+      "width_check": {
+        "n_quantizers": 12,
+        "all_ok": true
+      }
+    },
+    "zero_floor_over_target": 7.7183971428571425,
+    "one_bit_alive_over_target": 7.7183971428571425,
+    "headroom_at_zero_floor": -2351439,
+    "status": "STATIC_INFEASIBLE"
+  },
+  {
+    "name": "f-chang",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": "WRAP",
+      "softmax_quant": "chang",
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 32,
+      "n_heads": 4,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "none"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 12878966,
+      "per_layer": {
+        "input_proj": 47104,
+        "bit_block_0_attn_Wq": 458752,
+        "bit_block_0_attn_Wk": 458752,
+        "bit_block_0_attn_scores": 5783552,
+        "bit_block_0_attn_softmax": 2746870,
+        "bit_block_0_attn_Wv": 458752,
+        "bit_block_0_attn_ctx": 2285568,
+        "bit_block_0_attn_Wo": 131072,
+        "bit_block_0_ffn_fc1": 262144,
+        "bit_block_0_ffn_fc2": 241664,
+        "head_fc1": 4096,
+        "head_fc2": 640
+      }
+    },
+    "parameters": 59903,
+    "zero": {
+      "total": 343053,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 0,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 0,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true
+      }
+    },
+    "one": {
+      "total": 1005741,
+      "per_layer": {
+        "input_proj": 6144,
+        "bit_block_0_attn_Wq": 65536,
+        "bit_block_0_attn_Wk": 65536,
+        "bit_block_0_attn_scores": 131072,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 65536,
+        "bit_block_0_attn_ctx": 131072,
+        "bit_block_0_attn_Wo": 65536,
+        "bit_block_0_ffn_fc1": 65536,
+        "bit_block_0_ffn_fc2": 65536,
+        "head_fc1": 1024,
+        "head_fc2": 160
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true
+      }
+    },
+    "zero_floor_over_target": 0.9801514285714286,
+    "one_bit_alive_over_target": 2.873545714285714,
+    "headroom_at_zero_floor": 6947,
+    "status": "STATIC_FEASIBLE"
+  }
+]

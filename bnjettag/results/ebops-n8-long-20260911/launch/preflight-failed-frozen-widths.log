@@ -1,0 +1,40 @@
+/cmcode/hgq2.tar.gz: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+=== BNJetTag FINAL preflight (PVC-free) Fri Sep 11 22:16:51 UTC 2026 ===
+[deps] pinned install (mirror .venv-hgq2)
+--- data source reachability: Zenodo train tarball (HEAD, no download) ---
+  OK Zenodo train tarball reachable: 2725115104 bytes
+  PASS data-source
+--- build all 5 configs (CPU) + param counts + binary gate ---
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789165013.622395      21 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1789165013.719500      21 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789165016.135546      21 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789165018.569642      21 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+  ebops-n8-20260910-b25-w1a8 [3817d3c8] params=18,657 trainable=18,469 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260910-b50-w1a8 [ccaa1033] params=18,657 trainable=18,469 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260910-b75-w1a8 [ac37330a] params=18,657 trainable=18,469 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260910-control-w1a8 [6c498e72] params=18,657 trainable=18,469 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260910-costfirst-b50-w1a8 [c452955e] params=18,657 trainable=18,469 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260911-e1000-b350k-w1a8 [7044e68d] params=18,657 trainable=18,469 taps=19 binary_gate=OK(15 layers)
+  PASS build
+PREFLIGHT_ALL_PASS
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789165026.445354      30 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1789165026.542581      30 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789165028.676415      30 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789165031.049790      30 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+Traceback (most recent call last):
+  File "/work/code/check_ebops_target.py", line 157, in <module>
+    main()
+  File "/work/code/check_ebops_target.py", line 45, in main
+    assert variables
+           ^^^^^^^^^
+AssertionError

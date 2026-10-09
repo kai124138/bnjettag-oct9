@@ -1,0 +1,69 @@
+{
+  "selection_cost": 533092,
+  "selection_cost_convention": "native_hgq2_plus_custom_estimate",
+  "native_hgq2_backbone_ebops": 515172,
+  "custom_estimated_bitops": 17920,
+  "modules": {
+    "jet_engram": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 17920,
+      "components": {
+        "encoder_comparisons": 5632,
+        "hash_addressing": 0,
+        "table_reduction_adds": 0,
+        "query_key_dot": 0,
+        "gate_affine_clip": 0,
+        "gate_value_products": 0,
+        "residual_adds": 12288
+      },
+      "logical_table_bits": 131072,
+      "logical_table_bytes": 16384,
+      "table_read_bits_per_jet": 4096,
+      "vector_reads_per_jet": 16,
+      "independent_addresses_per_bank_per_jet": 16,
+      "two_read_port_replicas_for_whole_jet_ii1": 8,
+      "replicated_table_bytes_estimate": 131072,
+      "threshold_storage_bits": 336,
+      "encoder_comparisons_per_jet": 352,
+      "hash_words_per_jet": 0,
+      "exact_tuple_addressing": true,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    }
+  },
+  "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals.",
+  "run": "engram-e02-s1",
+  "checkpoint": "model_min_ebops.keras",
+  "checkpoint_sha256": "f6309c700d4a727c3c126dcdec077adff00cc215fd60c346bf1e915103b9e9b8",
+  "completed_epochs": 100,
+  "selected": {
+    "epoch": 99,
+    "val_macro_auc": 0.8694581403250925,
+    "val_categorical_accuracy": 0.6102983870967742,
+    "ebops": 533092
+  },
+  "budget_met": false,
+  "validation_accuracy": 0.6102983870967742,
+  "validation_macro_auc": 0.86945815285001,
+  "validation_per_class_auc": [
+    0.8387572071956456,
+    0.869682177652637,
+    0.8660077798883674,
+    0.8514408123326486,
+    0.9214027871807515
+  ],
+  "validation_labels_sha256": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e",
+  "validation_inputs_sha256": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+  "seed": 1,
+  "test_set_used": false,
+  "hardware_validated": false,
+  "train_sample_occupied_slots": [
+    512
+  ],
+  "occupancy_note": "Occupancy is not a hash-collision measurement."
+}

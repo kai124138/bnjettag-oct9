@@ -1,0 +1,469 @@
+--- /tmp/claude-1000/-home-kaimoe-lab-bnjettag/e92600b4-dce3-4d77-b804-05a4a62d92c5/scratchpad/freeze_p.orig.py	2026-10-05 14:18:40.725954086 +0900
++++ /home/kaimoe/lab/bnjettag/campaigns/2026-10-05-pilot-program/freeze_p.py	2026-10-05 15:26:17.883926858 +0900
+@@ -55,13 +55,147 @@
+ TAGS = 'pilot1005,pilot-program,r1,option-c-ladder,regime-b,validation-only'
+ GPU_PRODUCT = ['NVIDIA-GeForce-RTX-3090']                # STUDY §3: one product per round
+ PER_ARM_CPU = 2
+-N_ARMS = 23
++N_ARMS = 23   # b3fb22c8; a tree with a later patch (0042+) carries its own count (index.json, checked vs PROGRAM.json)
+ PER_ARM_MEMORY_GI = 10      # RSS gate 8,192 MiB + about 2 GiB for pip, monitor and page cache (one arm)
+ EPHEMERAL_GI = 16
+ RSS_GATE_LIMIT_MB, RSS_GATE_WINDOW = str(8 * 1024), '5:105'
+ STOP_AFTER = 500
+ MONITOR_EVERY_S = 1800
+ GATE_DEADLINE_S, READOUT_DEADLINE_S = 14400, 28800
++# --- Fixes after PREFLIGHT review v1 (opt-in; defaults reproduce the b3fb22 build-half manifests) ---
++# A1: certify_ebops.py:120 imports evaluate_roc, which exists only in campaigns/chang0926.
++READOUT_PYTHONPATH = '/work/code:/work/code/campaigns/chang0926'
++# A2: bound R1 spend. Pod-level activeDeadlineSeconds (counts from pod start, not Job creation).
++#   A07 K=1 RTX 3090 (gpu-benchmark VERIFY.md:109): 30.85 s/epoch -> 500 ep 15,425 s (4.3 h);
++#   total elapsed 38.8 s per run-epoch -> 19,400 s (5.4 h), the pessimistic bound. Pre-arm (pip +
++#   fingerprint) about 4-5 min (training-batch ONBOARDING.md:31). E at K=1 is unmeasured.
++#   Worst case per arm: PREARM_RETRY_S (one early retry) + POD_DEADLINE_S + GRACE (backstop kill)
++#   = 600 + 20,800 + 180 = 21,580 s; x 23 = 496,340 s = 137.87 GPU-h <= 138 (STUDY §11).
++POD_DEADLINE_S = 20800
++PREARM_RETRY_S = 600         # a failure before run_pack starts and within this many s of script start is retryable
++RESERVE_S = 420              # run_pack's own timeout ends this long before the pod deadline
++KILL_AFTER_S = 150           # timeout: SIGTERM, then SIGKILL after this (run_pack's child grace is 120 s)
++BACKOFF_PER_INDEX_BOUNDED = 1
++EXIT_RSS_GATE, EXIT_ARM_FINAL, EXIT_PREARM_RETRY, EXIT_ARM_DEADLINE = 5, 76, 75, 124
++FINAL_EXIT_CODES = [EXIT_RSS_GATE, EXIT_ARM_FINAL, EXIT_ARM_DEADLINE, 137, 143]   # 137/143: pod-deadline kill of PID 1
++OPTS = {'readout_pythonpath': False, 'bounded': False, 'diag': False}
++# F5 (STUDY_arbiter_v1; constructive A2/A3): readout_diag.json, descriptive only, never a rule input and never
++# read by readout_pilot.py or PROGRAM.json. Standard library; runs after readout.json is written; its exit
++# status does not enter the Job's exit status.
++DIAG_PY = r"""
++import json, os, statistics, sys
++from pathlib import Path
++run_root, index_path, out_dir, epoch = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), int(sys.argv[4])
++rows = [r for r in json.loads(index_path.read_text())['runs'] if r['round'] == 'R1']
++Q, K = '_attn_scores__in0', '_attn_scores__in1'
++
++def zero(bits):
++    flat = bits if isinstance(bits, list) else [bits]
++    while flat and isinstance(flat[0], list):
++        flat = [x for sub in flat for x in sub]
++    return bool(flat) and all(float(x) == 0.0 for x in flat)
++
++def mean(bits):
++    flat = bits if isinstance(bits, list) else [bits]
++    while flat and isinstance(flat[0], list):
++        flat = [x for sub in flat for x in sub]
++    return sum(map(float, flat)) / len(flat) if flat else None
++
++def group(layer):
++    if layer.endswith('_attn_softmax'):
++        return 'softmax_tables'
++    if '_attn_' in layer:
++        return 'attention_nonsoftmax'
++    if 'ffn' in layer:
++        return 'ffn'
++    if 'input_proj' in layer or 'embed' in layer:
++        return 'input_proj'
++    return 'head_and_other'
++
++def a26_mean(path):
++    if not path.is_file():
++        return None, None
++    d = json.loads(path.read_text())
++    r = (d.get('runs') or [{}])[0]
++    if r.get('status') != 'ok':
++        return None, r.get('status')
++    heads = [h['entropy_over_log_n'] for blk in r['entropy'].values() for h in blk['heads']]
++    return (sum(heads) / len(heads) if heads else None), {'checkpoint': r.get('checkpoint'), 'heads': heads,
++                                                         'checkpoint_sha256': r.get('checkpoint_sha256')}
++
++arms = []
++for row in rows:
++    name, run = row['name'], run_root / row['name']
++    entry = {'name': name, 'arm': row['program_arm'], 'seed': row['seed'], 'budget': row['budget']}
++    recs = []
++    path = run / 'activation_widths.jsonl'
++    if path.is_file():
++        for line in path.read_text().splitlines():
++            if line.strip():
++                r = json.loads(line)
++                if int(r['epoch']) < epoch:
++                    recs.append(r)
++    entry['epochs_read'] = len(recs)
++    t_uniform, first_zero = None, {}
++    for r in recs:
++        widths = r.get('widths') or {}
++        blocks = {}
++        for site, w in widths.items():
++            if site.startswith('bit_block_') and (site.endswith(Q) or site.endswith(K)):
++                blk = site[len('bit_block_'):-len(Q)]
++                blocks.setdefault(blk, []).append(zero(w.get('bits')))
++            m = mean(w.get('bits'))
++            if m == 0.0 and site not in first_zero:
++                first_zero[site] = r['epoch']
++        if t_uniform is None and blocks and all(any(v) for v in blocks.values()):
++            t_uniform = r['epoch']
++    entry['t_uniform'] = t_uniform          # first epoch: in every block Q or K at 0 bits on all channels
++    traced = [r for r in recs if r.get('ebops_traced', 1) == 1 and r.get('ebops') is not None]
++    t_budget = next((r['epoch'] for r in traced if r['ebops'] <= row['budget']), None)
++    entry['t_budget'] = t_budget            # first traced epoch meeting (a)
++    sites = sorted({s for r in recs for s in (r.get('widths') or {})})
++    entry['site_order'] = sorted([[s, first_zero.get(s)] for s in sites],
++                                 key=lambda x: (x[1] is None, x[1] if x[1] is not None else 0, x[0]))
++    state, sel, which = {}, None, None
++    sp = run / 'snapshots' / f'epoch-{epoch:04d}' / 'state.json'
++    if sp.is_file():
++        state = json.loads(sp.read_text())
++    if state.get('best_feasible'):
++        sel, which = state['best_feasible']['epoch'], 'best_feasible'
++    elif traced:
++        sel, which = min(traced, key=lambda r: (r['ebops'], r['epoch']))['epoch'], 'min_traced_ebops'
++    rec = next((r for r in recs if r['epoch'] == sel), None)
++    split = {}
++    if rec and rec.get('per_layer'):
++        for layer, v in rec['per_layer'].items():
++            split[group(layer)] = split.get(group(layer), 0.0) + float(v)
++    total = sum(split.values())
++    entry['cost_split'] = {'epoch': sel, 'checkpoint': which, 'ebops_total': total or None,
++                           'share_of_budget': {g: v / row['budget'] for g, v in sorted(split.items())},
++                           'share_of_total': {g: (v / total if total else None) for g, v in sorted(split.items())}}
++    ratio = [r['ebops_in_training_over_traced'] for r in recs
++             if r.get('ebops_in_training_over_traced') is not None and r.get('pid_stepped', 1) == 1]
++    entry['controller_error'] = {'n': len(ratio), 'median': statistics.median(ratio) if ratio else None,
++                                 'max': max(ratio) if ratio else None,
++                                 'definition': 'ebops_in_training_over_traced over stepped traced epochs'}
++    if row.get('variant') == 'nb':
++        wb = {r['epoch']: r.get('weight_bits_mean') for r in recs}
++        entry['nb_weight_bits_mean'] = {'at_t_budget': wb.get(t_budget), f'at_epoch_{epoch - 1}': wb.get(epoch - 1)}
++    last = next((r for r in recs if r['epoch'] == epoch - 1), None)
++    m, info = a26_mean(out_dir / f'a26-last-{name}.json')
++    entry['last_epoch'] = {'epoch': epoch - 1, 'val_categorical_accuracy': last and last.get('val_categorical_accuracy'),
++                           'val_macro_auc': last and last.get('val_macro_auc'), 'attn_entropy_norm_mean': m, 'a26': info}
++    m, info = a26_mean(out_dir / f'a26-unc-{name}.json')
++    if info is not None or (out_dir / f'a26-unc-{name}.json').exists():
++        entry['unconstrained'] = {'best_auc_point': state.get('best_auc'), 'attn_entropy_norm_mean': m, 'a26': info}
++    arms.append(entry)
++out = {'descriptive_only': True, 'rule_input': False, 'epoch': epoch, 'split': 'validation (a26), training logs',
++       'source': 'STUDY_arbiter_v1 F5; STUDY_constructive_v1 A2 items 1-6, A3', 'arms': arms}
++tmp = out_dir / 'readout_diag.json.tmp'
++tmp.write_text(json.dumps(out, indent=1, allow_nan=False) + '\n')
++os.replace(tmp, out_dir.parent / 'readout_diag.json')
++print('READOUT_DIAG_WROTE', out_dir.parent / 'readout_diag.json', 'arms', len(arms), flush=True)
++"""
+ APPROVAL = ('PENDING launch authorization; program approval .claude/memory/decisions.md 2026-10-05 10:08 JST '
+             '(PROGRAM.json not yet signed)')
+ SINGLE_ARM = ('campaigns/2026-09-29-gpu-benchmark/VERIFY.md:109: RTX 3090 A07 K=1 GPU util 61.6 % all / 74.3 % '
+@@ -69,6 +203,12 @@
+               '(decisions.md 2026-10-05 10:08 item 2). E at K=1 is unmeasured: utilization is checked 30 min '
+               'after launch (PILOT_PROGRAM.md §4).')
+ 
++# Patches after 0041 in patches/PATCHES.json (e.g. 0042, the F2 24-arm configs). Appended to the provenance strings;
++# empty for b3fb22c8, whose manifests are then reproduced byte for byte.
++_ORDER = [o['file'][:4] for o in json.loads((HERE / 'patches' / 'PATCHES.json').read_text())['order']]
++EXTRA_PATCHES = _ORDER[_ORDER.index('0041') + 1:]
++EXTRA_TXT = ''.join(f' + {x}' for x in EXTRA_PATCHES)
++
+ sys.dont_write_bytecode = True   # importing the historical freeze.py must not write into its campaign
+ 
+ 
+@@ -127,7 +267,7 @@
+ def check_campaign():
+     index = json.loads((CAMP / 'index.json').read_text())
+     rows = index['runs']
+-    assert index['count'] == len(rows) == N_ARMS and index['round'] == ROUND
++    assert index['count'] == len(rows) and (len(rows) == N_ARMS or EXTRA_PATCHES) and index['round'] == ROUND
+     for row in rows:
+         data = (CAMP / 'configs' / row['file']).read_bytes()
+         assert sha(data) == row['config_sha256'], row['file']
+@@ -237,6 +377,42 @@
+     ]) + '\n'
+ 
+ 
++def pod_exit_trap():
++    """A2: classify every nonzero pod exit into final (FailIndex) or retryable, in the EXIT trap.
++    0 and the epoch-0 FailJob code pass through. ARM_FINAL_RC (deadline 124, RSS gate 5) is final.
++    A failure before run_pack starts, within PREARM_RETRY_S of script start, exits 75 (retryable,
++    counts against backoffLimitPerIndex). Anything else exits 76 (final)."""
++    return '\n'.join([
++        'T0=$(date +%s); ARM_PHASE=pre; ARM_FINAL_RC=""',
++        'pod_exit() { rc=$?; trap - EXIT; el=$(( $(date +%s) - T0 )); '
++        f'if [ "$rc" = 0 ] || [ "$rc" = {H.EXIT_EPOCH0_ALL_DIVERGED} ]; then exit "$rc"; fi; '
++        'if [ -n "$ARM_FINAL_RC" ]; then echo "POD_EXIT_FINAL rc=$rc exit=$ARM_FINAL_RC elapsed_s=$el"; exit "$ARM_FINAL_RC"; fi; '
++        f'if [ "$ARM_PHASE" = pre ] && [ "$el" -lt {PREARM_RETRY_S} ]; then '
++        f'echo "POD_EXIT_RETRYABLE rc=$rc phase=pre elapsed_s=$el exit={EXIT_PREARM_RETRY}"; exit {EXIT_PREARM_RETRY}; fi; '
++        f'echo "POD_EXIT_FINAL rc=$rc phase=$ARM_PHASE elapsed_s=$el exit={EXIT_ARM_FINAL}"; exit {EXIT_ARM_FINAL}; }}',
++        'trap pod_exit EXIT',
++    ])
++
++
++def run_pack_line(name):
++    if not OPTS['bounded']:
++        return [f'python -u /work/code/run_pack.py "$PACKS" {STOP_AFTER} || RP=$?']
++    return [
++        'ARM_PHASE=train',
++        f'ARM_BUDGET_S=$(( {POD_DEADLINE_S} - ($(date +%s) - T0) - {RESERVE_S} ))',
++        f'echo "ARM_DEADLINE pod_deadline_s={POD_DEADLINE_S} run_pack_budget_s=$ARM_BUDGET_S"',
++        f'if [ "$ARM_BUDGET_S" -le 0 ]; then ARM_FINAL_RC={EXIT_ARM_DEADLINE}; echo "ARM_DEADLINE_EXCEEDED {name} before_start"; '
++        f'exit {EXIT_ARM_DEADLINE}; fi',
++        'TS=$(date +%s)',
++        f'timeout --signal=TERM --kill-after={KILL_AFTER_S} "$ARM_BUDGET_S" python -u /work/code/run_pack.py "$PACKS" '
++        f'{STOP_AFTER} || RP=$?',
++        'if [ "$RP" = 124 ] || { [ "$RP" = 137 ] && [ $(( $(date +%s) - TS )) -ge "$ARM_BUDGET_S" ]; }; then '
++        f'ARM_FINAL_RC={EXIT_ARM_DEADLINE}; echo "ARM_DEADLINE_EXCEEDED {name} run_pack_exit=$RP budget_s=$ARM_BUDGET_S"; fi',
++        f'if [ "$RP" != 0 ] && [ -z "$ARM_FINAL_RC" ] && test -f {RUN_ROOT}/runs/{name}/RSS_GATE_FAIL.json; then '
++        f'ARM_FINAL_RC={EXIT_RSS_GATE}; echo "ARM_RSS_GATE_FINAL {name} run_pack_exit=$RP"; fi',
++    ]
++
++
+ def monitor_loop(name):
+     """Notify-only, standard library: every MONITOR_EVERY_S the warmup-aware canary/controller reader
+     runs on the arm's telemetry and prints into the pod log. Never kills."""
+@@ -267,7 +443,9 @@
+     lines += [
+         f'PACKS={row["pack"]}',
+         'RP=0; E0=0',
+-        f'python -u /work/code/run_pack.py "$PACKS" {STOP_AFTER} || RP=$?',
++    ]
++    lines += run_pack_line(name)
++    lines += [
+         'kill "$SMI" $MON 2>/dev/null || true',
+         H.EPOCH0_CHECK,
+         f'if [ "$E0" = {H.EXIT_EPOCH0_ALL_DIVERGED} ]; then echo "POD_EPOCH0_ALL_DIVERGED node=${{NODE_NAME:-na}} '
+@@ -287,7 +465,10 @@
+     names = ' '.join(r['name'] for r in rows)
+     c_names = ' '.join(r['name'] for r in rows if r['option_c'])
+     indices = ' '.join(str(r['index']) for r in rows)
+-    return '\n'.join([
++    pre = ([f'export PYTHONPATH={READOUT_PYTHONPATH}   # A1: certify_ebops.py:120 imports evaluate_roc (chang0926)',
++            'python -c "import evaluate_roc; print(\'READOUT_IMPORT_OK evaluate_roc\', evaluate_roc.__file__)"']
++           if OPTS['readout_pythonpath'] else [])
++    return '\n'.join(pre + [
+         f'OUT={out}',
+         'test ! -e "$OUT" || { echo "READOUT_OUTPUT_EXISTS $OUT"; exit 1; }',
+         f'test -f {DATA_ROOT}/n64/data/READY.json || {{ echo "CACHE_NOT_READY"; exit 1; }}',
+@@ -305,12 +486,35 @@
+         f'python -u {CAMPAIGN_DIR}/readout_pilot.py --run-root {RUN_ROOT}/runs --round {ROUND} --bundle-sha256 {bundle} '
+         f'--a26 "$OUT/a26-entropy-epoch-{STOP_AFTER:04d}.json" --cert "$OUT/certify-snapshot-{STOP_AFTER:04d}.json" '
+         f'--controller-dir "$OUT/controller" --epoch {STOP_AFTER} --out "$OUT/readout.json" || RO=$?',
++    ] + (diag_lines(rows) if OPTS['diag'] else []) + [
+         'sha256sum "$OUT"/*.json "$OUT"/controller/*.json 2>/dev/null || true',
+         'echo "READOUT_JOB_DONE a26_exit=$A26 certify_exit=$CERT controller_exit=$MONC readout_exit=$RO out=$OUT/readout.json"',
+         'test "$RO" = 0 && test "$A26" = 0 && test "$CERT" = 0 && test "$MONC" = 0',
+     ]) + '\n'
+ 
+ 
++def diag_lines(rows):
++    """F5: a26 on checkpoints/epoch-0500/model.keras for every row, and on the snapshot's
++    model_unconstrained.keras for every E row and A07-5000k-C; then DIAG_PY. Never fails the Job."""
++    snap = f'snapshots/epoch-{STOP_AFTER:04d}'
++    last = f'checkpoints/epoch-{STOP_AFTER:04d}/model.keras'
++    a26 = '/work/code/analysis/attn_entropy.py'
++    lines = ['DIAG=0; mkdir -p "$OUT/diag"']
++    for r in rows:
++        d = f"{RUN_ROOT}/runs/{r['name']}"
++        lines.append(f'test -f {d}/{last} && {{ python -u {a26} --indices {r["index"]} --checkpoint {d}/{last} '
++                     f'--out "$OUT/diag/a26-last-{r["name"]}.json" > "$OUT/diag/a26-last-{r["name"]}.log" 2>&1 || DIAG=1; }} '
++                     f'|| echo "DIAG_LAST_MISSING {r["name"]}"')
++        if r['arch_name'] == 'E' or r['program_arm'] == 'A07-5000k-C':
++            lines.append(f'test -f {d}/{snap}/model_unconstrained.keras && {{ python -u {a26} --indices {r["index"]} '
++                         f'--checkpoint {d}/{snap}/model_unconstrained.keras --out "$OUT/diag/a26-unc-{r["name"]}.json" '
++                         f'> "$OUT/diag/a26-unc-{r["name"]}.log" 2>&1 || DIAG=1; }} || echo "DIAG_UNC_MISSING {r["name"]}"')
++    lines += [f"python - {RUN_ROOT}/runs {CAMPAIGN_DIR}/index.json \"$OUT/diag\" {STOP_AFTER} <<'DIAGPY' || DIAG=1",
++              DIAG_PY.strip('\n'), 'DIAGPY',
++              'echo "READOUT_DIAG_DONE diag_exit=$DIAG (descriptive only; not part of the Job exit status)"']
++    return lines
++
++
+ MOUNTS = [{'mountPath': '/cmcode', 'name': 'code', 'readOnly': True},
+           {'mountPath': '/work', 'name': 'work'},
+           {'mountPath': '/data', 'name': 'persistent'}]
+@@ -371,16 +575,26 @@
+                 'bnjettag.io/gpu-fingerprint': f'{H.fp_configmap_name()} sha256 {H.FP_SHA[:16]}: '
+                                                f'{FP_RUN} initial_ebops == {H.FP_EXPECT} before the arm',
+                 'bnjettag.io/regime': 'B: [D20] trace every 10 epochs',
+-                'bnjettag.io/active-deadline': 'unset in the build half; cluster-ops sets it at the launch half (STUDY §11)',
++                'bnjettag.io/active-deadline': (
++                    f'pod {POD_DEADLINE_S} s; run_pack timeout = deadline - elapsed - {RESERVE_S} s; deadline (124), '
++                    f'RSS gate (5), training-phase failure (76) and PID-1 kill (137/143) are FailIndex; a pre-arm failure '
++                    f'within {PREARM_RETRY_S} s exits 75 and is retried once (PREFLIGHT fixes after review v1, A2)'
++                    if OPTS['bounded'] else
++                    'unset in the build half; cluster-ops sets it at the launch half (STUDY §11)'),
+                 'bnjettag.io/per-arm-memory': f'{PER_ARM_MEMORY_GI}Gi host RAM, {PER_ARM_CPU} CPU, one arm',
+                 'bnjettag.io/rss-gate': f'projection <= {RSS_GATE_LIMIT_MB} MiB, fit over process epochs {RSS_GATE_WINDOW}'}},
+             'spec': {'completionMode': 'Indexed', 'completions': 1, 'parallelism': 1,
+-                     'backoffLimitPerIndex': 2, 'podReplacementPolicy': 'Failed', 'ttlSecondsAfterFinished': 604800,
++                     'backoffLimitPerIndex': BACKOFF_PER_INDEX_BOUNDED if OPTS['bounded'] else 2,
++                     'podReplacementPolicy': 'Failed', 'ttlSecondsAfterFinished': 604800,
+                      'podFailurePolicy': {'rules': [
+                          {'action': 'Ignore', 'onPodConditions': [{'type': 'DisruptionTarget'}]},
+                          {'action': 'FailJob', 'onExitCodes': {'containerName': 'train', 'operator': 'In',
+-                                                               'values': [H.EXIT_EPOCH0_ALL_DIVERGED]}}]},
++                                                               'values': [H.EXIT_EPOCH0_ALL_DIVERGED]}}]
++                         + ([{'action': 'FailIndex', 'onExitCodes': {'containerName': 'train', 'operator': 'In',
++                                                                     'values': FINAL_EXIT_CODES}}]
++                            if OPTS['bounded'] else [])},
+                      'template': {'metadata': {'labels': labels}, 'spec': {
++                         **({'activeDeadlineSeconds': POD_DEADLINE_S} if OPTS['bounded'] else {}),
+                          'affinity': affinity([gpu]), 'automountServiceAccountToken': False,
+                          'nodeSelector': {'kubernetes.io/arch': 'amd64'},
+                          'restartPolicy': 'Never', 'terminationGracePeriodSeconds': 180,
+@@ -418,13 +632,34 @@
+ 
+ 
+ def main():
++    global POD_DEADLINE_S, READOUT_DEADLINE_S, OUT
+     import argparse
+     ap = argparse.ArgumentParser()
+     ap.add_argument('--only', default='', help='comma list of cpugate, readout, r1-<tag> (default all)')
+     ap.add_argument('--gate-cleared', metavar='REFERENCE',
+                     help='only after Kai clears the gate: reviewed document that records it')
+     ap.add_argument('--approval-ref', help='exact dated Kai authorization (required with --gate-cleared)')
++    ap.add_argument('--readout-pythonpath', action='store_true',
++                    help=f'review v1 A1: readout Job exports PYTHONPATH={READOUT_PYTHONPATH}')
++    ap.add_argument('--bounded', action='store_true',
++                    help='review v1 A2: pod deadline, final exits (FailIndex), one pre-arm retry on the R1 GPU Jobs')
++    ap.add_argument('--diag', action='store_true', help='F5: readout_diag.json step in the readout Job')
++    ap.add_argument('--pod-deadline-s', type=int, help=f'pod activeDeadlineSeconds with --bounded (default {POD_DEADLINE_S})')
++    ap.add_argument('--readout-deadline-s', type=int, help=f'readout Job activeDeadlineSeconds (default {READOUT_DEADLINE_S})')
++    ap.add_argument('--manifests-dir', help='write manifests here (relative to the campaign) instead of manifests/; '
++                                            'a new bundle never overwrites the frozen files of an earlier one')
++    ap.add_argument('--expect-bundle', help='refuse unless the rebuilt bundle sha256 starts with this')
+     args = ap.parse_args()
++    OPTS.update(readout_pythonpath=args.readout_pythonpath, bounded=args.bounded, diag=args.diag)
++    if args.manifests_dir:
++        OUT = HERE / args.manifests_dir
++    if args.pod_deadline_s:
++        assert args.bounded, '--pod-deadline-s needs --bounded'
++        POD_DEADLINE_S = args.pod_deadline_s
++        OPTS['pod_deadline_s'] = POD_DEADLINE_S
++    if args.readout_deadline_s:
++        READOUT_DEADLINE_S = args.readout_deadline_s
++        OPTS['readout_deadline_s'] = READOUT_DEADLINE_S
+     if args.gate_cleared:
+         assert args.approval_ref and not args.approval_ref.startswith('PENDING'), 'explicit approval reference required'
+         GATE.update(status='cleared', reference=args.gate_cleared, approval_ref=args.approval_ref)
+@@ -435,35 +670,43 @@
+     bundle = sha(payload)
+     assert len(base64.b64encode(payload)) < 1_000_000, len(payload)
+     assert bundle not in (H.BUNDLE_42, '6919462cf050c5dca664baec694f36081f05d8c4075a0d299b28af8ce4eb9da3')
++    assert not args.expect_bundle or bundle.startswith(args.expect_bundle), ('bundle changed', bundle)
+     cm = 'kai-pilot1005-code-' + bundle[:10]
+     OUT.mkdir(exist_ok=True)
+-    (OUT / 'pilot1005-code.tar.gz').write_bytes(payload)
++
++    def write_same(path, data):     # never rewrite a frozen artifact with different bytes
++        if path.exists():
++            assert path.read_bytes() == data, (path, 'differs from the frozen file')
++            return
++        path.write_bytes(data)
++    write_same(OUT / 'pilot1005-code.tar.gz', payload)
+     configmap = {'apiVersion': 'v1', 'kind': 'ConfigMap', 'immutable': True,
+                  'metadata': {'name': cm, 'namespace': 'cms-ml', 'labels': LABELS,
+                               'annotations': {'bnjettag.io/bundle-sha256': bundle, 'bnjettag.io/manifest-sha256': msha,
+                                               'bnjettag.io/base': '42abed4b + 0032 + 0033 + 0034 + 0036 + 0037 + 0035 + 0038 + 0039 + '
+-                                                                  '0040 + 0041 (build_tree.py)'}},
++                                                                  '0040 + 0041' + EXTRA_TXT + ' (build_tree.py)'}},
+                  'binaryData': {KEY: base64.b64encode(payload).decode()}}
+-    (OUT / 'configmap.json').write_bytes(enc(configmap))
++    write_same(OUT / 'configmap.json', enc(configmap))
+     b6 = bundle[:6]
+     names = [r['name'] for r in rows]
+     jobs = {}
+     gate = cpu_job(f'kai-pilot1005-cpugate-{b6}', 'kai-pilot1005-cpugate', cm,
+                    header(bundle, msha, cpu=True, trap=GATE_TRAP) + cpugate_tail(bundle),
+-                   {'bnjettag.io/purpose': 'pilot-program CPU gate: threshold, cpu_gate.py on 23 configs, NB pairing, full pytest; '
++                   {'bnjettag.io/purpose': f'pilot-program CPU gate: threshold, cpu_gate.py on {len(rows)} configs, NB pairing, full pytest; '
+                                            'fail-fast, last line GATE_RESULT'}, GATE_DEADLINE_S)
+     jobs['cpugate'] = (gate, brief(
+         'CPU gate for the pilot-program round-1 bundle before any pilot: threshold (c) from the cache, per-config '
+         'build/step/reload/floor/PID-schedule gate with matched initialization, NB [A22] pairing at seeds 1-8, '
+         'and the full unit suite.',
+         'Tree 42abed4b + 0032 + 0033 (option c) + 0034 (test env fix) + 0036 (NB arm) + 0037 (attention bit floor) + '
+-        '0035 (23 pilot configs) + 0038 (W&B stages pilot-r1/2/3) + 0039 (readout) + 0040 (gate checks, NB pairing) + '
+-        '0041 (validate_cfg accepts NB). No GPU, no training, no checkpoint read.',
++        f'0035 ({len(rows) if not EXTRA_PATCHES else 23} pilot configs) + 0038 (W&B stages pilot-r1/2/3) + 0039 (readout) + 0040 (gate checks, NB pairing) + '
++        '0041 (validate_cfg accepts NB)' + (EXTRA_TXT + f' ({len(rows)}-arm R1 configs, STUDY [A3])' if EXTRA_PATCHES else '')
++        + '. No GPU, no training, no checkpoint read.',
+         names,
+         [{'name': 'threshold', 'split': 'validation labels, n=62000', 'expectation': 'val_accuracy_threshold '
+           '0.2109624456315518 and labels sha e593f51f...7617'},
+-         {'name': 'cpu_gate.py', 'split': 'synthetic inputs, n=4096 rows', 'expectation': 'PREFLIGHT_ALL_PASS 23; '
+-          '23 PID lines; PAIRED_INIT_OK E and A07'},
++         {'name': 'cpu_gate.py', 'split': 'synthetic inputs, n=4096 rows', 'expectation': f'PREFLIGHT_ALL_PASS {len(rows)}; '
++          f'{len(rows)} PID lines; PAIRED_INIT_OK E and A07'},
+          {'name': 'pair_nb.py', 'split': 'synthetic inputs, n=4096 rows', 'expectation': 'NB_PAIRING_ALL_OK 8'},
+          {'name': 'pytest suite', 'split': 'synthetic fixtures only', 'expectation': 'exactly 2 known skips '
+           '(analysis/test_attn_entropy.py:142), all other tests passed, exact collected count'}],
+@@ -473,7 +716,8 @@
+         [f'{PROGRAM_ROOT}/cpu-gate-{b6}-r1']))
+     for row in rows:
+         tag = tag_of(row['name'])
+-        job = pilot_job(f'kai-p1005r1-{tag}-{b6}', row, cm, header(bundle, msha, cpu=False) + pilot_tail(row))
++        trap = pod_exit_trap() if OPTS['bounded'] else None
++        job = pilot_job(f'kai-p1005r1-{tag}-{b6}', row, cm, header(bundle, msha, cpu=False, trap=trap) + pilot_tail(row))
+         assert len(job['metadata']['name']) <= 52, job['metadata']['name']
+         script = job['spec']['template']['spec']['containers'][0]['args'][0]
+         assert script.index('fingerprint_check.py --run') < script.index('run_pack.py')
+@@ -492,7 +736,13 @@
+              {'condition': 'CANARY_* FAIL or CONTROLLER_AUDIT FAIL in a MONITOR line', 'action': 'notify-only',
+               'approval_ref': 'option-(c) amendment canary; monitor_p.py (warmup-aware)'},
+              {'condition': 'GPU utilization < 40 % at 30 min', 'action': 'notify-only',
+-              'approval_ref': 'PILOT_PROGRAM.md §4; STUDY.md §10'}],
++              'approval_ref': 'PILOT_PROGRAM.md §4; STUDY.md §10'}]
++            + ([{'condition': f'pod activeDeadlineSeconds {POD_DEADLINE_S} / run_pack timeout, RSS gate, or a '
++                              'training-phase failure', 'action': 'existing-runner-guard',
++                 'approval_ref': 'final for the arm (podFailurePolicy FailIndex on exit 5, 76, 124, 137, 143); '
++                                 f'backoffLimitPerIndex {BACKOFF_PER_INDEX_BOUNDED} only for a pre-arm failure '
++                                 f'(exit 75, within {PREARM_RETRY_S} s); PREFLIGHT.md fixes after review v1 A2'}]
++               if OPTS['bounded'] else []),
+             [f"{RUN_ROOT}/runs/{row['name']}",
+              f'wandb://kayamaguchi-uc-san-diego/BNJetTag-ChangRecipe/chang-n64-20261005-{STAGE}']))
+     readout = cpu_job(f'kai-pilot1005-r1ro-{b6}', 'kai-pilot1005-readout', cm,
+@@ -506,7 +756,7 @@
+         'option-(c) snapshot telemetry; readout_pilot.py (patch 0039) assembles readout.json. New output directory.',
+         names,
+         [{'name': 'readout.json', 'split': 'validation n=62000; traced epochs < 500', 'expectation':
+-          '23 rows, exact field set; status per row; integrity fields threshold_c, labels_sha256'}],
++          f'{len(rows)} rows, exact field set; status per row; integrity fields threshold_c, labels_sha256'}],
+         [{'condition': 'any script exit nonzero or deadline', 'action': 'existing-runner-guard',
+           'approval_ref': f'Job script exit status; activeDeadlineSeconds {READOUT_DEADLINE_S}'}],
+         [f'{RUN_ROOT}/readout-epoch-{STOP_AFTER:04d}-{b6}-r1/readout.json']))
+@@ -528,9 +778,9 @@
+         prepared[key] = {'job': job['metadata']['name'], 'handoff': str(handoff.relative_to(HERE)),
+                          'record_sha256': sha((handoff / 'record.json').read_bytes()),
+                          'job_json_sha256': sha((handoff / 'job.json').read_bytes())}
+-    (OUT / 'bundle-manifest.json').write_bytes(enc({
++    write_same(OUT / 'bundle-manifest.json', enc({
+         'bundle_sha256': bundle, 'manifest_sha256': msha, 'configmap': cm, 'bytes': len(payload),
+-        'base': '42abed4b + 0032 (f475c69e) + 0033 (23536dfe) + 0034 + 0036 + 0037 + 0035 + 0038 + 0039 + 0040 + 0041 '
++        'base': '42abed4b + 0032 (f475c69e) + 0033 (23536dfe) + 0034 + 0036 + 0037 + 0035 + 0038 + 0039 + 0040 + 0041' + EXTRA_TXT + ' '
+                 '(patches/PATCHES.json)',
+         'run_root': RUN_ROOT, 'stage': STAGE, 'data_root': DATA_ROOT,
+         'files': {rel: sha(p.read_bytes()) for rel, p in files}}))
+@@ -539,9 +789,29 @@
+         assert not target.exists(), target
+         target.write_bytes(enc({'gate': GATE, 'jobs': prepared}))
+         return
++    if only and (HERE / 'PREPARED.json').exists():   # --only: replace those keys, keep every other entry
++        old = json.loads((HERE / 'PREPARED.json').read_text())
++        assert old['bundle_sha256'] == bundle and old['manifest_sha256'] == msha, 'PREPARED.json is for another bundle'
++        merged = {**old['jobs'], **prepared}
++        superseded = {k: old['jobs'][k] for k in prepared if k in old['jobs'] and old['jobs'][k] != prepared[k]}
++        prepared_all = merged
++        extra = {'superseded': {**old.get('superseded', {}), **{f'{k}@{v["handoff"].split("/")[-1]}': v
++                                                                for k, v in superseded.items()}},
++                 'options': {**old.get('options', {}), **{k: dict(OPTS) for k in prepared}}}
++    else:
++        prepared_all, extra = prepared, {'options': {k: dict(OPTS) for k in prepared}}
++        if (HERE / 'PREPARED.json').exists():      # keep the earlier bundle's record beside the new one
++            old = json.loads((HERE / 'PREPARED.json').read_text())
++            if old['bundle_sha256'] != bundle:
++                keep = HERE / f"PREPARED-{old['bundle_sha256'][:8]}.json"
++                assert not keep.exists() or keep.read_bytes() == (HERE / 'PREPARED.json').read_bytes(), keep
++                keep.write_bytes((HERE / 'PREPARED.json').read_bytes())
++                extra['previous_bundle_record'] = keep.name
++        extra['manifests_dir'] = str(OUT.relative_to(HERE))
+     (HERE / 'PREPARED.json').write_bytes(enc({'status': 'offline_prepared_not_submitted', 'bundle_sha256': bundle,
+                                               'manifest_sha256': msha, 'configmap': cm, 'image': IMAGE,
+-                                              'gpu_product': GPU_PRODUCT, 'run_root': RUN_ROOT, 'jobs': prepared}))
++                                              'gpu_product': GPU_PRODUCT, 'run_root': RUN_ROOT, 'jobs': prepared_all,
++                                              **extra}))
+     print('BUNDLE_SHA256', bundle)
+     print('MANIFEST_SHA256', msha)
+     print('CONFIGMAP', cm, 'bytes', len(payload), 'files', len(files))

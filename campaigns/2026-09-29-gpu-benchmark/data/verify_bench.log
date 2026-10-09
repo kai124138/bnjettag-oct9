@@ -1,0 +1,478 @@
+ROOT 9 Jobs: a10-klow a10-krule a100-sxm4-80gb-klow a100-sxm4-80gb-krule geforce-rtx-3090-klow geforce-rtx-3090-krule geforce-rtx-4090-klow geforce-rtx-4090-krule rtx-a6000-klow
+BENCH_SUMMARY in-process == CLI data/bench_summary.json: True
+phases 18 rule-3 rows 7
+a100 quota snapshot 2026-09-29T18:28:07Z 23 / 24 headroom 1
+REPRO a10-klow p3-E-k3 all OK
+REPRO a10-klow p4-A07-k1 all OK
+REPRO a10-krule p1-E-k4 all OK
+REPRO a10-krule p2-A07-k2 all OK
+REPRO a100-sxm4-80gb-klow p3-E-k4 all OK
+REPRO a100-sxm4-80gb-klow p4-A07-k2 all OK
+REPRO a100-sxm4-80gb-krule p1-E-k16 all OK
+REPRO a100-sxm4-80gb-krule p2-A07-k8 all OK
+REPRO geforce-rtx-3090-klow p3-E-k4 all OK
+REPRO geforce-rtx-3090-klow p4-A07-k1 all OK
+REPRO geforce-rtx-3090-krule p1-E-k5 all OK
+REPRO geforce-rtx-3090-krule p2-A07-k2 all OK
+REPRO geforce-rtx-4090-klow p3-E-k4 all OK
+REPRO geforce-rtx-4090-klow p4-A07-k1 all OK
+REPRO geforce-rtx-4090-krule p1-E-k5 all OK
+REPRO geforce-rtx-4090-krule p2-A07-k2 all OK
+REPRO rtx-a6000-klow p3-E-k4 all OK
+REPRO rtx-a6000-klow p4-A07-k2 all OK
+CEILING reproduces bench_plan max_pods_by_allocatable_upper_bound: True
+FLIPS chang {'equal G, now': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB'), (2, 'RTX 4090', 'RTX 4090')], 'equal G, a100 quota not binding': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB')], '[D4]-capped': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB'), (2, 'RTX 4090', 'RTX 4090')]}
+FLIPS delta {'equal G, now': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB'), (2, 'RTX A6000', 'RTX A6000')], 'equal G, a100 quota not binding': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB')], '[D4]-capped': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB'), (2, 'RTX A6000', 'RTX A6000')], 'equal G, [A1] overridden': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB'), (2, 'RTX 4090', 'RTX 4090')], '[D4]-capped, [A1] overridden': [(1, 'A100-SXM4-80GB', 'A100-SXM4-80GB'), (2, 'RTX 4090', 'RTX 4090')]}
+VERIFY.md rendered from campaigns/2026-09-29-gpu-benchmark/code/verify_template.md
+ROWS 1128
+SHA verify_bench.py 56221f766371b5afd41b543d90e1fb99550f96791fb8de9a7e406bae0b391090
+
+## provenance
+| item | value |
+| --- | --- |
+| PVC `gpu-bench/` files, all (inventory `data/pvc_inventory_full.tsv`) | 1,678 files, 1,568,375,293 bytes |
+| left on the PVC: `*.keras`, `*.npz`, `activation_widths.jsonl`, `checkpoints/` (never read by the analysis) | 784 files, 1,565,906,836 bytes |
+| copied read-only to `data/gpu-bench/` (every size equal to the inventory: True) | 894 files, 2,468,457 bytes |
+| `code/bench_summary.py` sha256 (fixer v2, PREFLIGHT l. 55) | `cd5f5b6410e09b4e43a16ca97d16905deb1c108fe719cf1e20a7e84924f514ef` |
+| in-process `summarize_bench` equals the CLI output `data/bench_summary.json` | True |
+| a100 quota snapshot 2026-09-29T18:28:07Z (`data/resourcequota_snapshot.json`) | used 23 of 24, headroom 1 |
+
+## headline
+| product | Job | class | K | n (arms × epochs) | s [D1], s/epoch | R, run-epochs per GPU-h | total elapsed s per run-epoch | peak GPU MiB / card MiB | peak % of card (rule 1: 90 %) | GPU util %, all / steady | cores per arm (rule 5: 2.1) | Q, h (s), apply → running | verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A10 | krule | E | 4 | 4 × 20 | 114.10 | 126.2 | 30.1 | 17,425 / 23,028 | 75.7 % | 97.5 / 100.0 | 0.556 | 0.01 (19 s) | in T |
+| A10 | krule | A07 | 2 | 2 × 20 | 96.56 | 74.6 | 53.2 | 16,906 / 23,028 | 73.4 % | 96.4 / 99.1 | 0.543 | 0.01 (19 s) | in T |
+| A10 | klow | E | 3 | 3 × 20 | 80.75 | 133.8 | 29.8 | 13,069 / 23,028 | 56.8 % | 95.3 / 99.7 | 0.575 | 0.01 (18 s) | in T |
+| A10 | klow | A07 | 1 | 1 × 20 | 45.73 | 78.7 | 56.2 | 8,455 / 23,028 | 36.7 % | 80.2 / 91.3 | 0.588 | 0.01 (18 s) | in T |
+| A100-SXM4-80GB | krule | E | 16 | 16 × 20 | 177.46 | 324.6 | 11.6 | 72,709 / 81,920 | 88.8 % | 99.3 / 100.0 | 0.520 | 0.29 (1,032 s) | in T |
+| A100-SXM4-80GB | krule | A07 | 8 | 8 × 20 | 142.23 | 202.5 | 18.9 | 69,125 / 81,920 | 84.4 % | 98.0 / 100.0 | 0.544 | 0.29 (1,032 s) | in T |
+| A100-SXM4-80GB | klow | E | 4 | 4 × 20 | 47.10 | 305.7 | 14.5 | 18,181 / 81,920 | 22.2 % | 88.1 / 98.5 | 0.653 | 3.82 (13,744 s) | in T |
+| A100-SXM4-80GB | klow | A07 | 2 | 2 × 20 | 45.05 | 159.8 | 27.5 | 17,285 / 81,920 | 21.1 % | 78.8 / 95.7 | 0.654 | 3.82 (13,744 s) | in T |
+| RTX 3090 | krule | E | 5 | 5 × 20 | 85.51 | 210.5 | 18.0 | 21,921 / 24,576 | 89.2 % | 99.9 / 100.0 | 0.511 | 1.50 (5,408 s) | in T |
+| RTX 3090 | krule | A07 | 2 | 2 × 20 | 57.11 | 126.1 | 31.7 | 16,963 / 24,576 | 69.0 % | 96.4 / 99.3 | 0.534 | 1.50 (5,408 s) | in T |
+| RTX 3090 | klow | E | 4 | 4 × 20 | 71.08 | 202.6 | 18.8 | 17,538 / 24,576 | 71.4 % | 94.6 / 100.0 | 0.543 | 2.45 (8,829 s) | in T |
+| RTX 3090 | klow | A07 | 1 | 1 × 20 | 30.85 | 116.7 | 38.8 | 8,484 / 24,576 | 34.5 % | 61.6 / 74.3 | 0.623 | 2.45 (8,829 s) | in T |
+| RTX 4090 | krule | E | 5 | 5 × 20 | 68.28 | 263.6 | 14.4 | 22,571 / 24,564 | 91.9 % | 95.4 / 100.0 | 0.586 | 1.50 (5,405 s) | excluded: rule 1: pod peak above 90 % of memory.total |
+| RTX 4090 | krule | A07 | 2 | 2 × 20 | 48.29 | 149.1 | 28.1 | 17,223 / 24,564 | 70.1 % | 96.8 / 99.9 | 0.593 | 1.50 (5,405 s) | in T |
+| RTX 4090 | klow | E | 4 | 4 × 20 | 55.41 | 259.9 | 15.0 | 18,058 / 24,564 | 73.5 % | 97.2 / 99.9 | 0.606 | 3.91 (14,060 s) | in T |
+| RTX 4090 | klow | A07 | 1 | 1 × 20 | 26.04 | 138.3 | 34.1 | 8,614 / 24,564 | 35.1 % | 65.4 / 84.4 | 0.667 | 3.91 (14,060 s) | in T |
+| RTX A6000 | klow | E | 4 | 4 × 20 | 77.32 | 186.2 | 20.4 | 17,562 / 49,140 | 35.7 % | 100.0 / 100.0 | 0.512 | 4.38 (15,770 s) | in T |
+| RTX A6000 | klow | A07 | 2 | 2 × 20 | 65.53 | 109.9 | 36.1 | 16,975 / 49,140 | 34.5 % | 95.4 / 98.8 | 0.525 | 4.38 (15,770 s) | in T |
+| L40S | klow | E, A07 | E 4 / A07 2 | 0 (never Running) | – | – | – | – | – | – | – | ≥ 6.09 (21,927 s) | not practical now (rule 3, [D6]) |
+| L40 | klow | E, A07 | E 4 / A07 2 | 0 (never Running) | – | – | – | – | – | – | – | ≥ 6.04 (21,739 s) | not practical now (rule 3, [D6]) |
+| A40 | klow | E, A07 | E 4 / A07 2 | 0 (never Running) | – | – | – | – | – | – | – | ≥ 6.04 (21,730 s) | not practical now (rule 3, [D6]) |
+| L40S | krule | E, A07 | E 9 / A07 4 | 0 (never Running) | – | – | – | – | – | – | – | ≥ 6.85 (24,660 s) | not practical now (rule 3, [D6]) |
+| RTX A6000 | krule | E, A07 | E 9 / A07 5 | 0 (never Running) | – | – | – | – | – | – | – | ≥ 6.85 (24,657 s) | not practical now (rule 3, [D6]) |
+| L40 | krule | E, A07 | E 9 / A07 4 | 0 (never Running) | – | – | – | – | – | – | – | ≥ 6.85 (24,654 s) | not practical now (rule 3, [D6]) |
+| A40 | krule | E, A07 | E 9 / A07 4 | 0 (never Running) | – | – | – | – | – | – | – | ≥ 6.85 (24,651 s) | not practical now (rule 3, [D6]) |
+
+## gates
+| product | Job | phase | node (CPU) | arms ok, exit 0 at 21 epochs | CHECKPOINT_VERIFICATION PASS (rule 6) | OOM (exit 7) | non-finite loss | fingerprint 11559681 (rule 2) | ARM_CPUS OK / thread rows in pin (rule 5) | cache = anchor | host RSS peak, MB | per-arm s, min–max (sd) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A10 | krule | p1-E-k4 | hcc-nrp-shor-c6009.unl.edu (AMD EPYC 7502 32-Core) | 4/4 | 4/4 | no | no | match | 4/4; 144 rows, 0 outside | yes | 2,368 | 110.32–114.10 (1.65) |
+| A10 | krule | p2-A07-k2 | hcc-nrp-shor-c6009.unl.edu (AMD EPYC 7502 32-Core) | 2/2 | 2/2 | no | no | match | 2/2; 66 rows, 0 outside | yes | 2,441 | 96.13–96.56 (0.31) |
+| A10 | klow | p3-E-k3 | hcc-nrp-shor-c5821.unl.edu (AMD EPYC 7502 32-Core) | 3/3 | 3/3 | no | no | match | 3/3; 80 rows, 0 outside | yes | 2,323 | 79.86–80.75 (0.46) |
+| A10 | klow | p4-A07-k1 | hcc-nrp-shor-c5821.unl.edu (AMD EPYC 7502 32-Core) | 1/1 | 1/1 | no | no | match | 1/1; 15 rows, 0 outside | yes | 2,415 | 45.73–45.73 (K = 1) |
+| A100-SXM4-80GB | krule | p1-E-k16 | sphinx.sdstate.edu (AMD EPYC 7713 64-Core) | 16/16 | 16/16 | no | no | match | 16/16; 866 rows, 0 outside | yes | 2,678 | 166.58–177.46 (3.41) |
+| A100-SXM4-80GB | krule | p2-A07-k8 | sphinx.sdstate.edu (AMD EPYC 7713 64-Core) | 8/8 | 8/8 | no | no | match | 8/8; 361 rows, 0 outside | yes | 2,684 | 134.80–142.23 (2.84) |
+| A100-SXM4-80GB | klow | p3-E-k4 | gp-engine.usd.edu (AMD EPYC 7713 64-Core) | 4/4 | 4/4 | no | no | match | 4/4; 58 rows, 0 outside | yes | 2,365 | 45.78–47.10 (0.66) |
+| A100-SXM4-80GB | klow | p4-A07-k2 | gp-engine.usd.edu (AMD EPYC 7713 64-Core) | 2/2 | 2/2 | no | no | match | 2/2; 28 rows, 0 outside | yes | 2,473 | 41.42–45.05 (2.57) |
+| RTX 3090 | krule | p1-E-k5 | nautilus01.hsrn.nyu.edu (AMD EPYC 7443P 24-Core) | 5/5 | 5/5 | no | no | match | 5/5; 134 rows, 0 outside | yes | 2,438 | 81.88–85.51 (1.41) |
+| RTX 3090 | krule | p2-A07-k2 | nautilus01.hsrn.nyu.edu (AMD EPYC 7443P 24-Core) | 2/2 | 2/2 | no | no | match | 2/2; 38 rows, 0 outside | yes | 2,491 | 56.15–57.11 (0.67) |
+| RTX 3090 | klow | p3-E-k4 | fiona-1.famu.edu (AMD EPYC 7453 28-Core) | 4/4 | 4/4 | no | no | match | 4/4; 87 rows, 0 outside | yes | 2,380 | 67.75–71.08 (1.51) |
+| RTX 3090 | klow | p4-A07-k1 | fiona-1.famu.edu (AMD EPYC 7453 28-Core) | 1/1 | 1/1 | no | no | match | 1/1; 10 rows, 0 outside | yes | 2,413 | 30.85–30.85 (K = 1) |
+| RTX 4090 | krule | p1-E-k5 | hcc-nrp-shor-c5834.unl.edu (AMD EPYC 7282 16-Core) | 5/5 | 5/5 | no | no | match | 5/5; 104 rows, 0 outside | yes | 2,418 | 63.92–68.28 (1.81) |
+| RTX 4090 | krule | p2-A07-k2 | hcc-nrp-shor-c5834.unl.edu (AMD EPYC 7282 16-Core) | 2/2 | 2/2 | no | no | match | 2/2; 32 rows, 0 outside | yes | 2,457 | 47.54–48.29 (0.53) |
+| RTX 4090 | klow | p3-E-k4 | hcc-nrp-shor-c5226.unl.edu (AMD EPYC 7282 16-Core) | 4/4 | 4/4 | no | no | match | 4/4; 66 rows, 0 outside | yes | 2,368 | 51.78–55.41 (1.55) |
+| RTX 4090 | klow | p4-A07-k1 | hcc-nrp-shor-c5226.unl.edu (AMD EPYC 7282 16-Core) | 1/1 | 1/1 | no | no | match | 1/1; 9 rows, 0 outside | yes | 2,434 | 26.04–26.04 (K = 1) |
+| RTX A6000 | klow | p3-E-k4 | gpu00.nrp.hpc.udel.edu (AMD EPYC 7443P 24-Core) | 4/4 | 4/4 | no | no | match | 4/4; 98 rows, 0 outside | yes | 2,370 | 74.27–77.32 (1.43) |
+| RTX A6000 | klow | p4-A07-k2 | gpu00.nrp.hpc.udel.edu (AMD EPYC 7443P 24-Core) | 2/2 | 2/2 | no | no | match | 2/2; 43 rows, 0 outside | yes | 2,432 | 64.53–65.53 (0.71) |
+
+## repro
+| product | Job | phase | fields recomputed by the independent parse (s, R, wall per run-epoch, peak, util all and steady, cores/K, Q, RSS, traced epochs, epoch count, attempts, verification, ARM_CPUS, thread masks, loss, exits, fingerprint, cache, card MiB) | result |
+| --- | --- | --- | --- | --- |
+| A10 | krule | p1-E-k4 | 19 checks against `bench_summary.py` | ✓ all equal |
+| A10 | krule | p2-A07-k2 | 19 checks against `bench_summary.py` | ✓ all equal |
+| A10 | klow | p3-E-k3 | 19 checks against `bench_summary.py` | ✓ all equal |
+| A10 | klow | p4-A07-k1 | 19 checks against `bench_summary.py` | ✓ all equal |
+| A100-SXM4-80GB | krule | p1-E-k16 | 19 checks against `bench_summary.py` | ✓ all equal |
+| A100-SXM4-80GB | krule | p2-A07-k8 | 19 checks against `bench_summary.py` | ✓ all equal |
+| A100-SXM4-80GB | klow | p3-E-k4 | 19 checks against `bench_summary.py` | ✓ all equal |
+| A100-SXM4-80GB | klow | p4-A07-k2 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 3090 | krule | p1-E-k5 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 3090 | krule | p2-A07-k2 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 3090 | klow | p3-E-k4 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 3090 | klow | p4-A07-k1 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 4090 | krule | p1-E-k5 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 4090 | krule | p2-A07-k2 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 4090 | klow | p3-E-k4 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX 4090 | klow | p4-A07-k1 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX A6000 | klow | p3-E-k4 | 19 checks against `bench_summary.py` | ✓ all equal |
+| RTX A6000 | klow | p4-A07-k2 | 19 checks against `bench_summary.py` | ✓ all equal |
+
+## run_claims
+| RUN.md claim | where | claimed | recomputed | source of the recompute | ✓/✗ |
+| --- | --- | --- | --- | --- | --- |
+| a10-klow p3-E-k3 PHASE_DONE wall | RUN.md l. 71 | 1,880.3 s | 1,880.3 s | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-klow/kai-gpubench-a10-klow-smvnq.log L153` | ✓ |
+| a10-klow p3-E-k3 steady cores per arm | RUN.md l. 71 | 0.575 | 0.575 (samples.csv pairs: 0.575) | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-klow/kai-gpubench-a10-klow-smvnq.log L153` | ✓ |
+| a10-klow p4-A07-k1 PHASE_DONE wall | RUN.md l. 71 | 1,180.1 s | 1,180.1 s | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-klow/kai-gpubench-a10-klow-smvnq.log L158` | ✓ |
+| a10-klow p4-A07-k1 steady cores per arm | RUN.md l. 71 | 0.588 | 0.588 (samples.csv pairs: 0.588) | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-klow/kai-gpubench-a10-klow-smvnq.log L158` | ✓ |
+| a10-krule p1-E-k4 PHASE_DONE wall | RUN.md l. 72 | 2,530.5 s | 2,530.5 s | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-krule/kai-gpubench-a10-krule-g8b5c.log L155` | ✓ |
+| a10-krule p1-E-k4 steady cores per arm | RUN.md l. 72 | 0.556 | 0.556 (samples.csv pairs: 0.556) | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-krule/kai-gpubench-a10-krule-g8b5c.log L155` | ✓ |
+| a10-krule p2-A07-k2 PHASE_DONE wall | RUN.md l. 72 | 2,235.3 s | 2,235.3 s | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-krule/kai-gpubench-a10-krule-g8b5c.log L162` | ✓ |
+| a10-krule p2-A07-k2 steady cores per arm | RUN.md l. 72 | 0.543 | 0.543 (samples.csv pairs: 0.543) | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a10-krule/kai-gpubench-a10-krule-g8b5c.log L162` | ✓ |
+| a100-sxm4-80gb-krule p1-E-k16 PHASE_DONE wall | RUN.md l. 73 | 3,902.7 s | 3,902.7 s | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a100-sxm4-80gb-krule/kai-gpubench-a100-sxm4-80gb-krule-kqnx5.log L177` | ✓ |
+| a100-sxm4-80gb-krule p1-E-k16 steady cores per arm | RUN.md l. 73 | 0.520 | 0.520 (samples.csv pairs: 0.520) | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a100-sxm4-80gb-krule/kai-gpubench-a100-sxm4-80gb-krule-kqnx5.log L177` | ✓ |
+| a100-sxm4-80gb-krule p2-A07-k8 PHASE_DONE wall | RUN.md l. 73 | 3,181.5 s | 3,181.5 s | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a100-sxm4-80gb-krule/kai-gpubench-a100-sxm4-80gb-krule-kqnx5.log L196` | ✓ |
+| a100-sxm4-80gb-krule p2-A07-k8 steady cores per arm | RUN.md l. 73 | 0.544 | 0.544 (samples.csv pairs: 0.544) | `campaigns/2026-09-29-gpu-benchmark/logs/kai-gpubench-a100-sxm4-80gb-krule/kai-gpubench-a100-sxm4-80gb-krule-kqnx5.log L196` | ✓ |
+| A100 pin check: proc rows past epoch 1 | RUN.md l. 52 | 346 | 346 | `campaigns/2026-09-29-gpu-benchmark/data/gpu-bench/a100-sxm4-80gb-krule/samples.csv data rows 1-487 (L2-L488), the read RUN.md made at about 10:30Z` | ✓ |
+| A100 pin check: rows outside the pinned set | RUN.md l. 52-53 | 0 | 0 | `campaigns/2026-09-29-gpu-benchmark/data/gpu-bench/a100-sxm4-80gb-krule/samples.csv data rows 1-487 (L2-L488), the read RUN.md made at about 10:30Z` | ✓ |
+| A100 pin check: proc_threads is 25 on every one of them | RUN.md l. 53-54 | 25 on all 346 | 25 on 341, 61 on 5 | `campaigns/2026-09-29-gpu-benchmark/data/gpu-bench/a100-sxm4-80gb-krule/samples.csv data rows 1-487 (L2-L488), the read RUN.md made at about 10:30Z` | ✗ (descriptive; the pin result above stands) |
+| A100 pin check: GPU utilization mean over 31 samples | RUN.md l. 55 | 95.3 % | 95.26 % over 31 samples in the first 487 rows | `campaigns/2026-09-29-gpu-benchmark/data/gpu-bench/a100-sxm4-80gb-krule/samples.csv data rows 1-487 (L2-L488), the read RUN.md made at about 10:30Z` | ✓ |
+| A100 pin check: peak GPU memory | RUN.md l. 55-56 | 72,709 / 81,920 MiB (88.8 %) | 72,709 MiB; whole phase 72,709 MiB | `campaigns/2026-09-29-gpu-benchmark/data/gpu-bench/a100-sxm4-80gb-krule/samples.csv data rows 1-487 (L2-L488), the read RUN.md made at about 10:30Z` | ✓ |
+| A100 K_rule started about 17 min after its apply | RUN.md l. 46-47 | about 17 min | 17.2 min | job.json, pod.json | ✓ |
+
+## deleted
+| Job | applied (job.json) | deleted (RUN.md) | pod state at deletion (pod.json) | Q lower bound, h | scheduler: the product-node buckets | anti-affinity named |
+| --- | --- | --- | --- | --- | --- | --- |
+| `kai-gpubench-l40s-klow` | 2026-09-29T09:32:18Z | 2026-09-29T15:37:45Z (RUN.md l. 89) | Pending, no startTime, PodScheduled False (Unschedulable) | ≥ 6.09 | 1 Insufficient cpu, 2 Insufficient nvidia.com/gpu | no |
+| `kai-gpubench-l40-klow` | 2026-09-29T09:35:26Z | 2026-09-29T15:37:45Z (RUN.md l. 90) | Pending, no startTime, PodScheduled False (Unschedulable) | ≥ 6.04 | 5 Insufficient cpu, 6 Insufficient nvidia.com/gpu | no |
+| `kai-gpubench-a40-klow` | 2026-09-29T09:35:35Z | 2026-09-29T15:37:45Z (RUN.md l. 91) | Pending, no startTime, PodScheduled False (Unschedulable) | ≥ 6.04 | 1 Insufficient cpu, 2 Insufficient nvidia.com/a40 | no |
+| `kai-gpubench-l40s-krule` | 2026-09-29T10:27:54Z | 2026-09-29T17:18:54Z (RUN.md l. 114) | Pending, no startTime, PodScheduled False (Unschedulable) | ≥ 6.85 | 2 Insufficient cpu, 2 Insufficient nvidia.com/gpu | no |
+| `kai-gpubench-rtx-a6000-krule` | 2026-09-29T10:27:57Z | 2026-09-29T17:18:54Z (RUN.md l. 115) | Pending, no startTime, PodScheduled False (Unschedulable) | ≥ 6.85 | 3 Insufficient nvidia.com/rtxa6000, 5 Insufficient cpu | no |
+| `kai-gpubench-l40-krule` | 2026-09-29T10:28:00Z | 2026-09-29T17:18:54Z (RUN.md l. 116) | Pending, no startTime, PodScheduled False (Unschedulable) | ≥ 6.85 | 6 Insufficient cpu, 6 Insufficient nvidia.com/gpu | no |
+| `kai-gpubench-a40-krule` | 2026-09-29T10:28:03Z | 2026-09-29T17:18:54Z (RUN.md l. 117) | Pending, no startTime, PodScheduled False (Unschedulable) | ≥ 6.85 | 2 Insufficient cpu, 2 Insufficient nvidia.com/a40 | no |
+
+## a10
+| A10 phase | attempt (B3) | counted | A10 s [D1] | slowest arm of the pure-pack canary | limit (× 1.10) | ratio | flag (B6) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| E K=4 (krule) | 1 of 1 | True | 114.10 | 114.455 | 125.9005 | 0.9969 | no |
+| A07 K=2 (krule) | 1 of 1 | True | 96.56 | 90.730 | 99.8030 | 1.0643 | no |
+| E K=3 (klow) | 1 of 1 | True | 80.75 | – (not an anchored K) | – | – | – |
+| A07 K=1 (klow) | 1 of 1 | True | 45.73 | – (not an anchored K) | – | – | – |
+
+## d2
+| product | class | K_rule | predicted peak % (PREFLIGHT l. 237-244, from A10 per-process peaks) | measured pod peak % | measured per-process peak, MiB | A10 per-process peak m_k, MiB ([D2]) |
+| --- | --- | --- | --- | --- | --- | --- |
+| A10 | E | 4 | 75.6 % | 75.7 % | 4,350 | 4,350 |
+| A10 | A07 | 2 | 73.4 % | 73.4 % | 8,446 | 8,446 |
+| A100-SXM4-80GB | E | 16 | 85.0 % | 88.8 % | 4,538 | 4,350 |
+| A100-SXM4-80GB | A07 | 8 | 82.5 % | 84.4 % | 8,634 | 8,446 |
+| RTX 3090 | E | 5 | 88.5 % | 89.2 % | 4,378 | 4,350 |
+| RTX 3090 | A07 | 2 | 68.7 % | 69.0 % | 8,474 | 8,446 |
+| RTX 4090 | E | 5 | 88.5 % | 91.9 % | 4,508 | 4,350 |
+| RTX 4090 | A07 | 2 | 68.8 % | 70.1 % | 8,604 | 8,446 |
+| RTX A6000 | E | 4 (K_low; K_rule not practical now) | – | 35.7 % | 4,384 | 4,350 |
+| RTX A6000 | A07 | 2 (K_low; K_rule not practical now) | – | 34.5 % | 8,480 | 8,446 |
+
+## equalk
+| class, K | product | Job | s [D1] | A10 s / product s (1.00 = A10 speed) |
+| --- | --- | --- | --- | --- |
+| E K=4 | A10 | krule | 114.10 | 1.00 |
+| E K=4 | A100-SXM4-80GB | klow | 47.10 | 2.42 |
+| E K=4 | RTX 3090 | klow | 71.08 | 1.61 |
+| E K=4 | RTX 4090 | klow | 55.41 | 2.06 |
+| E K=4 | RTX A6000 | klow | 77.32 | 1.48 |
+| A07 K=2 | A10 | krule | 96.56 | 1.00 |
+| A07 K=2 | A100-SXM4-80GB | klow | 45.05 | 2.14 |
+| A07 K=2 | RTX 3090 | krule | 57.11 | 1.69 |
+| A07 K=2 | RTX 4090 | krule | 48.29 | 2.00 |
+| A07 K=2 | RTX A6000 | klow | 65.53 | 1.47 |
+| A07 K=1 | A10 | klow | 45.73 | 1.00 |
+| A07 K=1 | RTX 3090 | klow | 30.85 | 1.48 |
+| A07 K=1 | RTX 4090 | klow | 26.04 | 1.76 |
+
+## ceilings
+| product | schedulable nodes | allocatable GPUs on them | pods of the production shape by allocatable, per K (2K CPU, 8K Gi) | joint ceiling of each K pair E/A07, campaign (a) | joint ceiling of each K pair E/A07, campaign (b) | a100 quota headroom |
+| --- | --- | --- | --- | --- | --- | --- |
+| A10 | 30 | 237 | K 4: 237, K 3: 237, K 2: 237, K 1: 237 | 4/2: 16, 4/1: 24, 3/2: 19, 3/1: 27 | 4/2: 110, 4/1: 206, 3/2: 115, 3/1: 211 | no quota object |
+| A100-SXM4-80GB | 16 | 77 | K 16: 57, K 8: 73, K 4: 77, K 2: 77 | 16/8: 4, 16/2: 10, 4/8: 10, 4/2: 16 | 16/8: 28, 16/2: 77, 4/8: 38, 4/2: 77 | 1 |
+| RTX 3090 | 30 | 115 | K 5: 43, K 4: 54, K 2: 98, K 1: 114 | 5/2: 15, 5/1: 23, 4/2: 16, 4/1: 24 | 5/2: 98, 5/1: 114, 4/2: 98, 4/1: 114 | no quota object |
+| RTX 4090 | 3 | 16 | K 4: 9, K 2: 14, K 1: 16 | 4/2: 13, 4/1: 16 | 4/2: 14, 4/1: 16 | no quota object |
+| RTX A6000 | 5 | 27 | K 4: 9, K 2: 17 | 4/2: 13 | 4/2: 17 | no quota object |
+
+## t_inputs
+| product | class | K | Job | s [D1] | Chang GPU-h, W·s/(3600·K) | Chang critical path, H·s/3600 (h) | Delta GPU-h | Delta critical path (h) | canary 110·s/3600 (h) | Q (h) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A10 | E | 4 | krule | 114.10 | 1,774.9 | 221.9 | 253.6 | 31.7 | 3.49 | 0.01 |
+| A10 | E | 3 | klow | 80.75 | 1,674.7 | 157.0 | 239.2 | 22.4 | 2.47 | 0.01 |
+| A10 | A07 | 2 | krule | 96.56 | 1,502.1 | 187.8 | 1,528.9 | 53.6 | 2.95 | 0.01 |
+| A10 | A07 | 1 | klow | 45.73 | 1,422.9 | 88.9 | 1,448.3 | 25.4 | 1.40 | 0.01 |
+| A100-SXM4-80GB | E | 16 | krule | 177.46 | 690.1 | 345.1 | 98.6 | 49.3 | 5.42 | 0.29 |
+| A100-SXM4-80GB | E | 4 | klow | 47.10 | 732.7 | 91.6 | 104.7 | 13.1 | 1.44 | 3.82 |
+| A100-SXM4-80GB | A07 | 8 | krule | 142.23 | 553.1 | 276.6 | 563.0 | 79.0 | 4.35 | 0.29 |
+| A100-SXM4-80GB | A07 | 2 | klow | 45.05 | 700.9 | 87.6 | 713.4 | 25.0 | 1.38 | 3.82 |
+| RTX 3090 | E | 5 | krule | 85.51 | 1,064.1 | 166.3 | 152.0 | 23.8 | 2.61 | 1.50 |
+| RTX 3090 | E | 4 | klow | 71.08 | 1,105.7 | 138.2 | 158.0 | 19.7 | 2.17 | 2.45 |
+| RTX 3090 | A07 | 2 | krule | 57.11 | 888.3 | 111.0 | 904.2 | 31.7 | 1.74 | 1.50 |
+| RTX 3090 | A07 | 1 | klow | 30.85 | 959.8 | 60.0 | 976.9 | 17.1 | 0.94 | 2.45 |
+| RTX 4090 | E | 4 | klow | 55.41 | 861.9 | 107.7 | 123.1 | 15.4 | 1.69 | 3.91 |
+| RTX 4090 | A07 | 2 | krule | 48.29 | 751.2 | 93.9 | 764.6 | 26.8 | 1.48 | 1.50 |
+| RTX 4090 | A07 | 1 | klow | 26.04 | 810.0 | 50.6 | 824.4 | 14.5 | 0.80 | 3.91 |
+| RTX A6000 | E | 4 | klow | 77.32 | 1,202.8 | 150.3 | 171.8 | 21.5 | 2.36 | 4.38 |
+| RTX A6000 | A07 | 2 | klow | 65.53 | 1,019.3 | 127.4 | 1,037.5 | 36.4 | 2.00 | 4.38 |
+
+## t_chang
+| product | memory.total MiB | G = 1 | G = 4 | G = 8 | G = 13 | G = 16 | notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| A10 | 23,028 | 3,097.6 (3/1) | 774.4 (3/1) | 387.2 (3/1) | 238.3 (3/1) | 193.6 (3/1) |  |
+| A100-SXM4-80GB | 81,920 | 1,249.2 (16/8) | 333.4 (4/8)* | 188.3 (4/2)* | 119.3 (4/2)* | 100.7 (4/2)* | * G above the a100 quota headroom (1 free at 2026-09-29T18:28:07Z; 1 at 08:41Z, 3 at 11:57Z) |
+| RTX 3090 | 24,576 | 1,958.0 (5/2) | 493.7 (5/2) | 249.7 (5/2) | 160.5 (4/2) | 145.3 (4/2) |  |
+| RTX 4090 | 24,564 | 1,622.6 (4/2) | 412.8 (4/2) | 211.1 (4/2) | 133.6 (4/2) | 117.2 (4/1) | E at K=4 only (K=5 excluded, rule 1) |
+| RTX A6000 | 49,140 | 2,233.2 (4/2) | 566.6 (4/2) | 288.9 (4/2) | 182.0 (4/2) | 161.5 (4/2)‡ | ‡ G above the static ceiling of its nodes (table of ceilings); K_low shape only (its K_rule shape was not practical now) |
+
+## sel_chang
+| G | eligible now | leader, T h | tie set (T ≤ 1.10 × min) | [D5] pick at equal G (smaller memory.total) | T(A10) / T(leader) | more than 10 % earlier than the A10? |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | A10, A100-SXM4-80GB, RTX 3090, RTX 4090, RTX A6000 | A100-SXM4-80GB 1,249.2 | A100-SXM4-80GB | A100-SXM4-80GB | 2.480 | yes |
+| 4 | A10, RTX 3090, RTX 4090, RTX A6000 | RTX 4090 412.8 | RTX 4090 | RTX 4090 | 1.876 | yes |
+| 8 | A10, RTX 3090, RTX 4090, RTX A6000 | RTX 4090 211.1 | RTX 4090 | RTX 4090 | 1.834 | yes |
+| 13 | A10, RTX 3090, RTX 4090, RTX A6000 | RTX 4090 133.6 | RTX 4090 | RTX 4090 | 1.784 | yes |
+| 16 | A10, RTX 3090, RTX 4090, RTX A6000‡ | RTX 4090 117.2 | RTX 4090 | RTX 4090 | 1.651 | yes |
+
+## capped_chang
+| G asked | A10: T h (G_eff) | A100-SXM4-80GB: T h (G_eff) | RTX 3090: T h (G_eff) | RTX 4090: T h (G_eff) | RTX A6000: T h (G_eff) | leader | tie set (T ≤ 1.10 × min) | [D5] pick (larger G_eff, then smaller memory.total) | T(A10) / T(leader) | more than 10 % earlier than the A10? |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 3,097.6 (1) | 1,249.2 (1) | 1,958.0 (1) | 1,622.6 (1) | 2,233.2 (1) | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | 2.480 | yes |
+| 4 | 774.4 (4) | 1,249.2 (1, a100 quota) | 493.7 (4) | 412.8 (4) | 566.6 (4) | RTX 4090 | RTX 4090 | RTX 4090 | 1.876 | yes |
+| 8 | 387.2 (8) | 1,249.2 (1, a100 quota) | 249.7 (8) | 211.1 (8) | 288.9 (8) | RTX 4090 | RTX 4090 | RTX 4090 | 1.834 | yes |
+| 13 | 238.3 (13) | 1,249.2 (1, a100 quota) | 160.5 (13) | 133.6 (13) | 182.0 (13) | RTX 4090 | RTX 4090 | RTX 4090 | 1.784 | yes |
+| 16 | 193.6 (16) | 1,249.2 (1, a100 quota) | 145.3 (16) | 117.2 (16) | 182.0 (13, static ceiling) | RTX 4090 | RTX 4090 | RTX 4090 | 1.651 | yes |
+
+## breakeven_chang
+| RTX 4090 G | RTX 4090 T, h | A10: fewest G at or under it | A100-SXM4-80GB: fewest G at or under it | RTX 3090: fewest G at or under it | RTX A6000: fewest G at or under it |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1,622.6 | 2 | 1 | 2 | 2 |
+| 4 | 412.8 | 8 | 4 (above the a100 quota) | 5 | 6 |
+| 8 | 211.1 | 15 | 8 (above the a100 quota) | 10 | 12 |
+| 13 | 133.6 | never (floor 157.0 h) | 12 (above the a100 quota) | never (floor 145.3 h) | never (floor 161.5 h) |
+| 16 | 117.2 | never (floor 157.0 h) | 14 (above the a100 quota) | never (floor 145.3 h) | never (floor 161.5 h) |
+
+## whatif_chang
+| G | condition | leader, T h | tie set | [D5] pick at equal G | T(A10) / T(leader) |
+| --- | --- | --- | --- | --- | --- |
+| 1 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 1,249.2 | A100-SXM4-80GB | A100-SXM4-80GB | 2.480 |
+| 4 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 333.4 | A100-SXM4-80GB | A100-SXM4-80GB | 2.323 |
+| 8 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 188.3 | A100-SXM4-80GB | A100-SXM4-80GB | 2.057 |
+| 13 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 119.3 | A100-SXM4-80GB | A100-SXM4-80GB | 1.997 |
+| 16 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 100.7 | A100-SXM4-80GB | A100-SXM4-80GB | 1.923 |
+
+## decomp_chang
+| product | G | K E/A07 | Q, h | C_p, h (max of the class canaries) | C_p, h (sum reading) | first term Σ W·s/(3600·K·G), h | critical path max H·s/3600, h | T, h | T with the C_p sum, h |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A10 | 1 | 3/1 | 0.01 | 0.00 | 0.00 | 3,097.6 | 157.0 | 3,097.6 | 3,097.6 |
+| A10 | 16 | 3/1 | 0.01 | 0.00 | 0.00 | 193.6 | 157.0 | 193.6 | 193.6 |
+| A100-SXM4-80GB | 1 | 16/8 | 0.29 | 5.71 | 10.05 | 1,243.2 | 345.1 | 1,249.2 | 1,253.6 |
+| A100-SXM4-80GB | 16 | 4/2 | 3.82 | 5.26 | 6.63 | 89.6 | 91.6 | 100.7 | 102.0 |
+| RTX 3090 | 1 | 5/2 | 1.50 | 4.12 | 5.86 | 1,952.4 | 166.3 | 1,958.0 | 1,959.8 |
+| RTX 3090 | 16 | 4/2 | 2.45 | 4.62 | 6.37 | 124.6 | 138.2 | 145.3 | 147.0 |
+| RTX 4090 | 1 | 4/2 | 3.91 | 5.60 | 7.07 | 1,613.1 | 107.7 | 1,622.6 | 1,624.1 |
+| RTX 4090 | 16 | 4/1 | 3.91 | 5.60 | 6.39 | 104.5 | 107.7 | 117.2 | 118.0 |
+| RTX A6000 | 1 | 4/2 | 4.38 | 6.74 | 8.75 | 2,222.0 | 150.3 | 2,233.2 | 2,235.2 |
+| RTX A6000 | 16 | 4/2 | 4.38 | 6.74 | 8.75 | 138.9 | 150.3 | 161.5 | 163.5 |
+
+## flips_chang
+| view | leader, and the [D5] pick where it differs, by G (from G = …) |
+| --- | --- |
+| equal G, now | A100-SXM4-80GB from G = 1; RTX 4090 from G = 2 |
+| equal G, a100 quota not binding | A100-SXM4-80GB from G = 1 |
+| [D4]-capped | A100-SXM4-80GB from G = 1; RTX 4090 from G = 2 |
+
+## checks_chang
+| G | view | leader (T with Q + C) | leader by the compute term only | leader with C_p as the sum reading | leader by LPT pack schedule | leader T, h | same leader with s × 1.0643, T h | leader after the stress | tie set after the stress |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | equal G | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | 1,249.2 | 1,329.5 | A100-SXM4-80GB | A100-SXM4-80GB |
+| 4 | equal G | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 412.8 | 438.8 | RTX 4090 | RTX 4090 |
+| 8 | equal G | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 211.1 | 224.2 | RTX 4090 | RTX 4090 |
+| 13 | equal G | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 133.6 | 141.7 | RTX 4090 | RTX 4090 |
+| 16 | equal G | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 117.2 | 124.3 | RTX 4090 | RTX 4090 |
+| 1 | [D4]-capped | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | 1,249.2 | 1,329.5 | A100-SXM4-80GB | A100-SXM4-80GB |
+| 4 | [D4]-capped | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 412.8 | 438.8 | RTX 4090 | RTX 4090 |
+| 8 | [D4]-capped | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 211.1 | 224.2 | RTX 4090 | RTX 4090 |
+| 13 | [D4]-capped | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 133.6 | 141.7 | RTX 4090 | RTX 4090 |
+| 16 | [D4]-capped | RTX 4090 | RTX 4090 | RTX 4090 | RTX 4090 | 117.2 | 124.3 | RTX 4090 | RTX 4090 |
+
+## t_delta
+| product | memory.total MiB | G = 1 | G = 4 | G = 8 | G = 10 | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| A10 | 23,028 | 1,687.5 (3/1)† | 421.9 (3/1)† | 210.9 (3/1)† | 168.8 (3/1)† | † [A1]: Delta A07 needs ≥ 45 GB; a reference only, unless Kai overrides |
+| A100-SXM4-80GB | 81,920 | 667.6 (16/8) | 171.4 (16/8)* | 88.7 (16/8)* | 85.0 (16/8)* | * G above the a100 quota headroom (1 free at 2026-09-29T18:28:07Z; 1 at 08:41Z, 3 at 11:57Z) |
+| RTX 3090 | 24,576 | 1,061.8 (5/2)† | 269.7 (5/2)† | 137.6 (5/2)† | 111.2 (5/2)† | † [A1]: Delta A07 needs ≥ 45 GB; a reference only, unless Kai overrides |
+| RTX 4090 | 24,564 | 897.2 (4/2)† | 231.4 (4/2)† | 120.5 (4/2)† | 98.3 (4/2)† | † [A1]: Delta A07 needs ≥ 45 GB; a reference only, unless Kai overrides; E at K=4 only (K=5 excluded, rule 1) |
+| RTX A6000 | 49,140 | 1,220.4 (4/2) | 313.4 (4/2) | 162.3 (4/2) | 132.1 (4/2) | K_low shape only (its K_rule shape was not practical now) |
+
+## sel_delta
+| G | eligible now | leader, T h | tie set (T ≤ 1.10 × min) | [D5] pick at equal G (smaller memory.total) | T(A10) / T(leader) | more than 10 % earlier than the A10? |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | A100-SXM4-80GB, RTX A6000 | A100-SXM4-80GB 667.6 | A100-SXM4-80GB | A100-SXM4-80GB | 2.528 (A10 not eligible under [A1]) | no eligible A10 baseline under [A1] |
+| 4 | RTX A6000 | RTX A6000 313.4 | RTX A6000 | RTX A6000 | 1.346 (A10 not eligible under [A1]) | no eligible A10 baseline under [A1] |
+| 8 | RTX A6000 | RTX A6000 162.3 | RTX A6000 | RTX A6000 | 1.300 (A10 not eligible under [A1]) | no eligible A10 baseline under [A1] |
+| 10 | RTX A6000 | RTX A6000 132.1 | RTX A6000 | RTX A6000 | 1.278 (A10 not eligible under [A1]) | no eligible A10 baseline under [A1] |
+
+## capped_delta
+| G asked | A100-SXM4-80GB: T h (G_eff) | RTX A6000: T h (G_eff) | leader | tie set (T ≤ 1.10 × min) | [D5] pick (larger G_eff, then smaller memory.total) | T(A10) / T(leader) | more than 10 % earlier than the A10? |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | 667.6 (1) | 1,220.4 (1) | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | 2.528 (reference) | no eligible A10 baseline under [A1] |
+| 4 | 667.6 (1, a100 quota) | 313.4 (4) | RTX A6000 | RTX A6000 | RTX A6000 | 1.346 (reference) | no eligible A10 baseline under [A1] |
+| 8 | 667.6 (1, a100 quota) | 162.3 (8) | RTX A6000 | RTX A6000 | RTX A6000 | 1.300 (reference) | no eligible A10 baseline under [A1] |
+| 10 | 667.6 (1, a100 quota) | 132.1 (10) | RTX A6000 | RTX A6000 | RTX A6000 | 1.278 (reference) | no eligible A10 baseline under [A1] |
+
+## breakeven_delta
+| RTX A6000 G | RTX A6000 T, h | A10: fewest G at or under it | A100-SXM4-80GB: fewest G at or under it | RTX 3090: fewest G at or under it | RTX 4090: fewest G at or under it |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 1,220.4 | 2 ([A1] override) | 1 | 1 ([A1] override) | 1 ([A1] override) |
+| 4 | 313.4 | 6 ([A1] override) | 3 (above the a100 quota) | 4 ([A1] override) | 3 ([A1] override) |
+| 8 | 162.3 | never within the 10-pod cap | 5 (above the a100 quota) | 7 ([A1] override) | 6 ([A1] override) |
+| 10 | 132.1 | never within the 10-pod cap | 6 (above the a100 quota) | 9 ([A1] override) | 8 ([A1] override) |
+
+## whatif_delta
+| G | condition | leader, T h | tie set | [D5] pick at equal G | T(A10) / T(leader) |
+| --- | --- | --- | --- | --- | --- |
+| 1 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 667.6 | A100-SXM4-80GB | A100-SXM4-80GB | 2.528 |
+| 1 | Kai overrides [A1] | A100-SXM4-80GB 667.6 | A100-SXM4-80GB | A100-SXM4-80GB | 2.528 |
+| 1 | Kai overrides [A1] and the a100 quota is not binding | A100-SXM4-80GB 667.6 | A100-SXM4-80GB | A100-SXM4-80GB | 2.528 |
+| 4 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 171.4 | A100-SXM4-80GB | A100-SXM4-80GB | 2.462 |
+| 4 | Kai overrides [A1] | RTX 4090 231.4 | RTX 4090 | RTX 4090 | 1.823 |
+| 4 | Kai overrides [A1] and the a100 quota is not binding | A100-SXM4-80GB 171.4 | A100-SXM4-80GB | A100-SXM4-80GB | 2.462 |
+| 8 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 88.7 | A100-SXM4-80GB | A100-SXM4-80GB | 2.378 |
+| 8 | Kai overrides [A1] | RTX 4090 120.5 | RTX 4090 | RTX 4090 | 1.751 |
+| 8 | Kai overrides [A1] and the a100 quota is not binding | A100-SXM4-80GB 88.7 | A100-SXM4-80GB | A100-SXM4-80GB | 2.378 |
+| 10 | a100 quota not binding (hypothetical) | A100-SXM4-80GB 85.0 | A100-SXM4-80GB | A100-SXM4-80GB | 1.985 |
+| 10 | Kai overrides [A1] | RTX 4090 98.3 | RTX 4090 | RTX 4090 | 1.717 |
+| 10 | Kai overrides [A1] and the a100 quota is not binding | A100-SXM4-80GB 85.0 | A100-SXM4-80GB | A100-SXM4-80GB | 1.985 |
+
+## decomp_delta
+| product | G | K E/A07 | Q, h | C_p, h (max of the class canaries) | C_p, h (sum reading) | first term Σ W·s/(3600·K·G), h | critical path max H·s/3600, h | T, h | T with the C_p sum, h |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A10 | 1 | 3/1 | 0.01 | 0.00 | 0.00 | 1,687.5 | 25.4 | 1,687.5 | 1,687.5 |
+| A10 | 10 | 3/1 | 0.01 | 0.00 | 0.00 | 168.8 | 25.4 | 168.8 | 168.8 |
+| A100-SXM4-80GB | 1 | 16/8 | 0.29 | 5.71 | 10.05 | 661.6 | 79.0 | 667.6 | 671.9 |
+| A100-SXM4-80GB | 10 | 16/8 | 0.29 | 5.71 | 10.05 | 66.2 | 79.0 | 85.0 | 89.4 |
+| RTX 3090 | 1 | 5/2 | 1.50 | 4.12 | 5.86 | 1,056.2 | 31.7 | 1,061.8 | 1,063.5 |
+| RTX 3090 | 10 | 5/2 | 1.50 | 4.12 | 5.86 | 105.6 | 31.7 | 111.2 | 113.0 |
+| RTX 4090 | 1 | 4/2 | 3.91 | 5.60 | 7.07 | 887.7 | 26.8 | 897.2 | 898.7 |
+| RTX 4090 | 10 | 4/2 | 3.91 | 5.60 | 7.07 | 88.8 | 26.8 | 98.3 | 99.8 |
+| RTX A6000 | 1 | 4/2 | 4.38 | 6.74 | 8.75 | 1,209.3 | 36.4 | 1,220.4 | 1,222.4 |
+| RTX A6000 | 10 | 4/2 | 4.38 | 6.74 | 8.75 | 120.9 | 36.4 | 132.1 | 134.1 |
+
+## flips_delta
+| view | leader, and the [D5] pick where it differs, by G (from G = …) |
+| --- | --- |
+| equal G, now | A100-SXM4-80GB from G = 1; RTX A6000 from G = 2 |
+| equal G, a100 quota not binding | A100-SXM4-80GB from G = 1 |
+| [D4]-capped | A100-SXM4-80GB from G = 1; RTX A6000 from G = 2 |
+| equal G, [A1] overridden | A100-SXM4-80GB from G = 1; RTX 4090 from G = 2 |
+| [D4]-capped, [A1] overridden | A100-SXM4-80GB from G = 1; RTX 4090 from G = 2 |
+
+## checks_delta
+| G | view | leader (T with Q + C) | leader by the compute term only | leader with C_p as the sum reading | leader T, h | same leader with s × 1.0643, T h | leader after the stress | tie set after the stress |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | equal G | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | 667.6 | 710.5 | A100-SXM4-80GB | A100-SXM4-80GB |
+| 4 | equal G | RTX A6000 | RTX A6000 | RTX A6000 | 313.4 | 333.0 | RTX A6000 | RTX A6000 |
+| 8 | equal G | RTX A6000 | RTX A6000 | RTX A6000 | 162.3 | 172.2 | RTX A6000 | RTX A6000 |
+| 10 | equal G | RTX A6000 | RTX A6000 | RTX A6000 | 132.1 | 140.0 | RTX A6000 | RTX A6000 |
+| 1 | [D4]-capped | A100-SXM4-80GB | A100-SXM4-80GB | A100-SXM4-80GB | 667.6 | 710.5 | A100-SXM4-80GB | A100-SXM4-80GB |
+| 4 | [D4]-capped | RTX A6000 | RTX A6000 | RTX A6000 | 313.4 | 333.0 | RTX A6000 | RTX A6000 |
+| 8 | [D4]-capped | RTX A6000 | RTX A6000 | RTX A6000 | 162.3 | 172.2 | RTX A6000 | RTX A6000 |
+| 10 | [D4]-capped | RTX A6000 | RTX A6000 | RTX A6000 | 132.1 | 140.0 | RTX A6000 | RTX A6000 |
+
+## lpt_chang
+| G | product (K E/A07) | packs E + A07 | formula compute term, h | LPT makespan of the packs, h | LPT / formula |
+| --- | --- | --- | --- | --- | --- |
+| 1 | A100-SXM4-80GB (16/8) | 2 + 2 | 1,243.2 | 1,243.2 | 1.000 |
+| 1 | A10 (3/1) | 11 + 16 | 3,097.6 | 3,149.9 | 1.017 |
+| 4 | RTX 4090 (4/2) | 8 + 8 | 403.3 | 403.3 | 1.000 |
+| 4 | A10 (3/1) | 11 + 16 | 774.4 | 826.7 | 1.068 |
+| 8 | RTX 4090 (4/2) | 8 + 8 | 201.6 | 201.6 | 1.000 |
+| 8 | A10 (3/1) | 11 + 16 | 387.2 | 423.8 | 1.095 |
+| 13 | RTX 4090 (4/2) | 8 + 8 | 124.1 | 187.8 | 1.513 |
+| 13 | A10 (3/1) | 11 + 16 | 238.3 | 266.8 | 1.120 |
+| 16 | RTX 4090 (4/1) | 8 + 16 | 107.7 | 107.7 | 1.000 |
+| 16 | A10 (3/1) | 11 + 16 | 193.6 | 245.9 | 1.270 |
+
+## lpt_worst
+Largest LPT / formula over the five measured products and G = 1-32 (Chang, chosen K): 1.833 (A100-SXM4-80GB at G = 15, K 4/2).
+
+## unit_chang_E
+| product | G = 1 | G = 4 | G = 8 | G = 13 | G = 16 |
+| --- | --- | --- | --- | --- | --- |
+| A10 | 1,674.7 (K 3) | 418.7 (K 3) | 209.3 (K 3) | 157.0 (K 3) | 157.0 (K 3) |
+| A100-SXM4-80GB | 696.1 (K 16) | 192.2 (K 4)* | 100.7 (K 4)* | 100.7 (K 4)* | 100.7 (K 4)* |
+| RTX 3090 | 1,069.7 (K 5) | 271.6 (K 5) | 145.3 (K 4) | 145.3 (K 4) | 145.3 (K 4) |
+| RTX 4090 | 871.4 (K 4) | 225.0 (K 4) | 117.2 (K 4) | 117.2 (K 4) | 117.2 (K 4) |
+| RTX A6000 | 1,213.9 (K 4) | 311.8 (K 4) | 161.5 (K 4) | 161.5 (K 4) | 161.5 (K 4) |
+
+| G | leader (a100 quota applied) | tie set | T(A10) / T(leader) |
+| --- | --- | --- | --- |
+| 1 | A100-SXM4-80GB | A100-SXM4-80GB | 2.406 |
+| 4 | RTX 4090 | RTX 4090 | 1.861 |
+| 8 | RTX 4090 | RTX 4090 | 1.786 |
+| 13 | RTX 4090 | RTX 4090 | 1.339 |
+| 16 | RTX 4090 | RTX 4090 | 1.339 |
+
+## unit_chang_A07
+| product | G = 1 | G = 4 | G = 8 | G = 13 | G = 16 |
+| --- | --- | --- | --- | --- | --- |
+| A10 | 1,422.9 (K 1) | 355.7 (K 1) | 177.9 (K 1) | 109.5 (K 1) | 88.9 (K 1) |
+| A100-SXM4-80GB | 558.0 (K 8) | 184.2 (K 2)* | 96.6 (K 2)* | 96.6 (K 2)* | 96.6 (K 2)* |
+| RTX 3090 | 893.0 (K 2) | 226.8 (K 2) | 115.8 (K 2) | 79.7 (K 1) | 65.8 (K 1) |
+| RTX 4090 | 755.7 (K 2) | 192.3 (K 2) | 98.4 (K 2) | 70.9 (K 1) | 59.2 (K 1) |
+| RTX A6000 | 1,030.0 (K 2) | 265.6 (K 2) | 138.2 (K 2) | 138.2 (K 2) | 138.2 (K 2) |
+
+| G | leader (a100 quota applied) | tie set | T(A10) / T(leader) |
+| --- | --- | --- | --- |
+| 1 | A100-SXM4-80GB | A100-SXM4-80GB | 2.550 |
+| 4 | RTX 4090 | RTX 4090 | 1.850 |
+| 8 | RTX 4090 | RTX 4090 | 1.808 |
+| 13 | RTX 4090 | RTX 4090 | 1.544 |
+| 16 | RTX 4090 | RTX 4090 | 1.501 |
+
+## constants
+| constant | value | source |
+| --- | --- | --- |
+| stop_after: epochs per arm | 21 | STUDY l. 47-49; PREFLIGHT arm table |
+| [D1] window: one-based epochs per arm (2-21) | 20 | STUDY l. 47 |
+| [D1] untraced epochs per arm in the window | 18 | STUDY l. 47-49 (traced 10 and 20) |
+| [D1] traced epochs per arm in the window | 2 | STUDY l. 48 |
+| sampler interval, s | 60 | PREFLIGHT Alignment 5; pod log BENCH_PLAN_OK sample_s |
+| rule 1: pod peak limit, % of memory.total | 90 | STUDY l. 65 |
+| rule 5: steady cores per arm limit | 2.1 | STUDY l. 72 |
+| rule 3 / [D6]: window after the apply, h | 6 | STUDY l. 67 |
+| [D5] tie factor | 1.10 | STUDY l. 87 |
+| policy item 4 utilization floor, % | 40 | STUDY l. 94; PREFLIGHT B5 |
+| C_p canary length, epochs | 110 | STUDY l. 55-56 |
+| [D4] campaign (b) pod cap | 10 | STUDY l. 60-61 |
+| [A1] minimum card memory for campaign (b) A07 packs, GB | 45 | STUDY l. 118 |
+| campaign (a) E run-epochs W | 224,000 | STUDY l. 20-21 |
+| campaign (a) A07 run-epochs W | 112,000 | STUDY l. 21 |
+| campaign (a) horizon H, epochs | 7,000 | STUDY l. 20-21 |
+| campaign (a) R run-epochs (untimed, [A2]) | 8,000 | STUDY l. 21 |
+| campaign (a) R batch size | 256 | STUDY l. 21 |
+| campaign (b) E run-epochs W (base class) | 32,000 | STUDY l. 23 |
+| campaign (b) A07 run-epochs W (base class) | 114,000 | STUDY l. 23 |
+| campaign (b) E longest horizon H, epochs | 1,000 | STUDY l. 23 |
+| campaign (b) A07 longest horizon H, epochs | 2,000 | STUDY l. 23 |
+| fingerprint gate constant | 11,559,681 | STUDY l. 66 |
+| seconds per hour in R = K x 3600 / s | 3,600 | STUDY l. 50 |
+| host-RSS gate: process epochs the in-code gate needs | 105 | STUDY l. 51, 69-70 |
+| alternative reading of "10 % earlier": T(p) < 0.90 x T(A10) | 0.90 | STUDY l. 19 (this VERIFY: the reading not used) |
+
+## formula
+STUDY's Check recomputed (s 138.9 s at K = 5, A10 pilot telemetry, a formula illustration): R = 129.6 (STUDY: 130), Chang E first term at G = 7 = 10.29 d (STUDY: 10.3 d), one 7,000-epoch run = 11.25 d (STUDY: 11.3 d).
+Limiting cases on the A10 Chang row: two identical products give T ratio 1.000; at G → large, T tends to Q + C + max H·s/3600 = 157.0 h (critical path 157.0 h + Q).
+
+## counts
+| count | value | source |
+| --- | --- | --- |
+| Jobs applied (two per product, eight products) | 16 | campaigns/2026-09-29-gpu-benchmark/manifests/bench_plan.json |
+| Jobs complete, every phase ok | 9 | logs/*/job.json (succeeded 1), pod logs BENCH_DONE |
+| Jobs "not practical now" (rule 3, [D6]) | 7 | RUN.md l. 89-91, 114-117; logs/*/scheduler-message-6h.txt |
+| phases measured (product x class x K) | 18 | data/bench_summary.json |
+| arm-runs, each at 21 epochs with exit 0 | 70 | pod logs, ARM_EXIT lines |
+| arm-runs with CHECKPOINT_VERIFICATION_PASS (rule 6) | 70 | arm logs |
+| arm-runs with a FAIL, an OOM exit or a non-finite loss | 0 | arm logs, pod logs |
+| pods printing FINGERPRINT 11559681 expected 11559681 (rule 2) | 9 | pod logs |
+| phases excluded under rule 1 | 1 | data/bench_summary.json |
+| phases above the rule-5 limit of 2.1 cores per arm | 0 | data/bench_summary.json |
+| sampler rows past epoch 1 with an arm thread outside its pinned CPUs | 0 | data/gpu-bench/*/samples.csv |
+| run-epochs timed | 1,470 | arm logs |

@@ -1,0 +1,662 @@
+
+
+================================================================
+== Vitis HLS Report for 'einsum_dense_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_s'
+================================================================
+* Date:           Tue Aug  4 11:44:02 2026
+
+* Version:        2023.2 (Build 4023990 on Oct 11 2023)
+* Project:        myproject_prj
+* Solution:       solution1 (Vivado IP Flow Target)
+* Product family: virtexuplus
+* Target device:  xcvu13p-flga2577-2-e
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+---------+----------+------------+
+    |  Clock |  Target | Estimated| Uncertainty|
+    +--------+---------+----------+------------+
+    |ap_clk  |  2.50 ns|  1.629 ns|     0.68 ns|
+    +--------+---------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+----------+----------+-----+-----+---------+
+    |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+    |   min   |   max   |    min   |    max   | min | max |   Type  |
+    +---------+---------+----------+----------+-----+-----+---------+
+    |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+    +---------+---------+----------+----------+-----+-----+---------+
+
+    + Detail: 
+        * Instance: 
+        +-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |                                                                                         |                                                                       |  Latency (cycles) |  Latency (absolute) |  Interval | Pipeline|
+        |                                         Instance                                        |                                 Module                                |   min   |   max   |    min   |    max   | min | max |   Type  |
+        +-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+        |call_ret_transpose_ap_fixed_8_4_4_0_0_ap_fixed_8_4_4_0_0_config3_tpose_inp_s_fu_46       |transpose_ap_fixed_8_4_4_0_0_ap_fixed_8_4_4_0_0_config3_tpose_inp_s    |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_s_fu_52           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_s   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_1_fu_59           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_1   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_2_fu_66           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_2   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_3_fu_73           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_3   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_4_fu_80           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_4   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_5_fu_87           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_5   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_6_fu_94           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_6   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_7_fu_101          |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_7   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_8_fu_108          |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_8   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_9_fu_115          |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_9   |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_10_fu_122         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_10  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_11_fu_129         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_11  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_12_fu_136         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_12  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_13_fu_143         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_13  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_14_fu_150         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_14  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_15_fu_157         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_15  |        1|        1|  2.500 ns|  2.500 ns|    1|    1|      yes|
+        |call_ret51_transpose_ap_fixed_14_7_4_0_0_ap_fixed_14_7_4_0_0_config3_tpose_out_s_fu_164  |transpose_ap_fixed_14_7_4_0_0_ap_fixed_14_7_4_0_0_config3_tpose_out_s  |        0|        0|      0 ns|      0 ns|    1|    1|      yes|
+        +-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------+---------+---------+----------+----------+-----+-----+---------+
+
+        * Loop: 
+        N/A
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++---------------------+---------+-------+---------+---------+------+
+|         Name        | BRAM_18K|  DSP  |    FF   |   LUT   | URAM |
++---------------------+---------+-------+---------+---------+------+
+|DSP                  |        -|      -|        -|        -|     -|
+|Expression           |        -|      -|        -|        -|     -|
+|FIFO                 |        -|      -|        -|        -|     -|
+|Instance             |        -|      -|     7371|    40948|     -|
+|Memory               |        -|      -|        -|        -|     -|
+|Multiplexer          |        -|      -|        -|        -|     -|
+|Register             |        -|      -|        -|        -|     -|
++---------------------+---------+-------+---------+---------+------+
+|Total                |        0|      0|     7371|    40948|     0|
++---------------------+---------+-------+---------+---------+------+
+|Available SLR        |     1344|   3072|   864000|   432000|   320|
++---------------------+---------+-------+---------+---------+------+
+|Utilization SLR (%)  |        0|      0|       ~0|        9|     0|
++---------------------+---------+-------+---------+---------+------+
+|Available            |     5376|  12288|  3456000|  1728000|  1280|
++---------------------+---------+-------+---------+---------+------+
+|Utilization (%)      |        0|      0|       ~0|        2|     0|
++---------------------+---------+-------+---------+---------+------+
+
++ Detail: 
+    * Instance: 
+    +-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------+---------+----+-----+------+-----+
+    |                                         Instance                                        |                                 Module                                | BRAM_18K| DSP|  FF |  LUT | URAM|
+    +-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------+---------+----+-----+------+-----+
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_1_fu_59           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_1   |        0|   0|  457|  2674|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_10_fu_122         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_10  |        0|   0|  456|  2614|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_11_fu_129         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_11  |        0|   0|  456|  2558|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_12_fu_136         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_12  |        0|   0|  448|  2542|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_13_fu_143         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_13  |        0|   0|  467|  2617|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_14_fu_150         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_14  |        0|   0|  457|  2528|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_15_fu_157         |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_15  |        0|   0|  456|  2583|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_2_fu_66           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_2   |        0|   0|  448|  2469|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_3_fu_73           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_3   |        0|   0|  467|  2600|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_4_fu_80           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_4   |        0|   0|  496|  2615|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_5_fu_87           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_5   |        0|   0|  459|  2486|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_6_fu_94           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_6   |        0|   0|  484|  2570|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_7_fu_101          |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_7   |        0|   0|  446|  2491|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_8_fu_108          |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_8   |        0|   0|  478|  2595|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_9_fu_115          |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_9   |        0|   0|  468|  2596|    0|
+    |grp_dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_s_fu_52           |dense_latency_ap_fixed_8_4_4_0_0_ap_fixed_14_7_4_0_0_config3_dense_s   |        0|   0|  428|  2410|    0|
+    |call_ret51_transpose_ap_fixed_14_7_4_0_0_ap_fixed_14_7_4_0_0_config3_tpose_out_s_fu_164  |transpose_ap_fixed_14_7_4_0_0_ap_fixed_14_7_4_0_0_config3_tpose_out_s  |        0|   0|    0|     0|    0|
+    |call_ret_transpose_ap_fixed_8_4_4_0_0_ap_fixed_8_4_4_0_0_config3_tpose_inp_s_fu_46       |transpose_ap_fixed_8_4_4_0_0_ap_fixed_8_4_4_0_0_config3_tpose_inp_s    |        0|   0|    0|     0|    0|
+    +-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------+---------+----+-----+------+-----+
+    |Total                                                                                    |                                                                       |        0|   0| 7371| 40948|    0|
+    +-----------------------------------------------------------------------------------------+-----------------------------------------------------------------------+---------+----+-----+------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    N/A
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    N/A
+
+    * Multiplexer: 
+    N/A
+
+    * Register: 
+    N/A
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++---------------+-----+-----+------------+--------------------------------------------------------------------------+--------------+
+|   RTL Ports   | Dir | Bits|  Protocol  |                               Source Object                              |    C Type    |
++---------------+-----+-----+------------+--------------------------------------------------------------------------+--------------+
+|ap_clk         |   in|    1|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_rst         |   in|    1|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_0    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_1    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_2    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_3    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_4    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_5    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_6    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_7    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_8    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_9    |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_10   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_11   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_12   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_13   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_14   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_15   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_16   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_17   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_18   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_19   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_20   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_21   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_22   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_23   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_24   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_25   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_26   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_27   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_28   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_29   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_30   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_31   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_32   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_33   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_34   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_35   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_36   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_37   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_38   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_39   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_40   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_41   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_42   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_43   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_44   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_45   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_46   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_47   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_48   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_49   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_50   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_51   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_52   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_53   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_54   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_55   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_56   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_57   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_58   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_59   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_60   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_61   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_62   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_63   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_64   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_65   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_66   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_67   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_68   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_69   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_70   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_71   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_72   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_73   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_74   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_75   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_76   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_77   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_78   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_79   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_80   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_81   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_82   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_83   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_84   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_85   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_86   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_87   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_88   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_89   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_90   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_91   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_92   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_93   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_94   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_95   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_96   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_97   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_98   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_99   |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_100  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_101  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_102  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_103  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_104  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_105  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_106  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_107  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_108  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_109  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_110  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_111  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_112  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_113  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_114  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_115  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_116  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_117  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_118  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_119  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_120  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_121  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_122  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_123  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_124  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_125  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_126  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_127  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_128  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_129  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_130  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_131  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_132  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_133  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_134  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_135  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_136  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_137  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_138  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_139  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_140  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_141  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_142  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_143  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_144  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_145  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_146  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_147  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_148  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_149  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_150  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_151  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_152  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_153  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_154  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_155  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_156  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_157  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_158  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_159  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_160  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_161  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_162  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_163  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_164  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_165  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_166  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_167  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_168  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_169  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_170  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_171  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_172  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_173  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_174  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_175  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_176  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_177  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_178  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_179  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_180  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_181  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_182  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_183  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_184  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_185  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_186  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_187  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_188  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_189  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_190  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_191  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_192  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_193  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_194  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_195  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_196  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_197  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_198  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_199  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_200  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_201  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_202  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_203  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_204  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_205  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_206  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_207  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_208  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_209  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_210  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_211  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_212  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_213  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_214  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_215  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_216  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_217  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_218  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_219  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_220  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_221  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_222  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_223  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_224  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_225  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_226  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_227  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_228  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_229  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_230  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_231  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_232  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_233  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_234  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_235  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_236  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_237  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_238  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_239  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_240  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_241  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_242  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_243  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_244  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_245  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_246  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_247  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_248  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_249  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_250  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_251  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_252  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_253  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_254  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_255  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_256  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_257  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_258  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_259  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_260  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_261  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_262  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_263  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_264  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_265  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_266  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_267  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_268  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_269  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_270  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_271  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_272  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_273  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_274  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_275  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_276  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_277  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_278  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_279  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_280  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_281  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_282  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_283  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_284  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_285  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_286  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_287  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_288  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_289  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_290  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_291  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_292  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_293  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_294  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_295  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_296  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_297  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_298  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_299  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_300  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_301  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_302  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_303  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_304  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_305  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_306  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_307  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_308  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_309  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_310  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_311  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_312  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_313  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_314  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_315  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_316  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_317  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_318  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_319  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_320  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_321  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_322  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_323  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_324  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_325  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_326  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_327  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_328  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_329  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_330  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_331  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_332  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_333  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_334  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_335  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_336  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_337  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_338  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_339  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_340  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_341  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_342  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_343  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_344  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_345  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_346  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_347  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_348  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_349  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_350  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_351  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_352  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_353  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_354  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_355  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_356  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_357  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_358  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_359  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_360  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_361  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_362  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_363  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_364  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_365  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_366  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_367  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_368  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_369  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_370  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_371  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_372  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_373  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_374  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_375  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_376  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_377  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_378  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_379  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_380  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_381  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_382  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_383  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_384  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_385  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_386  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_387  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_388  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_389  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_390  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_391  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_392  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_393  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_394  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_395  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_396  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_397  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_398  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_399  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_400  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_401  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_402  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_403  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_404  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_405  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_406  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_407  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_408  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_409  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_410  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_411  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_412  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_413  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_414  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_415  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_416  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_417  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_418  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_419  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_420  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_421  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_422  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_423  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_424  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_425  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_426  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_427  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_428  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_429  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_430  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_431  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_432  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_433  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_434  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_435  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_436  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_437  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_438  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_439  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_440  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_441  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_442  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_443  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_444  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_445  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_446  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_447  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_448  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_449  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_450  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_451  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_452  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_453  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_454  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_455  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_456  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_457  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_458  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_459  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_460  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_461  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_462  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_463  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_464  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_465  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_466  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_467  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_468  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_469  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_470  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_471  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_472  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_473  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_474  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_475  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_476  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_477  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_478  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_479  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_480  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_481  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_482  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_483  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_484  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_485  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_486  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_487  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_488  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_489  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_490  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_491  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_492  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_493  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_494  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_495  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_496  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_497  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_498  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_499  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_500  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_501  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_502  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_503  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_504  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_505  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_506  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_507  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_508  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_509  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_510  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|ap_return_511  |  out|   14|  ap_ctrl_hs|  einsum_dense<ap_fixed<8, 4, 4, 0, 0>, ap_fixed<14, 7, 4, 0, 0>, config3>|  return value|
+|data_val1      |   in|  384|     ap_none|                                                                 data_val1|        scalar|
++---------------+-----+-----+------------+--------------------------------------------------------------------------+--------------+
+

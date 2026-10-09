@@ -1,0 +1,226 @@
+From 4f2ee12a0f0d02e9d2c99d8e65448876b774a541 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:28:20 -0700
+Subject: [PATCH 02/24] binarizer-center-flag: quant.binary_center false =
+ uncentered absmean (B02, M017)
+
+---
+ code/bnhgq2/binarize.py   | 10 +++---
+ code/bnhgq2/delta_keys.py |  4 +++
+ code/bnhgq2/qat.py        | 72 ++++++++++++++++++++++++++++++++-------
+ code/convert_binary.py    |  4 ++-
+ 4 files changed, 73 insertions(+), 17 deletions(-)
+
+diff --git a/code/bnhgq2/binarize.py b/code/bnhgq2/binarize.py
+index f31bad7..6698911 100644
+--- a/code/bnhgq2/binarize.py
++++ b/code/bnhgq2/binarize.py
+@@ -34,10 +34,11 @@ SCORE_FOLD = ("_attn_Wq", "_attn_Wk")
+ LN_KILLED = ("_attn_Wv",)
+ 
+ 
+-def absmean_binarize(w: np.ndarray):
+-    """Returns (q int8 in {−1,0,+1}, beta float, alpha float, n_zero int)."""
++def absmean_binarize(w: np.ndarray, center: bool = True):
++    """Returns (q int8 in {−1,0,+1}, beta float, alpha float, n_zero int).
++    center=False: uncentered absmean (Delta quant.binary_center false), alpha = 0."""
+     w = np.asarray(w, dtype=np.float64)
+-    alpha = w.mean()
++    alpha = w.mean() if center else 0.0
+     wc = w - alpha
+     beta = np.abs(wc).mean() + 1e-6
+     q = np.sign(wc)
+@@ -68,7 +69,8 @@ def binarize_checkpoint(layers: dict, norm: str = "subln") -> dict:
+     `norm` = arch.norm of the graph the folds are for (fold_class is norm-aware)."""
+     out, total_zeros = {}, 0
+     for name, wb in layers.items():
+-        q, beta, alpha, n_zero = absmean_binarize(wb["kernel"])
++        opts = wb.get("binary") or {}
++        q, beta, alpha, n_zero = absmean_binarize(wb["kernel"], center=opts.get("center", True))
+         total_zeros += n_zero
+         out[name] = {
+             "q": q, "beta": beta, "alpha": alpha, "n_zero": n_zero,
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 8f1a1ad..5249b23 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -84,3 +84,7 @@ def _one_of(*allowed):
+ # --------------------------------------------------------------------------- #
+ # Per-slug registrations (one block per patch; append below, never reorder)   #
+ # --------------------------------------------------------------------------- #
++
++# binarizer-center-flag: uncentered absmean (card B02).
++register('quant.binary_center', 'binarizer-center-flag', _is_bool,
++         active=lambda v: v is False)  # export: binarize.py honours it; convert path not run (DR-17)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 99f9f1c..d148f86 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -40,7 +40,7 @@ EPS_BETA = 1e-6
+ # --------------------------------------------------------------------------- #
+ # (a) BitNet absmean straight-through binarizer                               #
+ # --------------------------------------------------------------------------- #
+-def bitnet_binary_ste(w, eps: float = EPS_BETA):
++def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True):
+     """Effective weight = beta * bipolar_sign(w - mean(w)), STE identity backward.
+ 
+     Replicates qkerasModel.AbsMeanQuantizer (binary branch), with two deliberate,
+@@ -54,10 +54,16 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA):
+         by 1/beta when a kernel's centered weights collapse (beta -> eps). That 1/beta
+         explosion produced the A4 training NaN (verified 2026-07-07); this removes it.
+     alpha/beta are per-tensor scalars (matches binarize.absmean_binarize exactly, so the
+-    export re-binarization gives the same +/-beta on the same latents)."""
++    export re-binarization gives the same +/-beta on the same latents).
++
++    center=False (Delta, quant.binary_center false): uncentered absmean, the
++    BitNet/XNOR-Net convention (alpha = 0)."""
+     w = ops.cast(w, "float32")
+-    alpha = ops.mean(w)
+-    wc = w - alpha
++    if center:
++        alpha = ops.mean(w)
++        wc = w - alpha
++    else:
++        wc = w
+     beta = ops.mean(ops.abs(wc)) + eps
+     ws = wc / ops.stop_gradient(beta)               # bounded backward (see docstring)
+     q = ops.where(wc >= 0.0, 1.0, -1.0)             # strict bipolar, never 0
+@@ -70,10 +76,23 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA):
+ # --------------------------------------------------------------------------- #
+ @keras.saving.register_keras_serializable(package="bnhgq2")
+ class BitQEinsumDense(QEinsumDense):
+-    """QEinsumDense whose kernel is absmean-binarized in the forward pass (QAT)."""
++    """QEinsumDense whose kernel is absmean-binarized in the forward pass (QAT).
++
++    `binary` carries opt-in Delta options (see delta_binary_options); empty = the
++    screen-bundle binarizer, and it is serialized only when non-empty."""
++
++    def __init__(self, *args, binary=None, **kwargs):
++        super().__init__(*args, **kwargs)
++        self.binary = dict(binary or {})
++
++    def get_config(self):
++        config = super().get_config()
++        if self.binary:
++            config["binary"] = dict(self.binary)
++        return config
+ 
+     def call(self, inputs, training=None):
+-        qkernel = bitnet_binary_ste(self._kernel)
++        qkernel = _delta_binarize(self, self._kernel)
+         if self.enable_iq:
+             inputs = self.iq(inputs, training=training)
+         x = ops.einsum(self.equation, inputs, qkernel)
+@@ -86,17 +105,27 @@ class BitQEinsumDense(QEinsumDense):
+ 
+     @property
+     def qkernel(self):
+-        return bitnet_binary_ste(self._kernel)
++        return _delta_binarize(self, self._kernel)
+ 
+ 
+ @keras.saving.register_keras_serializable(package="bnhgq2")
+ class BitQDense(QDense):
+     """QDense whose kernel is absmean-binarized in the forward pass (QAT)."""
+ 
++    def __init__(self, *args, binary=None, **kwargs):
++        super().__init__(*args, **kwargs)
++        self.binary = dict(binary or {})
++
++    def get_config(self):
++        config = super().get_config()
++        if self.binary:
++            config["binary"] = dict(self.binary)
++        return config
++
+     def call(self, inputs, training=None):
+         if self.enable_iq:
+             inputs = self.iq(inputs, training=training)
+-        x = ops.matmul(inputs, bitnet_binary_ste(self._kernel))
++        x = ops.matmul(inputs, _delta_binarize(self, self._kernel))
+         if self.bias is not None:
+             x = ops.add(x, self.qbias)
+         if self.activation is not None:
+@@ -105,7 +134,24 @@ class BitQDense(QDense):
+ 
+     @property
+     def qkernel(self):
+-        return bitnet_binary_ste(self._kernel)
++        return _delta_binarize(self, self._kernel)
++
++
++def _delta_binarize(layer, w):
++    """Dispatch on the layer's opt-in Delta options; no options -> the bundle binarizer."""
++    opts = layer.binary
++    if not opts:
++        return bitnet_binary_ste(w)
++    return bitnet_binary_ste(w, center=opts.get("center", True))
++
++
++def delta_binary_options(cfg: dict, layer_name: str) -> dict:
++    """Per-layer binarizer options from Delta keys; {} unless a key is set."""
++    q = cfg["quant"]
++    opts = {}
++    if q.get("binary_center", True) is False:
++        opts["center"] = False
++    return opts
+ 
+ 
+ # --------------------------------------------------------------------------- #
+@@ -411,10 +457,11 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         else:  # w8a8
+             kq, iq = _static_w8(), act_iq()
+             cls = QEinsumDense
++        extra = {"binary": delta_binary_options(cfg, name)} if binv and delta_binary_options(cfg, name) else {}
+         return cls(equation, output_shape=out_shape, bias_axes=bias_axes,
+                    iq_conf=iq, kq_conf=kq,
+                    bq_conf=(bias_conf() if bias_axes is not None else None),
+-                   name=name)(x)
++                   name=name, **extra)(x)
+ 
+     def dense(name, units, x, use_bias=True):
+         if not fp32:
+@@ -425,8 +472,9 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             kq, iq, cls = _binary_kq(), act_iq(), BitQDense
+         else:
+             kq, iq, cls = _static_w8(), act_iq(), QDense
++        extra = {"binary": delta_binary_options(cfg, name)} if binv and delta_binary_options(cfg, name) else {}
+         return cls(units, use_bias=use_bias, iq_conf=iq, kq_conf=kq,
+-                   bq_conf=bias_conf(), name=name)(x)
++                   bq_conf=bias_conf(), name=name, **extra)(x)
+ 
+     def stream_iq():
+         return _dummy("datalane") if fp32 else act_iq(6, axes=(-2, -1))  # shared over particles and batch
+@@ -615,6 +663,6 @@ def effective_weight_values(model):
+     out = {}
+     for ly in model.layers:
+         if isinstance(ly, (BitQEinsumDense, BitQDense)):
+-            w = ops.convert_to_numpy(bitnet_binary_ste(ly._kernel))
++            w = ops.convert_to_numpy(ly.qkernel)
+             out[ly.name] = np.unique(np.round(w, 10))
+     return out
+diff --git a/code/convert_binary.py b/code/convert_binary.py
+index 9a62f3e..e29badb 100644
+--- a/code/convert_binary.py
++++ b/code/convert_binary.py
+@@ -254,6 +254,8 @@ def extract_qat_layers(model, names):
+     for n in names:
+         ly = by[n]
+         out[n] = {"kernel": _read_kernel(ly), "bias": _read_bias(ly)}
++        if getattr(ly, "binary", None):
++            out[n]["binary"] = dict(ly.binary)  # Delta binarizer options
+     return out
+ 
+ 
+@@ -514,7 +516,7 @@ def weight_export_exactness(qat_model, binz):
+     for name, e in binz.items():
+         if name.startswith("_"):
+             continue
+-        qat_eff = _to_np(qat.bitnet_binary_ste(by[name]._kernel))
++        qat_eff = _to_np(by[name].qkernel)
+         exp_eff = (e["q"].astype(np.float64) * e["beta"]).astype(np.float32)
+         worst = max(worst, float(np.abs(qat_eff - exp_eff.reshape(qat_eff.shape)).max()))
+     return worst
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,121 @@
+Arbiter v5 threshold-stability runs (screen_null.py variants from arbiter_v5_tstab_gen.py; design arithmetic, not results)
+
+sn_m1_s1.py.out: 5M label threshold T = 1.0 pt 350k label threshold T = 1.3 pt 
+sn_m1_s2.py.out: 5M label threshold T = 1.1 pt 350k label threshold T = 1.2 pt 
+sn_m1_s20260927.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.5 pt 
+sn_m1_s3.py.out: 5M label threshold T = 1.1 pt 350k label threshold T = 1.1 pt 
+sn_m1_s4.py.out: 5M label threshold T = 0.9 pt 350k label threshold T = 1.4 pt 
+sn_m1_s5.py.out: 5M label threshold T = 1.2 pt 350k label threshold T = 1.2 pt 
+sn_m1_s6.py.out: 5M label threshold T = 1.2 pt 350k label threshold T = 1.3 pt 
+sn_m1_s7.py.out: 5M label threshold T = 1.1 pt 350k label threshold T = 1.4 pt 
+sn_m1_s8.py.out: 5M label threshold T = 1.1 pt 350k label threshold T = 1.4 pt 
+sn_m1_s9.py.out: 5M label threshold T = 1.2 pt 350k label threshold T = 1.4 pt 
+sn_m200_s1.py.out: 5M label threshold T = 1.2 pt 350k label threshold T = 1.9 pt 
+sn_m200_s2.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.9 pt 
+sn_m200_s20260927.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.9 pt 
+sn_m200_s3.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.8 pt 
+sn_m200_s4.py.out: 5M label threshold T = 1.2 pt 350k label threshold T = 1.9 pt 
+sn_m200_s5.py.out: 5M label threshold T = 1.2 pt 350k label threshold T = 1.9 pt 
+sn_m200_s6.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.9 pt 
+sn_m200_s7.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.9 pt 
+sn_m200_s8.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.9 pt 
+sn_m200_s9.py.out: 5M label threshold T = 1.3 pt 350k label threshold T = 1.9 pt 
+
+== design seed, written rule (set >= 1): section 18 T failure lines and threshold rows ==
+18. two-mode seeds: s_int, ranking recovery, top-k extension and the label threshold T:
+      q 0.3300: per-run sd 2.56 pt; median s_int 2.56 pt; recovery 0.19; extension 0.19
+      q 0.5000: per-run sd 2.72 pt; median s_int 2.72 pt; recovery 0.14; extension 0.23
+   largest step between consecutive median s_int: 0.186 pt overall; 0.055 pt where the medians are >= 1.0 pt (rule: <= 0.1 pt)
+      T 0.8 fails: Gaussian recovery 0.92; worst conditional q 0.1003 (set 1 of 20000) recovery 0.00
+      T 0.9 fails: Gaussian recovery 0.84; worst conditional q 0.1000 (set 5 of 20000) recovery 0.40
+      T 1.4 fails: Gaussian recovery 0.52; worst conditional q 0.1316 (set 201 of 20000) recovery 0.43
+      T 1.5 fails: Gaussian recovery 0.47; worst conditional q 0.2049 (set 1 of 20000) recovery 0.00
+      T 1.6 fails: Gaussian recovery 0.42; worst conditional q 0.2181 (set 2 of 20000) recovery 0.00
+      T 1.7 fails: Gaussian recovery 0.39; worst conditional q 0.2476 (set 2 of 20000) recovery 0.00
+      T 1.8 fails: Gaussian recovery 0.36; worst conditional q 0.2476 (set 7 of 20000) recovery 0.00
+      T 1.9 fails: Gaussian recovery 0.32; worst conditional q 0.2181 (set 317 of 20000) recovery 0.17
+      T 2.0 fails: Gaussian recovery 0.29; worst conditional q 0.3031 (set 6 of 20000) recovery 0.00
+      T 2.1 fails: Gaussian recovery 0.28; worst conditional q 0.3542 (set 1 of 20000) recovery 0.00
+      T 2.2 fails: Gaussian recovery 0.26; worst conditional q 0.3893 (set 1 of 20000) recovery 0.00
+      T 2.3 fails: Gaussian recovery 0.24; worst conditional q 0.4444 (set 6 of 20000) recovery 0.00
+      T 2.4 fails: Gaussian recovery 0.23; worst conditional q 0.5000 (set 48 of 20000) recovery 0.06
+      T 2.5 fails: Gaussian recovery 0.22; worst conditional q 0.5000 (set 454 of 20000) recovery 0.08
+      T 2.6 fails: Gaussian recovery 0.20; worst conditional q 0.5000 (set 2609 of 20000) recovery 0.10
+      T 2.7 fails: Gaussian recovery 0.19; worst conditional q 0.4444 (set 9783 of 20000) recovery 0.09
+      T 2.8 fails: Gaussian recovery 0.18; worst conditional q 0.4444 (set 16810 of 20000) recovery 0.09
+      T 2.9 fails: Gaussian recovery 0.17; worst conditional q 0.4444 (set 19715 of 20000) recovery 0.10
+      T 3.0 fails: Gaussian recovery 0.17; worst conditional q 0.4444 (set 19997 of 20000) recovery 0.10
+   5M label threshold T = 1.3 pt (Gaussian recovery at T 0.57)
+      q 0.02: P(s_int <= T) 1.00; recovery | s_int <= T 0.79 (set 19914); | 1.0 <= s_int <= T: n = 4 0.61, extension 0.61 (set 2995)
+      q 0.05: P(s_int <= T) 0.69; recovery | s_int <= T 0.62 (set 13757); | 1.0 <= s_int <= T: n = 4 0.58, extension 0.56 (set 10516)
+      q 0.10: P(s_int <= T) 0.04; recovery | s_int <= T 0.51 (set 823); | 1.0 <= s_int <= T: n = 4 0.51, extension 0.49 (set 797)
+      q 0.33: P(s_int <= T) 0.00; recovery | s_int <= T nan (set 0); | 1.0 <= s_int <= T: n = 4 nan, extension nan (set 0)
+      q 0.50: P(s_int <= T) 0.00; recovery | s_int <= T nan (set 0); | 1.0 <= s_int <= T: n = 4 nan, extension nan (set 0)
+      q 0.3300: per-run sd 2.56 pt; median s_int 2.56 pt; recovery 0.49; extension 0.60
+      q 0.5000: per-run sd 2.72 pt; median s_int 2.72 pt; recovery 0.45; extension 0.59
+   largest step between consecutive median s_int: 0.421 pt overall; 0.093 pt where the medians are >= 1.0 pt (rule: <= 0.1 pt)
+      T 1.2 fails: Gaussian recovery 0.83; worst conditional q 0.2643 (set 3 of 20000) recovery 0.33
+      T 1.6 fails: Gaussian recovery 0.71; worst conditional q 0.3893 (set 1 of 20000) recovery 0.00
+      T 1.7 fails: Gaussian recovery 0.69; worst conditional q 0.3893 (set 3 of 20000) recovery 0.00
+      T 1.8 fails: Gaussian recovery 0.65; worst conditional q 0.4444 (set 1 of 20000) recovery 0.00
+      T 1.9 fails: Gaussian recovery 0.64; worst conditional q 0.4444 (set 8 of 20000) recovery 0.00
+      T 2.0 fails: Gaussian recovery 0.63; worst conditional q 0.5000 (set 34 of 20000) recovery 0.26
+      T 2.1 fails: Gaussian recovery 0.61; worst conditional q 0.5000 (set 113 of 20000) recovery 0.38
+      T 2.2 fails: Gaussian recovery 0.60; worst conditional q 0.5000 (set 338 of 20000) recovery 0.38
+      T 2.3 fails: Gaussian recovery 0.58; worst conditional q 0.5000 (set 747 of 20000) recovery 0.38
+      T 2.4 fails: Gaussian recovery 0.56; worst conditional q 0.5000 (set 1646 of 20000) recovery 0.38
+      T 2.5 fails: Gaussian recovery 0.54; worst conditional q 0.5000 (set 3176 of 20000) recovery 0.41
+      T 2.6 fails: Gaussian recovery 0.55; worst conditional q 0.5000 (set 5632 of 20000) recovery 0.41
+      T 2.7 fails: Gaussian recovery 0.53; worst conditional q 0.5000 (set 9126 of 20000) recovery 0.42
+      T 2.8 fails: Gaussian recovery 0.52; worst conditional q 0.5000 (set 12927 of 20000) recovery 0.42
+      T 2.9 fails: Gaussian recovery 0.52; worst conditional q 0.5000 (set 16414 of 20000) recovery 0.43
+      T 3.0 fails: Gaussian recovery 0.50; worst conditional q 0.5000 (set 18795 of 20000) recovery 0.44
+   350k label threshold T = 1.5 pt (Gaussian recovery at T 0.73)
+      q 0.02: P(s_int <= T) 0.98; recovery | s_int <= T 0.93 (set 19699); | 1.0 <= s_int <= T: n = 4 0.80, extension 0.80 (set 4027)
+      q 0.05: P(s_int <= T) 0.82; recovery | s_int <= T 0.85 (set 16317); | 1.0 <= s_int <= T: n = 4 0.79, extension 0.78 (set 9177)
+      q 0.10: P(s_int <= T) 0.36; recovery | s_int <= T 0.79 (set 7221); | 1.0 <= s_int <= T: n = 4 0.77, extension 0.74 (set 6003)
+      q 0.33: P(s_int <= T) 0.00; recovery | s_int <= T 1.00 (set 1); | 1.0 <= s_int <= T: n = 4 1.00, extension 1.00 (set 1)
+      q 0.50: P(s_int <= T) 0.00; recovery | s_int <= T nan (set 0); | 1.0 <= s_int <= T: n = 4 nan, extension nan (set 0)
+
+== design seed, floor rule (set >= 200) ==
+18. two-mode seeds: s_int, ranking recovery, top-k extension and the label threshold T:
+      T 1.4 fails: Gaussian recovery 0.52; worst conditional q 0.1316 (set 201 of 20000) recovery 0.43
+      T 1.5 fails: Gaussian recovery 0.47; worst conditional q 0.1316 (set 661 of 20000) recovery 0.38
+      T 1.6 fails: Gaussian recovery 0.42; worst conditional q 0.1404 (set 1100 of 20000) recovery 0.33
+      T 1.7 fails: Gaussian recovery 0.39; worst conditional q 0.1809 (set 226 of 20000) recovery 0.25
+      T 1.8 fails: Gaussian recovery 0.36; worst conditional q 0.1925 (set 374 of 20000) recovery 0.21
+      T 1.9 fails: Gaussian recovery 0.32; worst conditional q 0.2181 (set 317 of 20000) recovery 0.17
+      T 2.0 fails: Gaussian recovery 0.29; worst conditional q 0.2181 (set 1154 of 20000) recovery 0.13
+      T 2.1 fails: Gaussian recovery 0.28; worst conditional q 0.2643 (set 450 of 20000) recovery 0.08
+      T 2.2 fails: Gaussian recovery 0.26; worst conditional q 0.2643 (set 1691 of 20000) recovery 0.07
+      T 2.3 fails: Gaussian recovery 0.24; worst conditional q 0.3300 (set 453 of 20000) recovery 0.06
+      T 2.4 fails: Gaussian recovery 0.23; worst conditional q 0.2181 (set 16956 of 20000) recovery 0.09
+      T 2.5 fails: Gaussian recovery 0.22; worst conditional q 0.5000 (set 454 of 20000) recovery 0.08
+      T 2.6 fails: Gaussian recovery 0.20; worst conditional q 0.5000 (set 2609 of 20000) recovery 0.10
+      T 2.7 fails: Gaussian recovery 0.19; worst conditional q 0.4444 (set 9783 of 20000) recovery 0.09
+      T 2.8 fails: Gaussian recovery 0.18; worst conditional q 0.4444 (set 16810 of 20000) recovery 0.09
+      T 2.9 fails: Gaussian recovery 0.17; worst conditional q 0.4444 (set 19715 of 20000) recovery 0.10
+      T 3.0 fails: Gaussian recovery 0.17; worst conditional q 0.4444 (set 19997 of 20000) recovery 0.10
+   5M label threshold T = 1.3 pt (Gaussian recovery at T 0.57)
+      q 0.02: P(s_int <= T) 1.00; recovery | s_int <= T 0.79 (set 19914); | 1.0 <= s_int <= T: n = 4 0.61, extension 0.61 (set 2995)
+      q 0.05: P(s_int <= T) 0.69; recovery | s_int <= T 0.62 (set 13757); | 1.0 <= s_int <= T: n = 4 0.58, extension 0.56 (set 10516)
+      q 0.10: P(s_int <= T) 0.04; recovery | s_int <= T 0.51 (set 823); | 1.0 <= s_int <= T: n = 4 0.51, extension 0.49 (set 797)
+      q 0.33: P(s_int <= T) 0.00; recovery | s_int <= T nan (set 0); | 1.0 <= s_int <= T: n = 4 nan, extension nan (set 0)
+      q 0.50: P(s_int <= T) 0.00; recovery | s_int <= T nan (set 0); | 1.0 <= s_int <= T: n = 4 nan, extension nan (set 0)
+      T 2.0 fails: Gaussian recovery 0.63; worst conditional q 0.3300 (set 415 of 20000) recovery 0.48
+      T 2.1 fails: Gaussian recovery 0.61; worst conditional q 0.3893 (set 294 of 20000) recovery 0.43
+      T 2.2 fails: Gaussian recovery 0.60; worst conditional q 0.5000 (set 338 of 20000) recovery 0.38
+      T 2.3 fails: Gaussian recovery 0.58; worst conditional q 0.5000 (set 747 of 20000) recovery 0.38
+      T 2.4 fails: Gaussian recovery 0.56; worst conditional q 0.5000 (set 1646 of 20000) recovery 0.38
+      T 2.5 fails: Gaussian recovery 0.54; worst conditional q 0.5000 (set 3176 of 20000) recovery 0.41
+      T 2.6 fails: Gaussian recovery 0.55; worst conditional q 0.5000 (set 5632 of 20000) recovery 0.41
+      T 2.7 fails: Gaussian recovery 0.53; worst conditional q 0.5000 (set 9126 of 20000) recovery 0.42
+      T 2.8 fails: Gaussian recovery 0.52; worst conditional q 0.5000 (set 12927 of 20000) recovery 0.42
+      T 2.9 fails: Gaussian recovery 0.52; worst conditional q 0.5000 (set 16414 of 20000) recovery 0.43
+      T 3.0 fails: Gaussian recovery 0.50; worst conditional q 0.5000 (set 18795 of 20000) recovery 0.44
+   350k label threshold T = 1.9 pt (Gaussian recovery at T 0.64)
+      q 0.02: P(s_int <= T) 1.00; recovery | s_int <= T 0.92 (set 19998); | 1.0 <= s_int <= T: n = 4 0.79, extension 0.80 (set 4326)
+      q 0.05: P(s_int <= T) 0.98; recovery | s_int <= T 0.82 (set 19623); | 1.0 <= s_int <= T: n = 4 0.75, extension 0.75 (set 12483)
+      q 0.10: P(s_int <= T) 0.79; recovery | s_int <= T 0.71 (set 15759); | 1.0 <= s_int <= T: n = 4 0.69, extension 0.67 (set 14541)
+      q 0.33: P(s_int <= T) 0.01; recovery | s_int <= T 0.54 (set 200); | 1.0 <= s_int <= T: n = 4 0.54, extension 0.60 (set 200)
+      q 0.50: P(s_int <= T) 0.00; recovery | s_int <= T 0.10 (set 10); | 1.0 <= s_int <= T: n = 4 0.10, extension 0.20 (set 10)

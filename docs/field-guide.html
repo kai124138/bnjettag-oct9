@@ -1,0 +1,801 @@
+<title>BNJetTag Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one reading column; a sticky section bar; the pipeline is a node chart that forks into two lanes and stacks on phones. */
+:root{
+  --bg:#f3f5f6; --surface:#ffffff; --sunk:#e8ecee; --fg:#17212a; --muted:#56646f; --line:#cdd5da;
+  --accent:#0f6b8a;
+  --laptop:#4b5d6b; --nrp:#1f5fbf; --wandb:#a86a00; --mulder:#7a3fa8; --kai:#b4322b;
+  --code-bg:#1b2630; --code-fg:#e3ebf0;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10171d; --surface:#17212a; --sunk:#1e2a34; --fg:#e4eaee; --muted:#9aa8b2; --line:#2c3a46;
+  --accent:#5fb7d6; --laptop:#93a6b5; --nrp:#6c9ef0; --wandb:#e0a63a; --mulder:#b98be0; --kai:#ee7a70;
+  --code-bg:#0b1116; --code-fg:#dbe5ec; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10171d; --surface:#17212a; --sunk:#1e2a34; --fg:#e4eaee; --muted:#9aa8b2; --line:#2c3a46;
+  --accent:#5fb7d6; --laptop:#93a6b5; --nrp:#6c9ef0; --wandb:#e0a63a; --mulder:#b98be0; --kai:#ee7a70;
+  --code-bg:#0b1116; --code-fg:#dbe5ec; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.6 var(--f-body);padding-inline:16px;padding-block:0 64px}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,5vw,44px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:26px;font-weight:600;margin-bottom:6px}
+h3{font-size:18px;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--accent)}
+code,kbd{font-family:var(--f-mono);font-size:.88em;background:var(--sunk);padding:1px 5px;border-radius:3px;overflow-wrap:anywhere}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--muted);font-size:16px}
+
+header.top{padding-block:40px 20px;display:grid;gap:12px;border-bottom:1px solid var(--line)}
+nav.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding:8px 16px;display:flex;gap:4px 14px;flex-wrap:wrap}
+nav.bar a{font:500 13px/1.8 var(--f-display);text-decoration:none;color:var(--muted);letter-spacing:.02em}
+nav.bar a:hover,nav.bar a:focus-visible{color:var(--fg)}
+section{padding-block:40px 8px;display:grid;gap:16px;scroll-margin-top:48px}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.l-laptop{--c:var(--laptop)} .l-nrp{--c:var(--nrp)} .l-wandb{--c:var(--wandb)} .l-mulder{--c:var(--mulder)} .l-kai{--c:var(--kai)}
+.dot{background:var(--c)}
+
+/* goal tree */
+.tree{display:grid;gap:8px}
+.tree details{background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.tree summary{cursor:pointer;padding:12px 14px;display:flex;gap:10px;align-items:baseline;list-style:none}
+.tree summary::-webkit-details-marker{display:none}
+.tree summary::before{content:"+";font:600 15px/1 var(--f-mono);color:var(--accent);width:12px;flex:none}
+.tree details[open]>summary::before{content:"−"}
+.tree summary b{font-family:var(--f-display);font-size:17px;font-weight:600}
+.tree summary small{color:var(--muted);font-size:13px}
+.branch{padding:0 14px 14px 36px;display:grid;gap:12px}
+.leaf{border-left:2px solid var(--line);padding-left:14px;display:grid;gap:6px;min-width:0}
+.leaf h4{margin:0;font:600 14px/1.3 var(--f-body)}
+.leaf p{font-size:14px;color:var(--muted)}
+
+/* code blocks */
+.cmd{position:relative;background:var(--code-bg);color:var(--code-fg);border-radius:5px;font:13px/1.55 var(--f-mono);min-width:0}
+.cmd pre{margin:0;padding:10px 64px 10px 12px;overflow-x:auto;white-space:pre}
+.cmd .c{color:#8fa3b1}
+.cmd button{position:absolute;top:6px;right:6px;font:500 11px/1 var(--f-mono);background:transparent;color:#a9bcc9;border:1px solid #3a4a57;border-radius:3px;padding:5px 7px;cursor:pointer}
+.cmd button:hover,.cmd button:focus-visible{color:#fff;border-color:#8fa3b1}
+
+/* pipeline chart */
+.flow{display:grid;gap:0;justify-items:center}
+.node{width:min(560px,100%);background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:5px;padding:10px 14px;display:grid;gap:4px;min-width:0}
+.node .where{font:500 11px/1 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--c)}
+.node h3{font-size:16px}
+.node p{font-size:13.5px;color:var(--muted)}
+.node .out{font-size:13px}
+.node .out::before{content:"→ ";color:var(--c);font-weight:600}
+.node.gate{border:2px dashed var(--kai);border-left-width:5px}
+.arrow{width:2px;height:22px;background:var(--line);position:relative}
+.arrow::after{content:"";position:absolute;bottom:-1px;left:-4px;border:5px solid transparent;border-top:6px solid var(--line);border-bottom:0}
+.fork{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;align-items:start;position:relative;padding-top:14px;border-top:2px solid var(--line)}
+.lane{display:grid;justify-items:center;gap:0;min-width:0}
+.lane>.tag{font:600 12px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.merge{width:100%;border-top:2px solid var(--line);height:0;margin-top:14px}
+@media (max-width:720px){.fork{grid-template-columns:1fr;border-top:0;padding-top:0}.lane>.tag{margin-top:12px}.merge{display:none}}
+
+/* tutorial */
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:22px}
+ol.steps>li{counter-increment:s;display:grid;grid-template-columns:40px 1fr;gap:4px 12px}
+ol.steps>li::before{content:counter(s);grid-row:span 9;font:700 22px/1.2 var(--f-display);color:var(--accent)}
+ol.steps>li>*{min-width:0}
+ol.steps>li>div{display:grid;gap:8px}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px/1.3 var(--f-display);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td:first-child{white-space:nowrap}
+
+.callout{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--kai);border-radius:5px;padding:12px 14px;display:grid;gap:6px}
+.callout.info{border-left-color:var(--accent)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;gap:6px;align-content:start}
+.card p{font-size:14px;color:var(--muted)}
+dl.gloss{display:grid;grid-template-columns:minmax(120px,190px) 1fr;gap:8px 16px;margin:0}
+dl.gloss dt{font:500 13.5px/1.5 var(--f-mono)}
+dl.gloss dd{margin:0;font-size:14px;color:var(--muted)}
+@media (max-width:560px){dl.gloss{grid-template-columns:1fr}dl.gloss dd{margin-bottom:6px}}
+footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+html{scroll-behavior:smooth}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">BNJetTag · ~/lab/bnjettag · checked against the repo 2026-10-02</span>
+  <h1>BNJetTag Field Guide</h1>
+  <p class="lede">How an idea becomes a quotable number or a synthesis report, where every step happens, and which command does it. The command list for the terminal is <code>docs/cheatsheet.md</code>; this page is the map around it.</p>
+  <div class="legend" aria-label="Where each step runs">
+    <span class="l-laptop"><i class="dot"></i>laptop (light work only)</span>
+    <span class="l-nrp"><i class="dot"></i>NRP Nautilus, namespace cms-ml</span>
+    <span class="l-wandb"><i class="dot"></i>W&amp;B, project BNJetTagAug</span>
+    <span class="l-mulder"><i class="dot"></i>mulder (Vitis HLS)</span>
+    <span class="l-kai"><i class="dot"></i>your decision</span>
+  </div>
+</header>
+
+<nav class="bar" aria-label="Sections">
+  <a href="#goals">What do you want to do?</a><a href="#asked">Asked before</a><a href="#pipeline">Pipeline</a><a href="#tutorial">Tutorial</a><a href="#map">Repo map</a><a href="#rules">Rules of the road</a><a href="#gotchas">Gotchas</a><a href="#glossary">Glossary</a><a href="#gaps">Known gaps</a>
+</nav>
+
+<!-- ============ GOALS ============ -->
+<section id="goals">
+  <span class="eyebrow">Decision tree</span>
+  <h2>What do you want to do?</h2>
+  <p class="lede">Pick the goal, open it, follow the leaves in order. Paths are relative to <code>~/lab/bnjettag</code>.</p>
+  <div class="tree">
+
+    <details>
+      <summary><b>Type in the home PC terminal without waiting for network replies</b><small>MacBook → kaiypc over Tailscale</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Keep a persistent tmux session</h4><p>Run the <a href="cheatsheet.md#reconnect-to-the-same-tmux-session">mosh and tmux command</a> in Ghostty or another Mac terminal. It creates or reattaches <code>bnjettag</code> in the WSL lab. Detach with <code>Ctrl+B</code>, then <code>D</code>, and reuse the command to reconnect. Mosh provides typing prediction, and tmux keeps programs running while WSL remains up.</p></div>
+        <div class="leaf"><h4>Use mosh inside VS Code</h4><p>In the Mac VS Code Remote SSH window, press <code>Cmd+Shift+P</code> and select <b>Terminal: Create New Integrated Terminal (Local)</b>. Run the <a href="cheatsheet.md#home-pc-terminal-from-the-mac">mosh command</a> in that Mac-local tab. The editor and terminal still use the same WSL files. This Mac workflow has not been tested here.</p></div>
+        <div class="leaf"><h4>Use Claude's graphical prompt box</h4><p>For a graphical alternative, keep this lab open in VS Code Remote SSH. Press <code>Cmd+Shift+P</code> and choose <b>Claude Code: Open in New Tab</b>. The extension is already installed in WSL. The prompt box is rendered on the Mac while tools use the PC's files. See the <a href="cheatsheet.md#graphical-alternative-mac-interface-with-pc-execution">saved workflow</a>.</p></div>
+        <div class="leaf"><h4>Keep the existing VS Code terminal</h4><p>VS Code's own local echo was enabled for the WSL connection on 2026-10-09: <code>terminal.integrated.localEchoEnabled</code> is <code>"on"</code> and <code>terminal.integrated.localEchoLatencyThreshold</code> is <code>0</code> in <code>~/.vscode-server/data/Machine/settings.json</code>. It can predict typing without switching away from SSH. The preview feature may pause with Claude's interface redraws; check its effect in your VS Code window.</p></div>
+        <div class="leaf"><h4>Connect with mosh</h4><p>Install mosh on the Mac with <code>brew install mosh</code> if needed, then use this in a Mac terminal while Tailscale is running:</p>
+          <div class="cmd"><pre>mosh --predict=always --ssh="ssh -p 2222" \
+  --bind-server=ssh \
+  --server="env LANG=C.UTF-8 LC_ALL=C.UTF-8 /usr/bin/mosh-server" \
+  kaimoe@100.93.120.69</pre></div></div>
+        <div class="leaf"><h4>What changes</h4><p>Mosh predicts ordinary echoed keystrokes locally in a mosh connection. VS Code's local echo provides a separate prediction feature in its SSH terminal. Command execution and output still depend on the network. Both settings are recorded in <code>~/HOME-PC.md</code>.</p></div>
+      </div>
+    </details>
+
+    <details open>
+      <summary><b>Get oriented</b><small>start of any work session</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>What's going on in the repo?</h4>
+          <div class="cmd"><pre>python3 tools/brief.py</pre></div></div>
+        <div class="leaf"><h4>Is the cluster healthy for me?</h4>
+          <div class="cmd"><pre>python3 nrp-lab/nrp_doctor.py status</pre></div>
+          <p>Use <code>status</code>, not <code>all</code>: <code>all</code> also tries to reach mulder, and mulder isn't reachable from this WSL machine (see <code>AGENTS.md</code>).</p></div>
+        <div class="leaf"><h4>What has been done before?</h4>
+          <p>Top of <code>.claude/memory/experiment-log.md</code> (newest first), the <code>campaigns/</code> folder names, <code>decisions.md</code>.</p></div>
+        <div class="leaf"><h4>Logged out of the cluster? (401 Unauthorized)</h4>
+          <div class="cmd"><pre>kubectl oidc-login clean
+kubectl get pods -n cms-ml      <span class="c"># re-opens the browser login, pick UC San Diego</span></pre></div></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Use Jev to audit methods or run a local loop</b><small>Claude Code and Codex</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Check connectivity</h4>
+          <div class="cmd"><pre>python3 tools/jev_lab.py doctor --live</pre></div></div>
+        <div class="leaf"><h4>Load the shared lab skill</h4><p>Use <code>/jev-lab</code> in Claude Code or <code>$jev-lab</code> in Codex. Both use the same local MCP implementation and methodology. Restart an existing session to load the configuration.</p></div>
+        <div class="leaf"><h4>Follow a bounded local workflow</h4><p>The <a href="infrastructure/jev-lab.md">Jev runbook</a> gives tool schemas, declared-protocol checks, loop stages, and a prompt. Scientific gates and training launch authority remain with the existing lab workflow.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Test a new idea</b><small>a question, not a launch</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Write the question down first</h4>
+          <p>Make <code>campaigns/&lt;YYYY-MM-DD&gt;-&lt;type&gt;/STUDY.md</code> from <code>docs/methodology/templates/</code>: the question and its null, the arms, the seeds (at least 3), the selection rule fixed in advance, what result would falsify the claim.</p></div>
+        <div class="leaf"><h4>2 · Express each arm as a config, not a code fork</h4>
+          <p>Arms differ by <code>arch.n_part</code>, <code>arch.n_feat</code>, <code>quant.weight</code>, <code>quant.act_bits</code>, seed. Edit the generator, then regenerate.</p>
+          <div class="cmd"><pre>cd bnjettag/code/jobs/training/variants
+python3 ../../../hgq2/configs/gen_r14.py
+python3 gen_r14_jobs.py
+python3 gen_r14_roc_jobs.py</pre></div></div>
+        <div class="leaf"><h4>3 · Then go to "Launch training"</h4></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Launch training</b><small>configs exist, code is ready</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Lint every manifest</h4>
+          <div class="cmd"><pre>python3 ~/lab/bnjettag/nrp-lab/nrp_doctor.py lint kai-bn14-*.yaml</pre></div></div>
+        <div class="leaf"><h4>Confirm the W&amp;B secret exists (never print the key)</h4>
+          <div class="cmd"><pre>kubectl get secret kai-wandb -n cms-ml</pre></div></div>
+        <div class="leaf"><h4>Ship the code, write down the md5</h4>
+          <div class="cmd"><pre>./make_code_configmap_r14.sh</pre></div></div>
+        <div class="leaf"><h4>Launch one job and read its log</h4>
+          <div class="cmd"><pre>kubectl apply -f kai-bn14-l1x3-n16-w1a8-s1.yaml -n cms-ml
+kubectl get pods -n cms-ml | grep kai-bn14
+kubectl logs -f &lt;pod&gt; -n cms-ml</pre></div>
+          <p>Wait for: md5 matches → <code>[gate]</code> → <code>[gpu] TF sees</code> → <code>[data] tarball bytes: 2725115104</code> → epoch lines.</p></div>
+        <div class="leaf"><h4>Launch the rest, then close the laptop</h4>
+          <div class="cmd"><pre>./launch_r14.sh stage1
+./launch_r14.sh stage2</pre></div></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Check on running jobs</b><small>once, then leave</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Done yet?</h4>
+          <div class="cmd"><pre>kubectl get jobs -n cms-ml | grep kai-      <span class="c"># COMPLETIONS 1/1 = done</span></pre></div></div>
+        <div class="leaf"><h4>What did it last say?</h4>
+          <div class="cmd"><pre>kubectl logs job/&lt;job&gt; -n cms-ml --tail=50</pre></div></div>
+        <div class="leaf"><h4>Why is it stuck Pending?</h4>
+          <div class="cmd"><pre>kubectl get pod &lt;pod&gt; -n cms-ml -o jsonpath='{.status.conditions[?(@.type=="PodScheduled")].message}'; echo</pre></div></div>
+        <div class="leaf"><h4>Training curves</h4><p>W&amp;B, entity <code>kayamaguchi-uc-san-diego</code>, project <code>BNJetTagAug</code>, grouped by round and stage.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>A job failed</b><small>stop, read, don't patch the live run</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Get the log of the attempt that crashed</h4>
+          <div class="cmd"><pre>kubectl logs &lt;pod&gt; -n cms-ml --previous --tail=50
+kubectl get pod &lt;pod&gt; -n cms-ml -o jsonpath='{.status.containerStatuses[0].lastState}'; echo</pre></div></div>
+        <div class="leaf"><h4>Check whether it's already known</h4><p><code>.claude/memory/cluster-inventory.md</code> lists past incidents and bad nodes.</p></div>
+        <div class="leaf"><h4>Get help cheaply</h4><p>Open a <em>fresh</em> Claude session, paste the 50 lines and the job name. A fix is a new preflight with a new ConfigMap md5, never an edit to a running round.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Get a number I can quote</b><small>ROC-test AUC with seeds and an interval</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Run the ROC eval jobs (CPU, one per N)</h4>
+          <div class="cmd"><pre>kubectl apply -f kai-bn14-roc-n8.yaml -n cms-ml</pre></div>
+          <p>They write one <code>.npz</code> per model with keys <code>y</code> (one-hot, N×5) and <code>score</code> (N×5 softmax). They land in <code>bnjettag/roc-results/</code>.</p></div>
+        <div class="leaf"><h4>Quick look at one model (not quotable yet)</h4>
+          <div class="cmd"><pre>uv run --with numpy,scikit-learn python -c "import numpy as np,sys; from sklearn.metrics import roc_auc_score as A; d=np.load(sys.argv[1]); print(A(d['y'],d['score'],average='macro'), len(d['y']))" &lt;file&gt;.npz</pre></div></div>
+        <div class="leaf"><h4>Is a gap real?</h4><p><code>bnjettag/code/hgq2/uncertainty_r14.py</code>: seed spread over 3 seeds plus a paired bootstrap on the same 260,000 held-out jets.</p></div>
+        <div class="leaf"><h4>Make it official</h4><p>The numbers go into <code>campaigns/&lt;id&gt;/VERIFY.md</code> with metric, split, n and status, then:</p>
+          <div class="cmd"><pre>python3 tools/verify_check.py campaigns/&lt;id&gt;/VERIFY.md</pre></div>
+          <p>Moving it into README, RESEARCH.md or a PI update is your call.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Measure the hardware cost</b><small>eBOPs, latency, LUT/DSP</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>eBOPs (laptop, no GPU)</h4><p><code>bnjettag/code/hgq2/ebops_r14.py</code> reads the checkpoints the ROC pass downloaded. HGQ2-native convention; never mix it with HGQ-v1 numbers.</p></div>
+        <div class="leaf"><h4>hls4ml project</h4><p><code>bnjettag/code/hgq2/convert_final.py</code>: checkpoint from W&amp;B → HGQ2 export → C-sim fidelity gate → project tarball.</p></div>
+        <div class="leaf"><h4>Synthesize on mulder</h4>
+          <p>From your MacBook, over the UCSD-verified connection. Direct ssh from the WSL home PC is not an approved route (<code>AGENTS.md</code>).</p>
+          <div class="cmd"><pre>ssh mulder                              <span class="c"># on the Mac</span>
+df -h ~                                 <span class="c"># shared home, runs near full</span>
+tmux                                    <span class="c"># so a dropped ssh doesn't kill it</span>
+./mulder_csynth.sh &lt;project&gt;.tar.gz</pre></div></div>
+        <div class="leaf"><h4>Parse and bring it home immediately</h4>
+          <div class="cmd"><pre>python3 parse_csynth.py &lt;project&gt;/.../csynth.xml   <span class="c"># on mulder, stdlib only</span></pre></div>
+          <p>Copy <code>csynth.xml</code> and the JSON into <code>bnjettag/results/synthesis/runs/</code>. Nothing on mulder is backed up.</p></div>
+        <div class="leaf"><h4>AUC of the exported graph</h4><p><code>export_roc_eval.py</code> runs it on the full 260,000-jet held-out split.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Make a figure or write something up</b></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Figure</h4><p>matplotlib with <code>docs/style/bnjettag.mplstyle</code>, saved as .png and .svg. ROC: efficiency on x, mistag on log y.</p>
+          <div class="cmd"><pre>python3 tools/plot_check.py &lt;script.py&gt;</pre></div></div>
+        <div class="leaf"><h4>Schematic</h4><p>TikZ in <code>docs/figures/&lt;name&gt;.tex</code>, rendered with <code>docs/figures/render.sh</code>.</p></div>
+        <div class="leaf"><h4>Text for other people</h4><p>Drafts live in <code>messages/</code>, dated. Plain, impersonal, no assistant trace.</p>
+          <div class="cmd"><pre>python3 tools/prose_lint.py &lt;file.md&gt;
+python3 tools/claims.py --unlabeled</pre></div></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Poke at code interactively on a GPU</b><small>scratch, nothing quotable</small></summary>
+      <div class="branch">
+        <div class="leaf"><div class="cmd"><pre>nrp-lab/lab.sh up
+nrp-lab/lab.sh sync
+nrp-lab/lab.sh url
+nrp-lab/lab.sh down      <span class="c"># always, idle GPUs get reaped</span></pre></div></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Record what happened</b><small>every campaign, every incident</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Experiment log, newest on top</h4>
+          <div class="cmd"><pre>## 2026-10-02 — &lt;the question&gt;  (campaigns/&lt;id&gt;)
+Question:        one line, with the null.
+Design:          arms, seeds, selection rule, what would falsify it.
+Result:          numbers with metric, split, n, status; or "no result yet".
+Interpretation:  what it means for the thesis; what is still open.
+Ops:             RUN.md; incidents → cluster-inventory.md.</pre></div></div>
+        <div class="leaf"><h4>Elsewhere</h4><p>Decisions → <code>decisions.md</code>. Cluster incidents → <code>cluster-inventory.md</code>, ending with a <b>Check</b> line. Papers → <code>research-log.md</code> with date and URL.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Clean up</b></summary>
+      <div class="branch">
+        <div class="leaf"><div class="cmd"><pre>./launch_r14.sh delete                 <span class="c"># a whole round</span>
+kubectl delete job &lt;job&gt; -n cms-ml     <span class="c"># one job, takes its pods with it</span></pre></div>
+          <p>Only objects starting with <code>kai-</code>. The namespace is shared with the group.</p></div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ ASKED BEFORE ============ -->
+<!-- One <details> per how-to question Kai asks, newest on top. Format: date, the question in his words (cleaned), the answer as steps + commands. -->
+<section id="asked">
+  <span class="eyebrow">How-to log · newest on top</span>
+  <h2>Asked before</h2>
+  <p class="lede">Every "how do I…" question from a session gets an entry here, so the answer only has to be worked out once.</p>
+  <div class="tree">
+
+    <details>
+      <summary><b>Why does Ghostty still feel delayed when mosh underlines my typing?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Prediction is visible immediately</h4><p>Kai reports that letters appear immediately and the underline clears later. Mosh marks predicted characters while waiting for confirmation from the PC's screen update. See <a href="https://mosh.org/#techinfo">Mosh's explanation</a>.</p></div>
+        <div class="leaf"><h4>The connection still has delay</h4><p>A live mosh server and attached <code>bnjettag</code> tmux session were observed with Claude running in the lab folder. Five direct Tailscale pings measured 129–222 ms round-trip. Command output and application screen updates still depend on that connection. No configuration changes or restart were made.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>How do I connect from Ghostty with mosh and keep Claude running in tmux?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>What was rechecked</h4><p>The WSL username is <code>kaimoe</code>, and Tailscale identifies the Linux instance as <code>kaiypc</code>, <code>100.93.120.69</code>. Mosh and tmux were already installed. SSH on port 2222 and Tailscale were active and enabled; systemd, UTF-8, Windows idle settings, and the running login task were already configured. Existing firewall rules permit Tailscale traffic. No further system changes or restart were needed.</p></div>
+        <div class="leaf"><h4>Install missing Mac applications</h4><p>On the Mac, use <code>brew install --cask ghostty</code> and <code>brew install mosh</code> if needed. Open Ghostty with Tailscale connected. See <a href="https://ghostty.org/docs/install/binary">Ghostty installation</a>.</p></div>
+        <div class="leaf"><h4>Create or reattach the lab session</h4>
+          <div class="cmd"><pre>TERM=xterm-256color mosh --predict=always --ssh="ssh -p 2222" \
+  --bind-server=ssh \
+  --server="env LANG=C.UTF-8 LC_ALL=C.UTF-8 /usr/bin/mosh-server" \
+  -- kaimoe@100.93.120.69 \
+  tmux new-session -A -s bnjettag -c /home/kaimoe/lab/bnjettag</pre></div>
+          <p>Run <code>claude</code> in that session. Detach with <code>Ctrl+B</code>, then <code>D</code>, and use the same command to reattach. To connect Claude to the VS Code diff viewer, enter <code>/ide</code> and select the remote lab workspace.</p></div>
+        <div class="leaf"><h4>What passed and what persists</h4><p>Local encrypted mosh/tmux and UTF-8 tests passed. Detach and reattach preserved the lab directory. A subsequent live Ghostty connection was observed with Claude in the attached tmux session; Kai reports immediate predicted typing. Tmux sessions persist while WSL runs; stopping WSL ends their processes. The command uses <code>xterm-256color</code> because WSL lacks Ghostty's terminal definition.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Can I still open files and Claude's proposed changes when the terminal uses mosh?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Keep the remote editor open</h4><p>A Mac-local mosh terminal does not replace the VS Code Remote SSH workspace. Open saved files through the existing Explorer or <code>Cmd+P</code>; both still use <code>/home/kaimoe/lab/bnjettag</code> in WSL.</p></div>
+        <div class="leaf"><h4>Connect Claude to the diff viewer</h4><p>Enter <code>/ide</code> inside the PC Claude session and select the VS Code workspace for this folder. The Claude IDE bridge for this exact workspace was reachable on WSL loopback when checked. Connecting it from a Mac mosh session has not been tested. See <a href="https://code.claude.com/docs/en/vs-code#run-cli-in-vs-code">Claude's external terminal integration</a>.</p></div>
+        <div class="leaf"><h4>Current proposals stay with their session</h4><p>Starting a new Claude process does not take over an existing conversation or its pending edit approvals. Saved changes are shared files; active conversations and pending proposals are session state.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Can I keep using a terminal inside VS Code without the SSH typing lag?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>What was checked</h4><p>A direct Tailscale ping measured 130 ms round-trip. WSL's load average was 0.26, no mosh server was active, and the remote local echo settings remained on with a threshold of zero. The Mac's effective settings and rendering were not inspected.</p></div>
+        <div class="leaf"><h4>Open a Mac-local terminal in the remote window</h4><p>Press <code>Cmd+Shift+P</code> and choose <b>Terminal: Create New Integrated Terminal (Local)</b>. Run the saved <a href="cheatsheet.md#home-pc-terminal-from-the-mac">mosh command</a> there. Install the Mac client with <code>brew install mosh</code> if needed. See <a href="https://github.com/microsoft/vscode-docs/blob/main/docs/terminal/advanced.md#local-terminals-in-remote-windows">VS Code's local terminal documentation</a>.</p></div>
+        <div class="leaf"><h4>Use the same PC files</h4><p>The editor stays connected through Remote SSH, while the new terminal uses mosh and its local prediction. Both use the WSL workspace. Prediction can pause when application echo behavior changes; command output still waits for the server. This Mac workflow has not been tested here, and no sessions were restarted for this clarification.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Are my Mac and kaipc sessions in sync, and can I work locally while the PC monitors jobs?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Selected workflow: Mac interface, PC execution</h4><p>Keep VS Code Remote SSH opened at <code>/home/kaimoe/lab/bnjettag</code>. Kai clarified a preference for terminal use; the local mosh terminal workflow is above. A graphical alternative is <code>Cmd+Shift+P</code> → <b>Claude Code: Open in New Tab</b>. The extension 2.1.296 is already installed in WSL; its Use Terminal setting defaults to off. No second checkout or repository sync is needed. The Mac panel has not been tested here. See <a href="https://code.claude.com/docs/en/vs-code">Claude's VS Code guide</a>.</p></div>
+        <div class="leaf"><h4>Remote windows share the WSL files</h4><p>VS Code Remote SSH opened at <code>~/lab/bnjettag</code> and Claude started there through SSH or mosh use the same files. Save editor changes for other processes to read them. Independent Claude conversations do not automatically share context. See <a href="https://code.visualstudio.com/docs/remote/ssh">VS Code Remote SSH</a>.</p></div>
+        <div class="leaf"><h4>A Mac-local folder is independent</h4><p>No repository synchronization was configured. The WSL lab root and <code>bnjettag/</code> have no <code>.git</code>; <code>publication/</code> is a separate repository. Current lab rules keep WSL as the writable workspace and historical imports as references.</p></div>
+        <div class="leaf"><h4>If tools must execute on the Mac</h4><p>A proposed workflow uses a private shared Git repository and a checkout on each machine, with task branches and committed handoffs. Establish the intended history and tracked files first. This would change the current workspace policy and has not been implemented. Git does not synchronize conversations, processes, or machine environments. See <a href="https://git-scm.com/book/en/v2/Distributed-Git-Distributed-Workflows">Git's distributed workflows</a>.</p></div>
+        <div class="leaf"><h4>If only the interface needs to be local</h4><p>Claude Code's <a href="https://code.claude.com/docs/en/remote-control">Remote Control</a> can connect a Mac browser to an existing PC session with <code>/remote-control</code>. Execution stays on the PC and connected views share that conversation. It requires an eligible Claude subscription/login and a running PC process. It has not been enabled or tested here.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Why can't the SSH terminal show what I type without waiting for a reply?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Why the delay happens</h4><p>The remote program decides what each key does and sends screen updates back. Local prediction can hide that wait, but frequent interface redraws make it harder to predict correctly.</p></div>
+        <div class="leaf"><h4>What was enabled in VS Code</h4><p>The installed version, 1.141.0, includes a local echo feature that defaults to off. Created <code>~/.vscode-server/data/Machine/settings.json</code> for this WSL connection with:</p>
+          <div class="cmd"><pre>{
+  "terminal.integrated.localEchoEnabled": "on",
+  "terminal.integrated.localEchoLatencyThreshold": 0
+}</pre></div>
+          <p>The setting can apply live to existing terminals; no SSH or WSL restart was performed. A separate mosh terminal is optional. Predicted characters use the default dim style until confirmed. See <a href="https://code.visualstudio.com/docs/terminal/advanced#reducing-remote-input-latency-preview">VS Code's documentation</a>.</p></div>
+        <div class="leaf"><h4>Check and undo</h4><p>Try typing in the existing VS Code terminal. The settings were validated against the installed version's source, but their effect in the Mac window has not been measured. Claude's redraws may limit prediction. To undo the change, set the enabled value to <code>"off"</code>, keeping other settings.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>What single command connects to my home PC, opens the lab folder, and starts Claude?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Run from Terminal or iTerm locally on the Mac</h4>
+          <div class="cmd"><pre>mosh --predict=always --ssh="ssh -p 2222" \
+  --bind-server=ssh \
+  --server="env LANG=C.UTF-8 LC_ALL=C.UTF-8 /usr/bin/mosh-server" \
+  -- kaimoe@100.93.120.69 \
+  bash -lc 'cd ~/lab/bnjettag &amp;&amp; exec claude'</pre></div>
+          <p>Tailscale and the Mac mosh client must be available. This opens <code>~/lab/bnjettag</code> and starts the Claude CLI installed in WSL. The folder and CLI lookup were checked with <code>bash -lc</code>; the combined Mac connection still needs testing from the Mac. Exiting Claude closes this mosh session.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Do I open a normal terminal each time, and can Claude run separately from VS Code?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Keep both windows open</h4><p>Use VS Code Remote SSH to edit and browse the WSL project. Open Terminal or iTerm locally on the Mac, connect through mosh using the <a href="cheatsheet.md#home-pc-terminal-from-the-mac">saved command</a>, and leave that window open. Connect once per terminal session.</p></div>
+        <div class="leaf"><h4>2 · Start Claude inside mosh</h4>
+          <div class="cmd"><pre>cd ~/lab/bnjettag
+claude</pre></div>
+          <p>The CLI is already installed in WSL. Both windows work on the same WSL files. Claude's <a href="https://code.claude.com/docs/en/vs-code#run-cli-in-vs-code">VS Code guide</a> supports using an external terminal alongside the editor; IDE integration for this mosh connection has not been tested.</p></div>
+        <div class="leaf"><h4>3 · Leave the connection open</h4><p>You do not reconnect for each prompt or shell command. Mosh can resume the connection after a network interruption or Mac sleep while the session remains open; see <a href="https://mosh.org/">Mosh's documentation</a>.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>How do I make typing on kaipc feel immediate despite high ping, and is it working?</b><small>2026-10-09 PDT</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Use mosh from the Mac</h4><p>Tailscale must be connected. Install the Mac client with <code>brew install mosh</code> if needed.</p>
+          <div class="cmd"><pre>mosh --predict=always --ssh="ssh -p 2222" \
+  --bind-server=ssh \
+  --server="env LANG=C.UTF-8 LC_ALL=C.UTF-8 /usr/bin/mosh-server" \
+  kaimoe@100.93.120.69</pre></div>
+          <p><code>--predict=always</code> enables local prediction of ordinary echoed keystrokes, including on low-delay links. Server output still waits for the network. This requires a mosh connection; an existing SSH terminal keeps its usual behavior. See <a href="https://mosh.org/#usage">Mosh usage</a>.</p></div>
+        <div class="leaf"><h4>2 · What was configured</h4><p>Mosh 1.4.0 was installed in WSL. Windows <code>.wslconfig</code> now has <code>[wsl2] vmIdleTimeout=-1</code>, and <code>WSL Ubuntu Remote Access</code> starts Ubuntu at Windows login and keeps it running without a time limit. SSH on port 2222, Tailscale, systemd, the existing firewall rules, and <code>C.UTF-8</code> were preserved.</p></div>
+        <div class="leaf"><h4>3 · What passed</h4><p>The approved WSL restart completed. SSH and Tailscale returned, and a local encrypted mosh session bound to <code>100.93.120.69</code> passed after restart with <code>--predict=always</code>. The full Mac-to-WSL mosh session and typing responsiveness still need testing from the Mac.</p></div>
+        <div class="leaf"><h4>4 · Where the record is</h4><p><code>~/HOME-PC.md</code> records the settings, verification, backup paths, and the temporary Windows restart task whose cleanup needs administrator access. The temporary task has finished and has no future run scheduled. See also the <a href="cheatsheet.md#home-pc-terminal-from-the-mac">command cheat sheet</a>.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>How do I run Claude Code in the terminal instead of the VS Code extension?</b><small>2026-10-10</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Why</h4><p>Mods draw their panes and bands fully in the terminal; whether the VS Code extension places a mod pane is untested. The <code>claude</code> command is already installed in WSL (<code>~/.local/bin/claude</code>, 2.1.296; mods need 2.1.287 or later), and the runs mod loads by itself in every session (entry below), so nothing extra needs installing.</p></div>
+        <div class="leaf"><h4>1 · Open a terminal in WSL</h4><p>The VS Code terminal panel (Ctrl+`) works, or Windows Terminal with the Ubuntu profile. Any terminal opened before 2026-10-10 needs <code>source ~/.bashrc</code> once.</p></div>
+        <div class="leaf"><h4>2 · Start it</h4>
+          <div class="cmd"><pre>lab          <span class="c"># alias in ~/.bashrc: cd ~/lab/bnjettag &amp;&amp; claude</span>
+/runs        <span class="c"># inside Claude Code: open the Runs pane</span></pre></div>
+          <p>Without the alias: <code>cd ~/lab/bnjettag &amp;&amp; claude</code>. <code>claude --continue</code> resumes the most recent conversation in this folder; <code>claude --resume</code> picks one from a list.</p></div>
+        <div class="leaf"><h4>3 · Check the mod loaded</h4>
+          <div class="cmd"><pre>claude plugin list | grep -A4 runs     <span class="c"># Status: loaded</span></pre></div>
+          <p>The Bench dashboard (<code>docs/design/bench-mod.md</code>) is a design, not yet built; <code>/runs</code> is the mod that exists.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Where do I learn NRP and the commands from scratch?</b><small>2026-10-03</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Learn the cluster basics</h4>
+          <p>Read the official <a href="https://nrp.ai/documentation/userdocs/start/getting-started/">access guide</a>, then <a href="https://nrp.ai/documentation/userdocs/tutorial/basic/">Basic Kubernetes</a>, <a href="https://nrp.ai/documentation/userdocs/tutorial/jobs/">Batch Jobs</a>, <a href="https://nrp.ai/documentation/userdocs/running/gpu-pods/">GPU Pods</a>, and <a href="https://nrp.ai/documentation/userdocs/tutorial/storage/">Storage</a>. Keep the <a href="https://kubernetes.io/docs/reference/kubectl/quick-reference/">kubectl quick reference</a> nearby. A namespace groups resources, a Pod runs containers, a Job manages a computation until it finishes, and a persistent volume keeps files beyond a Pod's lifetime.</p></div>
+        <div class="leaf"><h4>2 · Read the lab's own guides</h4>
+          <p>Start with <a href="infrastructure/nrp-nautilus-setup.md">NRP setup</a>, especially its current WSL section, then <a href="cheatsheet.md">the command cheat sheet</a>. The <a href="infrastructure/manual-round-runbook.md">manual round walkthrough</a> explains the Round 14 chain; its old paths and launch commands are examples. The current supported Chang/Delta launch procedure is <a href="infrastructure/run-handoff.md">immutable run handoff</a>, together with <code>AGENTS.md</code>. More references are indexed in <a href="infrastructure/README.md">infrastructure/README.md</a>.</p></div>
+        <div class="leaf"><h4>3 · Start by inspecting, one command at a time</h4>
+          <div class="cmd"><pre>cd ~/lab/bnjettag
+kubectl config current-context
+kubectl get jobs,pods -n cms-ml
+python3 nrp-lab/nrp_doctor.py status
+kubectl get --help
+kubectl logs --help
+kubectl describe --help</pre></div>
+          <p>Use <code>kubectl describe pod POD_NAME -n cms-ml</code> for events and <code>kubectl logs job/JOB_NAME -n cms-ml --tail=50</code> for recent logs. Replace <code>POD_NAME</code> and <code>JOB_NAME</code> with your actual names from the list. These are read-only cluster requests. The installed client and local context were checked; live status and logs were not collected for this documentation question.</p>
+          <p>Use <code>status</code> for NRP-only health checks; <code>all</code> also attempts Mulder access. Supported training launches require the existing freeze, validated handoff, cleared scientific gate, and action-time authorization. This reading exercise launches nothing.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>How do I use the implemented Jev tools and method loops?</b><small>2026-10-02</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Open the canonical lab in either client</h4><p>Claude Code has a working local MCP registration; Codex has project MCP configuration. The shared skill is <code>/jev-lab</code> in Claude Code and <code>$jev-lab</code> in Codex. The existing private TypeSafe key is loaded without being printed.</p></div>
+        <div class="leaf"><h4>2 · Run the verified smoke workflow</h4>
+          <div class="cmd"><pre>python3 tools/jev_lab.py doctor --live
+python3 tools/jev_smoke.py --live</pre></div>
+          <p>The smoke runs all six advisory workflows plus flawed/corrected method audits over MCP, then checks protocol drift and a complete local loop. Its inputs are synthetic; it launches no training.</p></div>
+        <div class="leaf"><h4>3 · Try the supplied prompt</h4><p>Use the prompt in <a href="infrastructure/jev-lab.md">the Jev runbook</a> for a bounded methods audit. Protocol snapshots bind declared method fields, explicitly referenced config bytes, methodology files, and the rubric catalog. Scientific review and immutable run handoff remain required.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>What are useful ways to use Jev inside Claude Code?</b><small>2026-10-02</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Give Claude the API reference</h4>
+          <div class="cmd"><pre>claude plugin marketplace add typesafe-ai/skills
+claude plugin install typesafe@typesafe-ai</pre></div>
+          <p>These commands are documented in <a href="https://docs.typesafe.ai/agent-skill">TypeSafe's official installation guide</a>; they were checked against the documentation, not executed here. The official skill teaches Claude to build API calls. A local SDK script or a community MCP server supplies the callable tool.</p></div>
+        <div class="leaf"><h4>2 · Start with a narrow, on-demand task</h4>
+          <p>Proposed lab uses: classify supplied failure-log excerpts, rank file snippets from a search, prioritize review findings, screen paper abstracts, check claims against supplied source passages, or suggest the relevant workflow owner. Start with log triage into environment, dataset, GPU memory, numerical failure, infrastructure, or unknown. Claude investigates the suggested cause; Jev supplies a structured judgment.</p></div>
+        <div class="leaf"><h4>3 · Evaluate before adding hooks</h4>
+          <p>Compare predictions against labeled examples and record errors, latency, and API cost. Keep unknown cases visible. Arithmetic, hashes, metrics, run-record validation, and action authorization stay in code and the existing workflow. Scientific gates and mandatory reviews remain authoritative. This entry recorded the initial proposals; the implementation is documented in the newer entry above.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>Where do I paste the TypeSafe (Jev) API key?</b><small>2026-10-03</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Not in a chat, not in the repo</h4><p>The SDK reads one environment variable, <code>TYPESAFE_API_KEY</code>. The Claude Code plugin is skills only, so it has no key field of its own. Create the key at <code>console.typesafe.ai</code>.</p></div>
+        <div class="leaf"><h4>1 · Save it once, hidden, outside git</h4>
+          <div class="cmd"><pre>read -rsp "TypeSafe key: " k &amp;&amp; printf 'export TYPESAFE_API_KEY=%s\n' "$k" &gt; ~/.typesafe.env &amp;&amp; unset k
+chmod 600 ~/.typesafe.env
+echo '[ -f ~/.typesafe.env ] &amp;&amp; . ~/.typesafe.env' &gt;&gt; ~/.bashrc</pre></div>
+          <p><code>read -s</code> keeps the key off the screen and out of shell history.</p></div>
+        <div class="leaf"><h4>2 · Check it loaded, without printing it</h4>
+          <div class="cmd"><pre>source ~/.bashrc
+[ -n "$TYPESAFE_API_KEY" ] &amp;&amp; echo set || echo missing
+uv run --with typesafe-sdk python -c "from typesafe_sdk import TypeSafeClient; TypeSafeClient(); print('ok')"</pre></div>
+          <p>Plain <code>pip install</code> fails with <code>externally-managed-environment</code> (Ubuntu blocks system-wide installs). Use <code>uv run --with typesafe-sdk</code> instead; no install step needed. Restart VS Code so new Claude Code sessions inherit the key.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>How is the repo laid out?</b><small>2026-10-02</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>Seven layers</h4><p>Instructions (top-level <code>.md</code>) → studies (<code>campaigns/</code>, <code>local/</code>) → code and results (<code>bnjettag/</code>) → machinery (<code>nrp-lab/</code>, <code>tools/</code>, <code>docs/</code>, <code>.claude/</code>) → knowledge (<code>literature/</code>, logs, <code>messages/</code>) → outward (<code>publication/</code>, <code>published/</code>) → frozen (<code>_attic/</code>, <code>archive/</code>, <code>reference-code/</code>, <code>data/</code>). Full table in <a href="#map">Repo map</a>.</p></div>
+        <div class="leaf"><h4>Where the disk goes</h4><p>Measured with <code>du -sh *</code> on 2026-10-02: <code>_attic/</code> 8.1 G, <code>data/</code> 4.0 G, <code>bnjettag/</code> 2.1 G, <code>campaigns/</code> 1.1 G, <code>published/</code> 750 M; everything else is under 50 M.</p></div>
+        <div class="leaf"><h4>Find anything</h4>
+          <div class="cmd"><pre>python3 tools/index.py build   <span class="c"># refresh INDEX.md, then open it</span>
+grep -rl "&lt;word&gt;" --include=*.md campaigns docs local</pre></div></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>How do I kill a job, and find jobs that are idle or stuck?</b><small>2026-10-02</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Let the doctor find them</h4>
+          <div class="cmd"><pre>python3 nrp-lab/nrp_doctor.py status</pre></div>
+          <p>It lists your <code>kai-</code> jobs and pods and flags three problems:</p>
+          <p><b>HUNG/IDLE POD</b>: Running for over 2 h with no log line in the last 2 h. An idle GPU breaks Nautilus policy.<br>
+          <b>FAILED JOB</b>: failed in the last 72 h with no active pods. Its W&amp;B run may still say "running".<br>
+          <b>Pending</b>: with the scheduler's reason.</p></div>
+        <div class="leaf"><h4>2 · Check a suspect by hand</h4>
+          <div class="cmd"><pre>kubectl get pods -n cms-ml | grep kai-                <span class="c"># AGE vs STATUS</span>
+kubectl logs &lt;pod&gt; -n cms-ml --tail=20 --timestamps  <span class="c"># when did it last say anything?</span>
+kubectl exec &lt;pod&gt; -n cms-ml -- nvidia-smi          <span class="c"># GPU-Util near 0% = idle</span></pre></div></div>
+        <div class="leaf"><h4>3 · Save the evidence before killing it</h4>
+          <div class="cmd"><pre>kubectl logs &lt;pod&gt; -n cms-ml &gt; ~/lab/bnjettag/local/&lt;pod&gt;.log
+kubectl exec &lt;pod&gt; -n cms-ml -- cat /proc/1/wchan; echo   <span class="c"># what the process is blocked on</span></pre></div>
+          <p>Write one entry in <code>.claude/memory/cluster-inventory.md</code> ending with a Check line.</p></div>
+        <div class="leaf"><h4>4 · Kill the right thing</h4>
+          <div class="cmd"><pre>kubectl delete pod &lt;pod&gt; -n cms-ml     <span class="c"># hung pod: the Job starts a fresh one (uses a retry)</span>
+kubectl delete job &lt;job&gt; -n cms-ml     <span class="c"># stop the run for good: takes all its pods</span>
+./launch_r14.sh delete                 <span class="c"># a whole round (from variants/)</span></pre></div>
+          <p>Delete the <b>pod</b> to retry a hung run, and the <b>Job</b> to stop it for good. Deleting only a pod of a job you want gone just makes the Job start another.</p></div>
+        <div class="leaf"><h4>5 · Close the books</h4><p>For a killed or failed run, mark its W&amp;B run as crashed or finished in the W&amp;B UI, so it doesn't sit "running". Lab notebook pod: <code>nrp-lab/lab.sh down</code>. Only touch names starting with <code>kai-</code>.</p></div>
+      </div>
+    </details>
+
+    <details>
+      <summary><b>How do I run a training job without an agent babysitting it?</b><small>2026-10-02</small></summary>
+      <div class="branch">
+        <div class="leaf"><h4>1 · Smoke test, then launch</h4><p>Launch one job and read its log until the five milestone lines appear (see "Launch training"). Then launch the round.</p></div>
+        <div class="leaf"><h4>2 · Close the laptop</h4><p>The Job retries preemptions and enforces its own time limit. Nothing needs to watch it.</p></div>
+        <div class="leaf"><h4>3 · Check back once, hours later</h4>
+          <div class="cmd"><pre>kubectl get jobs -n cms-ml | grep kai-
+kubectl logs job/&lt;job&gt; -n cms-ml --tail=50</pre></div></div>
+        <div class="leaf"><h4>4 · On failure, a fresh Claude session</h4><p>Paste the 50 lines. A long-running session that polls costs far more and adds nothing.</p></div>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ============ PIPELINE ============ -->
+<section id="pipeline">
+  <span class="eyebrow">Flowchart</span>
+  <h2>How an experiment becomes a result</h2>
+  <p class="lede">Each box says where it runs, what it does, and what it leaves behind. After training the path forks: accuracy on one side, hardware on the other. Both meet again at VERIFY.</p>
+
+  <div class="flow">
+    <div class="node l-kai"><span class="where">you</span><h3>Question</h3><p>"Does N64 beat N8 at a fixed eBOP cap?" A question with a null, not a feature.</p><span class="out"><code>STUDY.md</code> in a new campaign folder</span></div>
+    <div class="arrow"></div>
+    <div class="node l-laptop"><span class="where">laptop</span><h3>Configs</h3><p><code>gen_r14.py</code> writes one JSON per arm × seed (N, input features, weight and activation bits, seed).</p><span class="out"><code>bnjettag/code/hgq2/configs/r14-*.json</code></span></div>
+    <div class="arrow"></div>
+    <div class="node l-laptop"><span class="where">laptop</span><h3>Job manifests</h3><p><code>gen_r14_jobs.py</code> wraps each config in a Kubernetes Job. Never hand-edit the output.</p><span class="out"><code>variants/kai-bn14-*.yaml</code></span></div>
+    <div class="arrow"></div>
+    <div class="node l-laptop"><span class="where">laptop</span><h3>Lint</h3><p><code>nrp_doctor.py lint</code> catches unreachable GPU products, throttled parallelism, failure limits. The kubectl hook refuses unlinted manifests.</p><span class="out">exit 0</span></div>
+    <div class="arrow"></div>
+    <div class="node l-nrp"><span class="where">laptop → cluster</span><h3>Ship the code</h3><p><code>make_code_configmap_r14.sh</code> checks the tree, tars it (under 1 MB) and uploads it as a ConfigMap.</p><span class="out">ConfigMap <code>kai-bn14-code</code> + an md5 you write down</span></div>
+    <div class="arrow"></div>
+    <div class="node l-nrp"><span class="where">cluster, CPU</span><h3>Preflight</h3><p><code>preflight_final.sh</code> checks dataset access and builds every config.</p><span class="out"><code>PREFLIGHT_ALL_PASS</code> → <code>PREFLIGHT.md</code></span></div>
+    <div class="arrow"></div>
+    <div class="node l-nrp"><span class="where">cluster, 1 GPU</span><h3>One job (smoke test)</h3><p>Read the log until epoch lines appear. Cheapest place to catch a mistake.</p><span class="out">five milestone log lines</span></div>
+    <div class="arrow"></div>
+    <div class="node l-nrp"><span class="where">cluster, many GPUs</span><h3>The round</h3><p>Each pod unpacks the ConfigMap, fetches the dataset from Zenodo, trains, and dies. Kubernetes retries preemptions on its own.</p><span class="out"><code>RUN.md</code>; you close the laptop</span></div>
+    <div class="arrow"></div>
+    <div class="node l-wandb"><span class="where">W&amp;B</span><h3>Checkpoint + curves</h3><p>Every run commits a versioned artifact <code>model-r14-l1x3-n&lt;N&gt;-&lt;variant&gt;-s&lt;seed&gt;</code>. Validation AUC here is a monitor, not a result.</p><span class="out">the only durable copy of the model</span></div>
+
+    <div class="fork">
+      <div class="lane">
+        <span class="tag">Accuracy</span>
+        <div class="node l-nrp"><span class="where">cluster, CPU</span><h3>ROC eval</h3><p><code>kai-bn14-roc-n&lt;N&gt;.yaml</code> runs <code>roc_final.py</code> on the held-out split, n = 260,000.</p><span class="out">one <code>.npz</code> per model</span></div>
+        <div class="arrow"></div>
+        <div class="node l-laptop"><span class="where">laptop</span><h3>Bring home</h3><p>Into <code>bnjettag/roc-results/&lt;round&gt;/</code>.</p><span class="out"><code>.npz</code> files on disk</span></div>
+        <div class="arrow"></div>
+        <div class="node l-laptop"><span class="where">laptop</span><h3>Recompute + interval</h3><p>Macro AUC from the arrays; <code>uncertainty_r14.py</code> for seed spread and paired bootstrap.</p><span class="out">ROC-test AUC ± interval per arm</span></div>
+      </div>
+      <div class="lane">
+        <span class="tag">Hardware</span>
+        <div class="node l-laptop"><span class="where">laptop</span><h3>eBOPs</h3><p><code>ebops_r14.py</code> over the downloaded checkpoints.</p><span class="out">eBOP count per model</span></div>
+        <div class="arrow"></div>
+        <div class="node l-laptop"><span class="where">laptop</span><h3>Convert</h3><p><code>convert_final.py</code>: HGQ2 export, hls4ml project, C-sim fidelity gate.</p><span class="out">project tarball</span></div>
+        <div class="arrow"></div>
+        <div class="node l-mulder"><span class="where">mulder</span><h3>csynth</h3><p><code>mulder_csynth.sh</code>, Vitis HLS 2023.2, VU13P at 2.5 ns.</p><span class="out"><code>csynth.xml</code></span></div>
+        <div class="arrow"></div>
+        <div class="node l-laptop"><span class="where">mulder → laptop</span><h3>Parse + bring home</h3><p><code>parse_csynth.py</code> → JSON row.</p><span class="out"><code>bnjettag/results/synthesis/runs/</code></span></div>
+      </div>
+    </div>
+    <div class="merge"></div>
+    <div class="arrow"></div>
+    <div class="node l-laptop"><span class="where">laptop</span><h3>Verify</h3><p>Every number with metric, split, n, status; a gap needs seeds and an interval. <code>verify_check.py</code> plus review.</p><span class="out"><code>VERIFY.md</code></span></div>
+    <div class="arrow"></div>
+    <div class="node l-laptop"><span class="where">laptop</span><h3>Report</h3><p>What the study says about the binary thesis; figures through the style kit; <code>prose_lint</code>.</p><span class="out"><code>REPORT.md</code></span></div>
+    <div class="arrow"></div>
+    <div class="node gate l-kai"><span class="where">you</span><h3>The gate</h3><p>You decide whether a number enters README, RESEARCH.md or a PI update, and whether anything gets pushed outward.</p><span class="out">the record</span></div>
+  </div>
+</section>
+
+<!-- ============ TUTORIAL ============ -->
+<section id="tutorial">
+  <span class="eyebrow">Tutorial</span>
+  <h2>Learning to drive it yourself</h2>
+  <p class="lede">In order. Each step builds on the last; by step 7 you can run a round without help.</p>
+  <ol class="steps">
+    <li><h3>Know the three places things live</h3><div>
+      <p><b>This laptop</b> holds code, configs, manifests, results and notes, and does light work only. <b>Nautilus</b> runs training in throwaway pods. <b>W&amp;B</b> is where checkpoints and curves survive after the pods die. <b>mulder</b> is a fourth, used only for FPGA synthesis.</p>
+      <p>Most confusion comes from asking "which copy is this?". The answer is almost always: the code on the laptop is the truth, the ConfigMap is a snapshot of it, the checkpoint lives in W&amp;B, and the numbers come from <code>.npz</code> files on the laptop.</p></div></li>
+
+    <li><h3>Read four files once</h3><div>
+      <p><code>SYSTEM.md</code> (how research runs), <code>CLAUDE.md</code> and <code>RULES.md</code> (what Claude does and doesn't do), <code>docs/infrastructure/manual-round-runbook.md</code> (a full round, step by step). After that, <code>docs/cheatsheet.md</code> is all you need at the terminal.</p></div></li>
+
+    <li><h3>Learn five kubectl verbs</h3><div>
+      <p><code>get</code> (what exists), <code>logs</code> (what it said), <code>apply -f</code> (create from a file), <code>delete</code> (remove), <code>exec -it</code> (shell inside). Always add <code>-n cms-ml</code>. Everything else is a variation.</p>
+      <div class="cmd"><pre>kubectl get jobs,pods -n cms-ml | grep kai-
+kubectl logs -f &lt;pod&gt; -n cms-ml
+kubectl apply -f &lt;file&gt;.yaml -n cms-ml
+kubectl delete job &lt;job&gt; -n cms-ml
+kubectl exec -it &lt;pod&gt; -n cms-ml -- /bin/bash</pre></div>
+      <p>A <b>Job</b> is the order ("train this config"). A <b>pod</b> is the worker that carries it out. If a pod dies, the Job makes a new one, up to its retry limit.</p></div></li>
+
+    <li><h3>Understand the ConfigMap, because it bites</h3><div>
+      <p>The pod doesn't see your laptop. It sees a frozen tarball of the code that you uploaded. If you change code and forget to rebuild the ConfigMap, the cluster runs the old code without complaint. That's why the build script prints an md5 and every pod prints it back.</p></div></li>
+
+    <li><h3>Do one round by hand, one job first</h3><div>
+      <p>Follow "Launch training" in the tree above. Don't skip the single job. Read its whole log once so you know what healthy looks like; after that, a broken log stands out.</p></div></li>
+
+    <li><h3>Check once, then leave</h3><div>
+      <p>After the five milestone lines show up, the run takes care of itself. Check back hours later with <code>get jobs</code> and <code>logs --tail=50</code>. Watching it adds nothing, and having an agent watch it is the most expensive way to do it.</p></div></li>
+
+    <li><h3>Tell a monitor from a result</h3><div>
+      <p>The AUC in the training log and W&amp;B is <b>validation AUC</b>, used to pick the best epoch. The number that goes into anything is <b>ROC-test AUC</b> on the held-out split (n = 260,000), recomputed from the <code>.npz</code>, averaged over at least 3 seeds, with an interval. Two arms whose intervals overlap are tied. Compare only at the same N and the same input set (for example <code>l1x3</code>).</p></div></li>
+
+    <li><h3>Run the hardware branch</h3><div>
+      <p>Accuracy alone doesn't answer the thesis; it needs a cost next to it. eBOPs run on the laptop. Latency and resources come from csynth on mulder. Copy every report home as soon as it lands.</p></div></li>
+
+    <li><h3>Write it down, question first</h3><div>
+      <p>One experiment-log entry per campaign in the Question / Design / Result / Interpretation / Ops shape. Record failed approaches too, with the reason, so nobody tries them again.</p></div></li>
+
+    <li><h3>Hand Claude the judgment work, not the typing</h3><div>
+      <div class="grid2">
+        <div class="card"><h3>Do it yourself</h3><p>Launch, check, read logs, delete, the lab pod, ssh to mulder, reading W&amp;B curves, deciding what enters the record.</p></div>
+        <div class="card"><h3>Hand to Claude</h3><p>Changing generators or training code, recomputing numbers into VERIFY.md, review and red-team before anything goes out, diagnosing a crash from a pasted log in a fresh session.</p></div>
+      </div></div></li>
+  </ol>
+</section>
+
+<!-- ============ MAP ============ -->
+<section id="map">
+  <span class="eyebrow">Where things are</span>
+  <h2>Repo map</h2>
+  <p class="lede"><code>~/lab/bnjettag</code> on the home PC (Ubuntu WSL) is the one writable copy; the Mac edits it remotely through VS Code. It has seven layers, from what you read most to what you never touch.</p>
+  <div class="grid2">
+    <div class="card"><h3>1 · Instructions</h3><p>Top-level <code>.md</code> files: how the lab runs, and what Claude and other agents may do.</p></div>
+    <div class="card"><h3>2 · Studies</h3><p><code>campaigns/</code> (finished and older studies) and <code>local/</code> (the newest work, dated folders). One folder per question.</p></div>
+    <div class="card"><h3>3 · Code and results</h3><p><code>bnjettag/</code>: the pipeline code, job files, models, and every <code>.npz</code> and csynth row.</p></div>
+    <div class="card"><h3>4 · Machinery</h3><p><code>nrp-lab/</code>, <code>tools/</code>, <code>tests/</code>, <code>docs/</code>, <code>.claude/</code>: cluster access, checks, runbooks, Claude's rules and logs.</p></div>
+    <div class="card"><h3>5 · Knowledge</h3><p><code>literature/</code>, <code>.claude/memory/</code>, <code>messages/</code>: papers, the logs, things written for people.</p></div>
+    <div class="card"><h3>6 · Outward</h3><p><code>publication/</code> and <code>published/</code>: the copies that become public GitHub repos. Changes go out only with your yes.</p></div>
+    <div class="card"><h3>7 · Frozen</h3><p><code>_attic/</code>, <code>archive/</code>, <code>reference-code/</code>, <code>data/</code>, <code>sessions/</code>: history, upstream libraries, the dataset. Read, don't edit.</p></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>path</th><th>what it is</th><th>you touch it when</th></tr></thead>
+    <tbody>
+      <tr><td><code>README.md</code>, <code>INDEX.md</code></td><td>front door; one table of every study, doc and code tree (<code>tools/index.py build</code>). README is partly stale (it mentions 13 agents that aren't here)</td><td>finding something</td></tr>
+      <tr><td><code>SYSTEM.md</code></td><td>how research runs: phases, agents, conventions</td><td>once, and when the system changes</td></tr>
+      <tr><td><code>CLAUDE.md</code>, <code>RULES.md</code></td><td>what Claude loads every session, and how it behaves</td><td>to change a boundary</td></tr>
+      <tr><td><code>AGENTS.md</code></td><td>rules for any agent: which copy is canonical, mulder only through your Mac, launches through the run handoff, read-only monitoring</td><td>to change what agents may touch</td></tr>
+      <tr><td><code>DATASET.md</code></td><td>the HLS4ML LHC jet dataset (150 particles), measured from the local files</td><td>questions about inputs or splits</td></tr>
+      <tr><td><code>RESEARCH.md</code></td><td>the long research narrative. Marked archived 2026-09-26: it predates the eBOP target</td><td>history only</td></tr>
+      <tr><td><code>campaigns/&lt;date&gt;-&lt;type&gt;/</code></td><td>one folder per study with STUDY → PREFLIGHT → RUN → VERIFY → REPORT (23 so far, 2026-09-15 to 2026-10-02)</td><td>every experiment</td></tr>
+      <tr><td><code>local/</code></td><td>newest execution folders, runbooks, the local Jupyter kernel setup (<code>setup-local.sh</code>)</td><td>current work</td></tr>
+      <tr><td><code>data/train</code>, <code>data/val</code></td><td>the dataset <code>.h5</code> files; not versioned, fetched from Zenodo</td><td>never edit</td></tr>
+      <tr><td><code>tests/</code></td><td>unit tests for <code>run_handoff.py</code> and <code>lab_transfer.py</code></td><td>after changing those tools</td></tr>
+      <tr><td><code>publication/</code></td><td>working copy of the public GitHub repo: code, results, figures</td><td>preparing a public release</td></tr>
+      <tr><td><code>published/</code></td><td>the three public repos: results, code, methodology</td><td>only with your yes</td></tr>
+      <tr><td><code>reference-code/</code></td><td>upstream libraries for reading: HGQ2, hls4ml, ParT, weaver, qkeras, BitNet</td><td>checking how a library does something</td></tr>
+      <tr><td><code>sessions/</code></td><td>one note per past Claude session</td><td>rarely</td></tr>
+      <tr><td><code>bnjettag/code/hgq2/</code></td><td>the pipeline: <code>bnhgq2/</code> package, <code>run_stage.py</code>, <code>roc_final.py</code>, <code>convert_final.py</code>, <code>ebops_r14.py</code>, <code>uncertainty_r14.py</code></td><td>code changes (hand to Claude)</td></tr>
+      <tr><td><code>bnjettag/code/hgq2/configs/</code></td><td>one JSON per run, plus <code>gen_r14.py</code></td><td>adding arms</td></tr>
+      <tr><td><code>bnjettag/code/jobs/training/variants/</code></td><td>job generators, ConfigMap builders, launchers, the YAMLs</td><td>every launch</td></tr>
+      <tr><td><code>bnjettag/roc-results/</code></td><td><code>.npz</code> score arrays per model (r14, r15-gamma, ptw-n8)</td><td>any accuracy number</td></tr>
+      <tr><td><code>bnjettag/results/</code></td><td>eBOP studies, <code>synthesis/</code> csynth rows</td><td>any hardware number</td></tr>
+      <tr><td><code>nrp-lab/</code></td><td><code>nrp_doctor.py</code> (status, lint, mulder), <code>lab.sh</code> (GPU notebook)</td><td>health checks, scratch work</td></tr>
+      <tr><td><code>tools/</code></td><td>validators: prose, plots, VERIFY, claims, bib, index, brief</td><td>before anything ships</td></tr>
+      <tr><td><code>docs/infrastructure/</code></td><td>runbooks: Nautilus setup, round runbook, mulder, W&amp;B layout, GPU selection</td><td>when something is unclear</td></tr>
+      <tr><td><code>docs/methodology/</code>, <code>docs/conventions/</code></td><td>phase rules and templates; metric, quantization, synthesis, figure conventions</td><td>writing a STUDY or VERIFY</td></tr>
+      <tr><td><code>docs/style/</code></td><td>matplotlib style, LaTeX style, <code>CHOICES.md</code></td><td>figures, PDFs</td></tr>
+      <tr><td><code>.claude/memory/</code></td><td>experiment-log, decisions, cluster-inventory</td><td>logging</td></tr>
+      <tr><td><code>literature/INDEX.md</code></td><td>entry point to the annotated papers</td><td>citing or reading</td></tr>
+      <tr><td><code>messages/</code></td><td>everything written for people, dated</td><td>PI updates, posters, Slack</td></tr>
+      <tr><td><code>_attic/</code>, <code>archive/</code></td><td>frozen history</td><td>never, unless on purpose</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ RULES ============ -->
+<section id="rules">
+  <span class="eyebrow">Non-negotiables</span>
+  <h2>Rules of the road</h2>
+  <div class="grid2">
+    <div class="card"><h3>Every number carries four labels</h3><p>Metric (validation vs ROC-test AUC), split, n, status (single seed vs seed-averaged). Recomputed from <code>.npz</code> or csynth JSON, never from memory or W&amp;B alone.</p></div>
+    <div class="card"><h3>No gap without an interval</h3><p>At least 3 seeds. Inside the seed spread is flat.</p></div>
+    <div class="card"><h3>Compare like with like</h3><p>Same N, same input set. Cross-N comparisons only when that is the question.</p></div>
+    <div class="card"><h3>Binary is the thesis</h3><p>{−1,+1} weights. Ternary and FP32 are baselines.</p></div>
+    <div class="card"><h3>Scratch is never quotable</h3><p>Anything from the lab pod or the laptop kernel stays out of the record.</p></div>
+    <div class="card"><h3>Code is frozen during a run</h3><p>A fix is a new preflight and a new md5, never a patch to a live round.</p></div>
+  </div>
+</section>
+
+<!-- ============ GOTCHAS ============ -->
+<section id="gotchas">
+  <span class="eyebrow">These have cost runs before</span>
+  <h2>Gotchas</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>symptom</th><th>cause</th><th>fix</th></tr></thead>
+    <tbody>
+      <tr><td>every pod dies at start</td><td>stale or newline-poisoned <code>kai-wandb</code> secret; <code>wandb.init()</code> isn't wrapped</td><td>recreate the secret from the key file with the newline stripped; never print it</td></tr>
+      <tr><td>results look like last round</td><td>ConfigMap not rebuilt</td><td>rebuild, compare the md5 in the pod log</td></tr>
+      <tr><td>Pending for hours</td><td>GPU resource name (A100/A40 use <code>nvidia.com/a100</code>, <code>nvidia.com/a40</code>) or <code>required</code> affinity</td><td>read the PodScheduled message; <code>nrp_doctor lint</code></td></tr>
+      <tr><td>throughput is low</td><td><code>parallelism</code> on the Indexed Job is a ceiling you set</td><td>raise it to fit free capacity</td></tr>
+      <tr><td>a few failures killed the campaign</td><td><code>backoffLimitPerIndex</code> / <code>maxFailedIndexes</code> too tight</td><td>set them deliberately; ignore <code>DisruptionTarget</code> in <code>podFailurePolicy</code></td></tr>
+      <tr><td>eval finds no checkpoints</td><td>W&amp;B project name differs between training and eval generators</td><td>keep <code>BNJetTagAug</code> in all three places</td></tr>
+      <tr><td><code>UnexpectedAdmissionError</code></td><td>node GPU plugin race</td><td>harmless; the retry covers it</td></tr>
+      <tr><td>401 Unauthorized</td><td>expired OIDC token</td><td><code>kubectl oidc-login clean</code></td></tr>
+      <tr><td>synthesis report gone</td><td>mulder isn't backed up</td><td>copy home the moment it lands</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary">
+  <span class="eyebrow">Words</span>
+  <h2>Glossary</h2>
+  <dl class="gloss">
+    <dt>N, n_part</dt><dd>number of jet constituents fed to the transformer (8, 16, 32, 64). Attention cost grows as N².</dd>
+    <dt>l1x3</dt><dd>the L1-realistic 3-feature input set used from round 14. Results only compare within it.</dd>
+    <dt>w1a8, w1a4 …</dt><dd>weight bits / activation bits. w1 = binary {−1,+1} weights, the thesis.</dd>
+    <dt>fp32, w8a8</dt><dd>full-precision and 8-bit baselines.</dd>
+    <dt>validation AUC</dt><dd>the training monitor. Never published.</dd>
+    <dt>ROC-test AUC</dt><dd>macro one-vs-rest AUC over 5 classes on the held-out split, n = 260,000. The published number.</dd>
+    <dt>eBOPs</dt><dd>effective bit operations, a hardware cost proxy. HGQ2-native convention only.</dd>
+    <dt>HGQ2, hls4ml</dt><dd>quantization-aware training library; the converter from a trained model to HLS code.</dd>
+    <dt>csynth</dt><dd>Vitis HLS C synthesis: latency, LUT, FF, DSP, BRAM estimates. Target VU13P at 2.5 ns.</dd>
+    <dt>Job / Indexed Job / pod</dt><dd>the order; an order with many numbered runs; the disposable worker.</dd>
+    <dt>ConfigMap</dt><dd>the frozen code tarball the pods unpack. Under 1 MB.</dd>
+    <dt>PVC</dt><dd>persistent cluster disk. The current pipeline doesn't use one; the lab notebook pod does.</dd>
+    <dt>campaign</dt><dd>one study folder carrying its five phase files.</dd>
+    <dt>JFC</dt><dd>the agent framework from Moreno et al. (arXiv:2603.20179) this repo's process is adapted from.</dd>
+    <dt>PASS / ITERATE / ESCALATE</dt><dd>review verdicts: advance; fix and re-review; needs you.</dd>
+  </dl>
+</section>
+
+<!-- ============ GAPS ============ -->
+<section id="gaps">
+  <span class="eyebrow">As of 2026-10-02</span>
+  <h2>Known gaps in this copy of the repo</h2>
+  <div class="callout"><h3>No git</h3><p>Nothing under <code>~/lab/bnjettag</code> is a git repository, so "commit each change" and code shas in PREFLIGHT can't happen yet. The ConfigMap md5 is the only proof of which code ran.</p></div>
+  <div class="callout"><h3>Agents and slash commands are missing</h3><p><code>.claude/agents/</code> and <code>.claude/commands/</code> don't exist here, so <code>/review</code>, <code>/new-experiment</code> and the reviewer panel described in SYSTEM.md won't run in this folder.</p></div>
+  <div class="callout"><h3>ROC ConfigMap has no build script</h3><p><code>kai-bn14-roc-code</code> is mounted by the eval jobs but nothing here builds it (runbook, Phase 6).</p></div>
+  <div class="callout info"><h3>Paths in older docs</h3><p>Some runbooks still say <code>~/Downloads/bnjettag-training-results</code> or <code>~/Desktop/bnjettag</code>. On this machine it's <code>~/lab/bnjettag</code>.</p></div>
+</section>
+
+<footer>Built from the repo's skills, runbooks and script headers on 2026-10-02. Commands for the terminal: <code>docs/cheatsheet.md</code>.</footer>
+</div>
+
+<script>
+document.querySelectorAll('.cmd').forEach(function(box){
+  var b=document.createElement('button'); b.type='button'; b.textContent='copy';
+  b.addEventListener('click',function(){
+    var t=box.querySelector('pre').innerText;
+    var done=function(){b.textContent='copied';setTimeout(function(){b.textContent='copy'},1200)};
+    try{navigator.clipboard.writeText(t).then(done,function(){sel(box)})}catch(e){sel(box)}
+  });
+  box.appendChild(b);
+});
+function sel(box){var r=document.createRange();r.selectNodeContents(box.querySelector('pre'));var s=getSelection();s.removeAllRanges();s.addRange(r)}
+</script>

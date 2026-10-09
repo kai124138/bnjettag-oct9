@@ -1,0 +1,86 @@
+{
+  "rows": [
+    {
+      "arm": "control",
+      "run_id": "ed3piak8",
+      "run_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/ed3piak8",
+      "validation_auc_reported": 0.8716604564125753,
+      "checkpoint": "model_best.keras",
+      "checkpoint_epoch_1based": 91,
+      "initial_ebops": 1739182,
+      "target_ebops": null,
+      "checkpoint_ebops_verified": 1780910,
+      "checkpoint_reduction_vs_control_pct": 0.0,
+      "budget_met": null,
+      "first_feasible_epoch_1based": null,
+      "final_epoch_ebops_reported": 1780910.0,
+      "final_epoch_validation_auc_reported": 0.8687577688206496,
+      "final_beta": 0,
+      "final_learning_rate": 2.0000000233721948e-07,
+      "checkpoint_width_histogram": {
+        "8": 18,
+        "9": 3
+      },
+      "checkpoint_mean_bits": 8.142857142857142
+    },
+    {
+      "arm": "75% budget",
+      "run_id": "3bynw2ra",
+      "run_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/3bynw2ra",
+      "validation_auc_reported": 0.8700535576440043,
+      "checkpoint": "model_best.keras",
+      "checkpoint_epoch_1based": 95,
+      "initial_ebops": 1739182,
+      "target_ebops": 1304386.5,
+      "checkpoint_ebops_verified": 1263790,
+      "checkpoint_reduction_vs_control_pct": 29.036840716263036,
+      "budget_met": true,
+      "first_feasible_epoch_1based": 50,
+      "final_epoch_ebops_reported": 1263790.0,
+      "final_epoch_validation_auc_reported": 0.8672502783550586,
+      "final_beta": 8.290186856700347e-08,
+      "final_learning_rate": 2.0000000233721948e-07,
+      "checkpoint_width_histogram": {
+        "5": 5,
+        "6": 11,
+        "7": 3,
+        "8": 1,
+        "9": 1
+      },
+      "checkpoint_mean_bits": 6.142857142857143
+    },
+    {
+      "arm": "25% budget",
+      "run_id": "zyj0gwkq",
+      "run_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/zyj0gwkq",
+      "validation_auc_reported": 0.8629018714414356,
+      "checkpoint": "model_unconstrained.keras",
+      "checkpoint_epoch_1based": 49,
+      "initial_ebops": 1739182,
+      "target_ebops": 434795.5,
+      "checkpoint_ebops_verified": 1177006,
+      "checkpoint_reduction_vs_control_pct": 33.90985507409133,
+      "budget_met": false,
+      "first_feasible_epoch_1based": null,
+      "final_epoch_ebops_reported": 1062318.0,
+      "final_epoch_validation_auc_reported": 0.8585773639878111,
+      "final_beta": 6.36784583530053e-06,
+      "final_learning_rate": 2.0000000233721948e-07,
+      "checkpoint_width_histogram": {
+        "5": 10,
+        "6": 7,
+        "7": 2,
+        "8": 2
+      },
+      "checkpoint_mean_bits": 5.809523809523809
+    }
+  ],
+  "failed_arm": {
+    "arm": "50% budget",
+    "run_id": "mkvzt7ur",
+    "reason": "XLA/Triton GEMM autotuning: NOT_FOUND: No valid config found",
+    "completed_epochs": 0
+  },
+  "auc_status": "Quoted from train_meta.json; no independently recomputed ROC-test AUC",
+  "source": "Downloaded committed W&B model artifacts and complete scan_history; EBOPs remeasured from checkpoints"
+}

@@ -1,0 +1,115 @@
+From dae5279b6ea9ccbff5e4fe41134d112b39354585 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:08 -0700
+Subject: [PATCH 13/14] CPU gate for every chang0926 config (build, binary
+ gate, trace, one step, save/reload 2e-6, re-trace equal)
+
+---
+ campaigns/chang0926/cpu_gate.py | 95 +++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 campaigns/chang0926/cpu_gate.py
+
+diff --git a/campaigns/chang0926/cpu_gate.py b/campaigns/chang0926/cpu_gate.py
+new file mode 100644
+index 0000000..9156246
+--- /dev/null
++++ b/campaigns/chang0926/cpu_gate.py
+@@ -0,0 +1,95 @@
++#!/usr/bin/env python3
++"""CPU build/reload gate for every chang0926 config (synthetic inputs; no cache, no GPU).
++
++python campaigns/chang0926/cpu_gate.py [--only a,b] [--out gate.json]
++
++Per config: run_engram.validate_cfg; the production initializer
++(ablation.matching_initialization) on a fixed synthetic sample; binary gate; native EBOPs
++trace; optimizer path and LR at the schedule landmarks; ONE training step at the config's
++batch size (ablation.make_epoch_step, loss finite); save -> reload -> predictions within the
++screen preflight tolerance (atol = rtol = 2e-6) and re-traced EBOPs equal. Prints
++CONFIG_PREFLIGHT_PASS <name> params <n> ... per config and PREFLIGHT_ALL_PASS at the end.
++Synthetic data: nothing here is a result.
++"""
++from __future__ import annotations
++
++import argparse
++import json
++import os
++from pathlib import Path
++import sys
++import tempfile
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '2')
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE.parents[1]))
++import numpy as np
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--only', default='')
++    parser.add_argument('--out', type=Path)
++    args = parser.parse_args()
++    import keras
++    import tensorflow as tf
++    import run_engram
++    ablation, _ = run_engram.runtime()
++    tf.config.experimental.enable_tensor_float_32_execution(False)
++    rows = json.loads((HERE / 'index.json').read_text())['runs']
++    only = {a.upper() for a in args.only.split(',') if a}
++    rng = np.random.default_rng(0)
++    x = rng.standard_normal((4096, 64, 3)).astype('float32')
++    y = np.eye(5, dtype='float32')[rng.integers(0, 5, 4096)]
++    reports = []
++    for row in rows:
++        if only and row['arm'] not in only:
++            continue
++        keras.backend.clear_session()
++        cfg = json.loads((HERE / 'configs' / row['file']).read_text())
++        assert cfg['name'] == row['name'] and cfg['experiment']['seed'] == row['seed']
++        run_engram.validate_cfg(cfg)
++        assert ablation.cost_before_auc(cfg) is False
++        model, evidence = ablation.matching_initialization(cfg, x, cfg['experiment']['seed'])
++        ablation.binary_gate(model, cfg)
++        sample = x[:256]
++        cost = ablation.compute_ebops(model, sample)
++        optimizer = ablation.optimizer_for(cfg, model)
++        tr = cfg['train']
++        lrs = {e: ablation.learning_rate(cfg, e) for e in (0, 489, 490, 499, 500, tr['epochs'] - 1)}
++        batch = int(tr['batch'])
++        step = ablation.make_epoch_step(model, optimizer, x[:batch], y[:batch], cfg)
++        optimizer.learning_rate.assign(lrs[0])
++        loss = [float(v) for v in step(np.arange(batch, dtype='int32')).numpy()]
++        assert np.isfinite(loss).all(), loss
++        cost_after = ablation.compute_ebops(model, sample)
++        pred = np.asarray(model(x[:16], training=False))
++        with tempfile.TemporaryDirectory() as tmp:
++            path = Path(tmp) / 'm.keras'
++            model.save(path)
++            loaded = keras.models.load_model(path, compile=False)
++            reload_pred = np.asarray(loaded(x[:16], training=False))
++            np.testing.assert_allclose(reload_pred, pred, atol=2e-6, rtol=2e-6)
++            traced = ablation.compute_ebops(loaded, sample)
++            assert traced['total'] == cost_after['total']
++            reload_diff = float(np.max(np.abs(reload_pred - pred)))
++        weights = int(sum(np.prod(v.shape) for v in model.weights if v.name in ('kernel', 'bias', 'pos_table')))
++        report = {'name': row['name'], 'arm': row['arm'], 'seed': row['seed'],
++                  'params_count_params': int(model.count_params()), 'params_kernel_bias_pos': weights,
++                  'initial_ebops_synthetic': cost['total'], 'ebops_after_one_step': cost_after['total'],
++                  'one_step_loss': loss[0], 'lr': lrs, 'reload_max_abs_diff': reload_diff,
++                  'optimizer': tr.get('optimizer'), 'kernel_hashes': evidence['kernel_hashes'],
++                  'status': 'PASS'}
++        reports.append(report)
++        print('CONFIG_PREFLIGHT_PASS', row['name'], 'params', report['params_count_params'],
++              'kernel_bias_pos', weights, 'initial_ebops', cost['total'], 'reload_max_abs_diff',
++              reload_diff, flush=True)
++        del model, loaded, optimizer, step
++    if args.out:
++        args.out.write_text(json.dumps(reports, indent=2) + '\n')
++    print('PREFLIGHT_ALL_PASS', len(reports), flush=True)
++
++
++if __name__ == '__main__':
++    main()
+-- 
+2.50.1 (Apple Git-155)
+

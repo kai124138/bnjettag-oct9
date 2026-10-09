@@ -1,0 +1,166 @@
+# rules-b3.txt: epoch-500 pilot rule inputs, b3 (K=3 regime-B pod: A07-350-s1, C-s1, F-s1).
+# Pilot telemetry: validation only (n_val = 62,000), single seed, never quoted, selects nothing.
+# Written by readout/b3/rules_b3.py (uv run --with numpy python readout/b3/rules_b3.py).
+# Epochs: one-based = W&B _step = log '[epoch N/7000]'; zero-based = the runner's point['epoch'].
+INPUT readout/b3/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json sha256=9948e7b233dc6d09255beac5ad3bea461d1fa0cef7645362a444202eebca4eb9
+INPUT readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json sha256=95fb4b26cb1a87e1b135d92390dd685773928033bc56e3cb0bccb611f897683e
+INPUT readout/b3/readoutb3-pod.log sha256=5448b1c706e0c586504cddb451aba170a434629a53707926859bfe9c4dad251e
+INPUT readout/b3/wandb-history-b3.csv sha256=4cc869a8bdbd411fc2491e601b71025bde6333054b1ea5ad289f725ecf5ca13c
+INPUT readout/b3/pvc-extract-b3.json sha256=e9ce3f9c73aa592105d12e95a67a6708476d363b72e73c20dc9ec74a747ef43e
+INPUT code/evidence/static_floors_arms_s1_d25.json sha256=9999cb21382d337849cb20b52efa36839e912aca45f1fe8b00feeb64e5035b86
+INPUT logs/pilotb3-vqxc7-final-20260929T1613Z.log sha256=b9bdae588a4f3be247ac20213b91fc28f1e841f81009159399487a7e1e2c6158
+INPUT logs/chang0926-a07-350-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log sha256=4e63f20c6608928684e97d3d71c2f82616b126b1f026f51466db6ead2868bb53
+INPUT logs/chang0926-c-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log sha256=2ae76af5d532446e765c0a75377cf71d1bf2062e4faec5d1fde846c2368d5030
+INPUT logs/chang0926-f-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log sha256=3dff5726064d5cb64766f9a14a794934fd66e296c9d91aa805486f860e3b9480
+INPUT code/tree/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json sha256=fdf83bf20de9f02ad968c1b2f1eaa4ada270128819421893a03d09d501551905
+INPUT code/tree/campaigns/chang0926/configs/chang0926-c-n64-s1.json sha256=1f27443c764f95f42208be7c864c834bcf0fbe0be2583aa89d89c8fd3f7da156
+INPUT code/tree/campaigns/chang0926/configs/chang0926-f-n64-s1.json sha256=7815272edd7cf1c3b90b3755719082e7ccc6d5171d0000134a3bca7fb292e312
+
+[0] constants
+0.1 threshold_c (val top-1 accuracy, p_maj + 5 SE) = 0.2109624456315518 | src=PREFLIGHT.md:519
+0.2 A07-350-s1 target = 350000 | src=code/tree/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json:75
+0.3 A07-350-s1 traced 0-bit floor = 343053 | src=code/evidence/static_floors_arms_s1_d25.json:1115
+0.4 A07-350-s1 headroom = target - floor = 6947
+0.5 A07-350-s1 K1 threshold = 10 % of headroom = 694.7 (STUDY l. 1754-1755 prints 695)
+0.6 A07-350-s1 min_beta = 1e-10 | src=code/tree/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json:72
+0.2 C-s1 target = 5000000 | src=code/tree/campaigns/chang0926/configs/chang0926-c-n64-s1.json:75
+0.3 C-s1 traced 0-bit floor = 343053 | src=code/evidence/static_floors_arms_s1_d25.json:397
+0.4 C-s1 headroom = target - floor = 4656947
+0.5 C-s1 K1 threshold = 10 % of headroom = 465694.7 (STUDY l. 1754-1755 prints 465,695)
+0.6 C-s1 min_beta = 1e-10 | src=code/tree/campaigns/chang0926/configs/chang0926-c-n64-s1.json:72
+0.2 F-s1 target = 350000 | src=code/tree/campaigns/chang0926/configs/chang0926-f-n64-s1.json:75
+0.3 F-s1 traced 0-bit floor = 171526 | src=code/evidence/static_floors_arms_s1_d25.json:759
+0.4 F-s1 headroom = target - floor = 178474
+0.5 F-s1 K1 threshold = 10 % of headroom = 17847.4 (STUDY l. 1754-1755 prints 17,847)
+0.6 F-s1 min_beta = 1e-10 | src=code/tree/campaigns/chang0926/configs/chang0926-f-n64-s1.json:72
+0.7 A07 EBOPs per input channel-bit (all-1-bit per-layer totals / channels): input_proj 2048, bit_block_0_attn_Wq 2048, bit_block_0_attn_Wk 2048, bit_block_0_attn_Wv 2048, bit_block_0_attn_Wo 2048, bit_block_0_ffn_fc1 2048, bit_block_0_ffn_fc2 2048, head_fc1 32, head_fc2 5 | src=code/evidence/static_floors_arms_s1_d25.json:1136
+0.8 A07-350 per-constituent bound at 350k = floor(headroom / 2048) = 3 channel-bits (STUDY l. 1133: at most three 1-bit input channels)
+
+# A07-350-s1: committed trajectory = logs/chang0926-a07-350-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log lines before 35 with epoch <= 25, then lines after 35 (last ==== ARM_ATTEMPT); 51 traced epochs (one-based 1, 10, ..., 500)
+# C-s1: committed trajectory = logs/chang0926-c-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log lines before 35 with epoch <= 25, then lines after 35 (last ==== ARM_ATTEMPT); 51 traced epochs (one-based 1, 10, ..., 500)
+# F-s1: committed trajectory = logs/chang0926-f-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log lines before 51 with epoch <= 25, then lines after 51 (last ==== ARM_ATTEMPT); 51 traced epochs (one-based 1, 10, ..., 500)
+
+[X] cross-checks
+X.1 A07-350-s1 traced EBOPs, arm log vs W&B, 51 traced epochs: 51 equal
+X.2 A07-350-s1 W&B ebops_in_training / ebops vs logged ebops_in_training_over_traced: max |diff| = 0.0e+00
+X.1 C-s1 traced EBOPs, arm log vs W&B, 51 traced epochs: 51 equal
+X.2 C-s1 W&B ebops_in_training / ebops vs logged ebops_in_training_over_traced: max |diff| = 0.0e+00
+X.1 F-s1 traced EBOPs, arm log vs W&B, 51 traced epochs: 49 equal; differ at epoch 30: log 1221977 (logs/chang0926-f-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log:65) vs W&B 1217046 (readout/b3/wandb-history-b3.csv:1031), W&B holds the first attempt (re-run step dropped, RUN.md l. 907-910); epoch 40: log 687865 (logs/chang0926-f-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log:85) vs W&B 710660 (readout/b3/wandb-history-b3.csv:1041), W&B holds the first attempt (re-run step dropped, RUN.md l. 907-910)
+X.2 F-s1 W&B ebops_in_training / ebops vs logged ebops_in_training_over_traced: max |diff| = 0.0e+00
+X.3 A07-350-s1 zero-based epoch 329: PVC jsonl line 330 ebops 367730, in-training 378076 vs W&B step 330 equal | src=readout/b3/wandb-history-b3.csv:331
+X.3 A07-350-s1 zero-based epoch 499: PVC jsonl line 500 ebops 381965, in-training 381970 vs W&B step 500 equal | src=readout/b3/wandb-history-b3.csv:501
+X.3 C-s1 zero-based epoch 19: PVC jsonl line 20 ebops 4880224, in-training 4718944 vs W&B step 20 equal | src=readout/b3/wandb-history-b3.csv:521
+X.3 F-s1 zero-based epoch 289: PVC jsonl line 290 ebops 325319, in-training 330408 vs W&B step 290 equal | src=readout/b3/wandb-history-b3.csv:1291
+X.4 C-s1 snapshot500_primary: certify logged 4880224 = retraced 4880224 = stored 4880224, relative difference 0.0, CERTIFIED; state.json epoch 19 ebops 4880224 agrees | src=readout/b3/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json:30
+X.4 C-s1 snapshot500_auc_sensitivity: certify logged 4880224 = retraced 4880224 = stored 4880224, relative difference 0.0, CERTIFIED; state.json epoch 19 ebops 4880224 agrees | src=readout/b3/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json:48
+X.4 F-s1 snapshot500_primary: certify logged 325319 = retraced 325319 = stored 325319, relative difference 0.0, CERTIFIED; state.json epoch 289 ebops 325319 agrees | src=readout/b3/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json:74
+X.4 F-s1 snapshot500_auc_sensitivity: certify logged 325319 = retraced 325319 = stored 325319, relative difference 0.0, CERTIFIED; state.json epoch 289 ebops 325319 agrees | src=readout/b3/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json:92
+X.5 certification summary: CERTIFICATION_ALL_PASS 4 0 | src=readout/b3/readoutb3-pod.log:17; READOUT_JOB_DONE certify_exit=0 a26_exit=0 missing= none | src=readout/b3/readoutb3-pod.log:51
+X.6 RUN.md epoch-500 telemetry for A07-350-s1 vs arm log: identical | src=RUN.md:1047, logs/chang0926-a07-350-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log:517
+X.6 RUN.md epoch-500 telemetry for C-s1 vs arm log: identical | src=RUN.md:1048, logs/chang0926-c-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log:518
+
+[2] per run (evaluated snapshot = best-feasible-as-of-500, or model_min_ebops if none meets (a))
+2.1 A07-350-s1 traced epochs meeting (a) EBOPs <= target: 0 of 51; meeting (a)-(c): 0; feasible-degenerate (a) and not (b)/(c): 0 (state.json feasible_degenerate_epochs = 0) | src=logs/chang0926-a07-350-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log traced lines, readout/b3/pvc-extract-b3.json:53
+2.2 A07-350-s1 diverged: no (ARM_EXIT chang0926-a07-350-n64-s1 0 attempt 0; PACK_DONE diverged [] failed []) | src=logs/pilotb3-vqxc7-final-20260929T1613Z.log:12011, logs/pilotb3-vqxc7-final-20260929T1613Z.log:12042
+2.3 A07-350-s1 class: no feasible checkpoint (best_feasible null) | src=readout/b3/pvc-extract-b3.json:15
+2.4 A07-350-s1 evaluated snapshot: model_min_ebops.keras (no feasible checkpoint as of epoch 500), zero-based epoch 329 (one-based 330), traced EBOPs 367730, above floor 24677 | src=readout/b3/pvc-extract-b3.json:18, readout/b3/pvc-extract-b3.json:21
+2.5 A07-350-s1 headroom fraction (EBOPs - floor) / headroom = 24677 / 6947 = 3.5522
+2.6 A07-350-s1 snapshot validation top-1 accuracy 0.202597, macro-OvR AUC 0.500000 (validation, n = 62,000, single seed) | src=readout/b3/pvc-extract-b3.json:20, readout/b3/pvc-extract-b3.json:19
+2.7 A07-350-s1 A26 checkpoint: model_min_ebops.keras (no feasible checkpoint as of epoch: lowest-EBOPs file) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:23
+2.8 A07-350-s1 Q channels at 0 bits = 32 / 32 (fraction 1.000000; per head [8, 8, 8, 8]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:81
+2.8 A07-350-s1 K channels at 0 bits = 32 / 32 (fraction 1.000000; per head [8, 8, 8, 8]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:97
+2.8 A07-350-s1 V channels at 0 bits = 32 / 32 (fraction 1.000000; per head [8, 8, 8, 8]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:113
+2.9 A07-350-s1 entropy / log 64 (row-renormalized, [A26], validation n = 62,000) per head = 1.000000, 1.000000, 1.000000, 1.000000; per-jet sd 0.0000, 0.0000, 0.0000, 0.0000 | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:37, readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:44, readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:51, readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:58
+2.10 A07-350-s1 collapse label (STUDY l. 1403-1407: every head meets (i) all Q or all K at 0 bits, (ii) all V at 0 bits, or (iii) entropy/log 64 >= 0.99): Deep-Set-class; per head (i,ii,iii) = h0 (1, 1, 1); h1 (1, 1, 1); h2 (1, 1, 1); h3 (1, 1, 1)
+2.11 A07-350-s1 best-feasible validation accuracy: none (no feasible checkpoint)
+2.12 A07-350-s1 traced epochs failing (c) (val acc <= threshold_c): 27 of 51; every traced epoch from one-based 240 to 500 fails (c); traced epochs with val AUC exactly 0.500000: 19
+2.1 C-s1 traced epochs meeting (a) EBOPs <= target: 49 of 51; meeting (a)-(c): 49; feasible-degenerate (a) and not (b)/(c): 0 (state.json feasible_degenerate_epochs = 0) | src=logs/chang0926-c-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log traced lines, readout/b3/pvc-extract-b3.json:117
+2.2 C-s1 diverged: no (ARM_EXIT chang0926-c-n64-s1 0 attempt 0; PACK_DONE diverged [] failed []) | src=logs/pilotb3-vqxc7-final-20260929T1613Z.log:12040, logs/pilotb3-vqxc7-final-20260929T1613Z.log:12042
+2.3 C-s1 class: feasible | src=readout/b3/pvc-extract-b3.json:67
+2.4 C-s1 evaluated snapshot: model_best.keras (best-feasible-as-of-500), zero-based epoch 19 (one-based 20), traced EBOPs 4880224, above floor 4537171 | src=readout/b3/pvc-extract-b3.json:68, readout/b3/pvc-extract-b3.json:71
+2.5 C-s1 headroom fraction (EBOPs - floor) / headroom = 4537171 / 4656947 = 0.9743
+2.6 C-s1 snapshot validation top-1 accuracy 0.664726, macro-OvR AUC 0.900360 (validation, n = 62,000, single seed) | src=readout/b3/pvc-extract-b3.json:70, readout/b3/pvc-extract-b3.json:69
+2.7 C-s1 A26 checkpoint: model_best.keras (best_feasible present (feasible as of epoch)) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:140
+2.8 C-s1 Q channels at 0 bits = 0 / 32 (fraction 0.000000; per head [0, 0, 0, 0]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:198
+2.8 C-s1 K channels at 0 bits = 0 / 32 (fraction 0.000000; per head [0, 0, 0, 0]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:214
+2.8 C-s1 V channels at 0 bits = 3 / 32 (fraction 0.093750; per head [0, 0, 0, 3]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:230
+2.9 C-s1 entropy / log 64 (row-renormalized, [A26], validation n = 62,000) per head = 0.622127, 0.913695, 0.543640, 0.880046; per-jet sd 0.1820, 0.0834, 0.1707, 0.1379 | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:154, readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:161, readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:168, readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:175
+2.10 C-s1 collapse label (STUDY l. 1403-1407: every head meets (i) all Q or all K at 0 bits, (ii) all V at 0 bits, or (iii) entropy/log 64 >= 0.99): not Deep-Set-class; per head (i,ii,iii) = h0 (0, 0, 0); h1 (0, 0, 0); h2 (0, 0, 0); h3 (0, 0, 0)
+2.11 C-s1 best-feasible validation accuracy = 0.664726 (> threshold_c 0.2109624; margin +0.453763) | src=readout/b3/pvc-extract-b3.json:70
+2.12 C-s1 traced epochs failing (c) (val acc <= threshold_c): 0 of 51; traced epochs with val AUC exactly 0.500000: 0
+2.1 F-s1 traced epochs meeting (a) EBOPs <= target: 4 of 51; meeting (a)-(c): 1; feasible-degenerate (a) and not (b)/(c): 3 (state.json feasible_degenerate_epochs = 3) | src=logs/chang0926-f-n64-s1-kai-chang0926-pilotb3-42abed-0-final-20260929T1613Z.log traced lines, readout/b3/pvc-extract-b3.json:181
+2.2 F-s1 diverged: no (ARM_EXIT chang0926-f-n64-s1 0 attempt 0; PACK_DONE diverged [] failed []) | src=logs/pilotb3-vqxc7-final-20260929T1613Z.log:8578, logs/pilotb3-vqxc7-final-20260929T1613Z.log:12042
+2.3 F-s1 class: feasible | src=readout/b3/pvc-extract-b3.json:131
+2.4 F-s1 evaluated snapshot: model_best.keras (best-feasible-as-of-500), zero-based epoch 289 (one-based 290), traced EBOPs 325319, above floor 153793 | src=readout/b3/pvc-extract-b3.json:132, readout/b3/pvc-extract-b3.json:135
+2.5 F-s1 headroom fraction (EBOPs - floor) / headroom = 153793 / 178474 = 0.8617
+2.6 F-s1 snapshot validation top-1 accuracy 0.236177, macro-OvR AUC 0.594849 (validation, n = 62,000, single seed) | src=readout/b3/pvc-extract-b3.json:134, readout/b3/pvc-extract-b3.json:133
+2.7 F-s1 A26 checkpoint: model_best.keras (best_feasible present (feasible as of epoch)) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:257
+2.8 F-s1 Q channels at 0 bits = 24 / 24 (fraction 1.000000; per head [12, 12]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:301
+2.8 F-s1 K channels at 0 bits = 24 / 24 (fraction 1.000000; per head [12, 12]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:315
+2.8 F-s1 V channels at 0 bits = 24 / 24 (fraction 1.000000; per head [12, 12]) | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:329
+2.9 F-s1 entropy / log 64 (row-renormalized, [A26], validation n = 62,000) per head = 1.000000, 1.000000; per-jet sd 0.0000, 0.0000 | src=readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:271, readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json:278
+2.10 F-s1 collapse label (STUDY l. 1403-1407: every head meets (i) all Q or all K at 0 bits, (ii) all V at 0 bits, or (iii) entropy/log 64 >= 0.99): Deep-Set-class; per head (i,ii,iii) = h0 (1, 1, 1); h1 (1, 1, 1)
+2.11 F-s1 best-feasible validation accuracy = 0.236177 (> threshold_c 0.2109624; margin +0.025215) | src=readout/b3/pvc-extract-b3.json:134
+2.12 F-s1 traced epochs failing (c) (val acc <= threshold_c): 6 of 51; traced epochs with val AUC exactly 0.500000: 0
+
+[1] A07-350-s1 rule (Falsifier 'A07-350', STUDY l. 1129-1141; pilot bullet l. 1742-1746)
+1.1 feasible A07-350-s1 checkpoints as of epoch 500: 0 (traced epochs with EBOPs <= 350,000: 0 of 51; certify status 'no feasible checkpoint') | src=readout/b3/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json:102
+1.2 fallback = model_min_ebops at zero-based epoch 329 = state.json lowest; PVC jsonl line 330 (sha256 a68e14177f25329e...) | src=readout/b3/pvc-extract-b3.json:196
+1.3 per-layer traced EBOPs sum = 367730 = logged 367730 (equal); attn_softmax term = 343053 (= floor 343053: True) | src=readout/b3/pvc-extract-b3.json:210-223
+1.4 input_proj: input channels live 1 of 3 (1 at 1 bit), channel-bits 1, EBOPs 2048, 2048 per channel-bit (matches static 2048) | src=readout/b3/pvc-extract-b3.json:225
+1.4 bit_block_0_attn_Wq: input channels live 0 of 32 (0 at 1 bit), channel-bits 0, EBOPs 0 | src=readout/b3/pvc-extract-b3.json:234
+1.4 bit_block_0_attn_Wk: input channels live 0 of 32 (0 at 1 bit), channel-bits 0, EBOPs 0 | src=readout/b3/pvc-extract-b3.json:243
+1.4 bit_block_0_attn_Wv: input channels live 0 of 32 (0 at 1 bit), channel-bits 0, EBOPs 0 | src=readout/b3/pvc-extract-b3.json:297
+1.4 bit_block_0_attn_Wo: input channels live 0 of 32 (0 at 1 bit), channel-bits 0, EBOPs 0 | src=readout/b3/pvc-extract-b3.json:323
+1.4 bit_block_0_ffn_fc1: input channels live 10 of 32 (9 at 1 bit), channel-bits 11, EBOPs 22528, 2048 per channel-bit (matches static 2048) | src=readout/b3/pvc-extract-b3.json:332
+1.4 bit_block_0_ffn_fc2: input channels live 0 of 32 (0 at 1 bit), channel-bits 0, EBOPs 0 | src=readout/b3/pvc-extract-b3.json:341
+1.4 head_fc1: input channels live 3 of 32 (3 at 1 bit), channel-bits 3, EBOPs 96, 32 per channel-bit (matches static 32) | src=readout/b3/pvc-extract-b3.json:350
+1.4 head_fc2: input channels live 1 of 32 (1 at 1 bit), channel-bits 1, EBOPs 5, 5 per channel-bit (matches static 5) | src=readout/b3/pvc-extract-b3.json:359
+1.5 per-constituent layers total: 11 live input channels, 12 channel-bits, 24576 EBOPs = 12 x 2048; expected at <= 350k: <= 3 channel-bits (<= 6,144 EBOPs)
+1.6 above-floor decomposition: 24677 = per-constituent 24576 + head_fc1 96 + head_fc2 5 (True); checkpoint is 17730 over the 350,000 target; implied per-constituent ceiling at its own above-floor budget = floor(24677 / 2048) = 12 channel-bits
+1.7 attn_scores__in0 (Q) channels at 0 bits = 32 / 32 | src=readout/b3/pvc-extract-b3.json:252
+1.7 attn_scores__in1 (K) channels at 0 bits = 32 / 32 | src=readout/b3/pvc-extract-b3.json:261
+1.8 expectation (i) Q.K logits independent of the jet: Q and K at 0 bits on every channel -> logits constant; A26 entropy / log 64 = 1.000000 with per-jet sd 0.0 on all 4 heads (items 2.8-2.9) -> MATCH on the fallback
+1.9 expectation (ii) <= 3 per-constituent 1-bit input channels: 12 channel-bits on a checkpoint 17730 over target -> outside the expectation's domain (feasible checkpoints); per-layer EBOPs reconcile exactly with the widths and the floor (1.3-1.6) -> no floor-accounting discrepancy found
+1.10 descriptive, zero-based epoch 499 (jsonl line 500): EBOPs 381965, above floor 38912 = input_proj 2048 + ffn_fc1 36864; ffn_fc2 input live 0 of 32, head_fc1 input live 0 of 32 | src=readout/b3/pvc-extract-b3.json:373
+
+[3] C-s1 constraint readout (STUDY l. 1816-1840)
+3.1 (i) traced epochs with traced EBOPs > 5,000,000: 2 of 51 = 0.0392 (steps 1, 10) | src=readout/b3/wandb-history-b3.csv:502, readout/b3/wandb-history-b3.csv:511
+3.2 (ii) selected (best-feasible-as-of-500) traced EBOPs / 5,000,000 = 4880224 / 5,000,000 = 0.976045 (certified, X.4) | src=readout/b3/pvc-extract-b3.json:71
+3.3 (iii) beta at the last 10 traced epochs (steps 410-500): 1.339e-08, 1.431e-08, 1.422e-08, 1.471e-08, 1.5e-08, 1.527e-08, 1.549e-08, 1.596e-08, 1.617e-08, 1.679e-08; at 1e-10 (rel. diff <= 1e-6): 0 of 10; min beta / 1e-10 = 133.9 | src=readout/b3/wandb-history-b3.csv:911-1001
+3.4 traced EBOPs > 5,000,000 in the same last-10 window: 0 of 10; traced EBOPs there 4460863-4671737
+3.5 rule: not slack: (iii) fails, neither registered label applies
+
+[4] Regime-B PID input rule K1 (STUDY l. 1747-1778), r = W&B ebops_in_training / ebops on traced epochs
+4.1 A07-350-s1 one-based 100-500 (primary): n = 41 traced epochs (steps 100-500), median r = 1.005448 (min 0.9895, max 1.0573) | src=readout/b3/wandb-history-b3.csv:101-501
+4.2 A07-350-s1 one-based 100-500 (primary): implied traced offset 350,000 x (1 - r^-0.9) = 1707.4; share of headroom 0.2458; threshold 694.7 -> EXCEEDS (fires)
+4.3 A07-350-s1 one-based 100-500 (primary): r at which the offset equals the threshold r* = 1.002210; r values above r*: 23 of 41; order-statistic interval on the median (x_(14), x_(28), coverage 0.972 if draws were independent; the series is autocorrelated) = [1.000098, 1.013212]
+4.4 A07-350-s1 descriptive: median in-training - traced = 2048 EBOPs over the same 41 traced epochs; stationary point T x r^-0.9 = 348293
+4.1 A07-350-s1 zero-based 100-500: n = 40 traced epochs (steps 110-500), median r = 1.005419 (min 0.9895, max 1.0573) | src=readout/b3/wandb-history-b3.csv:111-501
+4.2 A07-350-s1 zero-based 100-500: implied traced offset 350,000 x (1 - r^-0.9) = 1698.3; share of headroom 0.2445; threshold 694.7 -> EXCEEDS (fires)
+4.3 A07-350-s1 zero-based 100-500: r at which the offset equals the threshold r* = 1.002210; r values above r*: 22 of 40; order-statistic interval on the median (x_(14), x_(27), coverage 0.962 if draws were independent; the series is autocorrelated) = [1.000098, 1.010733]
+4.1 C-s1 one-based 100-500 (primary): n = 41 traced epochs (steps 100-500), median r = 1.080792 (min 1.0156, max 1.1493) | src=readout/b3/wandb-history-b3.csv:601-1001
+4.2 C-s1 one-based 100-500 (primary): implied traced offset 5,000,000 x (1 - r^-0.9) = 337678.6; share of headroom 0.0725; threshold 465694.7 -> below (does not fire)
+4.3 C-s1 one-based 100-500 (primary): r at which the offset equals the threshold r* = 1.114749; r values above r*: 5 of 41; order-statistic interval on the median (x_(14), x_(28), coverage 0.972 if draws were independent; the series is autocorrelated) = [1.061345, 1.092103]
+4.4 C-s1 descriptive: median in-training - traced = 377098 EBOPs over the same 41 traced epochs; stationary point T x r^-0.9 = 4662321
+4.1 C-s1 zero-based 100-500: n = 40 traced epochs (steps 110-500), median r = 1.081843 (min 1.0156, max 1.1493) | src=readout/b3/wandb-history-b3.csv:611-1001
+4.2 C-s1 zero-based 100-500: implied traced offset 5,000,000 x (1 - r^-0.9) = 341757.3; share of headroom 0.0734; threshold 465694.7 -> below (does not fire)
+4.3 C-s1 zero-based 100-500: r at which the offset equals the threshold r* = 1.114749; r values above r*: 5 of 40; order-statistic interval on the median (x_(14), x_(27), coverage 0.962 if draws were independent; the series is autocorrelated) = [1.062074, 1.092103]
+4.1 F-s1 one-based 100-500 (primary): n = 41 traced epochs (steps 100-500), median r = 1.028816 (min 0.9975, max 1.1212) | src=readout/b3/wandb-history-b3.csv:1101-1501
+4.2 F-s1 one-based 100-500 (primary): implied traced offset 350,000 x (1 - r^-0.9) = 8835.3; share of headroom 0.0495; threshold 17847.4 -> below (does not fire)
+4.3 F-s1 one-based 100-500 (primary): r at which the offset equals the threshold r* = 1.059878; r values above r*: 9 of 41; order-statistic interval on the median (x_(14), x_(28), coverage 0.972 if draws were independent; the series is autocorrelated) = [1.020872, 1.040886]
+4.4 F-s1 descriptive: median in-training - traced = 11648 EBOPs over the same 41 traced epochs; stationary point T x r^-0.9 = 341165
+4.1 F-s1 zero-based 100-500: n = 40 traced epochs (steps 110-500), median r = 1.028048 (min 0.9975, max 1.1212) | src=readout/b3/wandb-history-b3.csv:1111-1501
+4.2 F-s1 zero-based 100-500: implied traced offset 350,000 x (1 - r^-0.9) = 8605.9; share of headroom 0.0482; threshold 17847.4 -> below (does not fire)
+4.3 F-s1 zero-based 100-500: r at which the offset equals the threshold r* = 1.059878; r values above r*: 8 of 40; order-statistic interval on the median (x_(14), x_(27), coverage 0.962 if draws were independent; the series is autocorrelated) = [1.020872, 1.037209]
+4.5 formula check: r = 1 gives offset 0.0 (limiting case); the regime-A medians E1-s1 1.0920 and D-s1 1.0717 give 350,000 x (1 - r^-0.9) = 26,654 and 21,147, the STUDY's 26,654 and 21,147 | src=STUDY.md:1775-1776
+4.6 |median r A07-350-s1 - median r C-s1| = 0.075343 -> > 0.02; gap between their median intervals (4.3) = 0.048133 (> 0.02)
+4.6 |median r A07-350-s1 - median r F-s1| = 0.023368 -> > 0.02; gap between their median intervals (4.3) = 0.007660 (<= 0.02)
+4.6 |median r C-s1 - median r F-s1| = 0.051976 -> > 0.02; gap between their median intervals (4.3) = 0.020460 (> 0.02)
+4.7 A07-350-s1 wind-up clause, last cycle = one-based epochs 1-500: untraced epochs with W&B ebops_in_training > 350,000: 449 of 449 (minimum 367730 at step 331) | src=readout/b3/wandb-history-b3.csv:332
+4.8 A07-350-s1 traced epochs within 1 % of the floor (<= 346483.53): 0 of 51; minimum traced 367730 at step 330 = 1.0719 x floor | src=readout/b3/wandb-history-b3.csv:331
+4.9 A07-350-s1 distance to target: minimum traced EBOPs - 350,000 = 17730; at step 500 31965
+4.10 A07-350-s1 last 10 traced epochs (steps 410-500): traced EBOPs 373837-400434 = 1.0681-1.1441 x target; traced epochs over target in the whole cycle 51 of 51; beta at step 500 7.113e-05 = 0.0711 x max_beta 0.001 | src=readout/b3/wandb-history-b3.csv:411-501, code/tree/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json:73
+4.10 C-s1 last 10 traced epochs (steps 410-500): traced EBOPs 4460863-4671737 = 0.8922-0.9343 x target; traced epochs over target in the whole cycle 2 of 51; beta at step 500 1.679e-08 = 1.68e-05 x max_beta 0.001 | src=readout/b3/wandb-history-b3.csv:911-1001, code/tree/campaigns/chang0926/configs/chang0926-c-n64-s1.json:73
+4.10 F-s1 last 10 traced epochs (steps 410-500): traced EBOPs 392308-488066 = 1.1209-1.3945 x target; traced epochs over target in the whole cycle 47 of 51; beta at step 500 1.955e-05 = 0.0196 x max_beta 0.001 | src=readout/b3/wandb-history-b3.csv:1411-1501, code/tree/campaigns/chang0926/configs/chang0926-f-n64-s1.json:73
+

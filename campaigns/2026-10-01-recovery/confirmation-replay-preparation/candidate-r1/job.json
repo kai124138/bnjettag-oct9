@@ -1,0 +1,209 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "annotations": {
+      "bnjettag.io/arms-per-pod": "1",
+      "bnjettag.io/single-arm-justified": "Bounded four-prediction diagnostic of one retained artifact; concurrency would change the diagnostic question.30min,nooptimizersteps; not a training utilization certificate."
+    },
+    "labels": {
+      "app": "kai-confirm-onegpu",
+      "campaign": "confirmation-20260923",
+      "user": "kai"
+    },
+    "name": "kai-confirm1001-replay-a02s3-r1",
+    "namespace": "cms-ml"
+  },
+  "spec": {
+    "activeDeadlineSeconds": 1800,
+    "backoffLimit": 0,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "kai-confirm-onegpu",
+          "campaign": "confirmation-20260923",
+          "user": "kai"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "args": [
+              "set -euo pipefail\nmkdir -p /work/code\necho '43495e085ae734c232e90003e96e96bf5034e729ff99d1bea6ee59b30a15a1f5  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport PYTHONDONTWRITEBYTECODE=1\npython - <<'VERIFY_ORIGINAL'\nimport base64,hashlib,json,tarfile,io\nfrom pathlib import Path\np=Path('/work/code');cm=json.loads((p/'diagnostics/original-source-configmap.json').read_bytes());raw=base64.b64decode(cm['binaryData']['hgq2.tar.gz']);assert hashlib.sha256(raw).hexdigest()=='26f3cc40a8f7c9ff378760c5b0d8ce046508cb4de585f9c4b80ea93653515a45'\nwith tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tf:\n files=[m for m in tf if m.isfile()];assert len(files)==152\n for m in files:assert (p/m.name.removeprefix('code/')).read_bytes()==tf.extractfile(m).read()\nVERIFY_ORIGINAL\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\ncd /work/code\nexec python -u /work/code/diagnostics/probe.py --scope /work/code/diagnostics/scope.json\n"
+            ],
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "env": [
+              {
+                "name": "KERAS_BACKEND",
+                "value": "tensorflow"
+              },
+              {
+                "name": "MPLBACKEND",
+                "value": "Agg"
+              },
+              {
+                "name": "TF_FORCE_GPU_ALLOW_GROWTH",
+                "value": "true"
+              },
+              {
+                "name": "TF_CPP_MIN_LOG_LEVEL",
+                "value": "2"
+              },
+              {
+                "name": "NVIDIA_TF32_OVERRIDE",
+                "value": "0"
+              },
+              {
+                "name": "OMP_NUM_THREADS",
+                "value": "4"
+              },
+              {
+                "name": "TF_NUM_INTRAOP_THREADS",
+                "value": "4"
+              },
+              {
+                "name": "TF_NUM_INTEROP_THREADS",
+                "value": "2"
+              },
+              {
+                "name": "OPENBLAS_NUM_THREADS",
+                "value": "1"
+              },
+              {
+                "name": "WANDB_MODE",
+                "value": "disabled"
+              },
+              {
+                "name": "JOB_NAME",
+                "value": "kai-confirm1001-replay-a02s3-r1"
+              },
+              {
+                "name": "POD_UID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "apiVersion": "v1",
+                    "fieldPath": "metadata.uid"
+                  }
+                }
+              },
+              {
+                "name": "RUN_ID",
+                "valueFrom": {
+                  "fieldRef": {
+                    "apiVersion": "v1",
+                    "fieldPath": "metadata.labels['bnjettag.io/run-id']"
+                  }
+                }
+              },
+              {
+                "name": "HANDOFF_SHA256",
+                "valueFrom": {
+                  "fieldRef": {
+                    "apiVersion": "v1",
+                    "fieldPath": "metadata.annotations['bnjettag.io/handoff-sha256']"
+                  }
+                }
+              }
+            ],
+            "image": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "diagnostic",
+            "resources": {
+              "limits": {
+                "cpu": "4",
+                "ephemeral-storage": "12Gi",
+                "memory": "16Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "4",
+                "ephemeral-storage": "12Gi",
+                "memory": "16Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "terminationGracePeriodSeconds": 30,
+        "volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-confirm1001-replay-a02s3-r1-code"
+            },
+            "name": "code"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "12Gi"
+            },
+            "name": "work"
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    },
+    "ttlSecondsAfterFinished": 604800
+  }
+}

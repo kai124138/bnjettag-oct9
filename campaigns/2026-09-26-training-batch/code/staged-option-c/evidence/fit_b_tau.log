@@ -1,0 +1,58 @@
+# TELEMETRY, NOT RESULTS. Regime-A pilot (stopped), traced every epoch, far from target (T=350000); b, tau fitted on traced log10 EBOPs vs log10 beta.
+# option (c) bound (settled plant, p=1.0, i=0.05, D=10, per_epoch): b < 0.800
+RUN A-s1 epochs 0-146 (147 rows after dedupe) ebops 1.174e+07->4.459e+05 beta 1e-07->8.5e-07 lr 0.003->0.00239
+RUN A-s2 epochs 0-145 (146 rows after dedupe) ebops 1.172e+07->4.866e+05 beta 1e-07->9.5e-07 lr 0.003->0.0024
+RUN D-s1 epochs 0-167 (168 rows after dedupe) ebops 1.178e+07->4.775e+05 beta 1e-07->1.2e-06 lr 0.003->0.00222
+RUN E1-s1 epochs 0-87 (88 rows after dedupe) ebops 1.069e+07->4.457e+05 beta 1e-07->2.7e-07 lr 0.003->0.00277
+FIT signal=traced form=arx w1 e1-40 (fresh-init collapse) pooled n=156: b=1.76 CI[0.991, 3.73] tau=17.2 CI[14.2, 33.1] a=0.9419 rho_c=0.705 CI[0.633, 1.05] boot_frac(b>=0.80)=0.993
+    per-run A-s1:b=1.74,tau=15.9,a=0.937,rho=0.711,corr(lb,e)=0.849 | A-s2:b=3.55,tau=17.9,a=0.944,rho=1.45,corr(lb,e)=0.266 | D-s1:b=1.68,tau=14.5,a=0.931,rho=0.717,corr(lb,e)=0.737 | E1-s1:b=1.35,tau=21.9,a=0.954,rho=0.694,corr(lb,e)=0.729
+FIT signal=traced form=arx w2 e40-90 pooled n=201: b=0.213 CI[0.184, 0.234] tau=2.61 CI[1.34, 2.64] a=0.6162 rho_c=0.914 CI[0.907, 0.923] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.2,tau=2.15,a=0.534,rho=0.918,corr(lb,e)=0.996 | A-s2:b=0.17,tau=1.35,a=0.259,rho=0.928,corr(lb,e)=0.998 | D-s1:b=0.251,tau=2.86,a=0.650,rho=0.902,corr(lb,e)=0.998 | E1-s1:b=0.292,tau=1.62,a=0.383,rho=0.89,corr(lb,e)=0.995
+FIT signal=traced form=arx w3 e90-end pooled n=191: b=0.0885 CI[0.0181, 0.162] tau=2.7 CI[1.6, 3.28] a=0.6298 rho_c=0.959 CI[0.931, 0.991] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.211,tau=1.2,a=0.164,rho=0.914,corr(lb,e)=0.994 | A-s2:b=0.0586,tau=1.88,a=0.468,rho=0.972,corr(lb,e)=0.997 | D-s1:b=0.0654,tau=2.56,a=0.609,rho=0.969,corr(lb,e)=0.990
+FIT signal=traced form=arx w23 e40-end pooled n=389: b=0.168 CI[0.147, 0.204] tau=4.21 CI[2.43, 5.02] a=0.7623 rho_c=0.929 CI[0.917, 0.936] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.214,tau=1.61,a=0.378,rho=0.913,corr(lb,e)=0.991 | A-s2:b=0.127,tau=2.73,a=0.633,rho=0.944,corr(lb,e)=0.998 | D-s1:b=0.178,tau=4.28,a=0.766,rho=0.925,corr(lb,e)=0.994 | E1-s1:b=0.292,tau=1.62,a=0.383,rho=0.89,corr(lb,e)=0.995
+FIT signal=traced form=arx+trend w1 e1-40 (fresh-init collapse) pooled n=156: b=0.725 CI[-0.154, 2.3] tau=8.45 CI[4.03, 19.9] a=0.8817 rho_c=0.799 CI[0.706, 1.1] boot_frac(b>=0.80)=0.204
+    per-run A-s1:b=0.484,tau=4.96,a=0.798,rho=0.844,corr(lb,e)=0.849 | A-s2:b=2.3,tau=11.3,a=0.912,rho=1.4,corr(lb,e)=0.266 | D-s1:b=1.2,tau=11.7,a=0.915,rho=0.747,corr(lb,e)=0.737 | E1-s1:b=0.357,tau=5.59,a=0.821,rho=0.871,corr(lb,e)=0.729
+FIT signal=traced form=arx+trend w2 e40-90 pooled n=201: b=0.0915 CI[-0.0503, 0.304] tau=2.29 CI[1.03, 2.63] a=0.5635 rho_c=0.958 CI[0.89, 1.03] boot_frac(b>=0.80)=0.002
+    per-run A-s1:b=-0.264,tau=0.989,a=-0.012,rho=1.17,corr(lb,e)=0.996 | A-s2:b=0.18,tau=1.36,a=0.264,rho=0.925,corr(lb,e)=0.998 | D-s1:b=1.31,tau=3.9,a=0.744,rho=1.57,corr(lb,e)=0.998 | E1-s1:b=0.878,tau=2.18,a=0.542,rho=1.1,corr(lb,e)=0.995
+FIT signal=traced form=arx+trend w3 e90-end pooled n=191: b=0.213 CI[-0.297, 1.59] tau=3.02 CI[1.04, 5.82] a=0.6689 rho_c=0.914 CI[0.819, 1.71] boot_frac(b>=0.80)=0.078
+    per-run A-s1:b=0.127,tau=1.1,a=0.087,rho=0.944,corr(lb,e)=0.994 | A-s2:b=nan,tau=inf,a=1.628,rho=nan,corr(lb,e)=0.997 | D-s1:b=nan,tau=inf,a=1.249,rho=nan,corr(lb,e)=0.990
+FIT signal=traced form=arx+trend w23 e40-end pooled n=389: b=0.3 CI[0.0755, 0.652] tau=4.48 CI[2.38, 5.67] a=0.7768 rho_c=0.887 CI[0.82, 0.965] boot_frac(b>=0.80)=0.004
+    per-run A-s1:b=0.168,tau=1.51,a=0.338,rho=0.929,corr(lb,e)=0.991 | A-s2:b=0.575,tau=2.54,a=0.607,rho=0.83,corr(lb,e)=0.998 | D-s1:b=0.839,tau=4.12,a=0.757,rho=0.912,corr(lb,e)=0.994 | E1-s1:b=0.878,tau=2.18,a=0.542,rho=1.1,corr(lb,e)=0.995
+FIT signal=traced form=diff w1 e1-40 (fresh-init collapse) pooled n=156: b=5.06 CI[0.585, 22.9] tau=4.48 CI[1.4, 20.2] a=0.7770 rho_c=6.59 CI[0.856, 12.6] boot_frac(b>=0.80)=0.923
+    per-run A-s1:b=2.84,tau=2.65,a=0.623,rho=3.93,corr(lb,e)=0.849 | A-s2:b=9.93,tau=7.32,a=0.863,rho=10.9,corr(lb,e)=0.266 | D-s1:b=nan,tau=inf,a=1.028,rho=nan,corr(lb,e)=0.737 | E1-s1:b=1.91,tau=2.15,a=0.535,rho=2.59,corr(lb,e)=0.729
+FIT signal=traced form=diff w2 e40-90 pooled n=201: b=11 CI[0.535, 37.5] tau=8.72 CI[1.04, 27.6] a=0.8853 rho_c=11 CI[0.831, 16.5] boot_frac(b>=0.80)=0.809
+    per-run A-s1:b=1.35,tau=1.91,a=0.477,rho=1.78,corr(lb,e)=0.996 | A-s2:b=19.7,tau=14.8,a=0.932,rho=14.1,corr(lb,e)=0.998 | D-s1:b=8.85,tau=7.05,a=0.858,rho=9.86,corr(lb,e)=0.998 | E1-s1:b=nan,tau=inf,a=1.568,rho=nan,corr(lb,e)=0.995
+FIT signal=traced form=diff w3 e90-end pooled n=191: b=nan CI[n/a: 1996 of 2000 reps a>=1] tau=inf CI[n/a: 1996 of 2000 reps a>=1] a=3.4874 rho_c=nan CI[n/a: 1996 of 2000 reps a>=1] boot_frac(b>=0.80)=0.002
+    per-run A-s1:b=2.59,tau=2.4,a=0.583,rho=3.58,corr(lb,e)=0.994 | A-s2:b=nan,tau=inf,a=3.796,rho=nan,corr(lb,e)=0.997 | D-s1:b=nan,tau=inf,a=5.095,rho=nan,corr(lb,e)=0.990
+FIT signal=traced form=diff w23 e40-end pooled n=389: b=2.81 CI[0.554, 13.6] tau=2.73 CI[1.05, 10.4] a=0.6341 rho_c=3.88 CI[0.832, 12.1] boot_frac(b>=0.80)=0.886
+    per-run A-s1:b=0.915,tau=1.38,a=0.274,rho=1.16,corr(lb,e)=0.991 | A-s2:b=2.69,tau=2.48,a=0.597,rho=3.72,corr(lb,e)=0.998 | D-s1:b=6.13,tau=5.25,a=0.810,rho=7.65,corr(lb,e)=0.994 | E1-s1:b=nan,tau=inf,a=1.568,rho=nan,corr(lb,e)=0.995
+FIT signal=in_training form=arx w1 e1-40 (fresh-init collapse) pooled n=156: b=1.35 CI[0.061, 2.98] tau=18.6 CI[16.2, 41.6] a=0.9463 rho_c=0.712 CI[0.586, 0.974] boot_frac(b>=0.80)=0.738
+    per-run A-s1:b=1.05,tau=18.9,a=0.947,rho=0.727,corr(lb,e)=0.849 | A-s2:b=2.81,tau=18.5,a=0.946,rho=0.915,corr(lb,e)=0.266 | D-s1:b=1.39,tau=15.7,a=0.936,rho=0.723,corr(lb,e)=0.737 | E1-s1:b=0.812,tau=25.7,a=0.961,rho=0.638,corr(lb,e)=0.729
+FIT signal=in_training form=arx w2 e40-90 pooled n=201: b=0.179 CI[0.152, 0.205] tau=3.64 CI[1.52, 3.56] a=0.7252 rho_c=0.925 CI[0.916, 0.935] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.181,tau=3.02,a=0.669,rho=0.924,corr(lb,e)=0.996 | A-s2:b=0.139,tau=2.36,a=0.576,rho=0.939,corr(lb,e)=0.998 | D-s1:b=0.211,tau=4.16,a=0.760,rho=0.914,corr(lb,e)=0.998 | E1-s1:b=0.245,tau=1.84,a=0.456,rho=0.904,corr(lb,e)=0.995
+FIT signal=in_training form=arx w3 e90-end pooled n=191: b=0.125 CI[0.031, 0.185] tau=3.37 CI[1.91, 4.07] a=0.7037 rho_c=0.945 CI[0.923, 0.985] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.285,tau=1.25,a=0.200,rho=0.892,corr(lb,e)=0.994 | A-s2:b=0.111,tau=2.86,a=0.650,rho=0.95,corr(lb,e)=0.997 | D-s1:b=0.0863,tau=2.74,a=0.635,rho=0.96,corr(lb,e)=0.990
+FIT signal=in_training form=arx w23 e40-end pooled n=389: b=0.174 CI[0.15, 0.207] tau=5.12 CI[3.09, 6.36] a=0.8046 rho_c=0.926 CI[0.915, 0.935] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.236,tau=2.56,a=0.610,rho=0.906,corr(lb,e)=0.991 | A-s2:b=0.132,tau=2.89,a=0.654,rho=0.942,corr(lb,e)=0.998 | D-s1:b=0.181,tau=4.58,a=0.781,rho=0.924,corr(lb,e)=0.994 | E1-s1:b=0.245,tau=1.84,a=0.456,rho=0.904,corr(lb,e)=0.995
+FIT signal=in_training form=arx+trend w1 e1-40 (fresh-init collapse) pooled n=156: b=0.478 CI[-0.395, 1.15] tau=8.44 CI[3.66, 17.3] a=0.8815 rho_c=0.84 CI[0.74, 1.28] boot_frac(b>=0.80)=0.046
+    per-run A-s1:b=0.261,tau=5.78,a=0.827,rho=0.897,corr(lb,e)=0.849 | A-s2:b=1.79,tau=11.2,a=0.910,rho=0.964,corr(lb,e)=0.266 | D-s1:b=0.912,tau=12.1,a=0.917,rho=0.768,corr(lb,e)=0.737 | E1-s1:b=0.197,tau=5.53,a=0.819,rho=0.918,corr(lb,e)=0.729
+FIT signal=in_training form=arx+trend w2 e40-90 pooled n=201: b=0.0307 CI[-0.0996, 0.134] tau=3.16 CI[1.17, 3.2] a=0.6835 rho_c=0.985 CI[0.941, 1.05] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=-0.26,tau=1.69,a=0.407,rho=1.17,corr(lb,e)=0.996 | A-s2:b=-0.256,tau=1.71,a=0.415,rho=1.16,corr(lb,e)=0.998 | D-s1:b=0.0812,tau=4.04,a=0.753,rho=0.962,corr(lb,e)=0.998 | E1-s1:b=0.111,tau=1.73,a=0.420,rho=0.95,corr(lb,e)=0.995
+FIT signal=in_training form=arx+trend w3 e90-end pooled n=191: b=-0.314 CI[-0.616, -0.0694] tau=2.2 CI[1.29, 2.42] a=0.5463 rho_c=1.21 CI[1.04, 1.52] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.271,tau=1.24,a=0.193,rho=0.896,corr(lb,e)=0.994 | A-s2:b=-0.547,tau=1.66,a=0.396,rho=1.44,corr(lb,e)=0.997 | D-s1:b=-0.616,tau=1.36,a=0.264,rho=1.52,corr(lb,e)=0.990
+FIT signal=in_training form=arx+trend w23 e40-end pooled n=389: b=-0.0176 CI[-0.144, 0.116] tau=4.4 CI[2.49, 5.32] a=0.7727 rho_c=1.01 CI[0.948, 1.08] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.0392,tau=1.51,a=0.336,rho=0.981,corr(lb,e)=0.991 | A-s2:b=0.0619,tau=2.83,a=0.647,rho=0.971,corr(lb,e)=0.998 | D-s1:b=0.145,tau=4.59,a=0.782,rho=0.937,corr(lb,e)=0.994 | E1-s1:b=0.111,tau=1.73,a=0.420,rho=0.95,corr(lb,e)=0.995
+FIT signal=in_training form=diff w1 e1-40 (fresh-init collapse) pooled n=156: b=0.634 CI[-0.267, 0.39] tau=1.25 CI[0.838, 1.25] a=0.2006 rho_c=0.821 CI[0.866, 1.17] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.554,tau=1.11,a=0.102,rho=0.834,corr(lb,e)=0.849 | A-s2:b=1.33,tau=1.53,a=0.347,rho=1.75,corr(lb,e)=0.266 | D-s1:b=0.522,tau=1.57,a=0.362,rho=0.839,corr(lb,e)=0.737 | E1-s1:b=0.387,tau=1.01,a=0.007,rho=0.866,corr(lb,e)=0.729
+FIT signal=in_training form=diff w2 e40-90 pooled n=201: b=-0.0553 CI[-0.0878, 0.0868] tau=0.842 CI[0.69, 0.849] a=-0.1875 rho_c=1.03 CI[0.96, 1.05] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=-0.18,tau=0.82,a=-0.220,rho=1.11,corr(lb,e)=0.996 | A-s2:b=0.0577,tau=1.02,a=0.020,rho=0.973,corr(lb,e)=0.998 | D-s1:b=-0.0692,tau=0.82,a=-0.220,rho=1.04,corr(lb,e)=0.998 | E1-s1:b=-0.0481,tau=0.796,a=-0.256,rho=1.03,corr(lb,e)=0.995
+FIT signal=in_training form=diff w3 e90-end pooled n=191: b=-0.213 CI[-0.326, 0.0142] tau=0.707 CI[0.64, 0.754] a=-0.4144 rho_c=1.13 CI[0.993, 1.22] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=0.0197,tau=0.674,a=-0.485,rho=0.99,corr(lb,e)=0.994 | A-s2:b=-0.085,tau=0.713,a=-0.403,rho=1.05,corr(lb,e)=0.997 | D-s1:b=-0.297,tau=0.743,a=-0.346,rho=1.2,corr(lb,e)=0.990
+FIT signal=in_training form=diff w23 e40-end pooled n=389: b=-0.173 CI[-0.256, 0.0242] tau=0.735 CI[0.661, 0.758] a=-0.3604 rho_c=1.1 CI[0.988, 1.16] boot_frac(b>=0.80)=0.000
+    per-run A-s1:b=-0.0437,tau=0.712,a=-0.404,rho=1.02,corr(lb,e)=0.991 | A-s2:b=-0.0306,tau=0.785,a=-0.274,rho=1.02,corr(lb,e)=0.998 | D-s1:b=-0.27,tau=0.746,a=-0.340,rho=1.18,corr(lb,e)=0.994 | E1-s1:b=-0.0481,tau=0.796,a=-0.256,rho=1.03,corr(lb,e)=0.995
+# p_max for b=0.8: settled bound p < 1.000
+# p_max for b=1.0: settled bound p < 0.750
+# p_max for b=1.2: settled bound p < 0.583
+# p_max for b=1.5: settled bound p < 0.417

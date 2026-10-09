@@ -1,0 +1,1702 @@
+From 9de13c33071a8f5800235f801eedf0343fbc1cbb Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 09:49:43 -0700
+Subject: [PATCH] D25: opt-in quant.i_decay_speed (jsc150 1e-3) on the
+ quantizers i_decay_speeds() lists; generator sets 0.001 on every [D19] arm,
+ C-PRIME unset; CPU gate asserts the recorded values; floors retraced
+ (unchanged)
+
+---
+ bnhgq2/qat.py                                 |  31 +++++
+ campaigns/chang0926/cache_configs/n64.json    |   3 +-
+ campaigns/chang0926/config_diff_a_s1.json     |   1 +
+ .../chang0926/configs/chang0926-a-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s8.json |   3 +-
+ .../configs/chang0926-a07-350-n64-s1.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s2.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s3.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s4.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s5.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s6.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s7.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s8.json     |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s8.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s8.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s8.json |   3 +-
+ .../configs/chang0926-e1-n64-s1.json          |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s8.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s8.json |   3 +-
+ campaigns/chang0926/cpu_gate.py               |  20 ++-
+ campaigns/chang0926/generate.py               |   3 +-
+ campaigns/chang0926/index.json                | 114 +++++++++---------
+ campaigns/chang0926/static_floors.json        |  16 +--
+ tests/test_i_decay_speed.py                   |  76 ++++++++++++
+ 65 files changed, 310 insertions(+), 125 deletions(-)
+ create mode 100644 tests/test_i_decay_speed.py
+
+diff --git a/bnhgq2/qat.py b/bnhgq2/qat.py
+index f7d1e92..68a883f 100644
+--- a/bnhgq2/qat.py
++++ b/bnhgq2/qat.py
+@@ -417,6 +417,19 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+     if (act_overflow != "SAT" or softmax_quant != "fixed") and (act_calib != "free" or not binv):
+         raise ValueError(f"{cfg['name']}: act_overflow/softmax_quant need binary weights "
+                          "and act_calib='free'")
++    # [D25] (2026-09-27, opt-in): quant.i_decay_speed sets HGQ2's per-step decay of a WRAP
++    # quantizer's integer bits (i <- max(i - i_decay_speed, i_batch) in training) on exactly
++    # the quantizers ablation.i_decay_speeds() records. Absent => nothing below runs and the
++    # HGQ2 default (0.01) stays, byte-identical to the build without this key.
++    i_decay_speed = cfg["quant"].get("i_decay_speed")
++    if i_decay_speed is not None:
++        if isinstance(i_decay_speed, bool) or not isinstance(i_decay_speed, (int, float)) \
++                or not np.isfinite(i_decay_speed) or i_decay_speed <= 0:
++            raise ValueError(f"{cfg['name']}: quant.i_decay_speed must be a finite float > 0, "
++                             f"got {i_decay_speed!r}")
++        if act_overflow != "WRAP":
++            raise ValueError(f"{cfg['name']}: quant.i_decay_speed needs quant.act_overflow='WRAP' "
++                             "(only WRAP quantizers carry i_decay_speed)")
+     taps: dict = {}
+ 
+     # Norm placement: 'subln' (default -> PSubLN, existing behavior) | 'none' (identity
+@@ -600,9 +613,27 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         out = dense("head_fc2", C, h, use_bias=True)
+ 
+         model = keras.Model(x_in, out, name=cfg["name"])
++    if i_decay_speed is not None:
++        set_i_decay_speed(model, float(i_decay_speed))
+     return model, taps
+ 
+ 
++def set_i_decay_speed(model, value: float) -> int:
++    """[D25] assign `value` to `_i_decay_speed` of every quantizer that
++    ablation.i_decay_speeds() enumerates (activation_quantizers with `_i_decay_speed`).
++    The variable exists already (HGQ2 creates it in build() for WRAP), so no new weights and
++    no RNG draw. Returns the number assigned; raises if none."""
++    from .ebops_target import activation_quantizers
++    n = 0
++    for _, q in activation_quantizers(model):
++        if hasattr(q, "_i_decay_speed"):
++            q._i_decay_speed.assign(value)
++            n += 1
++    if n == 0:
++        raise ValueError(f"{model.name}: quant.i_decay_speed set but no quantizer carries it")
++    return n
++
++
+ # --------------------------------------------------------------------------- #
+ # (f) activation calibration (warmup-calibrated-then-frozen static grids)      #
+ # --------------------------------------------------------------------------- #
+diff --git a/campaigns/chang0926/cache_configs/n64.json b/campaigns/chang0926/cache_configs/n64.json
+index 89881bc..eeede5d 100644
+--- a/campaigns/chang0926/cache_configs/n64.json
++++ b/campaigns/chang0926/cache_configs/n64.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/config_diff_a_s1.json b/campaigns/chang0926/config_diff_a_s1.json
+index c72980a..01d0e21 100644
+--- a/campaigns/chang0926/config_diff_a_s1.json
++++ b/campaigns/chang0926/config_diff_a_s1.json
+@@ -97,6 +97,7 @@
+     "experiment.nondegenerate.zero_floor_ebops": 171526,
+     "experiment.snapshot_every_epochs": 500,
+     "quant.act_overflow": "WRAP",
++    "quant.i_decay_speed": 0.001,
+     "quant.softmax_quant": "chang",
+     "train.ebops_reload_check": "stored",
+     "train.ebops_trace_batch": 2048,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s1.json b/campaigns/chang0926/configs/chang0926-a-n64-s1.json
+index d2c8387..724e556 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s1.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s2.json b/campaigns/chang0926/configs/chang0926-a-n64-s2.json
+index 5ac2310..b576013 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s2.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s3.json b/campaigns/chang0926/configs/chang0926-a-n64-s3.json
+index 4bbef6a..fd4065e 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s3.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s4.json b/campaigns/chang0926/configs/chang0926-a-n64-s4.json
+index 08264ee..7b0936d 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s4.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s5.json b/campaigns/chang0926/configs/chang0926-a-n64-s5.json
+index a6c87a8..800ecbf 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s5.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s6.json b/campaigns/chang0926/configs/chang0926-a-n64-s6.json
+index 9de3165..385f6b5 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s6.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s7.json b/campaigns/chang0926/configs/chang0926-a-n64-s7.json
+index 18f0da2..a39510a 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s7.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s8.json b/campaigns/chang0926/configs/chang0926-a-n64-s8.json
+index 208abd7..d4d7fe1 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s8.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
+index e80fc00..0617fac 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
+index f5c4b51..9e3cb98 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
+index fd258ee..f897439 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
+index e71785e..4ab98db 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
+index 57459c2..f94f987 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
+index 92cacb8..2e76938 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
+index 31c7f1d..84f266d 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
+index 0419801..729949e 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s1.json b/campaigns/chang0926/configs/chang0926-b-n64-s1.json
+index 585bc19..a40c2e0 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s1.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s2.json b/campaigns/chang0926/configs/chang0926-b-n64-s2.json
+index 5567bb2..2627c26 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s2.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s3.json b/campaigns/chang0926/configs/chang0926-b-n64-s3.json
+index 50f84e3..87a41e7 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s3.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s4.json b/campaigns/chang0926/configs/chang0926-b-n64-s4.json
+index b8673cd..69196b9 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s4.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s5.json b/campaigns/chang0926/configs/chang0926-b-n64-s5.json
+index 5ce897d..b876bee 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s5.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s6.json b/campaigns/chang0926/configs/chang0926-b-n64-s6.json
+index af5a9f3..68fd898 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s6.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s7.json b/campaigns/chang0926/configs/chang0926-b-n64-s7.json
+index 266bad1..4ba0afa 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s7.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s8.json b/campaigns/chang0926/configs/chang0926-b-n64-s8.json
+index d636c1c..26a9db6 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s8.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s1.json b/campaigns/chang0926/configs/chang0926-c-n64-s1.json
+index 135896a..c932b9d 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s1.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s2.json b/campaigns/chang0926/configs/chang0926-c-n64-s2.json
+index 196207f..cd9b365 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s2.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s3.json b/campaigns/chang0926/configs/chang0926-c-n64-s3.json
+index d7c4078..b8603e2 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s3.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s4.json b/campaigns/chang0926/configs/chang0926-c-n64-s4.json
+index 9d2f6ac..d6e1468 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s4.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s5.json b/campaigns/chang0926/configs/chang0926-c-n64-s5.json
+index de1a254..22a098e 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s5.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s6.json b/campaigns/chang0926/configs/chang0926-c-n64-s6.json
+index fb900ef..9a3cf66 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s6.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s7.json b/campaigns/chang0926/configs/chang0926-c-n64-s7.json
+index 50164b7..1d08ce1 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s7.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s8.json b/campaigns/chang0926/configs/chang0926-c-n64-s8.json
+index 30748c2..afac2d5 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s8.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s1.json b/campaigns/chang0926/configs/chang0926-d-n64-s1.json
+index b26f9e4..13b4261 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s1.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s2.json b/campaigns/chang0926/configs/chang0926-d-n64-s2.json
+index 011a338..72b456f 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s2.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s3.json b/campaigns/chang0926/configs/chang0926-d-n64-s3.json
+index 12d2d4f..03b9132 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s3.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s4.json b/campaigns/chang0926/configs/chang0926-d-n64-s4.json
+index 96057e6..05c0674 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s4.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s5.json b/campaigns/chang0926/configs/chang0926-d-n64-s5.json
+index bd57a9b..2391a86 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s5.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s6.json b/campaigns/chang0926/configs/chang0926-d-n64-s6.json
+index c0fb2ab..fbc1863 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s6.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s7.json b/campaigns/chang0926/configs/chang0926-d-n64-s7.json
+index 3cd3ab9..6f2ec63 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s7.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s8.json b/campaigns/chang0926/configs/chang0926-d-n64-s8.json
+index 8d019ce..b7cb679 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s8.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-e1-n64-s1.json b/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
+index 4782675..54657fd 100644
+--- a/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s1.json b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+index b10b1a6..237c1e5 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s2.json b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+index ad702fe..82f7b5e 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s3.json b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+index 61e2b98..34c9943 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s4.json b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+index 3b11e0f..6847ea3 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s5.json b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+index 91613c2..29e87a6 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s6.json b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+index 191b6a3..b1e1419 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s7.json b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+index 7b25724..82d135c 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s8.json b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+index 786fcce..85cabca 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+@@ -35,7 +35,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s1.json b/campaigns/chang0926/configs/chang0926-r-n64-s1.json
+index 5156e60..3be4835 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s1.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s2.json b/campaigns/chang0926/configs/chang0926-r-n64-s2.json
+index a52b551..9332f5c 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s2.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s3.json b/campaigns/chang0926/configs/chang0926-r-n64-s3.json
+index a0dc501..e5dfbaf 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s3.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s4.json b/campaigns/chang0926/configs/chang0926-r-n64-s4.json
+index 3c1e4b1..a33c6b9 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s4.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s5.json b/campaigns/chang0926/configs/chang0926-r-n64-s5.json
+index 68d50b1..3bc794d 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s5.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s6.json b/campaigns/chang0926/configs/chang0926-r-n64-s6.json
+index 726b6f4..7dd0ca6 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s6.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s7.json b/campaigns/chang0926/configs/chang0926-r-n64-s7.json
+index 7939e78..d5974de 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s7.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s8.json b/campaigns/chang0926/configs/chang0926-r-n64-s8.json
+index be03165..480ddf7 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s8.json
+@@ -36,7 +36,8 @@
+     "softmax_out_bits": 10,
+     "softmax_out_i": 1,
+     "act_overflow": "WRAP",
+-    "softmax_quant": "chang"
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001
+   },
+   "train": {
+     "data": "data/train",
+diff --git a/campaigns/chang0926/cpu_gate.py b/campaigns/chang0926/cpu_gate.py
+index 29f94d2..b3a93ea 100644
+--- a/campaigns/chang0926/cpu_gate.py
++++ b/campaigns/chang0926/cpu_gate.py
+@@ -17,6 +17,12 @@ BetaPID reads (`ablation.model_ebops`) must equal the traced total; the stored-v
+ reload check must equal it too; `i_decay_speed` is read per quantizer; the config's
+ `experiment.nondegenerate.zero_floor_ebops` is re-traced with static_floor.py once per arm
+ (seed 1) and must be equal. Pilot-only rows run too and are counted apart.
++
++[D25] (patch 0024): a config with `quant.i_decay_speed` must record that value (at float32) on
++every quantizer `ablation.i_decay_speeds` lists, the list must cover every `i_decay_speed`
++weight in the model, and the values must survive the training step and the save/reload. A
++config without the key (C-PRIME) must record nothing: it has no WRAP quantizer, so no quantizer
++carries the knob and the HGQ2 default 0.01 acts on nothing. Printed as I_DECAY_OK per config.
+ """
+ from __future__ import annotations
+ 
+@@ -66,6 +72,13 @@ def main():
+         cost = ablation.compute_ebops(model, sample, batch_size=ablation.ebops_trace_batch(cfg))
+         assert ablation.model_ebops(model) == cost['total'], ('PID-read EBOPs differ', ablation.model_ebops(model), cost['total'])
+         decay = ablation.i_decay_speeds(model)
++        want = cfg['quant'].get('i_decay_speed')
++        n_decay_weights = sum(v.name == 'i_decay_speed' for v in model.weights)
++        assert n_decay_weights == len(decay), ('i_decay_speed weights not all enumerated', n_decay_weights, len(decay))
++        if want is not None:
++            assert decay and all(v == float(np.float32(want)) for v in decay.values()), (row['name'], want, decay)
++        else:
++            assert decay == {} and n_decay_weights == 0, (row['name'], 'no key but quantizers carry i_decay_speed', decay)
+         optimizer = ablation.optimizer_for(cfg, model)
+         tr = cfg['train']
+         lrs = {e: ablation.learning_rate(cfg, e) for e in (0, 489, 490, 499, 500, tr['epochs'] - 1)}
+@@ -87,6 +100,8 @@ def main():
+             traced = ablation.compute_ebops(loaded, sample, batch_size=ablation.ebops_trace_batch(cfg))
+             assert traced['total'] == cost_after['total']
+             reload_diff = float(np.max(np.abs(reload_pred - pred)))
++            assert ablation.i_decay_speeds(model) == decay, 'i_decay_speed changed by the training step'
++            assert ablation.i_decay_speeds(loaded) == decay, 'i_decay_speed changed by save/reload'
+         nd = cfg['experiment'].get('nondegenerate')
+         if nd is not None and row['arm'] not in floor_checked:
+             probe = json.loads(json.dumps(cfg))
+@@ -103,12 +118,15 @@ def main():
+                   'production': row.get('production', True), 'trace_rows': int(len(sample)),
+                   'zero_floor_ebops': None if nd is None else nd['zero_floor_ebops'],
+                   'zero_floor_retraced': floor_checked.get(row['arm']) if nd is not None else None,
+-                  'i_decay_speed': decay, 'status': 'PASS'}
++                  'i_decay_speed': decay, 'i_decay_speed_config': want,
++                  'i_decay_speed_values': sorted(set(decay.values())), 'status': 'PASS'}
+         reports.append(report)
+         print('CONFIG_PREFLIGHT_PASS', row['name'], 'params', report['params_count_params'],
+               'kernel_bias_pos', weights, 'initial_ebops', cost['total'], 'reload_max_abs_diff',
+               reload_diff, 'zero_floor', report['zero_floor_ebops'], 'floor_retraced', report['zero_floor_retraced'],
+               'production', int(report['production']), flush=True)
++        print('I_DECAY_OK', row['name'], 'config', want, 'quantizers', len(decay),
++              'values', report['i_decay_speed_values'], flush=True)
+         del model, loaded, optimizer, step
+     if args.out:
+         args.out.write_text(json.dumps(reports, indent=2) + '\n')
+diff --git a/campaigns/chang0926/generate.py b/campaigns/chang0926/generate.py
+index 069b141..e7cc504 100644
+--- a/campaigns/chang0926/generate.py
++++ b/campaigns/chang0926/generate.py
+@@ -37,7 +37,8 @@ PROJECT = 'BNJetTag-ChangRecipe'
+ ORDER_SEED_BASE = 20260926          # [D9] order_seed = ORDER_SEED_BASE * 100 + s
+ 
+ # [D19]/[A20]: the Chang quantizer set in every production arm.
+-QUANT = {'act_overflow': 'WRAP', 'softmax_quant': 'chang'}
++QUANT = {'act_overflow': 'WRAP', 'softmax_quant': 'chang',
++         'i_decay_speed': 0.001}     # [D25]: jsc150's 1e-3 (HGQ2 default 0.01)
+ CURRENT_QUANT = {}                   # C-PRIME: the screen's SAT / fixed-softmax quantizer
+ 
+ CHANG_SCHEDULE = {  # [D2]/[D4]: jsc150 run_train.py:67, 93, 104
+diff --git a/campaigns/chang0926/index.json b/campaigns/chang0926/index.json
+index a370351..f6a3508 100644
+--- a/campaigns/chang0926/index.json
++++ b/campaigns/chang0926/index.json
+@@ -16,7 +16,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "534947e0cbd08bcdfc8e18d4703e340c5ba2fe303840e37702bfbb918a81379c"
++      "config_sha256": "9e05bc2b460b9f3860f54b3a61c2e80caf4d2043a1e92a1a1c6408da3ae3e447"
+     },
+     {
+       "index": 1,
+@@ -34,7 +34,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "61e1d7dee62ff92202065c41849ca674dcb1a4fc77f81344d1333a6b495be056"
++      "config_sha256": "7b9c67db1d3979186fe326d62cc97973afb6f8d351854ea09f1460c356dbb94d"
+     },
+     {
+       "index": 2,
+@@ -52,7 +52,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "24906d46e2b2e25c2cd87a5584fd2fdbb34dc093b8e7d911a5119a36686bce92"
++      "config_sha256": "74cc140d6bb3622580d9524437891fcbdd1e7ee8240b1a5d4f95a0e4453d0602"
+     },
+     {
+       "index": 3,
+@@ -70,7 +70,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "930fc20cc519404e78f2e8a4267a570e334c63bc6a9ef820414daec090365e38"
++      "config_sha256": "dc82d9d45e2989d22a6f921ee8bf9cb8076054e4a8f21141f607d50be814601b"
+     },
+     {
+       "index": 4,
+@@ -88,7 +88,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "f5a5089c5a17d4e3a56e0768505f7d98e2cc8a945e3b9e08ab26a8d43c505651"
++      "config_sha256": "c30af6c5a0f5428afc2975adf4c91c49bda042983b3847d7d3270fc720db0672"
+     },
+     {
+       "index": 5,
+@@ -106,7 +106,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "ce08766983a7e5a05e65816fbb3239944551df0124a23c3cdf29c760b980d611"
++      "config_sha256": "a46ccfbdfe6f54feecd42ccad69d06de671bf88e63537c80cdf41ea07383a4ba"
+     },
+     {
+       "index": 6,
+@@ -124,7 +124,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "3e952e0800856afe497ddff0123e7f9ede63d0321e644a951a3e21072e7a51df"
++      "config_sha256": "b8125612774423b50ce82b68b3a3f69754bd89518077c2de32622d0a5aff61e8"
+     },
+     {
+       "index": 7,
+@@ -142,7 +142,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "89a616de057b7bd6961998be3ca64dbda8666f9941da528e01095c3dfec54f9d"
++      "config_sha256": "6ff9d6649b62f6e862d41885706060898c24cb782ffed92690bb3c246561db2d"
+     },
+     {
+       "index": 8,
+@@ -160,7 +160,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "b15054eb9bc63c5f79bcbc1313e1cadab02342e674dcfebf24c7010a73c0a411"
++      "config_sha256": "c06dc4e9a968bd6fa9c74ce8b1cd9307cad0f3231482783e4e7483cd2b35dc1f"
+     },
+     {
+       "index": 9,
+@@ -178,7 +178,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "4328ca5c24550e2db28690c9d5ee44a054e748a7b3db796548e76f84817563d5"
++      "config_sha256": "98ec854a6987ef2d7cd05e042d7375716b07d659b9a1007225cc7adf2c9ee5b1"
+     },
+     {
+       "index": 10,
+@@ -196,7 +196,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "3ee0f199b61e51262ef3d1ca932ea226d3326a74f54c0972d54b897bddeb1c19"
++      "config_sha256": "03fc57564534095aa742c2230909f0666697c80027814f005ac4c6e72d9ec85c"
+     },
+     {
+       "index": 11,
+@@ -214,7 +214,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "9b0046f68482a5ed7d7deabc2b62668d90486ebf8bdfbb92cef7f2f03e7ca35d"
++      "config_sha256": "de409afce44cca50e032305f49161d4b6166b3573e3d352a7d537c13faa0493a"
+     },
+     {
+       "index": 12,
+@@ -232,7 +232,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "a046d991960bb1a6eeda78ac323929d59880e0524896eed3177ae5e709f2ce81"
++      "config_sha256": "e0dad9fcfd4ec5ba8da3ae707b00c8f24ab49b8bb799c1154e13823530e219ff"
+     },
+     {
+       "index": 13,
+@@ -250,7 +250,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "fe512c5b6f358d5518bf6e1a32023496b85057809124566674e02d7a91696428"
++      "config_sha256": "a2e5d93201607c10e46a96b5d7d228aa0f1f2110867142991b9f2fbab2582650"
+     },
+     {
+       "index": 14,
+@@ -268,7 +268,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "ba9e6c64f50093cc64ca038b289a69c87d1a4599bc942c8ef349791e6b884190"
++      "config_sha256": "4eb6eafe86df113b24590f51e60bcf9f7302433b620eaba40c1f2d5de0464fa1"
+     },
+     {
+       "index": 15,
+@@ -286,7 +286,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "179954763e52e68705026e7f6e6b25d4ecc7b9c97e0b22466e576808e054d02e"
++      "config_sha256": "7fa859c523becc23a0b666874375d5c566bc4a3452e6ddacf35a9bc6dcf23e58"
+     },
+     {
+       "index": 16,
+@@ -304,7 +304,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "7f699ffe7bf8d642e599602597efce7a327be67edb7c5f13b9a067a852e79567"
++      "config_sha256": "60ef2984b6e132b66c8962bc19f24f074104dd6a58de46a9276132ca977ff1e0"
+     },
+     {
+       "index": 17,
+@@ -322,7 +322,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "30a21bf12735752b3bf3dd2d845096ce445ac01ce4faef0267ee325fcca22524"
++      "config_sha256": "26ff334a554f3cfe69518f2238e5ac3f9b9e91182533988b3585d16c09b14f01"
+     },
+     {
+       "index": 18,
+@@ -340,7 +340,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "5fff6d8f585b462337973b568612c8f823f1accbdc5cd005d5310c26882ac275"
++      "config_sha256": "583d59ba6b39724f06160d6dab5712389aedc4c586bc23d45e3d35e9ebfb124b"
+     },
+     {
+       "index": 19,
+@@ -358,7 +358,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "c18e5d34318b9b973f29012cb8daf4a84ad369c6a20b34c9db9cdb8088bcbe0f"
++      "config_sha256": "6c26bcfdc8acec66c3ae9cb56df1c1090cd7177401b61838c4e38e8db06dcdde"
+     },
+     {
+       "index": 20,
+@@ -376,7 +376,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "5755b854578084009fca3790206d9804359fc3684008f47f959b434be3c552a2"
++      "config_sha256": "da967224154368ade1732456f5caa91a989b4d487053624741f9081d331ea903"
+     },
+     {
+       "index": 21,
+@@ -394,7 +394,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "c629858682dac4345eaa839645831986060d85888acbccf76f8d3d7d4da53f3d"
++      "config_sha256": "3b34996c7ec9bcea440e7e7c29113804364e281d44eca460eda5d021028aad89"
+     },
+     {
+       "index": 22,
+@@ -412,7 +412,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "a5b55cb64fae9ef48622249be2e8f946e647ef012c413a8397d5c7922c209da6"
++      "config_sha256": "08abedbb74d500e055d171e8da7b6e4d1973c057349bdcfde5cb3e6b67f6bb47"
+     },
+     {
+       "index": 23,
+@@ -430,7 +430,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "ee25bf7c0bcb05e63efaa5adac7c50bbf972dd7290586f3842c377e0026839be"
++      "config_sha256": "b0b03331a84978e060aeb8cd538947768ecb6538065ce2fc6d2df0cccc50d75e"
+     },
+     {
+       "index": 24,
+@@ -448,7 +448,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "1ed2daf772f502ae1386832973c06a09c6fae104ca6600da3650f883aa423497"
++      "config_sha256": "198feeec757e9b584fad421bef48658a757fae232f8a26d2cbf54b12479da031"
+     },
+     {
+       "index": 25,
+@@ -466,7 +466,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "d5eb5cfeb3ba6f148ad4e440befefed33849b43c800be408a4c6cffa8ccd00a0"
++      "config_sha256": "ec8d2e8b76da962ec760eea17760081db6aceef2f12a92c85d29e52c6a865731"
+     },
+     {
+       "index": 26,
+@@ -484,7 +484,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "6ae1da0c8a7399de56b33660cd7df153b6192e7ad69f04984d151c1b2dccb81b"
++      "config_sha256": "92ab1548401cc78a5f79e54c628a0a61aeeebb5bd75a5bdd712e256c3b3edb5d"
+     },
+     {
+       "index": 27,
+@@ -502,7 +502,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "ef671b8f3b5aa1d3eebcfd490f209aa1d1c93bb402e316c7278c2eb6734f8e68"
++      "config_sha256": "51fcf3823721ef19602aea04707a1b595f67852241479cfdfe906116be124c99"
+     },
+     {
+       "index": 28,
+@@ -520,7 +520,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "9fedd28e0fa2c7af2b19c3ad997ac5e565e626c49064f7d54d0ffde4a71a0867"
++      "config_sha256": "39b1f25758f5a2a631c35ba0a7f74ed5e32bd52cfe37442bb448e458c645ce41"
+     },
+     {
+       "index": 29,
+@@ -538,7 +538,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "b3f513ca9053f84728721b2550a6810e711199cb41fc263d0ebabae6b36b550a"
++      "config_sha256": "69031da4a54a9c659bf94d7a71b185a77e5e10a715628462129248d9f49c3c9d"
+     },
+     {
+       "index": 30,
+@@ -556,7 +556,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "4dd9018d7d34fb9c6a023c26e1846c816787a152f402666aaa501332d49313c4"
++      "config_sha256": "9983bd93d5e888e1c17cb32b1f9a9d6cda2771e0dc2af704cd7c6d4681942f70"
+     },
+     {
+       "index": 31,
+@@ -574,7 +574,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "5c8a137b89f18d7fb3fa57641cc2848cea37263ffc9484f44903eed3c06120ba"
++      "config_sha256": "64ebd170f9fd5ab251dd4cb84a187cd8acaff16e4b21e69d78b70446167adbd8"
+     },
+     {
+       "index": 32,
+@@ -592,7 +592,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "ed25287012543a12937874c19ca20e3e009e15465a76006564619c3fbefa708e"
++      "config_sha256": "2069a22ea2304e0ad55ecacc83936972e254e662e0ea9029a3a117b0246af727"
+     },
+     {
+       "index": 33,
+@@ -610,7 +610,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "e1a7feb081a3c544b2f033a79da565c000157bdf11b9f08e9d6f457519304f83"
++      "config_sha256": "6568a8df81821cf9f73aedf6d52c1721097885f6910d5c5dc842298e440a4d79"
+     },
+     {
+       "index": 34,
+@@ -628,7 +628,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "293eebf08f5bbb55d28206c67457d95409d6ec262f99ff2b1d8a796e9e12defb"
++      "config_sha256": "521c62c465c60acd048ed8d3d694bb72aa9dc3e3c2560c5fd15d47138e859324"
+     },
+     {
+       "index": 35,
+@@ -646,7 +646,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "d7a3c1acc24f6aaf3e53c53c76dde2d737f536368d1ff720563855ff81750350"
++      "config_sha256": "01d8a4827777b47bf20df3ab658f83e6470044bf54915bb6a08dccfd3abfaac9"
+     },
+     {
+       "index": 36,
+@@ -664,7 +664,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "362d43f84a4485afc2a127e9d05422b4214ca98b91b3868b370be122f5b7d585"
++      "config_sha256": "b65daa998cf597d537e797e6158cde884db5b70f897c8d84276887f5bdde2c8e"
+     },
+     {
+       "index": 37,
+@@ -682,7 +682,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "0184ab080b1a3a4f6588c99f9d949c2545dc124d84b4a347a9bf2b63ec4fd1a2"
++      "config_sha256": "307aa951f937d273cd61bff25a2b7f272acbb8d078ce18a95d25717bcc932e89"
+     },
+     {
+       "index": 38,
+@@ -700,7 +700,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "e17b06f9df9a4386c35754415b38ade5c77c778c5e563c17fa4a067909b93dc4"
++      "config_sha256": "9fde1205a4843ccc04b1b2bf9a4b4eba033d0c34477af48e54aa5b3217cf1539"
+     },
+     {
+       "index": 39,
+@@ -718,7 +718,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "74b9c0f081ea4b9267fce6a270dd23d73a014d36260ffc4051993d127abb0138"
++      "config_sha256": "4aae0eb62f88868fc78d4ea81fd816fff6c3613ce5c0eca7b406315d5749155f"
+     },
+     {
+       "index": 40,
+@@ -736,7 +736,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "8575ccac024b221f1bf2271680a9ffc61c130f175769b1c474ff7c0adbe45f58"
++      "config_sha256": "362d1d64f97bda103cd0b378e69cc46f864b1ca66a0e504ad6886cba6fd52067"
+     },
+     {
+       "index": 41,
+@@ -754,7 +754,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "b9d70195d187136df2e6d4312ada793e5af2cfb9acb49aa8ed766d94ba3f8dd8"
++      "config_sha256": "5ecefe690b4cb33cfbf6659f592e33d29726c8fef119709f2a3e610caaed047e"
+     },
+     {
+       "index": 42,
+@@ -772,7 +772,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "629607434a99ef33b1a333de6551c71653df938ade11e65504e9c5aa7d1060da"
++      "config_sha256": "8dc2e73e0117ddca71ac4e5d3fb762e23b99e8a0d91b6704a31531b3ed9e5664"
+     },
+     {
+       "index": 43,
+@@ -790,7 +790,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "907e43ce01a0a6c2cafdf332a569b1275ed78f37850db44dc9430e49e8237088"
++      "config_sha256": "7ee58b8421745fa66b2ea3950292a2d7ad63bc59ad98ba518cdf02a29b39be14"
+     },
+     {
+       "index": 44,
+@@ -808,7 +808,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "21092911271f0af897e3a8f01dac78ea0f34fc5257049e1b33b89cc12392a223"
++      "config_sha256": "8eb343ee1db6a745d502bac28311eee90ab15b87b23069186eaa58333fbaf8c9"
+     },
+     {
+       "index": 45,
+@@ -826,7 +826,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "3fe0e958b9dd29757dd3384e5f5d9e079bcc094ebeaa201c1a5f1c4016bd82b3"
++      "config_sha256": "8b976c82cdc19dd06cad7c223b428107b4549d288b3791596f71120c4cc3db9c"
+     },
+     {
+       "index": 46,
+@@ -844,7 +844,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "99b17ef14a8922e0ec23a6b409128a95f174e012c7d5710b04380b1cc8c62083"
++      "config_sha256": "7bf16d8e137870e0f8919705f9ba88d406d72d952f23e18ef3af550454b1f0d1"
+     },
+     {
+       "index": 47,
+@@ -862,7 +862,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "08c2ed6e8529e2731473cf1acae46071af94e541d3f09f4f1e4000010e569568"
++      "config_sha256": "f8f42eb95100623b9ff294aca3826df6b83cbfb93262f508d18c8be5ad22f7b8"
+     },
+     {
+       "index": 48,
+@@ -880,7 +880,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "35d1abe468ded4229fa7b0b4a52e95e5832539e8a91424e335d789ad370bd592"
++      "config_sha256": "44edb194da35a2e14a75b3b88a02982c9be6ef9e2a2613f387cbd304547ec135"
+     },
+     {
+       "index": 49,
+@@ -898,7 +898,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "82872db89f7f3bf6df0f5c0c136745a881c19012bb2ef191e7e1b71145d28c31"
++      "config_sha256": "f4a57ab03fbb3237e37d5a2ffed46d34da9a9b03662c099b3df82cd04244a274"
+     },
+     {
+       "index": 50,
+@@ -916,7 +916,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "5b3fc9901267364a542f0353dd83cfbd501b6351aeeea14b1b6c6597b738486a"
++      "config_sha256": "6a45ce7ca214b06c2c35dc8b473f249581d6e43353df8dddab1b9180fd627acf"
+     },
+     {
+       "index": 51,
+@@ -934,7 +934,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "497adbb3c01ae609b41673ed4bddd19969ba5e6276b42d40adc90963cbc7c05f"
++      "config_sha256": "0f6447659bfb4416ce2e59b7f5d68a79336750f6136b5a8f8561ee7435fb5ec6"
+     },
+     {
+       "index": 52,
+@@ -952,7 +952,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "451fc5e5f155fa0ba9e05bb4b95232fae74406ec16322de4b66b9ad288150809"
++      "config_sha256": "f252c293ed05c307fb03c429f823a63936607371745fc3aff277ec7e2ca79567"
+     },
+     {
+       "index": 53,
+@@ -970,7 +970,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "c6678cf2179ddc0e1612fd8722d02bbc6729ec66f364d519e789dd003a514e99"
++      "config_sha256": "9ff8512d9369a1432ea86adce76fdd76ca4c0fcf45e80833d1bcb39c47d34e67"
+     },
+     {
+       "index": 54,
+@@ -988,7 +988,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "33246a0dbb88e2391f61de36203caa3775dedfe3444dbfaf864acb85a4ec93c6"
++      "config_sha256": "ffc30117ca9c192279f61a5238c75442a2bc131878f05dfb68490d773d68490e"
+     },
+     {
+       "index": 55,
+@@ -1006,7 +1006,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "93502b8432648fd736ca2005e25a6c5510d6d20aaa8adfdd3c39242ec317ba19"
++      "config_sha256": "1a95f14535ff1381953dbbd75d93433ec48913ba299c9b86756b3f347a50e0aa"
+     },
+     {
+       "index": 56,
+@@ -1042,7 +1042,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "6a8ffd1684e14dcda87eb64cd8a3ec0986e67ea7cca200fe78577268a9a939fd"
++      "config_sha256": "05cae0decc1ebbd9bd29895ce1b6474170b48b49671186aa8e0aab9745d87367"
+     }
+   ],
+   "count": 58,
+diff --git a/campaigns/chang0926/static_floors.json b/campaigns/chang0926/static_floors.json
+index 648f318..29c5e1f 100644
+--- a/campaigns/chang0926/static_floors.json
++++ b/campaigns/chang0926/static_floors.json
+@@ -4,7 +4,7 @@
+   "arms": {
+     "a": {
+       "config": "chang0926-a-n64-s1",
+-      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "floor_signature": "a03e5e0cbf2f23a2cf902563a4499c7a6534ed2e781577dde858e5c9fe386a5c",
+       "target_ebops": 350000,
+       "parameters": 31735,
+       "init_synthetic": 8913043,
+@@ -30,7 +30,7 @@
+     },
+     "b": {
+       "config": "chang0926-b-n64-s1",
+-      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "floor_signature": "a03e5e0cbf2f23a2cf902563a4499c7a6534ed2e781577dde858e5c9fe386a5c",
+       "target_ebops": 250000,
+       "parameters": 31735,
+       "init_synthetic": 8913043,
+@@ -56,7 +56,7 @@
+     },
+     "c": {
+       "config": "chang0926-c-n64-s1",
+-      "floor_signature": "4c37552f6f3a63fc9218f834c1afe7adecd2eea2086c1518a59fe1fbe1662b48",
++      "floor_signature": "9ff3b9453301cd1601db9e4556c49d4ed64cc3aeedc6ec53494d55094388053a",
+       "target_ebops": 5000000,
+       "parameters": 61951,
+       "init_synthetic": 13182317,
+@@ -88,7 +88,7 @@
+     },
+     "d": {
+       "config": "chang0926-d-n64-s1",
+-      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "floor_signature": "a03e5e0cbf2f23a2cf902563a4499c7a6534ed2e781577dde858e5c9fe386a5c",
+       "target_ebops": 350000,
+       "parameters": 31735,
+       "init_synthetic": 8913043,
+@@ -114,7 +114,7 @@
+     },
+     "f": {
+       "config": "chang0926-f-n64-s1",
+-      "floor_signature": "d3c1b025903c7f7d4d53e5aa17adaa1e73db62ae2d1faa46fcfc101efb9a9db3",
++      "floor_signature": "abc83b2ac54624ec48041002689368f9e6ab4f6417cfdb74245d6abdf7c0ace0",
+       "target_ebops": 350000,
+       "parameters": 33271,
+       "init_synthetic": 9330878,
+@@ -140,7 +140,7 @@
+     },
+     "r": {
+       "config": "chang0926-r-n64-s1",
+-      "floor_signature": "7a72838f6957d70dd2295e5ea3e46bfcadd441927e1bf9c9c89fdf28aa105a76",
++      "floor_signature": "a03e5e0cbf2f23a2cf902563a4499c7a6534ed2e781577dde858e5c9fe386a5c",
+       "target_ebops": 350000,
+       "parameters": 31735,
+       "init_synthetic": 8913043,
+@@ -166,7 +166,7 @@
+     },
+     "a07-350": {
+       "config": "chang0926-a07-350-n64-s1",
+-      "floor_signature": "4c37552f6f3a63fc9218f834c1afe7adecd2eea2086c1518a59fe1fbe1662b48",
++      "floor_signature": "9ff3b9453301cd1601db9e4556c49d4ed64cc3aeedc6ec53494d55094388053a",
+       "target_ebops": 350000,
+       "parameters": 61951,
+       "init_synthetic": 13182317,
+@@ -224,7 +224,7 @@
+     },
+     "e1": {
+       "config": "chang0926-e1-n64-s1",
+-      "floor_signature": "03b0202e473569c3b991cd027b79bbfeb33e88637830f2f590fe21654ad380ac",
++      "floor_signature": "8794e300510da9207774acb8b9650816eb350976eb7a59a5fdcf474eedf5f019",
+       "target_ebops": 350000,
+       "parameters": 19447,
+       "init_synthetic": 8175637,
+diff --git a/tests/test_i_decay_speed.py b/tests/test_i_decay_speed.py
+new file mode 100644
+index 0000000..74bc908
+--- /dev/null
++++ b/tests/test_i_decay_speed.py
+@@ -0,0 +1,76 @@
++"""[D25] opt-in quant.i_decay_speed (patch 0024). CPU, generated chang0926 configs, synthetic input."""
++import copy
++import json
++import os
++import tempfile
++from pathlib import Path
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import keras
++import numpy as np
++import pytest
++
++from bnhgq2 import ablation, qat
++
++CFG = Path(__file__).resolve().parents[1] / 'campaigns' / 'chang0926' / 'configs'
++
++
++def _cfg(name):
++    return json.loads((CFG / f'{name}.json').read_text())
++
++
++def _weights(model):
++    return [(v.path, np.asarray(v).tobytes()) for v in model.weights]
++
++
++def test_key_sets_every_enumerated_quantizer():
++    cfg = _cfg('chang0926-e1-n64-s1')
++    assert cfg['quant']['i_decay_speed'] == 0.001
++    keras.backend.clear_session()
++    model, _ = qat.build_qat_model(cfg, seed=1)
++    decay = ablation.i_decay_speeds(model)
++    assert decay and set(decay.values()) == {float(np.float32(0.001))}
++    assert sum(v.name == 'i_decay_speed' for v in model.weights) == len(decay)
++
++
++def test_absent_key_is_the_hgq2_default_and_byte_identical():
++    cfg = _cfg('chang0926-e1-n64-s1')
++    bare = copy.deepcopy(cfg)
++    bare['quant'].pop('i_decay_speed')
++    keras.backend.clear_session()
++    m0, _ = qat.build_qat_model(bare, seed=1)
++    assert set(ablation.i_decay_speeds(m0).values()) == {float(np.float32(0.01))}
++    keras.backend.clear_session()
++    m1, _ = qat.build_qat_model(cfg, seed=1)
++    w0, w1 = _weights(m0), _weights(m1)
++    assert [p for p, _ in w0] == [p for p, _ in w1]
++    differ = {p for (p, a), (_, b) in zip(w0, w1) if a != b}
++    assert differ and all(p.endswith('/i_decay_speed') for p in differ)
++
++
++def test_key_without_wrap_raises():
++    cfg = _cfg('chang0926-cprime-n64-s1')
++    assert 'i_decay_speed' not in cfg['quant']
++    cfg['quant']['i_decay_speed'] = 0.001
++    with pytest.raises(ValueError, match='i_decay_speed'):
++        qat.build_qat_model(cfg, seed=1)
++
++
++@pytest.mark.parametrize('bad', [0, -0.001, float('nan'), True, '0.001'])
++def test_bad_values_raise(bad):
++    cfg = _cfg('chang0926-e1-n64-s1')
++    cfg['quant']['i_decay_speed'] = bad
++    with pytest.raises(ValueError, match='i_decay_speed'):
++        qat.build_qat_model(cfg, seed=1)
++
++
++def test_value_survives_save_reload():
++    cfg = _cfg('chang0926-e1-n64-s1')
++    keras.backend.clear_session()
++    model, _ = qat.build_qat_model(cfg, seed=1)
++    model(np.zeros((2, 64, 3), 'float32'), training=False)
++    with tempfile.TemporaryDirectory() as tmp:
++        path = Path(tmp) / 'm.keras'
++        model.save(path)
++        loaded = keras.models.load_model(path, compile=False)
++    assert ablation.i_decay_speeds(loaded) == ablation.i_decay_speeds(model)
+-- 
+2.50.1 (Apple Git-155)
+

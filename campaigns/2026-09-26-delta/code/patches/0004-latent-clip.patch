@@ -1,0 +1,47 @@
+From fd6db29e804a0b949219232872c855316e7dfecf Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:31:15 -0700
+Subject: [PATCH 04/24] latent-clip: quant.latent_clip c clips binary latents
+ to [-c, c] after each step (M021)
+
+---
+ code/bnhgq2/ablation.py   | 4 ++++
+ code/bnhgq2/delta_keys.py | 3 +++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 1b06d6a..9c50bb1 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -158,6 +158,8 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None):
+     weight_vars = tuple(v for v in all_vars if id(v) not in width_ids)
+     batch = int(cfg['train']['batch'])
+     n = len(xt)
++    latent_clip = cfg['quant'].get('latent_clip')  # Delta: clip binary latents after each step
++    clip_vars = [ly._kernel for ly in model.layers if isinstance(ly, (qat.BitQEinsumDense, qat.BitQDense))] if latent_clip else []
+ 
+     @tf.function(jit_compile=False)
+     def epoch_step(order, frozen=False):
+@@ -177,6 +179,8 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None):
+             gradients = tape.gradient(loss, variables)
+             pairs = [(g, v) for g, v in zip(gradients, variables) if g is not None]
+             optimizer.apply_gradients(pairs)
++            for variable in clip_vars:
++                variable.assign(tf.clip_by_value(variable, -float(latent_clip), float(latent_clip)))
+             count = tf.cast(tf.shape(idx)[0], tf.float32)
+             acc = tf.reduce_mean(tf.cast(tf.argmax(logits, -1) == tf.argmax(yb, -1), tf.float32))
+             totals += count * tf.stack([loss, ce, kd, acc])
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index dccf51b..aabd53c 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -109,3 +109,6 @@ def _ste(value, cfg):
+ 
+ register('quant.ste', 'ste-variants', _ste, active=lambda v: v != 'bounded', export_ok=True)
+ register('quant.ste_ede_period', 'ste-variants', _ste_period, export_ok=True)
++
++# latent-clip: clip binary latent kernels to [-c, c] after every optimizer step (BinaryConnect).
++register('quant.latent_clip', 'latent-clip', _positive_number, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

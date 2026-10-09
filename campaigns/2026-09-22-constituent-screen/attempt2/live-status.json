@@ -1,0 +1,724 @@
+{
+  "snapshot_utc": "2026-09-22T07:40:31.888667+00:00",
+  "runs": [
+    {
+      "name": "const0922-a02-n64-s1-fast50-fp32",
+      "completed_epochs": 1,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 0,
+        "val_macro_auc": 0.8493829609619492,
+        "val_categorical_accuracy": 0.5681612903225807,
+        "ebops": 49574940
+      },
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-a02-n8-s1-fast50-fp32",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.8498747183245996,
+        "val_categorical_accuracy": 0.5866370967741935,
+        "ebops": 1228875
+      },
+      "last_epoch_wall_seconds": 126.42143034934998,
+      "estimated_hours_remaining": 1.6856190713246664,
+      "result": {
+        "index": 4,
+        "name": "const0922-a02-n8-s1-fast50-fp32",
+        "variant": "a02",
+        "n_part": 8,
+        "file": "const0922-a02-n8-s1-fast50-fp32.json",
+        "aliases": [
+          "batch20260917-a02-s1",
+          "batch20260917-a04-s1",
+          "batch20260917-a05-s1",
+          "batch20260918-b00-s4",
+          "engram-e00-s1"
+        ],
+        "config_sha256": "94855e5614c4db81ecd9b62260e8b7bed7ab89d7139f0022b97474d73e7df8dc",
+        "status": "verified_canary",
+        "completed_epochs": 2,
+        "selected": {
+          "epoch": 1,
+          "val_macro_auc": 0.8498747183245996,
+          "val_categorical_accuracy": 0.5866370967741935,
+          "ebops": 1228875
+        },
+        "checkpoint": "model_min_ebops.keras",
+        "checkpoint_sha256": "edd3eaf647ace11541e806986d26178f07f1cc8e7abe8836186c5d20e282f22b",
+        "budget_met": false,
+        "validation_accuracy": 0.5866370967741935,
+        "validation_macro_auc": 0.8498747183245996,
+        "validation_per_class_auc": [
+          0.7892793934973166,
+          0.8457923714229489,
+          0.8599278431230631,
+          0.8453542986919185,
+          0.9090196848877508
+        ],
+        "wall_seconds_this_invocation": 305.69118011096725,
+        "test_set_used": false,
+        "hardware_validated": false,
+        "validation_labels_sha256": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e",
+        "source_sha256": "7f9e93075123217af2adc10660cf9cf7dafffb51b9c385c29ee0211b3bff74d7",
+        "selection_cost": 1228875,
+        "selection_cost_convention": "native_hgq2",
+        "native_hgq2_backbone_ebops": 1228875,
+        "custom_estimated_bitops": 0,
+        "modules": {},
+        "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals."
+      },
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-e02-n8-s1-fast50-fp32",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.846761639947835,
+        "val_categorical_accuracy": 0.5802822580645162,
+        "ebops": 629746
+      },
+      "last_epoch_wall_seconds": 83.53362107276917,
+      "estimated_hours_remaining": 1.1137816143035888,
+      "result": {
+        "index": 26,
+        "name": "const0922-e02-n8-s1-fast50-fp32",
+        "variant": "e02",
+        "n_part": 8,
+        "file": "const0922-e02-n8-s1-fast50-fp32.json",
+        "aliases": [
+          "engram-e02-s1"
+        ],
+        "config_sha256": "32f1910709a2a8485dd722e82e3a325c83b0719cf09915a3f57c300f060dacaf",
+        "status": "verified_canary",
+        "completed_epochs": 2,
+        "selected": {
+          "epoch": 1,
+          "val_macro_auc": 0.846761639947835,
+          "val_categorical_accuracy": 0.5802822580645162,
+          "ebops": 629746
+        },
+        "checkpoint": "model_min_ebops.keras",
+        "checkpoint_sha256": "cacb7d898394af33b01f794c5a969d7a0bc482cdaad934f425ef2531341e19bc",
+        "budget_met": false,
+        "validation_accuracy": 0.5802822580645162,
+        "validation_macro_auc": 0.846761639947835,
+        "validation_per_class_auc": [
+          0.797047143602474,
+          0.8505640725018189,
+          0.841352532737218,
+          0.8345965817990014,
+          0.9102478690986632
+        ],
+        "wall_seconds_this_invocation": 213.57642519898945,
+        "test_set_used": false,
+        "hardware_validated": false,
+        "validation_labels_sha256": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e",
+        "source_sha256": "7f9e93075123217af2adc10660cf9cf7dafffb51b9c385c29ee0211b3bff74d7",
+        "selection_cost": 629746,
+        "selection_cost_convention": "native_hgq2_plus_custom_estimate",
+        "native_hgq2_backbone_ebops": 620786,
+        "custom_estimated_bitops": 8960,
+        "modules": {
+          "jet_engram": {
+            "convention": "engram_structural_bitops_v1_estimate",
+            "estimated_bitops": 8960,
+            "components": {
+              "encoder_comparisons": 2816,
+              "hash_addressing": 0,
+              "table_reduction_adds": 0,
+              "query_key_dot": 0,
+              "gate_affine_clip": 0,
+              "gate_value_products": 0,
+              "residual_adds": 6144
+            },
+            "logical_table_bits": 131072,
+            "logical_table_bytes": 16384,
+            "table_read_bits_per_jet": 2048,
+            "vector_reads_per_jet": 8,
+            "independent_addresses_per_bank_per_jet": 8,
+            "two_read_port_replicas_for_whole_jet_ii1": 4,
+            "replicated_table_bytes_estimate": 65536,
+            "threshold_storage_bits": 336,
+            "encoder_comparisons_per_jet": 176,
+            "hash_words_per_jet": 0,
+            "exact_tuple_addressing": true,
+            "unpriced_operations": [
+              "round/saturate quantizers",
+              "validity masks and multiplexers",
+              "control and wiring",
+              "physical memory block rounding/routing"
+            ],
+            "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+          }
+        },
+        "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals."
+      },
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-e03-n64-s1-fast50-fp32",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.8763018998309817,
+        "val_categorical_accuracy": 0.6135645161290323,
+        "ebops": 18239019
+      },
+      "last_epoch_wall_seconds": 142.62390208244324,
+      "estimated_hours_remaining": 1.90165202776591,
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-e03-n8-s1-fast50-fp32",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.8419754796482058,
+        "val_categorical_accuracy": 0.5683870967741935,
+        "ebops": 658860
+      },
+      "last_epoch_wall_seconds": 86.68560743331909,
+      "estimated_hours_remaining": 1.1558080991109212,
+      "result": {
+        "index": 28,
+        "name": "const0922-e03-n8-s1-fast50-fp32",
+        "variant": "e03",
+        "n_part": 8,
+        "file": "const0922-e03-n8-s1-fast50-fp32.json",
+        "aliases": [
+          "engram-e03-s1"
+        ],
+        "config_sha256": "ed0fd8c25cefc175cfbaa367a5297244b538e55635d6596d9e5341d4bf4465a9",
+        "status": "verified_canary",
+        "completed_epochs": 2,
+        "selected": {
+          "epoch": 1,
+          "val_macro_auc": 0.8419754796482058,
+          "val_categorical_accuracy": 0.5683870967741935,
+          "ebops": 658860
+        },
+        "checkpoint": "model_min_ebops.keras",
+        "checkpoint_sha256": "d0dabc5d234bf49bf2b3f8ff080bfd4ce65cc07070a9e0446dcfc7ac323f57c9",
+        "budget_met": false,
+        "validation_accuracy": 0.5683870967741935,
+        "validation_macro_auc": 0.8419754796482058,
+        "validation_per_class_auc": [
+          0.7941093445702645,
+          0.8446187826192961,
+          0.8356944534355664,
+          0.827846093245784,
+          0.9076087243701176
+        ],
+        "wall_seconds_this_invocation": 208.78247335797641,
+        "test_set_used": false,
+        "hardware_validated": false,
+        "validation_labels_sha256": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e",
+        "source_sha256": "7f9e93075123217af2adc10660cf9cf7dafffb51b9c385c29ee0211b3bff74d7",
+        "selection_cost": 658860,
+        "selection_cost_convention": "native_hgq2_plus_custom_estimate",
+        "native_hgq2_backbone_ebops": 619612,
+        "custom_estimated_bitops": 39248,
+        "modules": {
+          "jet_engram": {
+            "convention": "engram_structural_bitops_v1_estimate",
+            "estimated_bitops": 39248,
+            "components": {
+              "encoder_comparisons": 2816,
+              "hash_addressing": 0,
+              "table_reduction_adds": 0,
+              "query_key_dot": 21592,
+              "gate_affine_clip": 504,
+              "gate_value_products": 8192,
+              "residual_adds": 6144
+            },
+            "logical_table_bits": 262144,
+            "logical_table_bytes": 32768,
+            "table_read_bits_per_jet": 4096,
+            "vector_reads_per_jet": 8,
+            "independent_addresses_per_bank_per_jet": 8,
+            "two_read_port_replicas_for_whole_jet_ii1": 4,
+            "replicated_table_bytes_estimate": 131072,
+            "threshold_storage_bits": 336,
+            "encoder_comparisons_per_jet": 176,
+            "hash_words_per_jet": 0,
+            "exact_tuple_addressing": true,
+            "unpriced_operations": [
+              "round/saturate quantizers",
+              "validity masks and multiplexers",
+              "control and wiring",
+              "physical memory block rounding/routing"
+            ],
+            "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+          }
+        },
+        "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals."
+      },
+      "verified_complete": false
+    }
+  ],
+  "preflight": [
+    {
+      "file": "shard-0.json",
+      "status": "PASS",
+      "runs": 19
+    },
+    {
+      "file": "shard-1.json",
+      "status": "PASS",
+      "runs": 19
+    }
+  ],
+  "jobs": [
+    {
+      "name": "kai-n8n64-canary-0922-669ed0",
+      "status": {
+        "active": 1,
+        "completedIndexes": "0",
+        "failedIndexes": "",
+        "ready": 1,
+        "startTime": "2026-09-22T07:32:29Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "name": "kai-n8n64-canary-0922-a2c434",
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T07:25:05Z",
+            "lastTransitionTime": "2026-09-22T07:25:05Z",
+            "message": "Job suspended",
+            "reason": "JobSuspended",
+            "status": "True",
+            "type": "Suspended"
+          }
+        ],
+        "failed": 1,
+        "failedIndexes": "",
+        "ready": 0,
+        "startTime": "2026-09-22T07:14:40Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "name": "kai-n8n64-data-0922",
+      "status": {
+        "completionTime": "2026-09-22T07:09:17Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T07:09:17Z",
+            "lastTransitionTime": "2026-09-22T07:09:17Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "SuccessCriteriaMet"
+          },
+          {
+            "lastProbeTime": "2026-09-22T07:09:17Z",
+            "lastTransitionTime": "2026-09-22T07:09:17Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T07:02:40Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-669ed0",
+      "status": {
+        "completedIndexes": "0,1",
+        "completionTime": "2026-09-22T07:31:13Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T07:31:13Z",
+            "lastTransitionTime": "2026-09-22T07:31:13Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "SuccessCriteriaMet"
+          },
+          {
+            "lastProbeTime": "2026-09-22T07:31:13Z",
+            "lastTransitionTime": "2026-09-22T07:31:13Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "failedIndexes": "",
+        "ready": 0,
+        "startTime": "2026-09-22T07:27:15Z",
+        "succeeded": 2,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-a2c434",
+      "status": {
+        "completedIndexes": "0,1",
+        "completionTime": "2026-09-22T07:14:08Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T07:14:08Z",
+            "lastTransitionTime": "2026-09-22T07:14:08Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "SuccessCriteriaMet"
+          },
+          {
+            "lastProbeTime": "2026-09-22T07:14:08Z",
+            "lastTransitionTime": "2026-09-22T07:14:08Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "failedIndexes": "",
+        "ready": 0,
+        "startTime": "2026-09-22T07:09:55Z",
+        "succeeded": 2,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    }
+  ],
+  "pods": [
+    {
+      "name": "kai-n8n64-canary-0922-669ed0-0-qcnq7",
+      "phase": "Succeeded",
+      "node": "hcc-nrp-shor-c5825.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:39:43Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:32:29Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:39:41Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:39:41Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:32:29Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-canary-0922-669ed0-1-jcwkd",
+      "phase": "Running",
+      "node": "hcc-nrp-shor-c5921.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:32:45Z",
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:32:29Z",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:32:45Z",
+          "status": "True",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:32:45Z",
+          "status": "True",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:32:29Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-canary-0922-a2c434-0-vt6xd",
+      "phase": "Failed",
+      "node": "hcc-nrp-shor-c5921.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:21Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:41Z",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:18Z",
+          "reason": "PodFailed",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:18Z",
+          "reason": "PodFailed",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:41Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-data-0922-pvc25",
+      "phase": "Succeeded",
+      "node": "gpn-fiona-mizzou-8.rnet.missouri.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:16Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:02:41Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:13Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:13Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:02:41Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-669ed0-0-fwzpk",
+      "phase": "Succeeded",
+      "node": "hcc-nrp-shor-c5905.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:30:51Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:27:15Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:30:49Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:30:49Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:27:15Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-669ed0-1-57ww8",
+      "phase": "Succeeded",
+      "node": "rci-nrp-gpu-05.sdsu.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:31:13Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:27:15Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:31:11Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:31:11Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:27:15Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-a2c434-0-r5w7q",
+      "phase": "Succeeded",
+      "node": "hcc-nrp-shor-c5905.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:07Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:05Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:05Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-a2c434-1-5pqlc",
+      "phase": "Succeeded",
+      "node": "rci-nrp-gpu-05.sdsu.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:07Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:06Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:06Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    }
+  ]
+}

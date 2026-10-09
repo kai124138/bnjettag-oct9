@@ -1,0 +1,144 @@
+{
+  "campaign": "discovery-350k-20261008",
+  "protocol": {
+    "id": "d350-protocol-v2",
+    "identity": "The protocol in force is PROPOSAL.md as approved; its frozen files and their sha256 are BRIEF.md frozen_files, and APPROVAL.json binds the BRIEF limits block (brief_sha256). Hashes are not copied here, so they cannot go stale."
+  },
+  "fields": {
+    "status": "execution status: open | prepared | running | evaluated | failed | stopped",
+    "outcome": "scientific outcome: not evaluated | supporting | against | inconclusive | does not qualify at this horizon | diverged",
+    "score": "number from eval/score.py, or the INVALID reason string, exactly as in LEDGER.jsonl",
+    "measured": "values copied from the score result file or STATE.json, with source; no interpretation",
+    "lesson": "interpretation of the measured values; seed 1 only, no interval, not quotable"
+  },
+  "nodes": [
+    {
+      "id": "R0",
+      "parent": "",
+      "hypothesis": "Baseline: the pilot E-350k-C configuration unchanged loses validation accuracy when squeezed to 350k EBOPs within 1,000 epochs.",
+      "spec": "configs: code/campaigns/d350/configs/d350-baseline-e-350k-s1.json; stop epoch 1000; seed 1",
+      "status": "evaluated",
+      "score": "INVALID[scientific]: no feasible checkpoint in epochs < 1000",
+      "branch": "main",
+      "notes": "Root node. Its score is measured under this protocol; no historical number is copied. Attempt a1 never started (0 pod records, admission failure); a2 is the infrastructure relaunch and resumed into a1's run root.",
+      "code_revision": "43e8326c85c1850537eb66d71a55d6b1348c1df8",
+      "protocol_id": "d350-protocol-v2",
+      "evidence": [
+        "handoffs/rh-adce3a6b9ad29ca7ab6f1f81",
+        "handoffs/rh-6facf4ed7c2b1a01f26e2b4d",
+        "attempts/baseline-e-350k-s1-a1.json",
+        "attempts/baseline-e-350k-s1-a2.json",
+        "evidence/scores/baseline-e-350k-s1-a2.s1.result.json",
+        "evidence/evaluate-11499a7559fd500b/evaluate-output.txt",
+        "notes/wave1-interpretation.md"
+      ],
+      "attempts": [
+        "kai-d350-baseline-e-350k-s1-a1",
+        "kai-d350-baseline-e-350k-s1-a2"
+      ],
+      "measured": {
+        "evaluation_key": "kai-d350-baseline-e-350k-s1-a2#0",
+        "invalid_class": "scientific",
+        "score_attempt": 1,
+        "secondary": "none recorded (score.py writes no secondary block for an INVALID run)",
+        "gpu_h_measured": 6.265278,
+        "sources": "LEDGER.jsonl line 10; evidence/scores/baseline-e-350k-s1-a2.s1.result.json; STATE.json resources"
+      },
+      "outcome": "does not qualify at this horizon",
+      "lesson": "No checkpoint in 1,000 epochs meets all of: traced EBOPs <= 350,000, above the 0-bit floor, accuracy above the non-degeneracy threshold, certified. With the reference valid, PROPOSAL §5 reads this as the protocol showing the problem; the validity check passes (no baseline score, so neither 'within 0.05 of the reference' nor 'reaches 0.50' can hold). Candidates are compared with R0 by qualification. Whether the run never reached the budget or reached it only degenerately is not in the score output; VERIFY should read the traced records."
+    },
+    {
+      "id": "REF",
+      "parent": "R0",
+      "hypothesis": "Reference (control, not ranked): the same model at a 5,000,000 EBOPs target shows the accuracy reachable without the 350k squeeze under this protocol.",
+      "spec": "configs: code/campaigns/d350/configs/d350-reference-e-5m-s1.json; stop epoch 1000; seed 1",
+      "status": "evaluated",
+      "score": 0.6497741935483871,
+      "branch": "main",
+      "notes": "Used for the validity check (PROPOSAL §5) and as the C2 teacher. Attempt a1 never started (0 pod records); a4 is the infrastructure relaunch and resumed into a1's run root.",
+      "code_revision": "43e8326c85c1850537eb66d71a55d6b1348c1df8",
+      "protocol_id": "d350-protocol-v2",
+      "evidence": [
+        "handoffs/rh-e066021d9a5e350f0bc0ffe4",
+        "handoffs/rh-fae7f97029721a068ded4f0b",
+        "attempts/reference-e-5m-s1-a1.json",
+        "attempts/reference-e-5m-s1-a4.json",
+        "evidence/scores/reference-e-5m-s1-a4.s1.result.json",
+        "evidence/scores/reference-e-5m-s1-a4.metrics.json",
+        "notes/wave1-interpretation.md"
+      ],
+      "attempts": [
+        "kai-d350-reference-e-5m-s1-a1",
+        "kai-d350-reference-e-5m-s1-a4"
+      ],
+      "measured": {
+        "evaluation_key": "kai-d350-reference-e-5m-s1-a4#0",
+        "metric": "best_feasible_val_top1_acc",
+        "split": "validation",
+        "n": 62000,
+        "status": "unverified",
+        "selected_epoch_one_based": 30,
+        "selected_ebops": 3260614,
+        "selected_val_macro_auc": 0.8864449110426327,
+        "certification": "CERTIFIED, relative difference 0.0",
+        "cpu_replay_abs_acc_difference": 0.0,
+        "threshold": 0.2109624456315518,
+        "epoch_500": {"val_acc": 0.4045967741935484, "ebops": 5174723, "feasible": false},
+        "epoch_1000": {"val_acc": 0.3641129032258065, "ebops": 5034020, "feasible": false},
+        "best_feasible_acc_by_window_one_based": {
+          "1-200": 0.6497741935483871,
+          "201-400": 0.5289677419354839,
+          "401-600": 0.49256451612903224,
+          "601-800": 0.5235161290322581,
+          "801-1000": 0.5271935483870968
+        },
+        "feasible_epochs": 49,
+        "feasible_epochs_acc_ge_050": 22,
+        "first_budget_met_epoch_one_based": 10,
+        "min_traced_ebops": 3132715,
+        "attention_entropy_mean_at_selected": 0.778037074155873,
+        "activation_bits_mean_at_selected": 3.472907566993271,
+        "gpu_h_measured": 6.904722,
+        "teacher_checkpoint": "/data/discovery-350k-20261008/attempts/reference-e-5m-s1-a1/runs/d350-reference-e-5m-s1/snapshots/epoch-1000/model_best.keras (sha256 44fbd774d28d0bdae7e1d037ebacdca06fd88bea8c2668e39b6763257204b0e4)",
+        "sources": "LEDGER.jsonl line 13; evidence/scores/reference-e-5m-s1-a4.s1.result.json; STATE.json resources"
+      },
+      "outcome": "supporting",
+      "lesson": "The control did its job: it is valid, so the wave-1 validity check can be evaluated, and it shows about 0.65 validation accuracy is reachable by this model at a feasible 5M checkpoint. But that checkpoint is from epoch 30. From epoch 201 the best feasible accuracy per window stays at 0.49-0.53, and at epochs 500 and 1,000 the run is just above its target (not feasible) at 0.40 and 0.36. Under this protocol the 5M run also loses most of its early accuracy while the controller holds it near target, so the loss is not specific to 350k. The rise from window 601-800 to 801-1,000 (0.5235 to 0.5272) is recovery under continued training with the existing schedule, not attributed to the restart. One seed; not quotable before VERIFY."
+    },
+    {
+      "id": "C1",
+      "parent": "R0",
+      "hypothesis": "Learned per-channel weight scales let a binarized layer represent channel magnitudes that the fixed per-tensor absmean scale cannot, which matters more as activation widths are squeezed.",
+      "spec": "plan/specs/C1.md (written 2026-10-09 after wave 1). Methods: notes/methods-C1.md (BiViT parameterized weight scales, Sec. 3.3.2, read from an HTML extract; PDF confirmation is an acceptance item of the spec). Implemented form: learned per-output-channel power-of-two multiplier on top of the per-tensor absmean scale, in all nine binary projections; config d350-c1-e-350k-s1.",
+      "status": "open",
+      "score": null,
+      "branch": null,
+      "notes": "Supported by BiViT (arXiv:2211.07091, Sec. 3.3.2); BiT (arXiv:2205.13016) learns activation scales, not weight scales. Argued against if the baseline accuracy drop coincides with attention entropy going uniform while activation widths stay wide, if channel magnitudes are already uniform, or if the learned scales do not move from their initial values. After wave 1: the entropy/width falsifier cannot be evaluated from R0 (INVALID, no secondary measurements); REF shows a similar loss at 5M, so a mechanism tied only to narrow widths may not explain it. Power-of-two scales are chosen because a real-valued per-channel multiply in all nine layers (11,293 output elements per jet, from the config shapes) would cost, at only 2 bits by 8 bits per multiply, about 180,000 EBOPs: more than the 178,474 EBOPs between the 0-bit floor and the 350k target (index.json headroom_zero). That is an arithmetic estimate, not a trace. Advances to confirmation if it qualifies where R0 does not (PROPOSAL §5).",
+      "code_revision": null,
+      "protocol_id": "d350-protocol-v2",
+      "evidence": [
+        "notes/methods-C1.md",
+        "notes/wave1-interpretation.md"
+      ],
+      "attempts": [],
+      "outcome": "not evaluated"
+    },
+    {
+      "id": "C2",
+      "parent": "REF",
+      "hypothesis": "Distillation from the reference run's best checkpoint gives the squeezed student class-similarity information that hard labels do not.",
+      "spec": "not written; requires reading BiT / BiBERT (arXiv:2203.06390) distillation methods first (PROPOSAL §6.1)",
+      "status": "open",
+      "score": null,
+      "branch": null,
+      "notes": "Argued against if the student matches teacher outputs on training jets while validation accuracy at 350k does not move (capacity limit, pilot H2). After wave 1: the teacher is REF's best feasible checkpoint, the epoch-30 model (val acc 0.6497741935483871, 3,260,614 EBOPs, sha256 44fbd774d28d0bdae7e1d037ebacdca06fd88bea8c2668e39b6763257204b0e4; validation, n = 62,000, unverified). It is an early model, before REF itself lost accuracy under the controller.",
+      "code_revision": null,
+      "protocol_id": "d350-protocol-v2",
+      "evidence": [
+        "evidence/scores/reference-e-5m-s1-a4.s1.result.json"
+      ],
+      "attempts": [],
+      "outcome": "not evaluated"
+    }
+  ]
+}

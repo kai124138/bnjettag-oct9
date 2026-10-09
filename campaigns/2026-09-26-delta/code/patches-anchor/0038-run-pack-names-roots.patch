@@ -1,0 +1,211 @@
+From 020e3a4bfc59e21714aa0796f9cec1cb8d94fc40 Mon Sep 17 00:00:00 2001
+From: apply <apply@localhost>
+Date: Sun, 27 Sep 2026 15:16:09 -0700
+Subject: [PATCH 38/38] 0038-run-pack-names-roots
+
+[Delta 0038] run_pack.py: pack entries may be run names (resolved against the unique
+index.json name); a dict-form packs file carries run_root / data_root (per-pack
+pack_meta data_root wins) exported to the children as BNJ_RUN_ROOT / BNJ_DATA_ROOT;
+conflicting environment values and unknown names are refused (exit 2) before any arm
+starts. A legacy list of row-number lists is unchanged. Test: tests/test_run_pack_delta.py.
+---
+ code/run_pack.py                  | 58 ++++++++++++++++++-
+ code/tests/test_run_pack_delta.py | 93 +++++++++++++++++++++++++++++++
+ 2 files changed, 149 insertions(+), 2 deletions(-)
+ create mode 100644 code/tests/test_run_pack_delta.py
+
+diff --git a/code/run_pack.py b/code/run_pack.py
+index 8ef7f49..ab9975c 100644
+--- a/code/run_pack.py
++++ b/code/run_pack.py
+@@ -24,6 +24,9 @@ four arms stalled in one sweep):
+ Exit 5 from an arm is a memory-gate failure (ablation RSS gate): not retried, counted as failed.
+ Roots: BNJ_RUN_ROOT (runs/, logs/), default the 2026-09-22 screen root; BNJ_CAMPAIGN_DIR
+ (index.json, packs), default this directory.
++[Delta 0038] packs may name runs instead of index rows, and a packs file may be a dict
++{"packs": [...], "run_root": ..., "data_root": ..., "pack_meta": [{"data_root": ...}, ...]};
++see resolve_pack. A list of row-number lists behaves exactly as before.
+ """
+ import json
+ import os
+@@ -47,7 +50,52 @@ CGROUP = Path(os.environ.get('BNJ_CGROUP_DIR', '/sys/fs/cgroup'))
+ PROC = Path(os.environ.get('BNJ_PROC_DIR', '/proc'))
+ EXIT_DIVERGED = 3
+ EXIT_MEMORY_GATE = 5
++EXIT_BAD_PACK = 2
+ children = []
++CHILD_ENV = {}   # [Delta 0038] roots from a dict-form packs file, exported to every child
++
++
++def resolve_pack(spec, rows, completion_index):
++    """[Delta 0038] (row indices, env) for this pod's pack.
++
++    spec is either the legacy list of packs (each a list of index.json row numbers) or a dict
++    {"packs": [...], "run_root": str, "data_root": str, "pack_meta": [{"data_root": str}, ...]}.
++    A pack entry is a row number (unchanged) or a run name, resolved against the unique `name`
++    of index.json rows. run_root / data_root (a pack_meta value wins over the file-level one)
++    become BNJ_RUN_ROOT / BNJ_DATA_ROOT for the children (run_study reads both at import) and
++    this runner's own ROOT; an environment value that disagrees is refused, never overridden.
++    """
++    if isinstance(spec, dict):
++        packs = spec['packs']
++        meta = (spec.get('pack_meta') or [{}] * len(packs))[completion_index]
++        if not spec.get('run_root'):     # runner and children must agree on runs/ and logs/
++            print('PACKS_RUN_ROOT_MISSING', flush=True)
++            raise SystemExit(EXIT_BAD_PACK)
++    else:
++        packs, meta, spec = spec, {}, {}
++    env = {}
++    for key, var in (('run_root', 'BNJ_RUN_ROOT'), ('data_root', 'BNJ_DATA_ROOT')):
++        value = meta.get(key, spec.get(key))
++        if value is None:
++            continue
++        if os.environ.get(var) not in (None, str(value)):
++            print('PACKS_ENV_CONFLICT', var, os.environ[var], 'packs file', value, flush=True)
++            raise SystemExit(EXIT_BAD_PACK)
++        env[var] = str(value)
++    names = [r.get('name') for r in rows]
++    by_name = {n: i for i, n in enumerate(names) if n}
++    indices = []
++    for item in packs[completion_index]:
++        if isinstance(item, str):
++            if names.count(item) != 1:
++                print('PACK_NAME_NOT_UNIQUE_IN_INDEX' if item in by_name else 'PACK_NAME_NOT_IN_INDEX', item, flush=True)
++                raise SystemExit(EXIT_BAD_PACK)
++            item = by_name[item]
++        elif isinstance(item, bool) or not isinstance(item, int):
++            print('PACK_ENTRY_INVALID', repr(item), flush=True)
++            raise SystemExit(EXIT_BAD_PACK)
++        indices.append(item)
++    return indices, env
+ 
+ 
+ def stop(signum, frame):
+@@ -75,7 +123,8 @@ def launch(index, name, stop_after, attempt):
+     path = log / f'{name}-{os.environ.get("HOSTNAME", "pod")}.log'
+     handle = path.open('a', buffering=1)
+     handle.write(f'==== ARM_ATTEMPT {attempt} {time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}\n')
+-    child = subprocess.Popen(command, stdout=handle, stderr=subprocess.STDOUT, start_new_session=True)
++    child = subprocess.Popen(command, stdout=handle, stderr=subprocess.STDOUT, start_new_session=True,
++                             env={**os.environ, **CHILD_ENV} if CHILD_ENV else None)
+     print('ARM_STARTED', index, name, 'pid', child.pid, 'attempt', attempt, flush=True)
+     return {'child': child, 'index': index, 'name': name, 'handle': handle, 'log': path,
+             'started': time.monotonic(), 'started_wall': time.time(), 'attempt': attempt,
+@@ -174,9 +223,14 @@ def terminate(entries):
+ def main():
+     signal.signal(signal.SIGTERM, stop)
+     signal.signal(signal.SIGINT, stop)
++    global ROOT
+     packs = json.loads((CAMPAIGN / sys.argv[1]).read_text())
+-    indices = packs[int(os.environ['JOB_COMPLETION_INDEX'])]
+     rows = json.loads((CAMPAIGN / 'index.json').read_text())['runs']
++    indices, env = resolve_pack(packs, rows, int(os.environ['JOB_COMPLETION_INDEX']))
++    if env:
++        CHILD_ENV.update(env)
++        ROOT = Path(env.get('BNJ_RUN_ROOT', str(ROOT)))
++        print('PACK_ROOTS', json.dumps(env, sort_keys=True), flush=True)
+     stop_after = sys.argv[2] if len(sys.argv) > 2 else None
+     for index in indices:
+         name = rows[index]['name']
+diff --git a/code/tests/test_run_pack_delta.py b/code/tests/test_run_pack_delta.py
+new file mode 100644
+index 0000000..c7acc9c
+--- /dev/null
++++ b/code/tests/test_run_pack_delta.py
+@@ -0,0 +1,93 @@
++"""[Delta 0038] run_pack.py with run names and dict-form packs files (fake arms, no TF):
++names resolve to index rows, run_root / data_root reach the children and the runner's own
++logs, a pack_meta data_root wins over the file-level one, bad names and env conflicts are
++refused before any arm starts, and the legacy list of row numbers is unchanged."""
++import json
++import os
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parents[1]
++
++FAKE = r'''
++import sys, os, json
++from pathlib import Path
++idx = int(sys.argv[sys.argv.index('--index') + 1])
++root = Path(os.environ.get('BNJ_RUN_ROOT', '/nonexistent-default-root'))
++name = json.loads((Path(__file__).parent / 'index.json').read_text())['runs'][idx]['name']
++run = root / 'runs' / name; run.mkdir(parents=True, exist_ok=True)
++(run / 'seen.json').write_text(json.dumps({'index': idx, 'data_root': os.environ.get('BNJ_DATA_ROOT')}))
++print('child', idx, name, flush=True)
++'''
++
++ROWS = [{'name': 'a'}, {'name': None, 'file': None}, {'name': 'b'}, {'name': 'c'}]
++
++
++def setup(tmp, packs, **extra_env):
++    shutil.copy(HERE / 'run_pack.py', tmp / 'run_pack.py')
++    (tmp / 'run_study.py').write_text(FAKE)
++    (tmp / 'index.json').write_text(json.dumps({'runs': ROWS}))
++    (tmp / 'packs.json').write_text(json.dumps(packs))
++    fake_bin = tmp / 'bin'                        # the laptop has no nvidia-smi; the tarball runner calls it
++    fake_bin.mkdir(exist_ok=True)
++    (fake_bin / 'nvidia-smi').write_text('#!/bin/sh\necho fake-gpu\n')
++    (fake_bin / 'nvidia-smi').chmod(0o755)
++    env = {k: v for k, v in os.environ.items() if not k.startswith('BNJ_')}
++    env['PATH'] = f"{fake_bin}{os.pathsep}{env.get('PATH', '')}"
++    env.update(JOB_COMPLETION_INDEX='0', BNJ_STAGGER_SECONDS='0', BNJ_RETRY_DELAY_SECONDS='0',
++               BNJ_POLL_SECONDS='0.2', **extra_env)
++    return env
++
++
++def run(tmp, env):
++    return subprocess.run([sys.executable, str(tmp / 'run_pack.py'), 'packs.json'], env=env, cwd=tmp,
++                          capture_output=True, text=True, timeout=120)
++
++
++def seen(root, name):
++    return json.loads((root / 'runs' / name / 'seen.json').read_text())
++
++
++def test_names_and_roots(tmp_path):
++    root, data = tmp_path / 'delta-root', '/data/chang-n64-20260926'
++    env = setup(tmp_path, {'packs': [['c', 'a'], ['b']], 'run_root': str(root), 'data_root': data})
++    r = run(tmp_path, env)
++    assert r.returncode == 0, r.stdout + r.stderr
++    assert 'ARM_STARTED 3 c' in r.stdout and 'ARM_STARTED 0 a' in r.stdout
++    assert seen(root, 'c') == {'index': 3, 'data_root': data}
++    assert (root / 'logs').is_dir() and any(p.name.startswith('c-') for p in (root / 'logs').iterdir())
++
++
++def test_pack_meta_data_root_wins(tmp_path):
++    root = tmp_path / 'r'
++    packs = {'packs': [['b']], 'run_root': str(root), 'data_root': '/data/anchor',
++             'pack_meta': [{'data_root': '/data/delta-20260927/caches/abcd1234'}]}
++    r = run(tmp_path, setup(tmp_path, packs))
++    assert r.returncode == 0, r.stdout + r.stderr
++    assert seen(root, 'b')['data_root'] == '/data/delta-20260927/caches/abcd1234'
++
++
++def test_unknown_name_refused_before_start(tmp_path):
++    r = run(tmp_path, setup(tmp_path, {'packs': [['a', 'zzz']], 'run_root': str(tmp_path / 'r')}))
++    assert r.returncode == 2 and 'PACK_NAME_NOT_IN_INDEX zzz' in r.stdout and 'ARM_STARTED' not in r.stdout
++
++
++def test_env_conflict_refused(tmp_path):
++    env = setup(tmp_path, {'packs': [['a']], 'run_root': str(tmp_path / 'r')}, BNJ_RUN_ROOT=str(tmp_path / 'other'))
++    r = run(tmp_path, env)
++    assert r.returncode == 2 and 'PACKS_ENV_CONFLICT BNJ_RUN_ROOT' in r.stdout and 'ARM_STARTED' not in r.stdout
++
++
++def test_legacy_list_unchanged(tmp_path):
++    root = tmp_path / 'legacy'
++    r = run(tmp_path, setup(tmp_path, [[0, 2]], BNJ_RUN_ROOT=str(root)))
++    assert r.returncode == 0, r.stdout + r.stderr
++    assert 'PACK_ROOTS' not in r.stdout
++    assert seen(root, 'a') == {'index': 0, 'data_root': None} and seen(root, 'b')['index'] == 2
++
++
++def test_dict_without_run_root_refused(tmp_path):
++    r = run(tmp_path, setup(tmp_path, {'packs': [['a']], 'data_root': '/data/x'}))
++    assert r.returncode == 2 and 'PACKS_RUN_ROOT_MISSING' in r.stdout and 'ARM_STARTED' not in r.stdout
+-- 
+2.50.1 (Apple Git-155)
+

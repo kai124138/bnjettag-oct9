@@ -1,0 +1,119 @@
+From e9cae9c0ae7a02fe9b1d5b00532fb19ae9d24f58 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:38:55 -0700
+Subject: [PATCH 08/24] init-from-checkpoint: experiment.init_checkpoint copies
+ latents from a named checkpoint, input_std checked (M027)
+
+---
+ code/bnhgq2/ablation.py   | 52 +++++++++++++++++++++++++++++++++++++++
+ code/bnhgq2/delta_keys.py |  7 ++++++
+ 2 files changed, 59 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index fcf2b97..e1a6afa 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -58,12 +58,59 @@ def prepare_arrays(cfg, data_dir):
+     return (xt, yt, xv, yv), info
+ 
+ 
++def resolve_artifact(name):
++    """Delta: a checkpoint by file path, or by name as $BNHGQ2_ARTIFACT_ROOT/<name>/model.keras.
++    Returns (path, sha256, input_std dict or None from input_std.json beside it)."""
++    path = Path(name)
++    if not path.is_file():
++        root = os.environ.get('BNHGQ2_ARTIFACT_ROOT')
++        path = Path(root) / name / 'model.keras' if root else path
++    if not path.is_file():
++        raise FileNotFoundError(f'Artifact {name!r} not found (file path or $BNHGQ2_ARTIFACT_ROOT/<name>/model.keras)')
++    std = path.parent / 'input_std.json'
++    return path, hashlib.sha256(path.read_bytes()).hexdigest(), (json.loads(std.read_text()) if std.is_file() else None)
++
++
++def check_artifact_std(name, data_info):
++    """A teacher/init checkpoint must have seen the same standardized inputs."""
++    path, digest, std = resolve_artifact(name)
++    if std is None:
++        raise ValueError(f'{path}: input_std.json missing; cannot prove the same input standardization')
++    mine = data_info['input_std']
++    for key in ('mu', 'sigma'):
++        if not np.allclose(np.asarray(std[key], np.float64), np.asarray(mine[key], np.float64), rtol=0, atol=1e-6):
++            raise ValueError(f'{path}: input_std {key} differs from this cache')
++    return {'path': str(path), 'sha256': digest}
++
++
++def _copy_latents(source, target, require=False):
++    """Copy kernel/bias/pos_table by path and shape; with require, every target kernel must match."""
++    found = {v.path: v for v in source.weights if v.name in ('kernel', 'bias', 'pos_table')}
++    copied, missing = [], []
++    for variable in target.weights:
++        if variable.name not in ('kernel', 'bias', 'pos_table'):
++            continue
++        other = found.get(variable.path)
++        if other is not None and tuple(other.shape) == tuple(variable.shape):
++            variable.assign(other)
++            copied.append(variable.path)
++        elif variable.name == 'kernel':
++            missing.append(variable.path)
++    if require and missing:
++        raise ValueError(f'init_checkpoint lacks equal-shape kernels for {missing}')
++    return copied
++
++
+ def matching_initialization(cfg, sample, seed):
+     """Copy equal-shape kernels/biases/position tables; channel grids start identical."""
++    init_from = cfg['experiment'].get('init_checkpoint')  # Delta: warm start from a checkpoint
++    source_model = keras.models.load_model(resolve_artifact(init_from)[0], compile=False) if init_from else None
+     baseline = copy.deepcopy(cfg)
+     baseline['arch']['ffn_dim'] = 64
+     baseline['quant'].update(act_granularity='tensor', softmax_out_bits=10, softmax_out_i=1)
+     reference, rtaps = qat.build_qat_model(baseline, seed=seed)
++    if source_model is not None:
++        _copy_latents(source_model, reference)
+     qat.init_delta_scales(reference)
+     qat.calibrate_activations(reference, rtaps, sample, cfg['quant']['act_bits'])
+     model, taps = qat.build_qat_model(cfg, seed=seed)
+@@ -77,6 +124,7 @@ def matching_initialization(cfg, sample, seed):
+     expected_copied = {v.path for v in model.weights
+                        if v.path in source and v.shape == source[v.path].shape}
+     assert expected_copied and set(copied) == expected_copied, 'Missing equal-shape initialization weights'
++    init_copied = _copy_latents(source_model, model, require=True) if source_model is not None else None
+     qat.init_delta_scales(model)
+     matched_kernels = sum(v.name == 'kernel' and v.path in expected_copied for v in model.weights)
+     changed_ffn_kernels = 2 * cfg['arch']['n_layers'] if cfg['arch']['ffn_dim'] != baseline['arch']['ffn_dim'] else 0
+@@ -114,6 +162,8 @@ def matching_initialization(cfg, sample, seed):
+                 'channel_tensor_forward_equivalence_checked': cfg['quant']['act_granularity'] == 'channel',
+                 'kernel_hashes': {v.path: array_hash(v.numpy()) for v in model.weights
+                                   if v.name in ('kernel', 'bias', 'pos_table')}}
++    if init_copied is not None:
++        evidence['init_checkpoint'] = {'name': init_from, 'copied_paths': init_copied}
+     del reference
+     return model, evidence
+ 
+@@ -357,6 +407,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             raise RuntimeError('History exists without a committed checkpoint')
+         builder = model_builder or matching_initialization
+         model, initialization = builder(cfg, xt[:4096], seed)
++        if cfg['experiment'].get('init_checkpoint'):
++            initialization['init_checkpoint_artifact'] = check_artifact_std(cfg['experiment']['init_checkpoint'], data_info)
+         optimizer = optimizer_for(cfg, model)
+         initial = compute_ebops(model, sample)
+         state = {'config_sha256': digest_json(cfg), 'data_sha256': digest_json(data_info),
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index e596c24..8e22b74 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -155,3 +155,10 @@ def _layer_override(value, cfg):
+ 
+ register('quant.weight', 'weight-scheme-baselines', _weight, active=lambda v: v != 'binary_absmean')
+ register('quant.layer_weight_override', 'weight-scheme-baselines', _layer_override)
++
++# init-from-checkpoint: warm start the latents from a named checkpoint (the FP teacher; M027).
++def _artifact_name(value, cfg):
++    return None if isinstance(value, str) and value else 'must be a non-empty artifact name or path'
++
++
++register('experiment.init_checkpoint', 'init-from-checkpoint', _artifact_name, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

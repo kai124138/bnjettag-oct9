@@ -1,0 +1,58 @@
+{
+  "audit_date": "2026-09-18",
+  "status": "PASS_FOR_BOUNDED_EXPLORATORY_PILOT",
+  "checks": [
+    "local full Engram preflight PASS11 groups",
+    "pinned W&B SDK wrapper and same-run review artifact contract PASS (mock remote writes)",
+    "repository validation PASS61 sources73 configs",
+    "independent theory/document audit complete; initialization wording corrected"
+  ],
+  "file_sha256": {
+    "docs/ENGRAM_HYPOTHESES_AND_ABSTRACT.md": "d62dd8ab5a34bd14db5f6451e108cbf8734817ea04f4aedb5491583fdba7d0d9",
+    "docs/ENGRAM_RESEARCH_AND_RUNBOOK.md": "cfa6efd7ca318bcf1067e66496c21ef218e85ee0a3b784784d13984122c7a508",
+    "code/hgq2/run_engram.py": "1d6d64832d7d880aac59826590de7b48ba2cd4bfd4772fc81a2f2c8d594587a2",
+    "code/hgq2/check_engram.py": "6081a1def721c687c71d7bfba5d3ed1dac663a1a5f1f0931de42a68c74598906",
+    "code/hgq2/bnhgq2/engram.py": "cceb2a85f233aa8baa35572cf54f4d6727293ee480ec4ced63d7f1edf059a77c",
+    "code/hgq2/bnhgq2/ablation.py": "2e5f6fbef42cc61d971bbc9e7fb06dea9b14cf6e68fc415a9adb6d536ec92909"
+  },
+  "scope": {
+    "arms": [
+      "e00",
+      "e01",
+      "e02",
+      "e03"
+    ],
+    "seed": 1,
+    "cumulative_epochs": 100,
+    "full_schedule_epochs": 1000,
+    "parallel_gpus": 1,
+    "campaign_deadline_seconds": 86400,
+    "project": "kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental",
+    "required_access": "PRIVATE"
+  },
+  "physics_results_claimed": false,
+  "hardware_validation_claimed": false,
+  "remote_preflight_required": true,
+  "remote_preflight": {
+    "status": "PASS",
+    "job": "kai-engram-preflight-a10364ed-r2",
+    "production_arms": 4,
+    "cache_arrays_rehashed": true,
+    "bundle_sha256": "a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792"
+  },
+  "pretraining_observation": {
+    "scope": "fixed256training_examples_untrained_E03",
+    "gate_half_fraction": 1.0,
+    "gate_std": 0.0,
+    "residual_rms": 0.0,
+    "interpretation": "Initial gate is constant0.5 and values are zero, as allowed by the prospective audit. Training diagnostics must determine whether context dependence develops; this is not a learned-accuracy result."
+  },
+  "verified_training_start": {
+    "verified_at_utc": "2026-09-18T17:00:03.826330+00:00",
+    "job": "kai-engram-screen-e100-a10364ed",
+    "first_epoch_verified": true,
+    "wandb_run_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/10dd9f63e913",
+    "first_checkpoint": "epoch-0001",
+    "pilot_completion_claimed": false
+  }
+}

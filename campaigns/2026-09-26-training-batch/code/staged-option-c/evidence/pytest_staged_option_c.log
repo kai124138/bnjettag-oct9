@@ -1,0 +1,16 @@
+# cwd /Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-26-training-batch/code/staged-option-c/code (42abed4b + 0032 f475c69e); Mon Sep 28 23:53:59 UTC 2026
+tests/test_wandb_stage.py: 368 warnings
+tests/test_wrap_overflow.py: 32 warnings
+analysis/test_attn_entropy.py: 440 warnings
+
+analysis/test_attn_entropy.py::test_uniform_logits_give_one[a]
+analysis/test_attn_entropy.py::test_main_on_snapshot_layout[a]
+analysis/test_attn_entropy.py::test_uniform_logits_give_one[cprime]
+analysis/test_attn_entropy.py::test_uniform_logits_give_one[fp32]
+  Expected: ['input_1']
+  Received: inputs=Tensor(shape=(16, 64, 3))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [2] analysis/test_attn_entropy.py:142: main() is exercised on the A build (C-prime test cfg differs from its file: pos_enc)
+100 passed, 2 skipped, 30738 warnings in 193.18s (0:03:13)

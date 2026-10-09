@@ -1,0 +1,129 @@
+/cmcode/hgq2.tar.gz: OK
+/work/code/bnhgq2/train.py: OK
+/work/code/bnhgq2/pt_weights.py: OK
+[gate] archive aad983805cba + train.py + pt_weights.py + 3 arm configs verified
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+=== BNJetTag FINAL preflight (PVC-free) Sat Sep 26 01:23:48 UTC 2026 ===
+[deps] pinned install (mirror .venv-hgq2)
+--- data source reachability: Zenodo train tarball (HEAD, no download) ---
+  OK Zenodo train tarball reachable: 2725115104 bytes
+  PASS data-source
+--- build all 5 configs (CPU) + param counts + binary gate ---
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385829.617653      25 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790385829.618115      25 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1790385829.661291      25 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790385830.861684      25 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790385830.862271      25 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1790385832.461058      25 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+  ptw-n8-20260925-base-w1a8 [d69a9f52] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ptw-n8-20260925-ptw5-w1a8 [5814ee26] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ptw-n8-20260925-ptwnc-w1a8 [87dba270] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  PASS build
+PREFLIGHT_ALL_PASS
+[data] 2026-09-26T01:23:54Z fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo
+[data] tarball bytes: 2725115104
+[data] DATA=/work/data/train (62 files) 2026-09-26T01:35:59Z
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790386559.770246      57 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790386559.770613      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1790386559.814481      57 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790386560.858142      57 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790386560.858717      57 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+=== ptw-n8-20260925-base-w1a8 [d69a9f52] ===
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 2 files, 20000 jets (16000 train / 4000 val), class counts [4141, 3852, 4019, 3909, 4079]
+[train] input_std ON: per-feature z-score from train split (|mu|max=89.57, sigma_max=85.18) -> input_std.json
+E0000 00:00:1790386563.528690      57 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[train] ptw-n8-20260925-base-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=trainable
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+Epoch 1/3
+  [epoch 0] val_macro_auc=0.51787 per_class=[0.6069, 0.4006, 0.5259, 0.5078, 0.5481]
+  [epoch 0] new best -> saved /work/outputs/smoke-base/model_best.keras
+63/63 - 20s - 317ms/step - categorical_accuracy: 0.2298 - loss: 1.6168 - val_macro_auc: 0.5179 - learning_rate: 2.0000e-05
+Epoch 2/3
+  [epoch 1] val_macro_auc=0.52914 per_class=[0.6108, 0.4209, 0.527, 0.4929, 0.5942]
+  [epoch 1] new best -> saved /work/outputs/smoke-base/model_best.keras
+63/63 - 6s - 89ms/step - categorical_accuracy: 0.2566 - loss: 1.6076 - val_macro_auc: 0.5291 - learning_rate: 1.0000e-05
+Epoch 3/3
+  [epoch 2] val_macro_auc=0.52914 per_class=[0.6108, 0.4209, 0.527, 0.4929, 0.5942]
+63/63 - 5s - 82ms/step - categorical_accuracy: 0.2679 - loss: 1.6055 - val_macro_auc: 0.5291 - learning_rate: 0.0000e+00
+Restoring model weights from the end of the best epoch: 2.
+[train] trainable-scale grids moved at 0/23 sites during training (drift tracking)
+[train] DONE best_epoch=1 best_val_macro_auc=0.52914 in 31s
+[train] wrote /work/outputs/smoke-base/model_best.keras + /work/outputs/smoke-base/train_meta.json
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790386599.779608     161 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790386599.779991     161 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1790386599.824487     161 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790386600.879134     161 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790386600.879696     161 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+=== ptw-n8-20260925-ptw5-w1a8 [5814ee26] ===
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 2 files, 20000 jets (16000 train / 4000 val), class counts [4141, 3852, 4019, 3909, 4079]
+[train] pt_weights ON: n_bins=100 cap=5.0 class_weight=None (train split only) eff_frac={'g': 0.502, 'q': 0.903, 'W': 0.679, 'Z': 0.736, 't': 0.678}
+[train] input_std ON: per-feature z-score from train split (|mu|max=89.57, sigma_max=85.18) -> input_std.json
+E0000 00:00:1790386604.045651     161 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[train] ptw-n8-20260925-ptw5-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=trainable
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+Epoch 1/3
+  [epoch 0] val_macro_auc=0.51341 per_class=[0.6076, 0.3905, 0.5288, 0.5107, 0.5294]
+  [epoch 0] new best -> saved /work/outputs/smoke-ptw5/model_best.keras
+63/63 - 22s - 344ms/step - categorical_accuracy: 0.2260 - loss: 1.6114 - val_macro_auc: 0.5134 - learning_rate: 2.0000e-05
+Epoch 2/3
+  [epoch 1] val_macro_auc=0.53021 per_class=[0.6086, 0.4241, 0.5325, 0.5029, 0.583]
+  [epoch 1] new best -> saved /work/outputs/smoke-ptw5/model_best.keras
+63/63 - 6s - 88ms/step - categorical_accuracy: 0.2521 - loss: 1.6030 - val_macro_auc: 0.5302 - learning_rate: 1.0000e-05
+Epoch 3/3
+  [epoch 2] val_macro_auc=0.53021 per_class=[0.6086, 0.4241, 0.5325, 0.5029, 0.583]
+63/63 - 5s - 81ms/step - categorical_accuracy: 0.2631 - loss: 1.6004 - val_macro_auc: 0.5302 - learning_rate: 0.0000e+00
+Restoring model weights from the end of the best epoch: 2.
+[train] trainable-scale grids moved at 0/23 sites during training (drift tracking)
+[train] DONE best_epoch=1 best_val_macro_auc=0.53021 in 32s
+[train] wrote /work/outputs/smoke-ptw5/model_best.keras + /work/outputs/smoke-ptw5/train_meta.json
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790386641.299119     265 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790386641.299490     265 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1790386641.343426     265 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1790386642.389429     265 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1790386642.389988     265 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+=== ptw-n8-20260925-ptwnc-w1a8 [87dba270] ===
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 2 files, 20000 jets (16000 train / 4000 val), class counts [4141, 3852, 4019, 3909, 4079]
+[train] pt_weights ON: n_bins=100 cap=None class_weight=None (train split only) eff_frac={'g': 0.502, 'q': 0.903, 'W': 0.528, 'Z': 0.541, 't': 0.661}
+[train] input_std ON: per-feature z-score from train split (|mu|max=89.57, sigma_max=85.18) -> input_std.json
+E0000 00:00:1790386645.518973     265 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[train] ptw-n8-20260925-ptwnc-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=trainable
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+Epoch 1/3
+  [epoch 0] val_macro_auc=0.51152 per_class=[0.6045, 0.3897, 0.5282, 0.508, 0.5272]
+  [epoch 0] new best -> saved /work/outputs/smoke-ptwnc/model_best.keras
+63/63 - 20s - 316ms/step - categorical_accuracy: 0.2239 - loss: 1.6123 - val_macro_auc: 0.5115 - learning_rate: 2.0000e-05
+Epoch 2/3
+  [epoch 1] val_macro_auc=0.52912 per_class=[0.6101, 0.4218, 0.5332, 0.4993, 0.5812]
+  [epoch 1] new best -> saved /work/outputs/smoke-ptwnc/model_best.keras
+63/63 - 6s - 88ms/step - categorical_accuracy: 0.2498 - loss: 1.6038 - val_macro_auc: 0.5291 - learning_rate: 1.0000e-05
+Epoch 3/3
+  [epoch 2] val_macro_auc=0.52912 per_class=[0.6101, 0.4218, 0.5332, 0.4993, 0.5812]
+63/63 - 5s - 82ms/step - categorical_accuracy: 0.2615 - loss: 1.6010 - val_macro_auc: 0.5291 - learning_rate: 0.0000e+00
+Restoring model weights from the end of the best epoch: 2.
+[train] trainable-scale grids moved at 0/23 sites during training (drift tracking)
+[train] DONE best_epoch=1 best_val_macro_auc=0.52912 in 31s
+[train] wrote /work/outputs/smoke-ptwnc/model_best.keras + /work/outputs/smoke-ptwnc/train_meta.json
+  base: n_files=2 n_train=16000 epochs_run=3 jit=False params=18657 -> OK
+  ptw5: cap=5.0 eff_frac={'g': 0.502, 'q': 0.903, 'W': 0.679, 'Z': 0.736, 't': 0.678} pngs=['w1a8-s1_13_pt_weights.png', 'w1a8-s1_14_weight_hist.png']
+  ptw5: n_files=2 n_train=16000 epochs_run=3 jit=False params=18657 -> OK
+  ptwnc: cap=None eff_frac={'g': 0.502, 'q': 0.903, 'W': 0.528, 'Z': 0.541, 't': 0.661} pngs=['w1a8-s1_13_pt_weights.png', 'w1a8-s1_14_weight_hist.png']
+  ptwnc: n_files=2 n_train=16000 epochs_run=3 jit=False params=18657 -> OK
+PTW_SMOKE_PASS

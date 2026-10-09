@@ -1,0 +1,51 @@
+{
+  "index": 4,
+  "name": "chang0926-a-n64-s5",
+  "arm": "A",
+  "seed": 5,
+  "n_part": 64,
+  "file": "chang0926-a-n64-s5.json",
+  "production": true,
+  "target_ebops": 350000,
+  "zero_floor_ebops": 171526,
+  "arch": {
+    "d_model": 24,
+    "n_heads": 2,
+    "pos_enc": "none"
+  },
+  "quant_set": "chang",
+  "config_sha256": "baa5c6e43742624cdfd4e6cd134e6077791332e191f706ad76e60801192a50d9",
+  "status": "verified_canary",
+  "completed_epochs": 21,
+  "selected": {
+    "epoch": 19,
+    "val_macro_auc": 0.8518627575700517,
+    "val_categorical_accuracy": 0.5810322580645161,
+    "ebops": 1610418,
+    "ebops_above_floor": 1438892
+  },
+  "checkpoint": "model_min_ebops.keras",
+  "checkpoint_sha256": "566a2b34f84760778a419ea127866450c934f0b08c21f2e8f36cc75113251c83",
+  "budget_met": false,
+  "validation_accuracy": 0.5810322580645161,
+  "validation_macro_auc": 0.8518627575700517,
+  "validation_per_class_auc": [
+    0.838409578150864,
+    0.8408462416510535,
+    0.8339693231497792,
+    0.8267228753339213,
+    0.9193657695646402
+  ],
+  "wall_seconds_this_invocation": 3707.6761672608554,
+  "test_set_used": false,
+  "hardware_validated": false,
+  "validation_labels_sha256": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709",
+  "reload_ebops_check": "stored",
+  "source_sha256": "041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42",
+  "selection_cost": 1610418,
+  "selection_cost_convention": "native_hgq2",
+  "native_hgq2_backbone_ebops": 1610418,
+  "custom_estimated_bitops": 0,
+  "modules": {},
+  "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals."
+}

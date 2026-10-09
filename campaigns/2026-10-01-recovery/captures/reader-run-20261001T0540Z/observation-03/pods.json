@@ -1,0 +1,309 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "bnjettag.io/launch-authorization": "pending-explicit-exception",
+                    "bnjettag.io/recovery-bundle-sha256": "cbb3dec6a6f3e04766b1973b39442ea2f9f16cf28ce3c323600ad037cf3ac75e",
+                    "bnjettag.io/recovery-scope": "finite-readonly-legacy-evidence",
+                    "cni.projectcalico.org/containerID": "32e91b918a288c6d0606c3cd208c98fec57e596eb90567b42e0e8f6a575d4e01",
+                    "cni.projectcalico.org/podIP": "10.244.227.121/32",
+                    "cni.projectcalico.org/podIPs": "10.244.227.121/32,fdf0:17b3:c3ec:1f79:10:0:a:d649/128",
+                    "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+                },
+                "creationTimestamp": "2026-10-01T05:41:40Z",
+                "finalizers": [
+                    "batch.kubernetes.io/job-tracking"
+                ],
+                "generateName": "kai-recovery-ro-1001-cbb3dec6a6-",
+                "generation": 1,
+                "labels": {
+                    "batch.kubernetes.io/controller-uid": "5acf637b-db47-42a0-a3b4-fbd5c2f012f0",
+                    "batch.kubernetes.io/job-name": "kai-recovery-ro-1001-cbb3dec6a6",
+                    "bnjettag.io/purpose": "evidence-recovery",
+                    "controller-uid": "5acf637b-db47-42a0-a3b4-fbd5c2f012f0",
+                    "job-name": "kai-recovery-ro-1001-cbb3dec6a6",
+                    "user": "kai"
+                },
+                "name": "kai-recovery-ro-1001-cbb3dec6a6-hdxjb",
+                "namespace": "cms-ml",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "kai-recovery-ro-1001-cbb3dec6a6",
+                        "uid": "5acf637b-db47-42a0-a3b4-fbd5c2f012f0"
+                    }
+                ],
+                "resourceVersion": "14992812050",
+                "uid": "09bf9a9f-405e-42b7-b8df-cde90e236fe9"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "NotIn",
+                                            "values": [
+                                                "nautilus-ext-gpu01.fullerton.edu"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "args": [
+                            "--bundle",
+                            "/reader/BUNDLE.json",
+                            "--expected-bundle-sha256",
+                            "cbb3dec6a6f3e04766b1973b39442ea2f9f16cf28ce3c323600ad037cf3ac75e"
+                        ],
+                        "command": [
+                            "python3",
+                            "-B",
+                            "/reader/reader.py"
+                        ],
+                        "env": [
+                            {
+                                "name": "NVIDIA_VISIBLE_DEVICES",
+                                "value": "void"
+                            }
+                        ],
+                        "image": "docker.io/library/python@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "reader",
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "ephemeral-storage": "3Gi",
+                                "memory": "512Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "ephemeral-storage": "256Mi",
+                                "memory": "256Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "readOnlyRootFilesystem": true
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/data",
+                                "name": "data",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/reader",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "scratch"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": false,
+                "nodeName": "hcc-nrp-pki-c1703.unl.edu",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "runAsGroup": 1000,
+                    "runAsNonRoot": true,
+                    "runAsUser": 1000,
+                    "seccompProfile": {
+                        "type": "RuntimeDefault"
+                    }
+                },
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 10,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "PreferNoSchedule",
+                        "key": "nvidia.com/gpu",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "data",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data",
+                            "readOnly": true
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 292,
+                            "name": "kai-recovery-ro-1001-cbb3dec6a6-code"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "2304Mi"
+                        },
+                        "name": "scratch"
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-10-01T05:41:51Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-10-01T05:41:40Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-10-01T05:41:51Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-10-01T05:41:51Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-10-01T05:41:40Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "100m",
+                            "ephemeral-storage": "256Mi",
+                            "memory": "256Mi"
+                        },
+                        "containerID": "containerd://6900ac12188dedab675bb52920a0ed22daabdd42bdbc08be6d4ea23b9d55fd30",
+                        "image": "sha256:9e87977b867847e186d066f531ef783b006d582a985c341c269446088d90f2c4",
+                        "imageID": "docker.io/library/python@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f",
+                        "lastState": {},
+                        "name": "reader",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "ephemeral-storage": "3Gi",
+                                "memory": "512Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "ephemeral-storage": "256Mi",
+                                "memory": "256Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2026-10-01T05:41:50Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 1000,
+                                "supplementalGroups": [
+                                    1000
+                                ],
+                                "uid": 1000
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/data",
+                                "name": "data",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/reader",
+                                "name": "code",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "scratch"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "129.93.153.196",
+                "hostIPs": [
+                    {
+                        "ip": "129.93.153.196"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.244.227.121",
+                "podIPs": [
+                    {
+                        "ip": "10.244.227.121"
+                    },
+                    {
+                        "ip": "fdf0:17b3:c3ec:1f79:10:0:a:d649"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2026-10-01T05:41:40Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

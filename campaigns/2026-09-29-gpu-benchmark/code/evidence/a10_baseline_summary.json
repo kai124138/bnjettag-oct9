@@ -1,0 +1,737 @@
+[
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10-pilot-b-K5",
+  "class": "E",
+  "phase": "K5 (mixed pack)",
+  "k": 5,
+  "stop_after": 21,
+  "arms_parsed": 3,
+  "arms_completed": 3,
+  "all_arms_completed": false,
+  "s_d1": 140.35999999999999,
+  "R_d1": null,
+  "steady_s_slowest_arm": 140.35999999999999,
+  "untraced_median_s": 129.65,
+  "traced_median_s": 238.55,
+  "n_untraced": 54,
+  "n_traced": 6,
+  "steady_s_per_epoch": 140.54000000000002,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   128.45,
+   130.0
+  ],
+  "epoch1_median_s": 230.3,
+  "trace_seconds_median": 113.97,
+  "completed_run_epochs": 63,
+  "host_rss_peak_mb": 2394,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 0,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 3
+  },
+  "pack_k": 5,
+  "pack_mix": "E x3, C' (A07, old quantizers) x1, E1 (one head) x1",
+  "n_samples": 36,
+  "gpu_util_mean_all": 100.0,
+  "gpu_mem_peak_mib": 22540.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.9788084071565051,
+  "smi_window_utc": [
+   "2026-09-29T00:16:20+00:00",
+   "2026-09-29T00:51:51.100000+00:00"
+  ],
+  "node": "hcc-nrp-shor-c5805.unl.edu",
+  "gpu_info": null,
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": "595.91.07",
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [
+   {
+    "log": "pilotb5-qqjmt-full-20260929T0305Z.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": null,
+  "note": "CROSS-CHECK ONLY (STUDY Amendment 1, A1): MIXED PACK, run_study.train with W&B on, run_pack; K counts every arm in the pod. Not the benchmark harness; the A10 baseline is the A10 harness Jobs.",
+  "class_run_epochs_per_gpu_hour": 76.94499857509263,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 140.16500000000002,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 223.4,
+    "host_rss_peak_mb": 2394,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 140.35999999999999,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 230.3,
+    "host_rss_peak_mb": 2388,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-d-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 140.275,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 230.6,
+    "host_rss_peak_mb": 2385,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   }
+  ]
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10-pilot-b-K5",
+  "class": "C' (A07, old quantizers)",
+  "phase": "K5 (mixed pack)",
+  "k": 5,
+  "stop_after": 21,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": false,
+  "s_d1": 228.39499999999998,
+  "R_d1": null,
+  "steady_s_slowest_arm": 228.39499999999998,
+  "untraced_median_s": 211.05,
+  "traced_median_s": 384.5,
+  "n_untraced": 18,
+  "n_traced": 2,
+  "steady_s_per_epoch": 228.39499999999998,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   211.05,
+   211.05
+  ],
+  "epoch1_median_s": 315.6,
+  "trace_seconds_median": 181.325,
+  "completed_run_epochs": 21,
+  "host_rss_peak_mb": 2377,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 0,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 1
+  },
+  "pack_k": 5,
+  "pack_mix": "E x3, C' (A07, old quantizers) x1, E1 (one head) x1",
+  "n_samples": 36,
+  "gpu_util_mean_all": 100.0,
+  "gpu_mem_peak_mib": 22540.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.9788084071565051,
+  "smi_window_utc": [
+   "2026-09-29T00:16:20+00:00",
+   "2026-09-29T00:51:51.100000+00:00"
+  ],
+  "node": "hcc-nrp-shor-c5805.unl.edu",
+  "gpu_info": null,
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": "595.91.07",
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [
+   {
+    "log": "pilotb5-qqjmt-full-20260929T0305Z.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": null,
+  "note": "CROSS-CHECK ONLY (STUDY Amendment 1, A1): MIXED PACK, run_study.train with W&B on, run_pack; K counts every arm in the pod. Not the benchmark harness; the A10 baseline is the A10 harness Jobs.",
+  "class_run_epochs_per_gpu_hour": 15.762166422207143,
+  "arms": [
+   {
+    "name": "chang0926-cprime-n64-s1",
+    "params": 12788,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 228.39499999999998,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 315.6,
+    "host_rss_peak_mb": 2377,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   }
+  ]
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10-pilot-b-K5",
+  "class": "E1 (one head)",
+  "phase": "K5 (mixed pack)",
+  "k": 5,
+  "stop_after": 21,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": false,
+  "s_d1": 100.62,
+  "R_d1": null,
+  "steady_s_slowest_arm": 100.62,
+  "untraced_median_s": 90.45,
+  "traced_median_s": 192.15,
+  "n_untraced": 18,
+  "n_traced": 2,
+  "steady_s_per_epoch": 100.62,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   90.45,
+   90.45
+  ],
+  "epoch1_median_s": 177.3,
+  "trace_seconds_median": 100.795,
+  "completed_run_epochs": 21,
+  "host_rss_peak_mb": 2393,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 0,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 1
+  },
+  "pack_k": 5,
+  "pack_mix": "E x3, C' (A07, old quantizers) x1, E1 (one head) x1",
+  "n_samples": 36,
+  "gpu_util_mean_all": 100.0,
+  "gpu_mem_peak_mib": 22540.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.9788084071565051,
+  "smi_window_utc": [
+   "2026-09-29T00:16:20+00:00",
+   "2026-09-29T00:51:51.100000+00:00"
+  ],
+  "node": "hcc-nrp-shor-c5805.unl.edu",
+  "gpu_info": null,
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": "595.91.07",
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [
+   {
+    "log": "pilotb5-qqjmt-full-20260929T0305Z.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": null,
+  "note": "CROSS-CHECK ONLY (STUDY Amendment 1, A1): MIXED PACK, run_study.train with W&B on, run_pack; K counts every arm in the pod. Not the benchmark harness; the A10 baseline is the A10 harness Jobs.",
+  "class_run_epochs_per_gpu_hour": 35.77817531305903,
+  "arms": [
+   {
+    "name": "chang0926-e1-n64-s1",
+    "params": 19447,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 100.62,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 177.3,
+    "host_rss_peak_mb": 2393,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   }
+  ]
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10-pilot-b-K5",
+  "class": "ALL (mixed pack)",
+  "phase": "K5 (mixed pack)",
+  "k": 5,
+  "pack_k": 5,
+  "pack_mix": "E x3, C' (A07, old quantizers) x1, E1 (one head) x1",
+  "pack_run_epochs_per_gpu_hour": 128.5365643935195,
+  "pack_arms_with_window_data": 5,
+  "per_arm_steady_s": {
+   "chang0926-a-n64-s1": 140.16500000000002,
+   "chang0926-a-n64-s2": 140.35999999999999,
+   "chang0926-cprime-n64-s1": 228.39499999999998,
+   "chang0926-d-n64-s1": 140.275,
+   "chang0926-e1-n64-s1": 100.62
+  },
+  "n_samples": 36,
+  "gpu_util_mean_all": 100.0,
+  "gpu_mem_peak_mib": 22540.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.9788084071565051,
+  "smi_window_utc": [
+   "2026-09-29T00:16:20+00:00",
+   "2026-09-29T00:51:51.100000+00:00"
+  ],
+  "node": "hcc-nrp-shor-c5805.unl.edu",
+  "gpu_info": null,
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": "595.91.07",
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [
+   {
+    "log": "pilotb5-qqjmt-full-20260929T0305Z.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": null,
+  "window_crosses_resume": false,
+  "host_rss_peak_mb": 2394,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10-pilot-b-K3",
+  "class": "A07",
+  "phase": "K3 (mixed pack)",
+  "k": 3,
+  "stop_after": 21,
+  "arms_parsed": 2,
+  "arms_completed": 2,
+  "all_arms_completed": false,
+  "s_d1": 132.48,
+  "R_d1": null,
+  "steady_s_slowest_arm": 132.48,
+  "untraced_median_s": 123.05000000000001,
+  "traced_median_s": 214.65,
+  "n_untraced": 36,
+  "n_traced": 4,
+  "steady_s_per_epoch": 132.21,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   122.9,
+   123.35
+  ],
+  "epoch1_median_s": 209.2,
+  "trace_seconds_median": 101.41999999999999,
+  "completed_run_epochs": 42,
+  "host_rss_peak_mb": 2483,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 0,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 2
+  },
+  "pack_k": 3,
+  "pack_mix": "A07 x2, E+PE (F) x1",
+  "n_samples": 30,
+  "gpu_util_mean_all": 96.93333333333334,
+  "gpu_mem_peak_mib": 21261.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.9232673267326733,
+  "smi_window_utc": [
+   "2026-09-28T23:27:04+00:00",
+   "2026-09-28T23:56:33.500000+00:00"
+  ],
+  "node": "gpu-16.nrp.mghpcc.org",
+  "gpu_info": null,
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": "595.71.05",
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [
+   {
+    "log": "pilotb3-42abed-c7tg4-full-20260929T0015Z.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": null,
+  "note": "CROSS-CHECK ONLY (STUDY Amendment 1, A1): MIXED PACK, run_study.train with W&B on, run_pack; K counts every arm in the pod. Not the benchmark harness; the A10 baseline is the A10 harness Jobs.",
+  "class_run_epochs_per_gpu_hour": 54.34782608695652,
+  "arms": [
+   {
+    "name": "chang0926-a07-350-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 132.14000000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 206.9,
+    "host_rss_peak_mb": 2483,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 132.48,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 211.5,
+    "host_rss_peak_mb": 2478,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   }
+  ]
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10-pilot-b-K3",
+  "class": "E+PE (F)",
+  "phase": "K3 (mixed pack)",
+  "k": 3,
+  "stop_after": 21,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": false,
+  "s_d1": 82.86500000000001,
+  "R_d1": null,
+  "steady_s_slowest_arm": 82.86500000000001,
+  "untraced_median_s": 73.95,
+  "traced_median_s": 163.10000000000002,
+  "n_untraced": 18,
+  "n_traced": 2,
+  "steady_s_per_epoch": 82.86500000000001,
+  "run_epochs_per_gpu_hour": null,
+  "gpu_hours_per_1000_run_epochs": null,
+  "per_arm_untraced_median_range_s": [
+   73.95,
+   73.95
+  ],
+  "epoch1_median_s": 171.2,
+  "trace_seconds_median": 86.74000000000001,
+  "completed_run_epochs": 21,
+  "host_rss_peak_mb": 2331,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 0,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 1
+  },
+  "pack_k": 3,
+  "pack_mix": "A07 x2, E+PE (F) x1",
+  "n_samples": 30,
+  "gpu_util_mean_all": 96.93333333333334,
+  "gpu_mem_peak_mib": 21261.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.9232673267326733,
+  "smi_window_utc": [
+   "2026-09-28T23:27:04+00:00",
+   "2026-09-28T23:56:33.500000+00:00"
+  ],
+  "node": "gpu-16.nrp.mghpcc.org",
+  "gpu_info": null,
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": "595.71.05",
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [
+   {
+    "log": "pilotb3-42abed-c7tg4-full-20260929T0015Z.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": null,
+  "note": "CROSS-CHECK ONLY (STUDY Amendment 1, A1): MIXED PACK, run_study.train with W&B on, run_pack; K counts every arm in the pod. Not the benchmark harness; the A10 baseline is the A10 harness Jobs.",
+  "class_run_epochs_per_gpu_hour": 43.44415615760574,
+  "arms": [
+   {
+    "name": "chang0926-f-n64-s1",
+    "params": 33271,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 82.86500000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 171.2,
+    "host_rss_peak_mb": 2331,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "none",
+    "verification_error": null,
+    "cache": null,
+    "arm_cpus": null,
+    "window_crosses_resume": false
+   }
+  ]
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10-pilot-b-K3",
+  "class": "ALL (mixed pack)",
+  "phase": "K3 (mixed pack)",
+  "k": 3,
+  "pack_k": 3,
+  "pack_mix": "A07 x2, E+PE (F) x1",
+  "pack_run_epochs_per_gpu_hour": 97.86190150016074,
+  "pack_arms_with_window_data": 3,
+  "per_arm_steady_s": {
+   "chang0926-a07-350-n64-s1": 132.14000000000001,
+   "chang0926-c-n64-s1": 132.48,
+   "chang0926-f-n64-s1": 82.86500000000001
+  },
+  "n_samples": 30,
+  "gpu_util_mean_all": 96.93333333333334,
+  "gpu_mem_peak_mib": 21261.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.9232673267326733,
+  "smi_window_utc": [
+   "2026-09-28T23:27:04+00:00",
+   "2026-09-28T23:56:33.500000+00:00"
+  ],
+  "node": "gpu-16.nrp.mghpcc.org",
+  "gpu_info": null,
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": null,
+  "queue_seconds": null,
+  "pod_created_to_running_seconds": null,
+  "job_created_to_running_seconds": null,
+  "running_source": null,
+  "driver": "595.71.05",
+  "cpu_model": null,
+  "cpu_counts": null,
+  "lscpu": [],
+  "host_mem": null,
+  "pod_cpus": null,
+  "pod_logs": [
+   {
+    "log": "pilotb3-42abed-c7tg4-full-20260929T0015Z.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": null,
+  "window_crosses_resume": false,
+  "host_rss_peak_mb": 2483,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false
+ }
+]

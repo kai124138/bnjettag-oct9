@@ -1,0 +1,31 @@
+NVIDIA-L40                nvidia.com/gpu       card  46068 MiB  E rule  9 run  9 low  4  A07 rule  4 run  4 low  2  schedulable 6/17  role candidate
+    krule p1-E-k9 p2-A07-k4      pod 18 CPU  72Gi  can hold  6  deadline pod 26400 s / Job 48000 s  run-epochs 273  compute h agg 2.50 per-process 1.63  -> kai-gpubench-l40-krule.json
+    klow  p3-E-k4 p4-A07-k2      pod  8 CPU  32Gi  can hold  6  deadline pod 14400 s / Job 36000 s  run-epochs 126  compute h agg 1.17 per-process 1.63  -> kai-gpubench-l40-klow.json
+NVIDIA-L40S               nvidia.com/gpu       card  46068 MiB  E rule  9 run  9 low  4  A07 rule  4 run  4 low  2  schedulable 2/4  role candidate
+    krule p1-E-k9 p2-A07-k4      pod 18 CPU  72Gi  can hold  2  deadline pod 26400 s / Job 48000 s  run-epochs 273  compute h agg 2.50 per-process 1.63  -> kai-gpubench-l40s-krule.json
+    klow  p3-E-k4 p4-A07-k2      pod  8 CPU  32Gi  can hold  2  deadline pod 14400 s / Job 36000 s  run-epochs 126  compute h agg 1.17 per-process 1.63  -> kai-gpubench-l40s-klow.json
+NVIDIA-GeForce-RTX-4090   nvidia.com/gpu       card  24564 MiB  E rule  5 run  5 low  4  A07 rule  2 run  2 low  1  schedulable 3/4  role candidate
+    krule p1-E-k5 p2-A07-k2      pod 10 CPU  40Gi  can hold  3  deadline pod 16200 s / Job 37800 s  run-epochs 147  compute h agg 1.33 per-process 1.63  -> kai-gpubench-geforce-rtx-4090-krule.json
+    klow  p3-E-k4 p4-A07-k1      pod  8 CPU  32Gi  can hold  3  deadline pod 12000 s / Job 33600 s  run-epochs 105  compute h agg 0.91 per-process 1.63  -> kai-gpubench-geforce-rtx-4090-klow.json
+NVIDIA-GeForce-RTX-3090   nvidia.com/gpu       card  24576 MiB  E rule  5 run  5 low  4  A07 rule  2 run  2 low  1  schedulable 30/49  role candidate
+    krule p1-E-k5 p2-A07-k2      pod 10 CPU  40Gi  can hold 29  deadline pod 16200 s / Job 37800 s  run-epochs 147  compute h agg 1.33 per-process 1.63  -> kai-gpubench-geforce-rtx-3090-krule.json
+    klow  p3-E-k4 p4-A07-k1      pod  8 CPU  32Gi  can hold 29  deadline pod 12000 s / Job 33600 s  run-epochs 105  compute h agg 0.91 per-process 1.63  -> kai-gpubench-geforce-rtx-3090-klow.json
+NVIDIA-RTX-A6000          nvidia.com/rtxa6000  card  49140 MiB  E rule 10 run  9 low  4  A07 rule  5 run  5 low  2  schedulable 5/8  role candidate
+    CAP E: K_rule 10 -> 9: node cap 9 (2 CPU + 8 Gi per arm, node reserve 2 CPU / 16 Gi; largest schedulable node 20 CPU / 251.5 Gi)
+    krule p1-E-k9 p2-A07-k5      pod 18 CPU  72Gi  can hold  5  deadline pod 28800 s / Job 50400 s  run-epochs 294  compute h agg 2.75 per-process 1.63  -> kai-gpubench-rtx-a6000-krule.json
+    klow  p3-E-k4 p4-A07-k2      pod  8 CPU  32Gi  can hold  5  deadline pod 14400 s / Job 36000 s  run-epochs 126  compute h agg 1.17 per-process 1.63  -> kai-gpubench-rtx-a6000-klow.json
+NVIDIA-A40                nvidia.com/a40       card  46068 MiB  E rule  9 run  9 low  4  A07 rule  4 run  4 low  2  schedulable 2/3  role candidate
+    krule p1-E-k9 p2-A07-k4      pod 18 CPU  72Gi  can hold  2  deadline pod 26400 s / Job 48000 s  run-epochs 273  compute h agg 2.50 per-process 1.63  -> kai-gpubench-a40-krule.json
+    klow  p3-E-k4 p4-A07-k2      pod  8 CPU  32Gi  can hold  2  deadline pod 14400 s / Job 36000 s  run-epochs 126  compute h agg 1.17 per-process 1.63  -> kai-gpubench-a40-klow.json
+NVIDIA-A100-SXM4-80GB     nvidia.com/a100      card  81920 MiB  E rule 16 run 16 low  4  A07 rule  8 run  8 low  2  schedulable 16/22  role candidate
+    krule p1-E-k16 p2-A07-k8     pod 32 CPU 128Gi  can hold 16  deadline pod 46200 s / Job 67800 s  run-epochs 504  compute h agg 4.67 per-process 1.63  -> kai-gpubench-a100-sxm4-80gb-krule.json
+    klow  p3-E-k4 p4-A07-k2      pod  8 CPU  32Gi  can hold 16  deadline pod 14400 s / Job 36000 s  run-epochs 126  compute h agg 1.17 per-process 1.63  -> kai-gpubench-a100-sxm4-80gb-klow.json
+NVIDIA-A10                nvidia.com/gpu       card  23028 MiB  E rule  4 run  4 low  3  A07 rule  2 run  2 low  1  schedulable 30/35  role baseline
+    krule p1-E-k4 p2-A07-k2      pod  8 CPU  32Gi  can hold 30  deadline pod 14400 s / Job 36000 s  run-epochs 126  compute h agg 1.17 per-process 1.63  -> kai-gpubench-a10-krule.json
+    klow  p3-E-k3 p4-A07-k1      pod  6 CPU  24Gi  can hold 30  deadline pod 10800 s / Job 32400 s  run-epochs 84  compute h agg 0.75 per-process 1.63  -> kai-gpubench-a10-klow.json
+JOBS 16 PRODUCTS 8
+DRIVER_CONFIGMAP kai-gpubench-driver-5ede0778f7 sha256 5ede0778f716cb9299ca82c64547fb993c93d775572d33463a0fef4cbf676c45
+EXCLUDED hcc-nrp-shor-c6017.unl.edu k8s-chase-ci-07.calit2.optiputer.net nautilus-ext-gpu01.fullerton.edu ren-gp-argo-01.madren.org
+EXCLUDED_A10_ONLY gpu-17.nrp.mghpcc.org hcc-nrp-shor-c5805.unl.edu (the Chang pilot-b nodes; PREFLIGHT critical v2 C5)
+SURVEY node_survey_20260929T073945Z.json (read 2026-09-29T07:39:45Z)
+rc=0

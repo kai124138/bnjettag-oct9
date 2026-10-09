@@ -1,0 +1,1653 @@
+From b62230764080814b5b2cec7ebabba36207be883b Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 15:36:43 -0700
+Subject: [PATCH 29/29] D20 regime B: generator sets train.ebops_trace_every 10
+ on all 58 configs (cache_configs/n64.json carries it too; identity keys
+ unchanged, cache not rebuilt); wave-1 packs: E Chang arms at K=5/4 (7 pods),
+ A07 arms at K=4 waiting on the K=3 readout (4 pods), R at K=4 (2 pods)
+ (plan.md DECISION R-B3); pilot-b K=5 and K=3 pack files; cpu_gate
+ TRACE_EVERY_OK
+
+---
+ campaigns/chang0926/cache_configs/n64.json    |   3 +-
+ campaigns/chang0926/config_diff_a_s1.json     |   1 +
+ .../chang0926/configs/chang0926-a-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-a-n64-s8.json |   3 +-
+ .../configs/chang0926-a07-350-n64-s1.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s2.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s3.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s4.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s5.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s6.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s7.json     |   3 +-
+ .../configs/chang0926-a07-350-n64-s8.json     |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-b-n64-s8.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-c-n64-s8.json |   3 +-
+ .../configs/chang0926-cprime-n64-s1.json      |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-d-n64-s8.json |   3 +-
+ .../configs/chang0926-e1-n64-s1.json          |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-f-n64-s8.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s1.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s2.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s3.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s4.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s5.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s6.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s7.json |   3 +-
+ .../chang0926/configs/chang0926-r-n64-s8.json |   3 +-
+ campaigns/chang0926/cpu_gate.py               |  24 +++-
+ campaigns/chang0926/generate.py               |  48 +++++++-
+ campaigns/chang0926/index.json                | 116 +++++++++---------
+ campaigns/chang0926/packs.json                |   2 +-
+ campaigns/chang0926/packs_meta.json           |  25 ++++
+ campaigns/chang0926/pilot_b_k3_packs.json     |   1 +
+ campaigns/chang0926/pilot_b_k5_packs.json     |   1 +
+ 67 files changed, 270 insertions(+), 125 deletions(-)
+ create mode 100644 campaigns/chang0926/packs_meta.json
+ create mode 100644 campaigns/chang0926/pilot_b_k3_packs.json
+ create mode 100644 campaigns/chang0926/pilot_b_k5_packs.json
+
+diff --git a/campaigns/chang0926/cache_configs/n64.json b/campaigns/chang0926/cache_configs/n64.json
+index eeede5d..c678174 100644
+--- a/campaigns/chang0926/cache_configs/n64.json
++++ b/campaigns/chang0926/cache_configs/n64.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/config_diff_a_s1.json b/campaigns/chang0926/config_diff_a_s1.json
+index 01d0e21..2a2a386 100644
+--- a/campaigns/chang0926/config_diff_a_s1.json
++++ b/campaigns/chang0926/config_diff_a_s1.json
+@@ -101,6 +101,7 @@
+     "quant.softmax_quant": "chang",
+     "train.ebops_reload_check": "stored",
+     "train.ebops_trace_batch": 2048,
++    "train.ebops_trace_every": 10,
+     "train.ebops_trace_sample": "train_full",
+     "train.lr_alpha": 1e-06,
+     "train.lr_alpha_epochs": 10,
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s1.json b/campaigns/chang0926/configs/chang0926-a-n64-s1.json
+index 724e556..475ae5b 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s1.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s2.json b/campaigns/chang0926/configs/chang0926-a-n64-s2.json
+index b576013..c573040 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s2.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s3.json b/campaigns/chang0926/configs/chang0926-a-n64-s3.json
+index fd4065e..f85d9bb 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s3.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s4.json b/campaigns/chang0926/configs/chang0926-a-n64-s4.json
+index 7b0936d..6b60ca3 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s4.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s5.json b/campaigns/chang0926/configs/chang0926-a-n64-s5.json
+index 800ecbf..1643bc0 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s5.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s6.json b/campaigns/chang0926/configs/chang0926-a-n64-s6.json
+index 385f6b5..cef77a3 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s6.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s7.json b/campaigns/chang0926/configs/chang0926-a-n64-s7.json
+index a39510a..7841787 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s7.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a-n64-s8.json b/campaigns/chang0926/configs/chang0926-a-n64-s8.json
+index d4d7fe1..f5f9590 100644
+--- a/campaigns/chang0926/configs/chang0926-a-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-a-n64-s8.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
+index 0617fac..f248638 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s1.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
+index 9e3cb98..91d4c4b 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s2.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
+index f897439..b1ca1aa 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s3.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
+index 4ab98db..e789fcd 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
+index f94f987..133d113 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s5.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
+index 2e76938..3ec74f3 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s6.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
+index 84f266d..8bbcd43 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s7.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json b/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
+index 729949e..c68795d 100644
+--- a/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-a07-350-n64-s8.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s1.json b/campaigns/chang0926/configs/chang0926-b-n64-s1.json
+index a40c2e0..1c4fe55 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s1.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s2.json b/campaigns/chang0926/configs/chang0926-b-n64-s2.json
+index 2627c26..71ee5e9 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s2.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s3.json b/campaigns/chang0926/configs/chang0926-b-n64-s3.json
+index 87a41e7..2d8dba4 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s3.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s4.json b/campaigns/chang0926/configs/chang0926-b-n64-s4.json
+index 69196b9..3f4d5d3 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s4.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s5.json b/campaigns/chang0926/configs/chang0926-b-n64-s5.json
+index b876bee..fdb4f01 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s5.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s6.json b/campaigns/chang0926/configs/chang0926-b-n64-s6.json
+index 68fd898..9001765 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s6.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s7.json b/campaigns/chang0926/configs/chang0926-b-n64-s7.json
+index 4ba0afa..fade3a3 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s7.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-b-n64-s8.json b/campaigns/chang0926/configs/chang0926-b-n64-s8.json
+index 26a9db6..019fcbf 100644
+--- a/campaigns/chang0926/configs/chang0926-b-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-b-n64-s8.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s1.json b/campaigns/chang0926/configs/chang0926-c-n64-s1.json
+index c932b9d..943a378 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s1.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s2.json b/campaigns/chang0926/configs/chang0926-c-n64-s2.json
+index cd9b365..419cc70 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s2.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s3.json b/campaigns/chang0926/configs/chang0926-c-n64-s3.json
+index b8603e2..4aee4c7 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s3.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s4.json b/campaigns/chang0926/configs/chang0926-c-n64-s4.json
+index d6e1468..46dd517 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s4.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s5.json b/campaigns/chang0926/configs/chang0926-c-n64-s5.json
+index 22a098e..f0f8b4c 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s5.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s6.json b/campaigns/chang0926/configs/chang0926-c-n64-s6.json
+index 9a3cf66..c90c398 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s6.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s7.json b/campaigns/chang0926/configs/chang0926-c-n64-s7.json
+index 1d08ce1..9ec858b 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s7.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-c-n64-s8.json b/campaigns/chang0926/configs/chang0926-c-n64-s8.json
+index afac2d5..7da4f55 100644
+--- a/campaigns/chang0926/configs/chang0926-c-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-c-n64-s8.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-cprime-n64-s1.json b/campaigns/chang0926/configs/chang0926-cprime-n64-s1.json
+index e401b76..500d6c5 100644
+--- a/campaigns/chang0926/configs/chang0926-cprime-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-cprime-n64-s1.json
+@@ -87,7 +87,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s1.json b/campaigns/chang0926/configs/chang0926-d-n64-s1.json
+index 13b4261..c8e147a 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s1.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s2.json b/campaigns/chang0926/configs/chang0926-d-n64-s2.json
+index 72b456f..37254e0 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s2.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s3.json b/campaigns/chang0926/configs/chang0926-d-n64-s3.json
+index 03b9132..a869630 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s3.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s4.json b/campaigns/chang0926/configs/chang0926-d-n64-s4.json
+index 05c0674..713c0b8 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s4.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s5.json b/campaigns/chang0926/configs/chang0926-d-n64-s5.json
+index 2391a86..c160443 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s5.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s6.json b/campaigns/chang0926/configs/chang0926-d-n64-s6.json
+index fbc1863..082dc05 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s6.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s7.json b/campaigns/chang0926/configs/chang0926-d-n64-s7.json
+index 6f2ec63..601b438 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s7.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-d-n64-s8.json b/campaigns/chang0926/configs/chang0926-d-n64-s8.json
+index b7cb679..8342b0a 100644
+--- a/campaigns/chang0926/configs/chang0926-d-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-d-n64-s8.json
+@@ -94,7 +94,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-e1-n64-s1.json b/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
+index 54657fd..2cc2406 100644
+--- a/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-e1-n64-s1.json
+@@ -91,7 +91,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s1.json b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+index 237c1e5..5f5f94f 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s2.json b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+index 82f7b5e..4e60b01 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s3.json b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+index 34c9943..3266311 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s4.json b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+index 6847ea3..07618d8 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s5.json b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+index 29e87a6..673ccbc 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s6.json b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+index b1e1419..58baed7 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s7.json b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+index 82d135c..99e2d2a 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s8.json b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+index 85cabca..9958dd6 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+@@ -90,7 +90,8 @@
+     "optimizer": "adam_default",
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s1.json b/campaigns/chang0926/configs/chang0926-r-n64-s1.json
+index 3be4835..fa867bd 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s1.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s2.json b/campaigns/chang0926/configs/chang0926-r-n64-s2.json
+index 9332f5c..0e8e920 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s2.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s3.json b/campaigns/chang0926/configs/chang0926-r-n64-s3.json
+index e5dfbaf..7fe7319 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s3.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s4.json b/campaigns/chang0926/configs/chang0926-r-n64-s4.json
+index a33c6b9..e2959ee 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s4.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s5.json b/campaigns/chang0926/configs/chang0926-r-n64-s5.json
+index 3bc794d..8a3f781 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s5.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s6.json b/campaigns/chang0926/configs/chang0926-r-n64-s6.json
+index 7dd0ca6..26a04ef 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s6.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s7.json b/campaigns/chang0926/configs/chang0926-r-n64-s7.json
+index d5974de..3f841d4 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s7.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/configs/chang0926-r-n64-s8.json b/campaigns/chang0926/configs/chang0926-r-n64-s8.json
+index 480ddf7..e17eced 100644
+--- a/campaigns/chang0926/configs/chang0926-r-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-r-n64-s8.json
+@@ -92,7 +92,8 @@
+     "clipvalue": 1.0,
+     "ebops_trace_sample": "train_full",
+     "ebops_trace_batch": 2048,
+-    "ebops_reload_check": "stored"
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
+   },
+   "hls": {
+     "backend": "Vitis",
+diff --git a/campaigns/chang0926/cpu_gate.py b/campaigns/chang0926/cpu_gate.py
+index b3a93ea..2289f2b 100644
+--- a/campaigns/chang0926/cpu_gate.py
++++ b/campaigns/chang0926/cpu_gate.py
+@@ -23,6 +23,13 @@ every quantizer `ablation.i_decay_speeds` lists, the list must cover every `i_de
+ weight in the model, and the values must survive the training step and the save/reload. A
+ config without the key (C-PRIME) must record nothing: it has no WRAP quantizer, so no quantizer
+ carries the knob and the HGQ2 default 0.01 acts on nothing. Printed as I_DECAY_OK per config.
++
++[D20] regime B (patch 0027, Kai 2026-09-27): `train.ebops_trace_every` is validated by
++`ablation.ebops_trace_every` (positive int, needs the trace sample and the stored reload check,
++snapshot cadence a multiple of k); the epoch count and the snapshot cadence must be multiples of
++k, so the traced epochs are exactly epochs / k plus zero-based epoch 0 (STUDY slot T) and include
++every snapshot. Printed as
++TRACE_EVERY_OK per config (k None = every epoch).
+ """
+ from __future__ import annotations
+ 
+@@ -79,6 +86,18 @@ def main():
+             assert decay and all(v == float(np.float32(want)) for v in decay.values()), (row['name'], want, decay)
+         else:
+             assert decay == {} and n_decay_weights == 0, (row['name'], 'no key but quantizers carry i_decay_speed', decay)
++        k = ablation.ebops_trace_every(cfg)
++        epochs_total = int(cfg['train']['epochs'])
++        snapshot = cfg['experiment'].get('snapshot_every_epochs')
++        traced_epochs = [e for e in range(epochs_total) if ablation.is_traced_epoch(cfg, e)]
++        if k is not None:
++            assert epochs_total % k == 0 and (not snapshot or int(snapshot) % k == 0), (row['name'], k)
++            assert len(traced_epochs) == epochs_total // k + 1 and traced_epochs[0] == 0
++            assert all((e + 1) % k == 0 for e in traced_epochs[1:])
++            if snapshot:
++                assert all(ablation.is_traced_epoch(cfg, e - 1) for e in range(int(snapshot), epochs_total + 1, int(snapshot)))
++        else:
++            assert len(traced_epochs) == epochs_total
+         optimizer = ablation.optimizer_for(cfg, model)
+         tr = cfg['train']
+         lrs = {e: ablation.learning_rate(cfg, e) for e in (0, 489, 490, 499, 500, tr['epochs'] - 1)}
+@@ -119,7 +138,8 @@ def main():
+                   'zero_floor_ebops': None if nd is None else nd['zero_floor_ebops'],
+                   'zero_floor_retraced': floor_checked.get(row['arm']) if nd is not None else None,
+                   'i_decay_speed': decay, 'i_decay_speed_config': want,
+-                  'i_decay_speed_values': sorted(set(decay.values())), 'status': 'PASS'}
++                  'i_decay_speed_values': sorted(set(decay.values())),
++                  'ebops_trace_every': k, 'traced_epochs': len(traced_epochs), 'status': 'PASS'}
+         reports.append(report)
+         print('CONFIG_PREFLIGHT_PASS', row['name'], 'params', report['params_count_params'],
+               'kernel_bias_pos', weights, 'initial_ebops', cost['total'], 'reload_max_abs_diff',
+@@ -127,6 +147,8 @@ def main():
+               'production', int(report['production']), flush=True)
+         print('I_DECAY_OK', row['name'], 'config', want, 'quantizers', len(decay),
+               'values', report['i_decay_speed_values'], flush=True)
++        print('TRACE_EVERY_OK', row['name'], 'k', k, 'epochs', epochs_total, 'traced_epochs', len(traced_epochs),
++              'snapshot_every', snapshot, flush=True)
+         del model, loaded, optimizer, step
+     if args.out:
+         args.out.write_text(json.dumps(reports, indent=2) + '\n')
+diff --git a/campaigns/chang0926/generate.py b/campaigns/chang0926/generate.py
+index e7cc504..ed674cb 100644
+--- a/campaigns/chang0926/generate.py
++++ b/campaigns/chang0926/generate.py
+@@ -15,8 +15,9 @@ config draws the PE initializer ([A17] `pos_enc_none_consume_rng`) so A, B, D, R
+ kernels at each seed. Pilot-only rows (never production, never ROC-test): C-PRIME (A07,
+ Chang recipe, current SAT/fixed-softmax quantizer, 5M) and E1 (E with 1 head, 350k).
+ 
+-Every config: [D20] one full-training-split reset trace per epoch
+-(`train.ebops_trace_sample` "train_full"), stored-variable reload check, and the
++Every config: [D20] full-training-split reset trace (`train.ebops_trace_sample` "train_full")
++every 10 epochs (`train.ebops_trace_every` 10, regime B, Kai [D15] decision 2026-09-27; the
++77f1ca4e bundle traced every epoch), stored-variable reload check, and the
+ non-degeneracy condition (arbiter v3 fix 1) with the arm's traced 0-bit floor read from
+ static_floors.json (static_floor.py on the s1 configs; `--no-floors` writes configs without
+ the block so the floors can be traced; cpu_gate re-traces and asserts the value).
+@@ -52,7 +53,8 @@ OUR_SCHEDULE = {    # [D4] arm R: the record recipe
+ CHANG_OPT = {'optimizer': 'adam_default'}                                            # [D3]
+ OUR_OPT = {'optimizer': 'adam_ours', 'beta2': 0.98, 'weight_decay': 0.01, 'clipvalue': 1.0}
+ D20 = {'ebops_trace_sample': 'train_full', 'ebops_trace_batch': 2048,               # [D20]
+-       'ebops_reload_check': 'stored'}
++       'ebops_reload_check': 'stored',
++       'ebops_trace_every': 10}         # [D20] regime B (Kai, 2026-09-27): trace at epochs 10, 20, ...
+ SE_MULTIPLE = 5                                                                      # fix 1
+ 
+ A07 = {}
+@@ -78,7 +80,22 @@ PILOT_ONLY = {
+     'e1': ('E1', CHANG_OPT, CHANG_SCHEDULE, 350000, E1_ARCH, QUANT, False,
+            'pilot only: E with one head at 350k'),
+ }
+-SEED_BLOCK = ('a', 'b', 'c', 'd', 'f', 'a07-350')      # K = 6 per pod, 8 pods
++SEED_BLOCK = ('a', 'b', 'c', 'd', 'f', 'a07-350')      # K = 6 per pod, 8 pods (superseded by the regime-B packing below)
++# Wave-1 packing, regime B (Kai 2026-09-27: K=5 on the A10 class, about 13 pods; STUDY Pods: R
++# packs separately; plan.md DECISION R-B3, provisional until the regime-B pilot's per-process
++# GPU memory is read at PREFLIGHT). The 32 E Chang-schedule runs {A, B, D, F} in seed order at
++# K=5 (5 x 4,354 MiB per RUN.md fits a 23,028 MiB A10), chunked 5, 5, 5, 5, 4, 4, 4 (7 pods,
++# launchable without the K=3 readout); the 16 A07 runs {C, A07-350} in seed pairs at K=4 (4 pods;
++# 5 x 5,172 MiB, the C' figure, would not fit an A10), which wait for the K=3 regime-B pilot pod's
++# A07-350-s1 epoch-500 readout (STUDY arbiter v8 fix 2 (3)); R s1-4 and s5-8 at K=4 (2 pods).
++E_ARMS = ('a', 'b', 'd', 'f')
++E_PACK_SIZES = (5, 5, 5, 5, 4, 4, 4)
++A07_ARMS = ('c', 'a07-350')
++A07_PACK_SIZES = (4, 4, 4, 4)
++# Regime-B pilot (Kai 2026-09-27): a K=5 pod (the regime-A pilot minus A07-350-s1, which OOMed at
++# K=6 on an A10) and the arbiter v8 K=3 pod (A07-350-s1, C-s1, F-s1).
++PILOT_B_K5 = [('a', 1), ('a', 2), ('d', 1), ('cprime', 1), ('e1', 1)]
++PILOT_B_K3 = [('a07-350', 1), ('c', 1), ('f', 1)]
+ # arbiter v3 fix 3: one pod, K = 6, epoch 500, validation only. E1-s1 takes the last slot
+ # because its traced 0-bit floor leaves 264,237 EBOPs of headroom at 350k (plan.md, fix 6).
+ PILOT = [('a', 1), ('a', 2), ('d', 1), ('a07-350', 1), ('cprime', 1), ('e1', 1)]
+@@ -193,15 +210,33 @@ def main():
+     assert len(production) == 56 and len({r['name'] for r in rows}) == len(rows) == 58
+     assert [r['index'] for r in production] == list(range(56))
+     index = {r['name']: r['index'] for r in rows}
+-    packs = [[index[name_of(arm, s)] for arm in SEED_BLOCK] for s in SEEDS]          # [D16] seed blocks
++    def chunk(runs, sizes):
++        assert sum(sizes) == len(runs)
++        out = []
++        for size in sizes:
++            out.append(runs[:size])
++            runs = runs[size:]
++        return out
++    packs = chunk([index[name_of(arm, s)] for s in SEEDS for arm in E_ARMS], E_PACK_SIZES)
++    waiting = list(range(len(packs), len(packs) + len(A07_PACK_SIZES)))
++    packs += chunk([index[name_of(arm, s)] for s in SEEDS for arm in A07_ARMS], A07_PACK_SIZES)
+     packs += [[index[name_of('r', s)] for s in (1, 2, 3, 4)], [index[name_of('r', s)] for s in (5, 6, 7, 8)]]
+     assert sorted(i for p in packs for i in p) == list(range(56))
+     pilot = [[index[name_of(arm, s)] for arm, s in PILOT]]
++    pilot_b_k5 = [[index[name_of(arm, s)] for arm, s in PILOT_B_K5]]
++    pilot_b_k3 = [[index[name_of(arm, s)] for arm, s in PILOT_B_K3]]
+     (HERE / 'index.json').write_text(json.dumps({'runs': rows, 'count': len(rows),
+                                                  'production_count': len(production)}, indent=2) + '\n')
+     (HERE / 'packs.json').write_text(json.dumps(packs) + '\n')
+     (HERE / 'pilot_packs.json').write_text(json.dumps(pilot) + '\n')
+     (HERE / 'canary_packs.json').write_text(json.dumps(pilot) + '\n')   # canary = the pilot pod at --stop-after 2
++    (HERE / 'pilot_b_k5_packs.json').write_text(json.dumps(pilot_b_k5) + '\n')
++    (HERE / 'pilot_b_k3_packs.json').write_text(json.dumps(pilot_b_k3) + '\n')
++    (HERE / 'packs_meta.json').write_text(json.dumps({
++        'packs': 'packs.json', 'arms_per_pack': [len(p) for p in packs],
++        'wait_for_k3_readout': waiting,
++        'rule': 'packs holding A07-350 or C launch only after the K=3 regime-B pilot pod has an '
++                'A07-350-s1 epoch-500 readout (STUDY arbiter v8 fix 2 (3)); plan.md DECISION R-B3'}, indent=1) + '\n')
+     # [A4] cache spec: gated, 90/10, order seed not pinned (one cache for all seeds)
+     spec = build(source, 'a', 1)
+     spec['name'] = 'chang0926-cache-n64'
+@@ -210,7 +245,8 @@ def main():
+     (HERE / 'cache_configs' / 'n64.json').write_text(json.dumps(spec, indent=2) + '\n')
+     # [A18] every changed field of one generated config against the source
+     (HERE / 'config_diff_a_s1.json').write_text(json.dumps(diff(source, build(source, 'a', 1, floors)), indent=2) + '\n')
+-    print(f'Generated {len(rows)} configs ({len(production)} production), {len(packs)} packs, pilot {pilot[0]}'
++    print(f'Generated {len(rows)} configs ({len(production)} production), {len(packs)} packs '
++          f'(waiting on the K=3 readout: {waiting}), pilot {pilot[0]}, pilot-b K=5 {pilot_b_k5[0]}, K=3 {pilot_b_k3[0]}'
+           + (' WITHOUT floors' if floors is None else ''))
+ 
+ 
+diff --git a/campaigns/chang0926/index.json b/campaigns/chang0926/index.json
+index f6a3508..f5051e9 100644
+--- a/campaigns/chang0926/index.json
++++ b/campaigns/chang0926/index.json
+@@ -16,7 +16,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "9e05bc2b460b9f3860f54b3a61c2e80caf4d2043a1e92a1a1c6408da3ae3e447"
++      "config_sha256": "d47d6799702cf67a49baa333aa2204b17a384289f32b106eb30433db8b2dec94"
+     },
+     {
+       "index": 1,
+@@ -34,7 +34,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "7b9c67db1d3979186fe326d62cc97973afb6f8d351854ea09f1460c356dbb94d"
++      "config_sha256": "06af8973e0148fa86e42783d6a581acadd503423a6127b67c74a52bb100a1156"
+     },
+     {
+       "index": 2,
+@@ -52,7 +52,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "74cc140d6bb3622580d9524437891fcbdd1e7ee8240b1a5d4f95a0e4453d0602"
++      "config_sha256": "f7c05573a4dc9405450a8544459e67da1b76b981a59d354effd47566b9e4ff4d"
+     },
+     {
+       "index": 3,
+@@ -70,7 +70,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "dc82d9d45e2989d22a6f921ee8bf9cb8076054e4a8f21141f607d50be814601b"
++      "config_sha256": "fad33c2e84de31375defae7a80b81aa24b07d3c89311f2fb69d2cb1dc01e82c2"
+     },
+     {
+       "index": 4,
+@@ -88,7 +88,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "c30af6c5a0f5428afc2975adf4c91c49bda042983b3847d7d3270fc720db0672"
++      "config_sha256": "baa5c6e43742624cdfd4e6cd134e6077791332e191f706ad76e60801192a50d9"
+     },
+     {
+       "index": 5,
+@@ -106,7 +106,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "a46ccfbdfe6f54feecd42ccad69d06de671bf88e63537c80cdf41ea07383a4ba"
++      "config_sha256": "e6cb3fdcdb73ece35e322274286db7f6a335047ed0ba3c55cf6d1af3988998dc"
+     },
+     {
+       "index": 6,
+@@ -124,7 +124,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "b8125612774423b50ce82b68b3a3f69754bd89518077c2de32622d0a5aff61e8"
++      "config_sha256": "479c619d59322c4adcbf738e40b18617786f59519ab88a953cd34bc62610cb75"
+     },
+     {
+       "index": 7,
+@@ -142,7 +142,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "6ff9d6649b62f6e862d41885706060898c24cb782ffed92690bb3c246561db2d"
++      "config_sha256": "9a7166ad1466d9b37695de7c5cb9dd98d59be6dec05a47d8fcb540de2f8b2e4e"
+     },
+     {
+       "index": 8,
+@@ -160,7 +160,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "c06dc4e9a968bd6fa9c74ce8b1cd9307cad0f3231482783e4e7483cd2b35dc1f"
++      "config_sha256": "19e253471b01383e311dbc27495fddbfa51cba5edecaf854a48f199159b05d76"
+     },
+     {
+       "index": 9,
+@@ -178,7 +178,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "98ec854a6987ef2d7cd05e042d7375716b07d659b9a1007225cc7adf2c9ee5b1"
++      "config_sha256": "954d1477c14895a2a0940bb9597e60997f0cc847be4a5d518b91b06cb54135b5"
+     },
+     {
+       "index": 10,
+@@ -196,7 +196,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "03fc57564534095aa742c2230909f0666697c80027814f005ac4c6e72d9ec85c"
++      "config_sha256": "f66fdeb5b04352488af91d9662fceeffa1755d62e087452b7005880724c89d3a"
+     },
+     {
+       "index": 11,
+@@ -214,7 +214,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "de409afce44cca50e032305f49161d4b6166b3573e3d352a7d537c13faa0493a"
++      "config_sha256": "c6ef6a8ff3b70114a4bd28a93903f7b10b87339c47b616212bc414e5154068b5"
+     },
+     {
+       "index": 12,
+@@ -232,7 +232,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "e0dad9fcfd4ec5ba8da3ae707b00c8f24ab49b8bb799c1154e13823530e219ff"
++      "config_sha256": "b839b4d873fb1bd571072281bf7497529cbedaf716bf471d23007c971a9e9545"
+     },
+     {
+       "index": 13,
+@@ -250,7 +250,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "a2e5d93201607c10e46a96b5d7d228aa0f1f2110867142991b9f2fbab2582650"
++      "config_sha256": "8180521b77010bf531815f64599cca0983b20ef622952454d694aafc5dc8fad1"
+     },
+     {
+       "index": 14,
+@@ -268,7 +268,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "4eb6eafe86df113b24590f51e60bcf9f7302433b620eaba40c1f2d5de0464fa1"
++      "config_sha256": "454da03bf2270a23ac1d6358a144706b09e13e77d66969cd16d14bbf11f34129"
+     },
+     {
+       "index": 15,
+@@ -286,7 +286,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "7fa859c523becc23a0b666874375d5c566bc4a3452e6ddacf35a9bc6dcf23e58"
++      "config_sha256": "ba93505eb18f22802e4a7158c91ca048c39f154e8ff0df49e926a7f3ae059845"
+     },
+     {
+       "index": 16,
+@@ -304,7 +304,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "60ef2984b6e132b66c8962bc19f24f074104dd6a58de46a9276132ca977ff1e0"
++      "config_sha256": "1f27443c764f95f42208be7c864c834bcf0fbe0be2583aa89d89c8fd3f7da156"
+     },
+     {
+       "index": 17,
+@@ -322,7 +322,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "26ff334a554f3cfe69518f2238e5ac3f9b9e91182533988b3585d16c09b14f01"
++      "config_sha256": "9027ff22da685bd9346bc3eeaa0babc1650bb232ef9b024255441ade62056795"
+     },
+     {
+       "index": 18,
+@@ -340,7 +340,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "583d59ba6b39724f06160d6dab5712389aedc4c586bc23d45e3d35e9ebfb124b"
++      "config_sha256": "7f19c37019724291065a0d53e708cebe4312a8f62cc03cb5cbc66db1705d3ef4"
+     },
+     {
+       "index": 19,
+@@ -358,7 +358,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "6c26bcfdc8acec66c3ae9cb56df1c1090cd7177401b61838c4e38e8db06dcdde"
++      "config_sha256": "0d866afd43411a9ab52e573ca724259466db76af4416d5fc2cff4d57ff860956"
+     },
+     {
+       "index": 20,
+@@ -376,7 +376,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "da967224154368ade1732456f5caa91a989b4d487053624741f9081d331ea903"
++      "config_sha256": "ccfe65e4b575adf54c27ccd81cecc5c74737b15fa2d3aa14c11605aa545766c2"
+     },
+     {
+       "index": 21,
+@@ -394,7 +394,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "3b34996c7ec9bcea440e7e7c29113804364e281d44eca460eda5d021028aad89"
++      "config_sha256": "8eab349f43d415119139795ea68c19734a547a44f52adac1c849a14ac1380d8a"
+     },
+     {
+       "index": 22,
+@@ -412,7 +412,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "08abedbb74d500e055d171e8da7b6e4d1973c057349bdcfde5cb3e6b67f6bb47"
++      "config_sha256": "4d49583866e33b4d1463017222a276230c54d081231eeb6e402505b249647b0d"
+     },
+     {
+       "index": 23,
+@@ -430,7 +430,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "b0b03331a84978e060aeb8cd538947768ecb6538065ce2fc6d2df0cccc50d75e"
++      "config_sha256": "6598f5573fed0cca455337bb1c7a7794454872c94365642c9d9f247e7fca535c"
+     },
+     {
+       "index": 24,
+@@ -448,7 +448,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "198feeec757e9b584fad421bef48658a757fae232f8a26d2cbf54b12479da031"
++      "config_sha256": "d5242aa7e0be390da25156764388a42d583596e88e342e6aaa0aa26038775f43"
+     },
+     {
+       "index": 25,
+@@ -466,7 +466,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "ec8d2e8b76da962ec760eea17760081db6aceef2f12a92c85d29e52c6a865731"
++      "config_sha256": "3b866eb8692603758a713631c885acbdce5760dbe12dfc34f9c0a1973a06c7de"
+     },
+     {
+       "index": 26,
+@@ -484,7 +484,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "92ab1548401cc78a5f79e54c628a0a61aeeebb5bd75a5bdd712e256c3b3edb5d"
++      "config_sha256": "54aa5dab04a88db881867c5d9492d82212f37e84bf463406a1b653d2a42a56fa"
+     },
+     {
+       "index": 27,
+@@ -502,7 +502,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "51fcf3823721ef19602aea04707a1b595f67852241479cfdfe906116be124c99"
++      "config_sha256": "4af83d21387ed351cef1b7a51fc1131d0a72c22e81d4dea01d3954f2b402306f"
+     },
+     {
+       "index": 28,
+@@ -520,7 +520,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "39b1f25758f5a2a631c35ba0a7f74ed5e32bd52cfe37442bb448e458c645ce41"
++      "config_sha256": "1f9068d6368a4a83e5ba6c11f03ea317aef481df0398ec5be00541559dc3394b"
+     },
+     {
+       "index": 29,
+@@ -538,7 +538,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "69031da4a54a9c659bf94d7a71b185a77e5e10a715628462129248d9f49c3c9d"
++      "config_sha256": "58864e269ff4ae2a02dddcaddf3a654f3737f0d4bf4fe3745f12de9d8c5a0b21"
+     },
+     {
+       "index": 30,
+@@ -556,7 +556,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "9983bd93d5e888e1c17cb32b1f9a9d6cda2771e0dc2af704cd7c6d4681942f70"
++      "config_sha256": "c6dc314b03238adbd911e89bc3fb9d5b0cd1c2bf27166ff738fa94b8d8288698"
+     },
+     {
+       "index": 31,
+@@ -574,7 +574,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "64ebd170f9fd5ab251dd4cb84a187cd8acaff16e4b21e69d78b70446167adbd8"
++      "config_sha256": "b3ff73efe517a6dde3f7e4ae96f57ca186950c436bbabe547141cf8fd64e6bea"
+     },
+     {
+       "index": 32,
+@@ -592,7 +592,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "2069a22ea2304e0ad55ecacc83936972e254e662e0ea9029a3a117b0246af727"
++      "config_sha256": "7815272edd7cf1c3b90b3755719082e7ccc6d5171d0000134a3bca7fb292e312"
+     },
+     {
+       "index": 33,
+@@ -610,7 +610,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "6568a8df81821cf9f73aedf6d52c1721097885f6910d5c5dc842298e440a4d79"
++      "config_sha256": "4d45b06d486bf220fecea0e98dcc374ca8c244983a31613f00de8b82c923a0c8"
+     },
+     {
+       "index": 34,
+@@ -628,7 +628,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "521c62c465c60acd048ed8d3d694bb72aa9dc3e3c2560c5fd15d47138e859324"
++      "config_sha256": "4c78d30d35ca6f1036cbbe7f233662a09c25bc32ab9837e66f1b3db2692eaa87"
+     },
+     {
+       "index": 35,
+@@ -646,7 +646,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "01d8a4827777b47bf20df3ab658f83e6470044bf54915bb6a08dccfd3abfaac9"
++      "config_sha256": "102cfdec10cd183c1aca11ec02442bed393f73f2d57929be65f79c019e27ec73"
+     },
+     {
+       "index": 36,
+@@ -664,7 +664,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "b65daa998cf597d537e797e6158cde884db5b70f897c8d84276887f5bdde2c8e"
++      "config_sha256": "eae2186d67eaa6cb5a46f7fdd689815398343021a8ccb2f198d1a1ba1a030056"
+     },
+     {
+       "index": 37,
+@@ -682,7 +682,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "307aa951f937d273cd61bff25a2b7f272acbb8d078ce18a95d25717bcc932e89"
++      "config_sha256": "7e5a9d00a96174697ff936b8fbe04ba9e582f7c40951d7782cf0837a9c16c88e"
+     },
+     {
+       "index": 38,
+@@ -700,7 +700,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "9fde1205a4843ccc04b1b2bf9a4b4eba033d0c34477af48e54aa5b3217cf1539"
++      "config_sha256": "ed14d4f081fe4f0a8680cf5f90882126014c23df0d2a8805d55df326df1ca395"
+     },
+     {
+       "index": 39,
+@@ -718,7 +718,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "4aae0eb62f88868fc78d4ea81fd816fff6c3613ce5c0eca7b406315d5749155f"
++      "config_sha256": "3e89d9d1f545f3970ac75e389b8382f06b9f563425e69b380069c33c38e5d895"
+     },
+     {
+       "index": 40,
+@@ -736,7 +736,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "362d1d64f97bda103cd0b378e69cc46f864b1ca66a0e504ad6886cba6fd52067"
++      "config_sha256": "3eaaa710bf11712f8bb8f30efd625d7aac9d1edb357754e1fec04c85250fb661"
+     },
+     {
+       "index": 41,
+@@ -754,7 +754,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "5ecefe690b4cb33cfbf6659f592e33d29726c8fef119709f2a3e610caaed047e"
++      "config_sha256": "1d198ba6566e6b7338be1375842998279f0f2f06bf1c682323673051f503ff2a"
+     },
+     {
+       "index": 42,
+@@ -772,7 +772,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "8dc2e73e0117ddca71ac4e5d3fb762e23b99e8a0d91b6704a31531b3ed9e5664"
++      "config_sha256": "798e5f4d2e82cd52c12ae50168ce85af07654bb15a330982c8847707be9f9eb2"
+     },
+     {
+       "index": 43,
+@@ -790,7 +790,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "7ee58b8421745fa66b2ea3950292a2d7ad63bc59ad98ba518cdf02a29b39be14"
++      "config_sha256": "2b45b08462980ec74029901fa753e1f9cb01a3ccf2a06ff82a9987225c81809a"
+     },
+     {
+       "index": 44,
+@@ -808,7 +808,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "8eb343ee1db6a745d502bac28311eee90ab15b87b23069186eaa58333fbaf8c9"
++      "config_sha256": "d2529f3f1e6b4561784c8673c28b313fcc64dec3df3d8a86f7ba50a1a23f4ec4"
+     },
+     {
+       "index": 45,
+@@ -826,7 +826,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "8b976c82cdc19dd06cad7c223b428107b4549d288b3791596f71120c4cc3db9c"
++      "config_sha256": "12d26819c1ba563bf824febe9eb19ac75c6c32876bdbc85e51cdc4d38e7b6efd"
+     },
+     {
+       "index": 46,
+@@ -844,7 +844,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "7bf16d8e137870e0f8919705f9ba88d406d72d952f23e18ef3af550454b1f0d1"
++      "config_sha256": "ff46f2d8f773b175814f2f3821af485773792f641da7e068fb16d0b24bc9f892"
+     },
+     {
+       "index": 47,
+@@ -862,7 +862,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "f8f42eb95100623b9ff294aca3826df6b83cbfb93262f508d18c8be5ad22f7b8"
++      "config_sha256": "3a79d92d15d011e115e9aef9c732fb113c346b7c2b51b3e787c8894f0611d99f"
+     },
+     {
+       "index": 48,
+@@ -880,7 +880,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "44edb194da35a2e14a75b3b88a02982c9be6ef9e2a2613f387cbd304547ec135"
++      "config_sha256": "fdf83bf20de9f02ad968c1b2f1eaa4ada270128819421893a03d09d501551905"
+     },
+     {
+       "index": 49,
+@@ -898,7 +898,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "f4a57ab03fbb3237e37d5a2ffed46d34da9a9b03662c099b3df82cd04244a274"
++      "config_sha256": "0113d1d2ac208d8cbd79fe1d597e54143d0c4c703b5b8541f0bd2715b6522061"
+     },
+     {
+       "index": 50,
+@@ -916,7 +916,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "6a45ce7ca214b06c2c35dc8b473f249581d6e43353df8dddab1b9180fd627acf"
++      "config_sha256": "74dbcd400a9091bedd7cba945102ddc9efed9fca6d7e618477eaf7aeffd391ca"
+     },
+     {
+       "index": 51,
+@@ -934,7 +934,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "0f6447659bfb4416ce2e59b7f5d68a79336750f6136b5a8f8561ee7435fb5ec6"
++      "config_sha256": "1efb99202f9dab755c4ce5cb009dddb510312a23a10b84e0b1de5052ffe329e8"
+     },
+     {
+       "index": 52,
+@@ -952,7 +952,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "f252c293ed05c307fb03c429f823a63936607371745fc3aff277ec7e2ca79567"
++      "config_sha256": "6c3b7e0ae70ac3a698b34d63f9813fe72817a528ed637ae13ceb8f09327c046e"
+     },
+     {
+       "index": 53,
+@@ -970,7 +970,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "9ff8512d9369a1432ea86adce76fdd76ca4c0fcf45e80833d1bcb39c47d34e67"
++      "config_sha256": "3c72ac989683286966daebde38ab54c87e860d25295aebe377d417f26ccd6bcc"
+     },
+     {
+       "index": 54,
+@@ -988,7 +988,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "ffc30117ca9c192279f61a5238c75442a2bc131878f05dfb68490d773d68490e"
++      "config_sha256": "99263b33a253f1d54d75941645e272c239958b2d59c70f64f8f25f43b0964435"
+     },
+     {
+       "index": 55,
+@@ -1006,7 +1006,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "1a95f14535ff1381953dbbd75d93433ec48913ba299c9b86756b3f347a50e0aa"
++      "config_sha256": "9cf3beb3ae71088ea8d6b901c7c875bdae230d045ffb82e18b7a63a452299208"
+     },
+     {
+       "index": 56,
+@@ -1024,7 +1024,7 @@
+         "pos_enc": "learned"
+       },
+       "quant_set": "current",
+-      "config_sha256": "f6acc476287eeb22b20f1925e0e6a460a30f09f367c614c839c4b4106c64634d"
++      "config_sha256": "dd6370e60ef66c38ff0945403aefdf98db0699a27a684c9e69033c15a840fb5a"
+     },
+     {
+       "index": 57,
+@@ -1042,7 +1042,7 @@
+         "pos_enc": "none"
+       },
+       "quant_set": "chang",
+-      "config_sha256": "05cae0decc1ebbd9bd29895ce1b6474170b48b49671186aa8e0aab9745d87367"
++      "config_sha256": "b9bdcb48989ea129994110d3e2bf1717ee0a6a3b3045a9cdfd78d27160b0e20b"
+     }
+   ],
+   "count": 58,
+diff --git a/campaigns/chang0926/packs.json b/campaigns/chang0926/packs.json
+index 1212017..d340397 100644
+--- a/campaigns/chang0926/packs.json
++++ b/campaigns/chang0926/packs.json
+@@ -1 +1 @@
+-[[0, 8, 16, 24, 32, 48], [1, 9, 17, 25, 33, 49], [2, 10, 18, 26, 34, 50], [3, 11, 19, 27, 35, 51], [4, 12, 20, 28, 36, 52], [5, 13, 21, 29, 37, 53], [6, 14, 22, 30, 38, 54], [7, 15, 23, 31, 39, 55], [40, 41, 42, 43], [44, 45, 46, 47]]
++[[0, 8, 24, 32, 1], [9, 25, 33, 2, 10], [26, 34, 3, 11, 27], [35, 4, 12, 28, 36], [5, 13, 29, 37], [6, 14, 30, 38], [7, 15, 31, 39], [16, 48, 17, 49], [18, 50, 19, 51], [20, 52, 21, 53], [22, 54, 23, 55], [40, 41, 42, 43], [44, 45, 46, 47]]
+diff --git a/campaigns/chang0926/packs_meta.json b/campaigns/chang0926/packs_meta.json
+new file mode 100644
+index 0000000..8efe399
+--- /dev/null
++++ b/campaigns/chang0926/packs_meta.json
+@@ -0,0 +1,25 @@
++{
++ "packs": "packs.json",
++ "arms_per_pack": [
++  5,
++  5,
++  5,
++  5,
++  4,
++  4,
++  4,
++  4,
++  4,
++  4,
++  4,
++  4,
++  4
++ ],
++ "wait_for_k3_readout": [
++  7,
++  8,
++  9,
++  10
++ ],
++ "rule": "packs holding A07-350 or C launch only after the K=3 regime-B pilot pod has an A07-350-s1 epoch-500 readout (STUDY arbiter v8 fix 2 (3)); plan.md DECISION R-B3"
++}
+diff --git a/campaigns/chang0926/pilot_b_k3_packs.json b/campaigns/chang0926/pilot_b_k3_packs.json
+new file mode 100644
+index 0000000..ad22605
+--- /dev/null
++++ b/campaigns/chang0926/pilot_b_k3_packs.json
+@@ -0,0 +1 @@
++[[48, 16, 32]]
+diff --git a/campaigns/chang0926/pilot_b_k5_packs.json b/campaigns/chang0926/pilot_b_k5_packs.json
+new file mode 100644
+index 0000000..c87c5db
+--- /dev/null
++++ b/campaigns/chang0926/pilot_b_k5_packs.json
+@@ -0,0 +1 @@
++[[0, 1, 24, 56, 57]]
+-- 
+2.50.1 (Apple Git-155)
+

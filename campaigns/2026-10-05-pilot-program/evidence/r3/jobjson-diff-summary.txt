@@ -1,0 +1,90 @@
+Structured job.json diff, r2e (submitted r2, same arm) -> r3; script compared line by line
+
+== h1-e-350k-c-s2
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '0'
+   /metadata/name : 'kai-p1005r1-h1-e-350k-c-s2-98dd28-r2' -> 'kai-p1005r1-h1-e-350k-c-s2-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']
+== h4-e-350k-c-w100-s2
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '0'
+   /metadata/name : 'kai-p1005r1-h4-e-350k-c-w100-s2-98dd28-r2' -> 'kai-p1005r1-h4-e-350k-c-w100-s2-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']
+== h4-e-350k-c-w50-s1
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '0'
+   /metadata/name : 'kai-p1005r1-h4-e-350k-c-w50-s1-98dd28-r2' -> 'kai-p1005r1-h4-e-350k-c-w50-s1-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']
+== h4-e-350k-c-w50-s2
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '0'
+   /metadata/name : 'kai-p1005r1-h4-e-350k-c-w50-s2-98dd28-r2' -> 'kai-p1005r1-h4-e-350k-c-w50-s2-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']
+== h1-e-350k-noc-s2
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '400'
+   /metadata/name : 'kai-p1005r1-h1-e-350k-noc-s2-98dd28-r2' -> 'kai-p1005r1-h1-e-350k-noc-s2-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']
+== h2-e-500k-c-s1
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '475'
+   /metadata/name : 'kai-p1005r1-h2-e-500k-c-s1-98dd28-r2' -> 'kai-p1005r1-h2-e-500k-c-s1-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']
+== h3-e-450k-c-qkv1-s1
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '200'
+   /metadata/name : 'kai-p1005r1-h3-e-450k-c-qkv1-s1-98dd28-r2' -> 'kai-p1005r1-h3-e-450k-c-qkv1-s1-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']
+== h5-e-350k-c-nb-s1
+   /metadata/annotations/bnjettag.io/active-deadline : 'pod 12000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), -> 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) a
+   /metadata/annotations/bnjettag.io/expected-start-epoch : None -> '175'
+   /metadata/name : 'kai-p1005r1-h5-e-350k-c-nb-s1-98dd28-r2' -> 'kai-p1005r1-h5-e-350k-c-nb-s1-98dd28-r3'
+   /spec/template/spec/activeDeadlineSeconds : 12000 -> 18000
+   /spec/template/spec/affinity/nodeAffinity/requiredDuringSchedulingIgnoredDuringExecution/nodeSelectorTerms[0]/matchExpressions[1]/values[4] : None -> 'hcc-chase-shor-c4715.unl.edu'
+   script -ARM_BUDGET_S=$(( 12000 - ($(date +%s) - T0) - 420 ))
+   script -echo "ARM_DEADLINE pod_deadline_s=12000 run_pack_budget_s=$ARM_BUDGET_S"
+   script +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+   script +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+   brief fields differing vs r2 pending brief: ['purpose']

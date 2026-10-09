@@ -1,0 +1,509 @@
+<design_size title="Design Size Report">
+    <item name="Total Instructions per Compilation Phase">
+        <table>
+            <keys size="4">Phase, Step, Instructions, Description</keys>
+            <column name="Compile/Link">,  1828379 *, After all functions are compiled and linked into a single design</column>
+            <column name="">, , </column>
+            <column name="Unroll/Inline">, , After user unroll and inline pragmas are applied</column>
+            <column name="">(1) unroll, 21295573 *, user unroll pragmas are applied</column>
+            <column name="">(2) simplification,  7416592 *, simplification of applied user unroll pragmas</column>
+            <column name="">(3) inline,  5870371 *, user inline pragmas are applied</column>
+            <column name="">(4) simplification,  5694391 *, simplification of applied user inline pragmas</column>
+            <column name="">, , </column>
+            <column name="Array/Struct">, , After user array partition and struct aggregate/disaggregate pragmas are applied</column>
+            <column name="">(1) array partition, 20317514 *, user array partition pragmas are applied</column>
+            <column name="">(2) simplification, 11173872 *, simplification of applied user array partition &amp; struct aggregate/disaggregate pragmas</column>
+            <column name="">(3) aggregate/disaggregate , 11173872 *, user struct aggregate/disaggregate pragmas are applied</column>
+            <column name="">(4) array reshape, 11174064 *, apply array reshape pragmas</column>
+            <column name="">(5) access patterns,  2793456 *, array access pattern optmizations</column>
+            <column name="">, , </column>
+            <column name="Performance">, , After transformations are applied to meet performance pragma targets</column>
+            <column name="">(1) loop simplification,  2717088 *, loop and instruction simplification</column>
+            <column name="">(2) parallelization,  2700204 *, loops are unrolled or pipelined to meet performance targets</column>
+            <column name="">(3) array partition,  2697902 *, arrays are partitioned to meet performance targets</column>
+            <column name="">(4) simplification,  2684006 *, simplification of design after performance transformations</column>
+            <column name="">, , </column>
+            <column name="HW Transforms">, , After hardware transfomations</column>
+            <column name="">(1) lowering,  2684012 *, initial conversion to HW specific instructions</column>
+            <column name="">(2) optimizations,  2682831 *, high level synthesis optimizations</column>
+        </table>
+    </item>
+    <item name="Instructions per Function for each Compilation Phase">
+        <hiertable>
+            <header size="7" col0="Function" col1="Location" col2="Compile/Link" col3="Unroll/Inline" col4="Array/Struct" col5="Performance" col6="HW Transforms"/>
+            <rows>
+                <row id="0" col0="myproject" col1="myproject.cpp:7" col2="1828379" col2_note="*" col3="5694391" col3_note="*" col4="2793456" col4_note="*" col5="2684006" col5_note="*" col6="2682831" col6_note="*">
+                    <row id="95" col0="einsum_dense&lt;ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, config3&gt;" col1="nnet_einsum_dense.h:40" col2="852" col3="37960" col4="28151" col5="22470" col6="22486">
+                        <row id="6" col0="transpose&lt;ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, config3_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="576" col4="530" col5="529" col6="529">
+                            <row id="145" col0="transfer_idx&lt;config3_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="288" col3_disp="    288 (48 calls)" col4="288" col4_disp="    288 (48 calls)" col5="288" col5_disp="    288 (48 calls)" col6="288" col6_disp="    288 (48 calls)"/>
+                        </row>
+                        <row id="31" col0="dense&lt;ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, config3_dense&gt;" col1="nnet_dense.h:41" col2="693" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="691" col3="" col4="" col5="" col6="">
+                                <row id="67" col0="dense_latency&lt;ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, config3_dense&gt;" col1="nnet_dense_latency.h:13" col2="689" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                                    <row id="118" col0="cast&lt;ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, config3_dense&gt;" col1="nnet_mult.h:110" col2="106" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="29" col0="transpose&lt;ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, config3_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="16" col0="transfer_idx&lt;config3_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="67" col0="dense_latency&lt;ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, config3_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="29632" col3_disp=" 29,632 (16 calls)" col4="20352" col4_disp=" 20,352 (16 calls)" col5="16160" col5_disp=" 16,160 (16 calls)" col6="16176" col6_disp=" 16,176 (16 calls)">
+                            <row id="118" col0="cast&lt;ap_fixed&lt;8, 4, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, config3_dense&gt;" col1="nnet_mult.h:110" col2="" col3="9216" col3_disp="  9,216 (512 calls)" col4="9216" col4_disp="  9,216 (512 calls)" col5="" col6=""/>
+                        </row>
+                    </row>
+                    <row id="84" col0="normalize&lt;ap_fixed&lt;14, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;21, 6, AP_TRN, AP_WRAP, 0&gt;, config5&gt;" col1="nnet_batchnorm.h:31" col2="415" col3="4096" col4="3074" col5="2562" col6="2563">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="85" col0="bit_block_0_attn_Wq_iq&lt;ap_fixed&lt;21, 6, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:27" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="106" col0="einsum_dense&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config7&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="93670" col5="91622" col6="91638">
+                        <row id="148" col0="transpose&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, config7_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="57" col0="transfer_idx&lt;config7_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="158" col0="dense&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config7_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="188" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config7_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="193" col0="cast&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config7_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="154" col0="transpose&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config7_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="175" col0="transfer_idx&lt;config7_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="188" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config7_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="78256" col4_disp=" 78,256 (16 calls)" col5="77744" col5_disp=" 77,744 (16 calls)" col6="77760" col6_disp=" 77,760 (16 calls)"/>
+                    </row>
+                    <row id="111" col0="bit_block_0_attn_Wk_iq&lt;ap_fixed&lt;21, 6, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:545" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="126" col0="einsum_dense&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config9&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="92710" col5="90662" col6="90678">
+                        <row id="99" col0="transpose&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, config9_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="133" col0="transfer_idx&lt;config9_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="120" col0="dense&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config9_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="131" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config9_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="128" col0="cast&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config9_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="122" col0="transpose&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config9_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="107" col0="transfer_idx&lt;config9_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="131" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config9_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="77296" col4_disp=" 77,296 (16 calls)" col5="76784" col5_disp=" 76,784 (16 calls)" col6="76800" col6_disp=" 76,800 (16 calls)"/>
+                    </row>
+                    <row id="127" col0="normalize&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config11&gt;" col1="nnet_batchnorm.h:31" col2="739" col3="30720" col4="29698" col5="29186" col6="29187">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="142" col0="normalize&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config13&gt;" col1="nnet_batchnorm.h:31" col2="739" col3="30720" col4="29698" col5="29186" col6="29187">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="141" col0="einsum&lt;ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, config16&gt;" col1="nnet_einsum.h:31" col2="631" col3="122379" col4="104968" col5="97794" col6="97795">
+                        <row id="28" col0="transpose&lt;ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config16_tpose_inp0&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="76" col0="transfer_idx&lt;config16_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="34" col0="transpose&lt;ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config16_tpose_inp1&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="47" col0="transfer_idx&lt;config16_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                        <row id="40" col0="transpose&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, config16_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="16384" col4="15361" col5="" col6="">
+                            <row id="44" col0="transfer_idx&lt;config16_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="10240" col3_disp=" 10,240 (1024 calls)" col4="10240" col4_disp=" 10,240 (1024 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="76" col0="transfer_idx&lt;config16_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        <row id="47" col0="transfer_idx&lt;config16_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        <row id="44" col0="transfer_idx&lt;config16_tpose_out&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="10240" col5_disp=" 10,240 (1024 calls)" col6="10240" col6_disp=" 10,240 (1024 calls)"/>
+                    </row>
+                    <row id="137" col0="bit_block_0_attn_Wv_iq&lt;ap_fixed&lt;21, 6, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:1063" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="161" col0="einsum_dense&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config18&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="93830" col5="91782" col6="91798">
+                        <row id="210" col0="transpose&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, config18_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="247" col0="transfer_idx&lt;config18_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="209" col0="dense&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config18_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="231" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config18_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="227" col0="cast&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config18_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="202" col0="transpose&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config18_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="217" col0="transfer_idx&lt;config18_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="231" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config18_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="78416" col4_disp=" 78,416 (16 calls)" col5="77904" col5_disp=" 77,904 (16 calls)" col6="77920" col6_disp=" 77,920 (16 calls)"/>
+                    </row>
+                    <row id="171" col0="softmax_multidim&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config19&gt;" col1="nnet_activation.h:400" col2="8969" col3="" col4="" col5="" col6="">
+                        <row id="215" col0="softmax&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config19&gt;" col1="nnet_activation.h:381" col2="8897" col3="" col4="" col5="" col6="">
+                            <row id="13" col0="softmax_stable&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config19&gt;" col1="nnet_activation.h:220" col2="8895" col3="" col4="" col5="" col6="">
+                                <row id="163" col0="init_exp_table&lt;ap_fixed&lt;10, 7, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config19&gt;" col1="nnet_activation.h:149" col2="1432" col3="" col4="" col5="" col6="">
+                                    <row id="130" col0="softmax_real_val_from_idx&lt;ap_fixed&lt;10, 7, AP_RND_CONV, AP_SAT, 0&gt;, 1024&gt;" col1="nnet_activation.h:133" col2="666" col3="" col4="" col5="" col6=""/>
+                                    <row id="147" col0="exp_fcn_float" col1="nnet_activation.h:131" col2="4" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="82" col0="init_invert_table&lt;ap_ufixed&lt;12, 4, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config19&gt;" col1="nnet_activation.h:165" col2="1418" col3="" col4="" col5="" col6="">
+                                    <row id="248" col0="softmax_real_val_from_idx&lt;ap_ufixed&lt;12, 4, AP_RND_CONV, AP_SAT, 0&gt;, 4096&gt;" col1="nnet_activation.h:133" col2="661" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="102" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 16, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="443" col3="" col4="" col5="" col6="">
+                                    <row id="15" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 8, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="414" col2_disp="    414 (2 calls)" col3="" col4="" col5="" col6="">
+                                        <row id="26" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 4, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="356" col2_disp="    356 (4 calls)" col3="" col4="" col5="" col6="">
+                                            <row id="246" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 2, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="240" col2_disp="    240 (8 calls)" col3="" col4="" col5="" col6="">
+                                                <row id="18" col0="operator()" col1="nnet_common.h:66" col2="160" col2_disp="    160 (8 calls)" col3="" col4="" col5="" col6=""/>
+                                            </row>
+                                            <row id="18" col0="operator()" col1="nnet_common.h:66" col2="80" col2_disp="     80 (4 calls)" col3="" col4="" col5="" col6=""/>
+                                        </row>
+                                        <row id="18" col0="operator()" col1="nnet_common.h:66" col2="40" col2_disp="     40 (2 calls)" col3="" col4="" col5="" col6=""/>
+                                    </row>
+                                    <row id="18" col0="operator()" col1="nnet_common.h:66" col2="20" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="242" col0="softmax_idx_from_real_val&lt;ap_fixed&lt;10, 7, AP_RND_CONV, AP_SAT, 0&gt;, 1024&gt;" col1="nnet_activation.h:141" col2="97" col3="" col4="" col5="" col6=""/>
+                                <row id="244" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 16, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="3458" col3="" col4="" col5="" col6="">
+                                    <row id="100" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 8, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="3228" col2_disp="  3,228 (2 calls)" col3="" col4="" col5="" col6="">
+                                        <row id="73" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 4, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="2768" col2_disp="  2,768 (4 calls)" col3="" col4="" col5="" col6="">
+                                            <row id="124" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 2, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="1848" col2_disp="  1,848 (8 calls)" col3="" col4="" col5="" col6="">
+                                                <row id="5" col0="operator()" col1="nnet_common.h:51" col2="1768" col2_disp="  1,768 (8 calls)" col3="" col4="" col5="" col6=""/>
+                                            </row>
+                                            <row id="5" col0="operator()" col1="nnet_common.h:51" col2="884" col2_disp="    884 (4 calls)" col3="" col4="" col5="" col6=""/>
+                                        </row>
+                                        <row id="5" col0="operator()" col1="nnet_common.h:51" col2="442" col2_disp="    442 (2 calls)" col3="" col4="" col5="" col6=""/>
+                                    </row>
+                                    <row id="5" col0="operator()" col1="nnet_common.h:51" col2="221" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="20" col0="softmax_idx_from_real_val&lt;ap_ufixed&lt;12, 4, AP_RND_CONV, AP_SAT, 0&gt;, 4096&gt;" col1="nnet_activation.h:141" col2="97" col3="" col4="" col5="" col6=""/>
+                            </row>
+                        </row>
+                    </row>
+                    <row id="167" col0="normalize&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, config21&gt;" col1="nnet_batchnorm.h:31" col2="739" col3="30720" col4="29698" col5="29186" col6="29187">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="187" col0="einsum&lt;ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, config24&gt;" col1="nnet_einsum.h:31" col2="1013" col3="137227" col4="135176" col5="127490" col6="127491">
+                        <row id="43" col0="transpose&lt;ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, config24_tpose_inp0&gt;" col1="nnet_transpose.h:29" col2="42" col3="16384" col4="15361" col5="" col6="">
+                            <row id="77" col0="transfer_idx&lt;config24_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="25" col3="10240" col3_disp=" 10,240 (1024 calls)" col4="10240" col4_disp=" 10,240 (1024 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="60" col0="transpose&lt;ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, config24_tpose_inp1&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="74" col0="transfer_idx&lt;config24_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                        <row id="66" col0="transpose&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, config24_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="71" col0="transfer_idx&lt;config24_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="77" col0="transfer_idx&lt;config24_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="10240" col5_disp=" 10,240 (1024 calls)" col6="10240" col6_disp=" 10,240 (1024 calls)"/>
+                        <row id="74" col0="transfer_idx&lt;config24_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        <row id="71" col0="transfer_idx&lt;config24_tpose_out&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                    </row>
+                    <row id="184" col0="einsum_dense&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config26&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="93190" col5="91142" col6="91158">
+                        <row id="90" col0="transpose&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, config26_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="39" col0="transfer_idx&lt;config26_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="87" col0="dense&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config26_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="56" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config26_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="33" col0="cast&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config26_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="65" col0="transpose&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config26_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="61" col0="transfer_idx&lt;config26_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="56" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config26_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="77776" col4_disp=" 77,776 (16 calls)" col5="77264" col5_disp=" 77,264 (16 calls)" col6="77280" col6_disp=" 77,280 (16 calls)"/>
+                    </row>
+                    <row id="179" col0="normalize&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;21, 5, AP_TRN, AP_WRAP, 0&gt;, config28&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="8192" col4="7170" col5="6658" col6="6659">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="24" col0="add&lt;ap_fixed&lt;21, 6, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;21, 5, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;23, 7, AP_TRN, AP_WRAP, 0&gt;, config29&gt;" col1="nnet_merge.h:38" col2="208" col3="7678" col4="6145" col5="5121" col6="5122"/>
+                    <row id="46" col0="bit_block_0_ffn_fc1_iq&lt;ap_fixed&lt;23, 7, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:1581" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="104" col0="einsum_dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config31&gt;" col1="nnet_einsum_dense.h:40" col2="791" col3="522440" col4="173350" col5="161526" col6="161542">
+                        <row id="250" col0="transpose&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, config31_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="211" col0="transfer_idx&lt;config31_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="252" col0="dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config31_dense&gt;" col1="nnet_dense.h:41" col2="632" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="630" col3="" col4="" col5="" col6="">
+                                <row id="221" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config31_dense&gt;" col1="nnet_dense_latency.h:13" col2="628" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                                    <row id="200" col0="cast&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config31_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="236" col0="transpose&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config31_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="12288" col4="11265" col5="10241" col6="10241">
+                            <row id="230" col0="transfer_idx&lt;config31_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="6144" col3_disp="  6,144 (1024 calls)" col4="6144" col4_disp="  6,144 (1024 calls)" col5="6144" col5_disp="  6,144 (1024 calls)" col6="6144" col6_disp="  6,144 (1024 calls)"/>
+                        </row>
+                        <row id="221" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config31_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="500832" col3_disp="500,832 (16 calls)" col4="152784" col4_disp="152,784 (16 calls)" col5="144032" col5_disp="144,032 (16 calls)" col6="144048" col6_disp="144,048 (16 calls)">
+                            <row id="200" col0="cast&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config31_dense&gt;" col1="nnet_mult.h:110" col2="" col3="3072" col3_disp="  3,072 (1024 calls)" col4="3072" col4_disp="  3,072 (1024 calls)" col5="" col6=""/>
+                        </row>
+                    </row>
+                    <row id="205" col0="normalize&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;22, 6, AP_TRN, AP_WRAP, 0&gt;, config33&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="16384" col4="14338" col5="13314" col6="13315">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="105" col0="thresholded_relu&lt;ap_fixed&lt;22, 6, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;2, 32, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, thresholdedrelu_config34&gt;" col1="nnet_activation.h:545" col2="792" col3="53246" col4="54273" col5="53249" col6="53250"/>
+                    <row id="153" col0="einsum_dense&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config36&gt;" col1="nnet_einsum_dense.h:40" col2="791" col3="518264" col4="183846" col5="181286" col6="181302">
+                        <row id="53" col0="transpose&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, config36_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="12288" col4="11265" col5="10241" col6="10241">
+                            <row id="259" col0="transfer_idx&lt;config36_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="6144" col3_disp="  6,144 (1024 calls)" col4="6144" col4_disp="  6,144 (1024 calls)" col5="6144" col5_disp="  6,144 (1024 calls)" col6="6144" col6_disp="  6,144 (1024 calls)"/>
+                        </row>
+                        <row id="14" col0="dense&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config36_dense&gt;" col1="nnet_dense.h:41" col2="632" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="630" col3="" col4="" col5="" col6="">
+                                <row id="10" col0="dense_latency&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config36_dense&gt;" col1="nnet_dense_latency.h:13" col2="628" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                                    <row id="258" col0="cast&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config36_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="17" col0="transpose&lt;ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config36_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="19" col0="transfer_idx&lt;config36_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="10" col0="dense_latency&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config36_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="498224" col3_disp="498,224 (16 calls)" col4="164336" col4_disp="164,336 (16 calls)" col5="163312" col5_disp="163,312 (16 calls)" col6="163328" col6_disp="163,328 (16 calls)"/>
+                    </row>
+                    <row id="206" col0="normalize&lt;ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;23, 7, AP_TRN, AP_WRAP, 0&gt;, config38&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="8192" col4="7170" col5="6658" col6="6659">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="222" col0="add&lt;ap_fixed&lt;23, 7, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;23, 7, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;24, 8, AP_TRN, AP_WRAP, 0&gt;, config39&gt;" col1="nnet_merge.h:38" col2="194" col3="6142" col4="4609" col5="3585" col6="3586"/>
+                    <row id="226" col0="bit_block_1_attn_Wq_iq&lt;ap_fixed&lt;24, 8, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:2099" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="229" col0="einsum_dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config41&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="93670" col5="91622" col6="91638">
+                        <row id="170" col0="transpose&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, config41_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="146" col0="transfer_idx&lt;config41_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="174" col0="dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config41_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="164" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config41_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="132" col0="cast&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config41_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="152" col0="transpose&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config41_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="149" col0="transfer_idx&lt;config41_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="164" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config41_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="78256" col4_disp=" 78,256 (16 calls)" col5="77744" col5_disp=" 77,744 (16 calls)" col6="77760" col6_disp=" 77,760 (16 calls)"/>
+                    </row>
+                    <row id="251" col0="bit_block_1_attn_Wk_iq&lt;ap_fixed&lt;24, 8, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:2617" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="254" col0="einsum_dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config43&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="93510" col5="91462" col6="91478">
+                        <row id="190" col0="transpose&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, config43_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="189" col0="transfer_idx&lt;config43_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="172" col0="dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config43_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="35" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config43_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="185" col0="cast&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config43_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="198" col0="transpose&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config43_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="2" col0="transfer_idx&lt;config43_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="35" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config43_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="78096" col4_disp=" 78,096 (16 calls)" col5="77584" col5_disp=" 77,584 (16 calls)" col6="77600" col6_disp=" 77,600 (16 calls)"/>
+                    </row>
+                    <row id="240" col0="normalize&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config45&gt;" col1="nnet_batchnorm.h:31" col2="739" col3="30720" col4="29698" col5="29186" col6="29187">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="3" col0="normalize&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config47&gt;" col1="nnet_batchnorm.h:31" col2="739" col3="30720" col4="29698" col5="29186" col6="29187">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="255" col0="einsum&lt;ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, config50&gt;" col1="nnet_einsum.h:31" col2="631" col3="122379" col4="104968" col5="97794" col6="97795">
+                        <row id="197" col0="transpose&lt;ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config50_tpose_inp0&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="115" col0="transfer_idx&lt;config50_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="177" col0="transpose&lt;ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 3, AP_RND_CONV, AP_SAT, 0&gt;, config50_tpose_inp1&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="117" col0="transfer_idx&lt;config50_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                        <row id="191" col0="transpose&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, config50_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="16384" col4="15361" col5="" col6="">
+                            <row id="186" col0="transfer_idx&lt;config50_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="10240" col3_disp=" 10,240 (1024 calls)" col4="10240" col4_disp=" 10,240 (1024 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="115" col0="transfer_idx&lt;config50_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        <row id="117" col0="transfer_idx&lt;config50_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        <row id="186" col0="transfer_idx&lt;config50_tpose_out&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="10240" col5_disp=" 10,240 (1024 calls)" col6="10240" col6_disp=" 10,240 (1024 calls)"/>
+                    </row>
+                    <row id="257" col0="bit_block_1_attn_Wv_iq&lt;ap_fixed&lt;24, 8, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:3135" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="256" col0="einsum_dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config52&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="93830" col5="91782" col6="91798">
+                        <row id="45" col0="transpose&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, config52_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="201" col0="transfer_idx&lt;config52_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="42" col0="dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config52_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="78" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config52_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="11" col0="cast&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config52_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="37" col0="transpose&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config52_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="62" col0="transfer_idx&lt;config52_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="78" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config52_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="78416" col4_disp=" 78,416 (16 calls)" col5="77904" col5_disp=" 77,904 (16 calls)" col6="77920" col6_disp=" 77,920 (16 calls)"/>
+                    </row>
+                    <row id="9" col0="softmax_multidim&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config53&gt;" col1="nnet_activation.h:400" col2="8969" col3="" col4="" col5="" col6="">
+                        <row id="92" col0="softmax&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config53&gt;" col1="nnet_activation.h:381" col2="8897" col3="" col4="" col5="" col6="">
+                            <row id="88" col0="softmax_stable&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config53&gt;" col1="nnet_activation.h:220" col2="8895" col3="" col4="" col5="" col6="">
+                                <row id="83" col0="init_exp_table&lt;ap_fixed&lt;10, 7, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config53&gt;" col1="nnet_activation.h:149" col2="1432" col3="" col4="" col5="" col6="">
+                                    <row id="130" col0="softmax_real_val_from_idx&lt;ap_fixed&lt;10, 7, AP_RND_CONV, AP_SAT, 0&gt;, 1024&gt;" col1="nnet_activation.h:133" col2="666" col3="" col4="" col5="" col6=""/>
+                                    <row id="147" col0="exp_fcn_float" col1="nnet_activation.h:131" col2="4" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="113" col0="init_invert_table&lt;ap_ufixed&lt;12, 4, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config53&gt;" col1="nnet_activation.h:165" col2="1418" col3="" col4="" col5="" col6="">
+                                    <row id="248" col0="softmax_real_val_from_idx&lt;ap_ufixed&lt;12, 4, AP_RND_CONV, AP_SAT, 0&gt;, 4096&gt;" col1="nnet_activation.h:133" col2="661" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="102" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 16, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="443" col3="" col4="" col5="" col6="">
+                                    <row id="15" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 8, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="414" col2_disp="    414 (2 calls)" col3="" col4="" col5="" col6="">
+                                        <row id="26" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 4, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="356" col2_disp="    356 (4 calls)" col3="" col4="" col5="" col6="">
+                                            <row id="246" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 2, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="240" col2_disp="    240 (8 calls)" col3="" col4="" col5="" col6="">
+                                                <row id="18" col0="operator()" col1="nnet_common.h:66" col2="160" col2_disp="    160 (8 calls)" col3="" col4="" col5="" col6=""/>
+                                            </row>
+                                            <row id="18" col0="operator()" col1="nnet_common.h:66" col2="80" col2_disp="     80 (4 calls)" col3="" col4="" col5="" col6=""/>
+                                        </row>
+                                        <row id="18" col0="operator()" col1="nnet_common.h:66" col2="40" col2_disp="     40 (2 calls)" col3="" col4="" col5="" col6=""/>
+                                    </row>
+                                    <row id="18" col0="operator()" col1="nnet_common.h:66" col2="20" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="242" col0="softmax_idx_from_real_val&lt;ap_fixed&lt;10, 7, AP_RND_CONV, AP_SAT, 0&gt;, 1024&gt;" col1="nnet_activation.h:141" col2="97" col3="" col4="" col5="" col6=""/>
+                                <row id="244" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 16, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="3458" col3="" col4="" col5="" col6="">
+                                    <row id="100" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 8, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="3228" col2_disp="  3,228 (2 calls)" col3="" col4="" col5="" col6="">
+                                        <row id="73" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 4, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="2768" col2_disp="  2,768 (4 calls)" col3="" col4="" col5="" col6="">
+                                            <row id="124" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 2, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="1848" col2_disp="  1,848 (8 calls)" col3="" col4="" col5="" col6="">
+                                                <row id="5" col0="operator()" col1="nnet_common.h:51" col2="1768" col2_disp="  1,768 (8 calls)" col3="" col4="" col5="" col6=""/>
+                                            </row>
+                                            <row id="5" col0="operator()" col1="nnet_common.h:51" col2="884" col2_disp="    884 (4 calls)" col3="" col4="" col5="" col6=""/>
+                                        </row>
+                                        <row id="5" col0="operator()" col1="nnet_common.h:51" col2="442" col2_disp="    442 (2 calls)" col3="" col4="" col5="" col6=""/>
+                                    </row>
+                                    <row id="5" col0="operator()" col1="nnet_common.h:51" col2="221" col3="" col4="" col5="" col6=""/>
+                                </row>
+                                <row id="20" col0="softmax_idx_from_real_val&lt;ap_ufixed&lt;12, 4, AP_RND_CONV, AP_SAT, 0&gt;, 4096&gt;" col1="nnet_activation.h:141" col2="97" col3="" col4="" col5="" col6=""/>
+                            </row>
+                        </row>
+                    </row>
+                    <row id="7" col0="normalize&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, config55&gt;" col1="nnet_batchnorm.h:31" col2="739" col3="30720" col4="29698" col5="29186" col6="29187">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="23" col0="einsum&lt;ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, config58&gt;" col1="nnet_einsum.h:31" col2="1013" col3="137227" col4="135176" col5="127490" col6="127491">
+                        <row id="48" col0="transpose&lt;ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, config58_tpose_inp0&gt;" col1="nnet_transpose.h:29" col2="42" col3="16384" col4="15361" col5="" col6="">
+                            <row id="204" col0="transfer_idx&lt;config58_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="25" col3="10240" col3_disp=" 10,240 (1024 calls)" col4="10240" col4_disp=" 10,240 (1024 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="70" col0="transpose&lt;ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 6, AP_RND_CONV, AP_SAT, 0&gt;, config58_tpose_inp1&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="208" col0="transfer_idx&lt;config58_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                        <row id="116" col0="transpose&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, config58_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="" col6="">
+                            <row id="112" col0="transfer_idx&lt;config58_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="" col6=""/>
+                        </row>
+                        <row id="204" col0="transfer_idx&lt;config58_tpose_inp0&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="10240" col5_disp=" 10,240 (1024 calls)" col6="10240" col6_disp=" 10,240 (1024 calls)"/>
+                        <row id="208" col0="transfer_idx&lt;config58_tpose_inp1&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        <row id="112" col0="transfer_idx&lt;config58_tpose_out&gt;" col1="nnet_transpose.h:18" col2="" col3="" col4="" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                    </row>
+                    <row id="54" col0="einsum_dense&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config60&gt;" col1="nnet_einsum_dense.h:40" col2="796" col3="264824" col4="93270" col5="91222" col6="91238">
+                        <row id="93" col0="transpose&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, config60_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="8192" col4="7681" col5="7169" col6="7169">
+                            <row id="55" col0="transfer_idx&lt;config60_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="5120" col3_disp="  5,120 (512 calls)" col4="5120" col4_disp="  5,120 (512 calls)" col5="5120" col5_disp="  5,120 (512 calls)" col6="5120" col6_disp="  5,120 (512 calls)"/>
+                        </row>
+                        <row id="199" col0="dense&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config60_dense&gt;" col1="nnet_dense.h:41" col2="637" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="635" col3="" col4="" col5="" col6="">
+                                <row id="225" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config60_dense&gt;" col1="nnet_dense_latency.h:13" col2="633" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="137" col3="" col4="" col5="" col6=""/>
+                                    <row id="138" col0="cast&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config60_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="207" col0="transpose&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config60_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="213" col0="transfer_idx&lt;config60_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="225" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config60_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="248880" col3_disp="248,880 (16 calls)" col4="77856" col4_disp=" 77,856 (16 calls)" col5="77344" col5_disp=" 77,344 (16 calls)" col6="77360" col6_disp=" 77,360 (16 calls)"/>
+                    </row>
+                    <row id="49" col0="normalize&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;21, 5, AP_TRN, AP_WRAP, 0&gt;, config62&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="8192" col4="7170" col5="6658" col6="6659">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="51" col0="add&lt;ap_fixed&lt;24, 8, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;21, 5, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;25, 9, AP_TRN, AP_WRAP, 0&gt;, config63&gt;" col1="nnet_merge.h:38" col2="194" col3="6142" col4="4609" col5="3585" col6="3586"/>
+                    <row id="72" col0="bit_block_1_ffn_fc1_iq&lt;ap_fixed&lt;25, 9, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_code_gen.h:3653" col2="222721" col3="" col4="" col5="" col6=""/>
+                    <row id="75" col0="einsum_dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config65&gt;" col1="nnet_einsum_dense.h:40" col2="791" col3="522440" col4="173190" col5="161366" col6="161382">
+                        <row id="157" col0="transpose&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, config65_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="97" col0="transfer_idx&lt;config65_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="156" col0="dense&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config65_dense&gt;" col1="nnet_dense.h:41" col2="632" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="630" col3="" col4="" col5="" col6="">
+                                <row id="129" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config65_dense&gt;" col1="nnet_dense_latency.h:13" col2="628" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                                    <row id="220" col0="cast&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config65_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="150" col0="transpose&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config65_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="12288" col4="11265" col5="10241" col6="10241">
+                            <row id="135" col0="transfer_idx&lt;config65_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="6144" col3_disp="  6,144 (1024 calls)" col4="6144" col4_disp="  6,144 (1024 calls)" col5="6144" col5_disp="  6,144 (1024 calls)" col6="6144" col6_disp="  6,144 (1024 calls)"/>
+                        </row>
+                        <row id="129" col0="dense_latency&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config65_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="500832" col3_disp="500,832 (16 calls)" col4="152624" col4_disp="152,624 (16 calls)" col5="143872" col5_disp="143,872 (16 calls)" col6="143888" col6_disp="143,888 (16 calls)">
+                            <row id="220" col0="cast&lt;ap_fixed&lt;8, 3, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, config65_dense&gt;" col1="nnet_mult.h:110" col2="" col3="3072" col3_disp="  3,072 (1024 calls)" col4="3072" col4_disp="  3,072 (1024 calls)" col5="" col6=""/>
+                        </row>
+                    </row>
+                    <row id="68" col0="normalize&lt;ap_fixed&lt;13, 8, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;22, 6, AP_TRN, AP_WRAP, 0&gt;, config67&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="16384" col4="14338" col5="13314" col6="13315">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="59" col0="thresholded_relu&lt;ap_fixed&lt;22, 6, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;2, 32, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, thresholdedrelu_config68&gt;" col1="nnet_activation.h:545" col2="792" col3="53246" col4="54273" col5="53249" col6="53250"/>
+                    <row id="94" col0="einsum_dense&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config70&gt;" col1="nnet_einsum_dense.h:40" col2="791" col3="518264" col4="184886" col5="182326" col6="182342">
+                        <row id="110" col0="transpose&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, config70_tpose_inp&gt;" col1="nnet_transpose.h:29" col2="42" col3="12288" col4="11265" col5="10241" col6="10241">
+                            <row id="260" col0="transfer_idx&lt;config70_tpose_inp&gt;" col1="nnet_transpose.h:18" col2="25" col3="6144" col3_disp="  6,144 (1024 calls)" col4="6144" col4_disp="  6,144 (1024 calls)" col5="6144" col5_disp="  6,144 (1024 calls)" col6="6144" col6_disp="  6,144 (1024 calls)"/>
+                        </row>
+                        <row id="36" col0="dense&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config70_dense&gt;" col1="nnet_dense.h:41" col2="632" col3="" col4="" col5="" col6="">
+                            <row id="22" col0="dense" col1="nnet_dense.h:50" col2="630" col3="" col4="" col5="" col6="">
+                                <row id="176" col0="dense_latency&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config70_dense&gt;" col1="nnet_dense_latency.h:13" col2="628" col3="" col4="" col5="" col6="">
+                                    <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                                    <row id="182" col0="cast&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config70_dense&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                                </row>
+                            </row>
+                        </row>
+                        <row id="38" col0="transpose&lt;ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config70_tpose_out&gt;" col1="nnet_transpose.h:29" col2="42" col3="6144" col4="5633" col5="5121" col6="5121">
+                            <row id="79" col0="transfer_idx&lt;config70_tpose_out&gt;" col1="nnet_transpose.h:18" col2="25" col3="3072" col3_disp="  3,072 (512 calls)" col4="3072" col4_disp="  3,072 (512 calls)" col5="3072" col5_disp="  3,072 (512 calls)" col6="3072" col6_disp="  3,072 (512 calls)"/>
+                        </row>
+                        <row id="176" col0="dense_latency&lt;ap_ufixed&lt;7, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, config70_dense&gt;" col1="nnet_dense_latency.h:13" col2="" col3="498224" col3_disp="498,224 (16 calls)" col4="165376" col4_disp="165,376 (16 calls)" col5="164352" col5_disp="164,352 (16 calls)" col6="164368" col6_disp="164,368 (16 calls)"/>
+                    </row>
+                    <row id="81" col0="normalize&lt;ap_fixed&lt;14, 9, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;23, 7, AP_TRN, AP_WRAP, 0&gt;, config72&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="8192" col4="7170" col5="6658" col6="6659">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="123" col0="add&lt;ap_fixed&lt;25, 9, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;23, 7, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;26, 10, AP_TRN, AP_WRAP, 0&gt;, config73&gt;" col1="nnet_merge.h:38" col2="194" col3="6142" col4="4609" col5="3585" col6="3586"/>
+                    <row id="103" col0="global_pooling1d_cl&lt;ap_fixed&lt;26, 10, AP_TRN, AP_WRAP, 0&gt;, ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, config74&gt;" col1="nnet_pooling.h:121" col2="776" col3="7060" col4="6979" col5="4193" col6="4194">
+                        <row id="180" col0="pool_op_limit_1d&lt;config74&gt;" col1="nnet_pooling.h:78" col2="1" col3="" col4="" col5="" col6=""/>
+                        <row id="196" col0="pool_op&lt;ap_fixed&lt;26, 10, AP_TRN, AP_WRAP, 0&gt;, 16, nnet::Average, ap_fixed&lt;34, 14, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_pooling.h:41" col2="354" col3="3616" col3_disp="  3,616 (32 calls)" col4="3104" col4_disp="  3,104 (32 calls)" col5="" col6="">
+                            <row id="4" col0="pool_op&lt;ap_fixed&lt;26, 10, AP_TRN, AP_WRAP, 0&gt;, 16, nnet::Average, ap_fixed&lt;34, 14, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_pooling.h:31" col2="352" col3="" col4="" col5="" col6="">
+                                <row id="96" col0="avg&lt;ap_fixed&lt;26, 10, AP_TRN, AP_WRAP, 0&gt;, 16, ap_fixed&lt;34, 14, AP_TRN, AP_WRAP, 0&gt; &gt;" col1="nnet_pooling.h:20" col2="350" col3="" col4="" col5="" col6=""/>
+                            </row>
+                        </row>
+                    </row>
+                    <row id="109" col0="dense&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config76&gt;" col1="nnet_dense.h:41" col2="632" col3="" col4="" col5="" col6="">
+                        <row id="22" col0="dense" col1="nnet_dense.h:50" col2="630" col3="" col4="" col5="" col6="">
+                            <row id="168" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config76&gt;" col1="nnet_dense_latency.h:13" col2="628" col3="" col4="" col5="" col6="">
+                                <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                                <row id="203" col0="cast&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config76&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                            </row>
+                        </row>
+                    </row>
+                    <row id="144" col0="normalize&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;21, 5, AP_TRN, AP_WRAP, 0&gt;, config78&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="512" col4="450" col5="418" col6="419">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="140" col0="thresholded_relu&lt;ap_fixed&lt;21, 5, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;2, 32, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;7, 1, AP_RND_CONV, AP_SAT, 0&gt;, thresholdedrelu_config79&gt;" col1="nnet_activation.h:545" col2="792" col3="1662" col4="1697" col5="1665" col6="1666"/>
+                    <row id="162" col0="dense&lt;ap_ufixed&lt;7, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config81&gt;" col1="nnet_dense.h:41" col2="632" col3="" col4="" col5="" col6="">
+                        <row id="22" col0="dense" col1="nnet_dense.h:50" col2="630" col3="" col4="" col5="" col6="">
+                            <row id="235" col0="dense_latency&lt;ap_ufixed&lt;7, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config81&gt;" col1="nnet_dense_latency.h:13" col2="628" col3="" col4="" col5="" col6="">
+                                <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                                <row id="8" col0="cast&lt;ap_ufixed&lt;7, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config81&gt;" col1="nnet_mult.h:110" col2="45" col3="" col4="" col5="" col6=""/>
+                            </row>
+                        </row>
+                    </row>
+                    <row id="160" col0="normalize&lt;ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;22, 6, AP_TRN, AP_WRAP, 0&gt;, config83&gt;" col1="nnet_batchnorm.h:31" col2="414" col3="80" col4="72" col5="67" col6="68">
+                        <row id="12" col0="product" col1="nnet_mult.h:70" col2="141" col3="" col4="" col5="" col6=""/>
+                    </row>
+                    <row id="13" col0="softmax_stable&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config19&gt;" col1="nnet_activation.h:220" col2="" col3="141760" col3_disp="141,760 (64 calls)" col4="134720" col4_disp="134,720 (64 calls)" col5="125504" col5_disp="125,504 (64 calls)" col6="124800" col6_disp="124,800 (64 calls)">
+                        <row id="15" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 8, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="" col3="16384" col3_disp=" 16,384 (128 calls)" col4="4864" col4_disp="  4,864 (128 calls)" col5="4864" col5_disp="  4,864 (128 calls)" col6="4864" col6_disp="  4,864 (128 calls)"/>
+                        <row id="73" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 4, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="" col3="7680" col3_disp="  7,680 (256 calls)" col4="11264" col4_disp=" 11,264 (256 calls)" col5="7168" col5_disp="  7,168 (256 calls)" col6="7168" col6_disp="  7,168 (256 calls)"/>
+                    </row>
+                    <row id="88" col0="softmax_stable&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, ap_ufixed&lt;10, 1, AP_RND_CONV, AP_SAT, 0&gt;, softmax_config53&gt;" col1="nnet_activation.h:220" col2="" col3="141760" col3_disp="141,760 (64 calls)" col4="134720" col4_disp="134,720 (64 calls)" col5="125504" col5_disp="125,504 (64 calls)" col6="124800" col6_disp="124,800 (64 calls)">
+                        <row id="15" col0="reduce&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt;, 8, nnet::Op_max&lt;ap_fixed&lt;19, 9, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="" col3="16384" col3_disp=" 16,384 (128 calls)" col4="4864" col4_disp="  4,864 (128 calls)" col5="4864" col5_disp="  4,864 (128 calls)" col6="4864" col6_disp="  4,864 (128 calls)"/>
+                        <row id="73" col0="reduce&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt;, 4, nnet::Op_add&lt;ap_ufixed&lt;27, 8, AP_TRN, AP_WRAP, 0&gt; &gt; &gt;" col1="nnet_common.h:37" col2="" col3="7680" col3_disp="  7,680 (256 calls)" col4="11264" col4_disp=" 11,264 (256 calls)" col5="7168" col5_disp="  7,168 (256 calls)" col6="7168" col6_disp="  7,168 (256 calls)"/>
+                    </row>
+                    <row id="168" col0="dense_latency&lt;ap_fixed&lt;8, 2, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config76&gt;" col1="nnet_dense_latency.h:13" col2="" col3="15523" col4="4822" col5="4790" col6="4791"/>
+                    <row id="235" col0="dense_latency&lt;ap_ufixed&lt;7, 1, AP_RND_CONV, AP_SAT, 0&gt;, ap_fixed&lt;13, 7, AP_RND_CONV, AP_SAT, 0&gt;, config81&gt;" col1="nnet_dense_latency.h:13" col2="" col3="2249" col4="1095" col5="1063" col6="1064"/>
+                </row>
+            </rows>
+            <notes>
+                <note name="*" desc="Exceeded design size warning message threshold"/>
+            </notes>
+        </hiertable>
+    </item>
+    <item name="Design Size Message Settings">
+        <table>
+            <keys size="3">Message Setting, Value, Description</keys>
+            <column name="config_compile -design_size_maximum_warning">100000, Show a warning when total design instructions exceeds this value</column>
+        </table>
+    </item>
+</design_size>
+

@@ -1,0 +1,477 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "bnjettag.io/handoff-configmap": "kai-rh-a15040ccc47283093ee9c734",
+            "bnjettag.io/handoff-path": "/data/run-handoffs/rh-a15040ccc47283093ee9c734",
+            "bnjettag.io/handoff-sha256": "a15040ccc47283093ee9c734e1ccb95448fad927f5bb791deb0137608e2aa41d",
+            "cni.projectcalico.org/containerID": "aa06b7462f1c582017b685aab196873a665789542ebe8d34d4a66c0c5646cfc4",
+            "cni.projectcalico.org/podIP": "",
+            "cni.projectcalico.org/podIPs": "",
+            "kubernetes.io/limit-ranger": "LimitRanger plugin set: ephemeral-storage request for init container record-run-handoff; ephemeral-storage limit for init container record-run-handoff",
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-10-01T06:45:53Z",
+        "generateName": "kai-confirm1001-replay-a02s3-r1-",
+        "generation": 1,
+        "labels": {
+            "app": "kai-confirm-onegpu",
+            "batch.kubernetes.io/controller-uid": "e78483f4-b74c-4fed-b7fa-e4b771e762a3",
+            "batch.kubernetes.io/job-name": "kai-confirm1001-replay-a02s3-r1",
+            "bnjettag.io/run-id": "rh-a15040ccc47283093ee9c734",
+            "campaign": "confirmation-20260923",
+            "controller-uid": "e78483f4-b74c-4fed-b7fa-e4b771e762a3",
+            "job-name": "kai-confirm1001-replay-a02s3-r1",
+            "user": "kai"
+        },
+        "name": "kai-confirm1001-replay-a02s3-r1-mjbzz",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+            {
+                "apiVersion": "batch/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "Job",
+                "name": "kai-confirm1001-replay-a02s3-r1",
+                "uid": "e78483f4-b74c-4fed-b7fa-e4b771e762a3"
+            }
+        ],
+        "resourceVersion": "14993334346",
+        "uid": "ea50754f-c194-4a9f-9b4f-eeb12a4628bd"
+    },
+    "spec": {
+        "affinity": {
+            "nodeAffinity": {
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                    "nodeSelectorTerms": [
+                        {
+                            "matchExpressions": [
+                                {
+                                    "key": "nvidia.com/gpu.product",
+                                    "operator": "In",
+                                    "values": [
+                                        "NVIDIA-A10"
+                                    ]
+                                },
+                                {
+                                    "key": "kubernetes.io/hostname",
+                                    "operator": "NotIn",
+                                    "values": [
+                                        "k8s-chase-ci-07.calit2.optiputer.net",
+                                        "nautilus-ext-gpu01.fullerton.edu",
+                                        "ren-gp-argo-01.madren.org"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+            {
+                "args": [
+                    "set -euo pipefail\nmkdir -p /work/code\necho '43495e085ae734c232e90003e96e96bf5034e729ff99d1bea6ee59b30a15a1f5  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport PYTHONDONTWRITEBYTECODE=1\npython - \u003c\u003c'VERIFY_ORIGINAL'\nimport base64,hashlib,json,tarfile,io\nfrom pathlib import Path\np=Path('/work/code');cm=json.loads((p/'diagnostics/original-source-configmap.json').read_bytes());raw=base64.b64decode(cm['binaryData']['hgq2.tar.gz']);assert hashlib.sha256(raw).hexdigest()=='26f3cc40a8f7c9ff378760c5b0d8ce046508cb4de585f9c4b80ea93653515a45'\nwith tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as tf:\n files=[m for m in tf if m.isfile()];assert len(files)==152\n for m in files:assert (p/m.name.removeprefix('code/')).read_bytes()==tf.extractfile(m).read()\nVERIFY_ORIGINAL\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\ncd /work/code\nexec python -u /work/code/diagnostics/probe.py --scope /work/code/diagnostics/scope.json\n"
+                ],
+                "command": [
+                    "bash",
+                    "-c"
+                ],
+                "env": [
+                    {
+                        "name": "KERAS_BACKEND",
+                        "value": "tensorflow"
+                    },
+                    {
+                        "name": "MPLBACKEND",
+                        "value": "Agg"
+                    },
+                    {
+                        "name": "TF_FORCE_GPU_ALLOW_GROWTH",
+                        "value": "true"
+                    },
+                    {
+                        "name": "TF_CPP_MIN_LOG_LEVEL",
+                        "value": "2"
+                    },
+                    {
+                        "name": "NVIDIA_TF32_OVERRIDE",
+                        "value": "0"
+                    },
+                    {
+                        "name": "OMP_NUM_THREADS",
+                        "value": "4"
+                    },
+                    {
+                        "name": "TF_NUM_INTRAOP_THREADS",
+                        "value": "4"
+                    },
+                    {
+                        "name": "TF_NUM_INTEROP_THREADS",
+                        "value": "2"
+                    },
+                    {
+                        "name": "OPENBLAS_NUM_THREADS",
+                        "value": "1"
+                    },
+                    {
+                        "name": "WANDB_MODE",
+                        "value": "disabled"
+                    },
+                    {
+                        "name": "JOB_NAME",
+                        "value": "kai-confirm1001-replay-a02s3-r1"
+                    },
+                    {
+                        "name": "POD_UID",
+                        "valueFrom": {
+                            "fieldRef": {
+                                "apiVersion": "v1",
+                                "fieldPath": "metadata.uid"
+                            }
+                        }
+                    },
+                    {
+                        "name": "RUN_ID",
+                        "valueFrom": {
+                            "fieldRef": {
+                                "apiVersion": "v1",
+                                "fieldPath": "metadata.labels['bnjettag.io/run-id']"
+                            }
+                        }
+                    },
+                    {
+                        "name": "HANDOFF_SHA256",
+                        "valueFrom": {
+                            "fieldRef": {
+                                "apiVersion": "v1",
+                                "fieldPath": "metadata.annotations['bnjettag.io/handoff-sha256']"
+                            }
+                        }
+                    }
+                ],
+                "image": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "diagnostic",
+                "resources": {
+                    "limits": {
+                        "cpu": "4",
+                        "ephemeral-storage": "12Gi",
+                        "memory": "16Gi",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "requests": {
+                        "cpu": "4",
+                        "ephemeral-storage": "12Gi",
+                        "memory": "16Gi",
+                        "nvidia.com/gpu": "1"
+                    }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "initContainers": [
+            {
+                "command": [
+                    "python",
+                    "/handoff/run_handoff.py",
+                    "install",
+                    "--record",
+                    "/handoff/record.json"
+                ],
+                "env": [
+                    {
+                        "name": "NVIDIA_VISIBLE_DEVICES",
+                        "value": "void"
+                    }
+                ],
+                "image": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "record-run-handoff",
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "ephemeral-storage": "50Gi",
+                        "memory": "256Mi"
+                    },
+                    "requests": {
+                        "cpu": "100m",
+                        "ephemeral-storage": "0",
+                        "memory": "128Mi"
+                    }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/handoff",
+                        "name": "run-handoff",
+                        "readOnly": true
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    }
+                ]
+            }
+        ],
+        "nodeName": "gpu-15.nrp.mghpcc.org",
+        "nodeSelector": {
+            "kubernetes.io/arch": "amd64"
+        },
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "PreferNoSchedule",
+                "key": "nvidia.com/gpu",
+                "operator": "Exists"
+            }
+        ],
+        "volumes": [
+            {
+                "configMap": {
+                    "defaultMode": 420,
+                    "name": "kai-confirm1001-replay-a02s3-r1-code"
+                },
+                "name": "code"
+            },
+            {
+                "emptyDir": {
+                    "sizeLimit": "12Gi"
+                },
+                "name": "work"
+            },
+            {
+                "name": "persistent",
+                "persistentVolumeClaim": {
+                    "claimName": "kai-data"
+                }
+            },
+            {
+                "configMap": {
+                    "defaultMode": 420,
+                    "name": "kai-rh-a15040ccc47283093ee9c734"
+                },
+                "name": "run-handoff"
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-01T06:47:55Z",
+                "status": "False",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-01T06:46:30Z",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-01T06:47:52Z",
+                "reason": "PodFailed",
+                "status": "False",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-01T06:47:52Z",
+                "reason": "PodFailed",
+                "status": "False",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-10-01T06:45:56Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "4",
+                    "ephemeral-storage": "12Gi",
+                    "memory": "16Gi",
+                    "nvidia.com/gpu": "1"
+                },
+                "containerID": "containerd://9e43c1e06fe2f457eb3b55d73f9538a091a628d5880bf59ef330b2cee050b2cd",
+                "image": "sha256:09fac22af2fd4a25594a5b259f918e1a2b77cb15b00b21db260487f1cfcf8503",
+                "imageID": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+                "lastState": {},
+                "name": "diagnostic",
+                "ready": false,
+                "resources": {
+                    "limits": {
+                        "cpu": "4",
+                        "ephemeral-storage": "12Gi",
+                        "memory": "16Gi",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "requests": {
+                        "cpu": "4",
+                        "ephemeral-storage": "12Gi",
+                        "memory": "16Gi",
+                        "nvidia.com/gpu": "1"
+                    }
+                },
+                "restartCount": 0,
+                "started": false,
+                "state": {
+                    "terminated": {
+                        "containerID": "containerd://9e43c1e06fe2f457eb3b55d73f9538a091a628d5880bf59ef330b2cee050b2cd",
+                        "exitCode": 1,
+                        "finishedAt": "2026-10-01T06:47:50Z",
+                        "reason": "Error",
+                        "startedAt": "2026-10-01T06:46:31Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0
+                        ],
+                        "uid": 0
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "192.69.103.155",
+        "hostIPs": [
+            {
+                "ip": "192.69.103.155"
+            }
+        ],
+        "initContainerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "100m",
+                    "ephemeral-storage": "0",
+                    "memory": "128Mi"
+                },
+                "containerID": "containerd://5439af34f19171a65519d2f5ed0f83e0ef82fa6ef355ba5a466a219669854e6d",
+                "image": "sha256:09fac22af2fd4a25594a5b259f918e1a2b77cb15b00b21db260487f1cfcf8503",
+                "imageID": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+                "lastState": {},
+                "name": "record-run-handoff",
+                "ready": true,
+                "resources": {
+                    "limits": {
+                        "cpu": "1",
+                        "ephemeral-storage": "50Gi",
+                        "memory": "256Mi"
+                    },
+                    "requests": {
+                        "cpu": "100m",
+                        "ephemeral-storage": "0",
+                        "memory": "128Mi"
+                    }
+                },
+                "restartCount": 0,
+                "started": false,
+                "state": {
+                    "terminated": {
+                        "containerID": "containerd://5439af34f19171a65519d2f5ed0f83e0ef82fa6ef355ba5a466a219669854e6d",
+                        "exitCode": 0,
+                        "finishedAt": "2026-10-01T06:46:27Z",
+                        "reason": "Completed",
+                        "startedAt": "2026-10-01T06:46:24Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0
+                        ],
+                        "uid": 0
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/handoff",
+                        "name": "run-handoff",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    }
+                ]
+            }
+        ],
+        "phase": "Failed",
+        "podIP": "10.244.124.217",
+        "podIPs": [
+            {
+                "ip": "10.244.124.217"
+            },
+            {
+                "ip": "fdf0:17b3:c3ec:1f79:10:0:b:f955"
+            }
+        ],
+        "qosClass": "Burstable",
+        "startTime": "2026-10-01T06:45:56Z"
+    }
+}

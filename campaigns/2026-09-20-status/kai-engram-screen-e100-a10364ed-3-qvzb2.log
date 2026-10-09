@@ -1,0 +1,49 @@
+2026-09-18T23:54:37.024868381Z /cmcode/hgq2.tar.gz: OK
+2026-09-18T23:55:51.714618288Z WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+2026-09-18T23:55:52.304928376Z 
+2026-09-18T23:55:52.304957320Z [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+2026-09-18T23:55:52.304960464Z [notice] To update, run: pip install --upgrade pip
+2026-09-18T23:55:54.001116171Z {"project": "BNJetTag-Engram-Experimental", "entity": "kayamaguchi-uc-san-diego", "access": "PRIVATE", "anonymous_read": "denied", "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental"}
+2026-09-18T23:55:54.027874323Z NVIDIA RTX 5000 Ada Generation, 32760 MiB
+2026-09-18T23:55:54.238204961Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-09-18T23:55:54.238229358Z I0000 00:00:1789775754.238101      69 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-18T23:55:54.280546525Z I0000 00:00:1789775754.280455      69 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-09-18T23:55:54.280564271Z To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-09-18T23:55:55.421040257Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-09-18T23:55:55.421062971Z I0000 00:00:1789775755.420933      69 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-18T23:55:56.268321418Z GPU_GATE_PASS
+2026-09-18T23:55:56.962126909Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-09-18T23:55:56.962163464Z I0000 00:00:1789775756.961989      74 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-18T23:55:57.943072272Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-09-18T23:55:57.943099413Z I0000 00:00:1789775757.942957      74 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-18T23:56:10.735190369Z [train] engram-e03-s1 params=42485 resume_epoch=100 initial_ebops=2237124
+2026-09-18T23:56:10.740744659Z wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+2026-09-18T23:56:11.711534914Z wandb: Resuming run engram-e03-s1
+2026-09-18T23:56:11.711589606Z wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/02559056a181
+2026-09-18T23:56:11.846213575Z wandb: uploading summary; updating run metadata
+2026-09-18T23:56:12.247567051Z wandb: uploading wandb-metadata.json; uploading requirements.txt; uploading wandb-summary.json; uploading config.yaml
+2026-09-18T23:56:13.068462788Z wandb: 🚀 View run engram-e03-s1 at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/02559056a181
+2026-09-18T23:56:13.068495507Z wandb: ⭐️ View project at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental
+2026-09-18T23:56:13.068497901Z wandb: Synced 4 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+2026-09-18T23:56:20.978911136Z Traceback (most recent call last):
+2026-09-18T23:56:20.979036514Z   File "/work/code/run_engram.py", line 464, in <module>
+2026-09-18T23:56:20.979046419Z     main()
+2026-09-18T23:56:20.979049564Z   File "/work/code/run_engram.py", line 454, in main
+2026-09-18T23:56:20.979052208Z     train(args)
+2026-09-18T23:56:20.979084186Z   File "/work/code/run_engram.py", line 275, in train
+2026-09-18T23:56:20.979119188Z     np.testing.assert_allclose([auc, accuracy],
+2026-09-18T23:56:20.979123395Z   File "/usr/local/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1780, in assert_allclose
+2026-09-18T23:56:20.979129414Z     assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+2026-09-18T23:56:20.979137486Z   File "/usr/local/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+2026-09-18T23:56:20.979141121Z     raise AssertionError(msg)
+2026-09-18T23:56:20.979143695Z AssertionError: 
+2026-09-18T23:56:20.979146669Z Not equal to tolerance rtol=0, atol=1e-07
+2026-09-18T23:56:20.979149414Z 
+2026-09-18T23:56:20.979152238Z Mismatched elements: 2 / 2 (100%)
+2026-09-18T23:56:20.979155363Z Mismatch at indices:
+2026-09-18T23:56:20.979157966Z  [0]: 0.8639896954867063 (ACTUAL), 0.8639880799773201 (DESIRED)
+2026-09-18T23:56:20.979160791Z  [1]: 0.6017177419354839 (ACTUAL), 0.6018467741935484 (DESIRED)
+2026-09-18T23:56:20.979163385Z Max absolute difference among violations: 0.00012903
+2026-09-18T23:56:20.979166119Z Max relative difference among violations: 0.00021439
+2026-09-18T23:56:20.979168863Z  ACTUAL: array([0.86399 , 0.601718])
+2026-09-18T23:56:20.979171477Z  DESIRED: array([0.863988, 0.601847])

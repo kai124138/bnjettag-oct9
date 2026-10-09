@@ -1,0 +1,297 @@
+{
+  "variant": "w1a8",
+  "seed": 5,
+  "config": "ptw-n8-20260925-ptw5-w1a8",
+  "config_hash": "5814ee26",
+  "params": 18657,
+  "trainable_params": 18511,
+  "best_epoch": 57,
+  "best_val_macro_auc": 0.8589922412709505,
+  "act_bits": 8,
+  "weight": "binary_absmean",
+  "lr": 2e-05,
+  "clip_mode": "value",
+  "epochs_run": 73,
+  "epochs_requested": 101,
+  "selection_rule": "highest val_macro_auc among admitted points; ties -> lower ebops -> earlier epoch",
+  "jit_compile": false,
+  "smoke": false,
+  "n_train": 496000,
+  "n_val": 124000,
+  "n_files": 62,
+  "features": [
+    "pt",
+    "etarel",
+    "phirel"
+  ],
+  "train_seconds": 9066.0,
+  "act_calib_i": {
+    "input_proj": 3,
+    "bit_block_0_attn_Wq": 1,
+    "bit_block_0_attn_Wk": 1,
+    "bit_block_0_attn_Wv": 1,
+    "bit_block_0_attn_scores__in0": 2,
+    "bit_block_0_attn_scores__in1": 2,
+    "bit_block_0_attn_Wo": 0,
+    "bit_block_0_ffn_fc1": 1,
+    "bit_block_0_ffn_fc2": 1,
+    "bit_block_1_attn_Wq": 2,
+    "bit_block_1_attn_Wk": 2,
+    "bit_block_1_attn_Wv": 2,
+    "bit_block_1_attn_scores__in0": 2,
+    "bit_block_1_attn_scores__in1": 2,
+    "bit_block_1_attn_Wo": 2,
+    "bit_block_1_ffn_fc1": 2,
+    "bit_block_1_ffn_fc2": 2,
+    "head_fc1": 2,
+    "head_fc2": 1
+  },
+  "act_calib": "trainable",
+  "act_recalib_epochs": [],
+  "act_grid_before": {
+    "input_proj": [
+      3.0,
+      4.0
+    ],
+    "bit_block_0_attn_Wq": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_Wk": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_Wv": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_0_attn_ctx__in1": [
+      6.0,
+      1.0
+    ],
+    "bit_block_0_attn_Wo": [
+      0.0,
+      7.0
+    ],
+    "bit_block_0_ffn_fc1": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_ffn_fc2": [
+      1.0,
+      6.0
+    ],
+    "bit_block_1_attn_Wq": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wk": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wv": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_1_attn_ctx__in1": [
+      6.0,
+      1.0
+    ],
+    "bit_block_1_attn_Wo": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc2": [
+      2.0,
+      5.0
+    ],
+    "head_fc1": [
+      2.0,
+      5.0
+    ],
+    "head_fc2": [
+      1.0,
+      6.0
+    ]
+  },
+  "act_grid_after": {
+    "input_proj": [
+      3.0,
+      4.0
+    ],
+    "bit_block_0_attn_Wq": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_Wk": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_Wv": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_0_attn_ctx__in1": [
+      5.0,
+      2.0
+    ],
+    "bit_block_0_attn_Wo": [
+      0.0,
+      7.0
+    ],
+    "bit_block_0_ffn_fc1": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_ffn_fc2": [
+      1.0,
+      6.0
+    ],
+    "bit_block_1_attn_Wq": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wk": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wv": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_1_attn_ctx__in1": [
+      5.0,
+      2.0
+    ],
+    "bit_block_1_attn_Wo": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc2": [
+      2.0,
+      5.0
+    ],
+    "head_fc1": [
+      2.0,
+      5.0
+    ],
+    "head_fc2": [
+      1.0,
+      6.0
+    ]
+  },
+  "pt_weights": {
+    "enable": true,
+    "n_bins": 100,
+    "cap": 5.0,
+    "class_weight": null,
+    "plot": true,
+    "summary": {
+      "g": {
+        "n": 99865,
+        "sum": 99864.99999999999,
+        "min": 0.20136764256434037,
+        "median": 0.4917798730735436,
+        "p99": 3.5234821856140135,
+        "max": 3.5234821856140135,
+        "eff_frac": 0.5251656539349968
+      },
+      "q": {
+        "n": 96146,
+        "sum": 96146.0,
+        "min": 0.19433648991540078,
+        "median": 0.9022676655516387,
+        "p99": 2.4603176560913336,
+        "max": 5.012735787138248,
+        "eff_frac": 0.9006869833199798
+      },
+      "W": {
+        "n": 100016,
+        "sum": 100016.0,
+        "min": 0.7109840975810323,
+        "median": 0.7489043147575147,
+        "p99": 4.2750764903144285,
+        "max": 5.296540712440247,
+        "eff_frac": 0.689255190354767
+      },
+      "Z": {
+        "n": 99637,
+        "sum": 99637.0,
+        "min": 0.641955232124144,
+        "median": 0.7454160867160369,
+        "p99": 4.38796519786618,
+        "max": 5.326163893827518,
+        "eff_frac": 0.6851537967297917
+      },
+      "t": {
+        "n": 100336,
+        "sum": 100336.0,
+        "min": 0.2028365934228131,
+        "median": 0.5798582196663413,
+        "p99": 3.0822278845811124,
+        "max": 5.013502149662898,
+        "eff_frac": 0.6893245181542526
+      }
+    }
+  },
+  "front": [],
+  "front_selected": null,
+  "started": "2026-09-26T07:56:24",
+  "finished": "2026-09-26T10:27:31"
+}

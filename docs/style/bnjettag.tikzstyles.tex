@@ -1,0 +1,21 @@
+% bnjettag.tikzstyles.tex — TikZ preamble matching docs/style/bnjettag.mplstyle (journal pick, 2026-09-26).
+% Use from a standalone figure:  \input{../style/bnjettag.tikzstyles.tex}
+\usetikzlibrary{positioning, arrows.meta, calc, fit}
+% the five precision colours, same order as the mplstyle prop_cycle
+\definecolor{bnFP32}{HTML}{243746}
+\definecolor{bnW8A8}{HTML}{0072B2}
+\definecolor{bnW1A8}{HTML}{009E73}
+\definecolor{bnW1A6}{HTML}{D55E00}
+\definecolor{bnW1A4}{HTML}{CC79A7}
+\definecolor{bnGate}{HTML}{990000}
+\definecolor{bnStore}{HTML}{E9E9E9}
+\tikzset{
+  bn/.style={font=\footnotesize\rmfamily, line width=0.6pt, node distance=6mm and 6mm},
+  box/.style={draw, rounded corners=1.5pt, minimum height=8mm, text width=26mm, align=center, inner sep=2pt},
+  store/.style={box, fill=bnStore},
+  gate/.style={box, draw=bnGate, fill=bnGate!8},
+  arr/.style={-{Stealth[length=1.8mm]}},
+  both/.style={{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}},
+  weak/.style={arr, gray},
+  data/.style={arr, font=\scriptsize\rmfamily},
+}

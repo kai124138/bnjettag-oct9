@@ -1,0 +1,173 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-delta0926-w2-cells",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "delta-20260927",
+      "app": "kai-delta0926-w2-cells",
+      "bnjettag.io/arms-per-pod": "4"
+    },
+    "annotations": {
+      "bnjettag.io/placeholders": "__CONFIGMAP_NAME__ (kai-delta0926-code-<sha10>), __BUNDLE_SHA256__, __MANIFEST_SHA256__ (cluster-ops, from the Delta freeze)",
+      "bnjettag.io/packs": "/work/code/campaigns/delta0926/delta_w2_cells_packs.json",
+      "bnjettag.io/status": "PLANNING: K not from the memory canary; run delta-canary-job.json first, copy k_result.json to code/, regenerate; TEMPLATE, not for kubectl apply before the wave-2 STUDY PASS and PREFLIGHT",
+      "bnjettag.io/active-deadline": "unset on purpose (resumable arms; anchor STUDY Resume)",
+      "bnjettag.io/per-arm-memory": "per pack: max(6 Gi, ceil((2,100 + 5 x H) / 1,024)) Gi = 6 / 7 / 10 / 12 Gi at H 500 / 1,000 / 1,500 / 2,000; pods sized for the largest pack of this Job (36Gi); STUDY Budget PACK-MEM",
+      "bnjettag.io/rss-gate": "BNJ_RSS_GATE_LIMIT_MB = 2,100 + 5 x H MiB of the pod's pack (pack_meta), window 5:105; PASS iff baseline + slope x train.epochs <= limit, else exit 5 (not retried)",
+      "bnjettag.io/parallelism": "7 = the 10-pod Delta cap minus 3 t0 replica pods that run past the epoch-500 gate (n = 4); recompute if the seed rule changes n or the t0 pods have finished"
+    }
+  },
+  "spec": {
+    "completionMode": "Indexed",
+    "completions": 87,
+    "parallelism": 7,
+    "backoffLimitPerIndex": 2,
+    "podReplacementPolicy": "Failed",
+    "ttlSecondsAfterFinished": 604800,
+    "podFailurePolicy": {
+      "rules": [
+        {
+          "action": "Ignore",
+          "onPodConditions": [
+            {
+              "type": "DisruptionTarget"
+            }
+          ]
+        }
+      ]
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "delta-20260927",
+          "app": "kai-delta0926-w2-cells",
+          "bnjettag.io/arms-per-pod": "4"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "containers": [
+          {
+            "name": "train",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '__BUNDLE_SHA256__  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\n# roots come from the dict-form packs file (run_pack.py, Delta patch 0038); never from the environment\nunset BNJ_DATA_ROOT BNJ_RUN_ROOT\nexport BNJ_CAMPAIGN_DIR=/work/code/campaigns/delta0926 BNJ_STAGE=production BNJ_RSS_GATE_WINDOW=5:105\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nunset WANDB_PROJECT   # every config says train.wandb_project BNJetTag-Delta; run_engram checks env == config\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_MODE=online WANDB_TAGS=delta0926,wave2,cells,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"__MANIFEST_SHA256__\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true\ndf -h /data\npython - <<'PY'\nimport json, os, pathlib, sys\np = json.load(open(os.path.join(os.environ[\"BNJ_CAMPAIGN_DIR\"], \"delta_w2_cells_packs.json\")))\nidx = range(len(p[\"packs\"])) if \"0\" == \"1\" else [int(os.environ[\"JOB_COMPLETION_INDEX\"])]\nbad = [(m[\"data_root\"], n) for i in idx for m in [p[\"pack_meta\"][i]] for n in m[\"n_parts\"]\n       if not pathlib.Path(m[\"data_root\"], f\"n{n}\", \"data\", \"READY.json\").is_file()]\nprint(\"CACHE_NOT_READY\" if bad else \"CACHE_READY\", bad or \"\"); sys.exit(1 if bad else 0)\nPY\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"GATE15_CACHE_NOT_READY /data/chang-n64-20260926\"; exit 9; }\npython -u /work/code/campaigns/delta0926/fingerprint_check.py --env-report --data-root /data/chang-n64-20260926 || { rc=$?; echo \"GATE15_FAIL exit $rc\"; exit $rc; }\necho GATE15_PASS\nexport BNJ_RSS_GATE_LIMIT_MB=$(python -c \"import json, os; p = json.load(open(os.path.join(os.environ['BNJ_CAMPAIGN_DIR'], 'delta_w2_cells_packs.json'))); print(p['pack_meta'][int(os.environ['JOB_COMPLETION_INDEX'])]['rss_gate_limit_mb'])\")\necho \"RSS_GATE_LIMIT_MB $BNJ_RSS_GATE_LIMIT_MB window $BNJ_RSS_GATE_WINDOW\"\npython -u /work/code/run_pack.py delta_w2_cells_packs.json\n"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "kai-wandb",
+                    "key": "WANDB_API_KEY"
+                  }
+                }
+              },
+              {
+                "name": "NODE_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.nodeName"
+                  }
+                }
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "8",
+                "memory": "36Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "limits": {
+                "cpu": "8",
+                "memory": "36Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "__CONFIGMAP_NAME__",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

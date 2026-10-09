@@ -1,0 +1,61 @@
+From 4215724e51866d9ef7527883cf1ad6ddf3674a41 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:35:46 -0700
+Subject: [PATCH 27/38] lr-schedule-variants: train.lr_warmup_epochs linear
+ warm-up over the first epochs of the [A1] cosine-restart schedule;
+ m_mul/t_mul are anchor keys (M030, M031)
+
+---
+ code/bnhgq2/ablation.py   | 10 +++++++---
+ code/bnhgq2/delta_keys.py | 17 +++++++++++++++++
+ 2 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index a9d4393..ec5fa6e 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -235,9 +235,13 @@ def beta_controller(cfg):
+ def learning_rate(cfg, epoch):
+     tr = cfg['train']
+     if tr.get('lr_schedule') == 'chang_cosine_restarts':
+-        return float(chang_cosine_restarts(tr['lr'], tr['lr_cycle_epochs'], tr.get('lr_t_mul', 1.0),
+-                                           tr.get('lr_m_mul', 1.0), tr['lr_alpha'],
+-                                           tr['lr_alpha_epochs'])(epoch))
++        lr = float(chang_cosine_restarts(tr['lr'], tr['lr_cycle_epochs'], tr.get('lr_t_mul', 1.0),
++                                         tr.get('lr_m_mul', 1.0), tr['lr_alpha'],
++                                         tr['lr_alpha_epochs'])(epoch))
++        warmup = tr.get('lr_warmup_epochs')  # Delta (lr-schedule-variants): linear warm-up, first cycle only
++        if warmup and epoch < warmup:
++            lr = lr * (epoch + 1) / warmup
++        return lr
+     if tr.get('lr_schedule', 'poly') != 'poly':
+         raise ValueError(f"Unsupported train.lr_schedule in the ablation runner: {tr['lr_schedule']!r}")
+     warmup, decay = tr['warmup_epochs'], tr['decay_epochs']
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 38f917e..5cae026 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -513,3 +513,20 @@ def _table_min_bits(value, cfg):
+ 
+ 
+ register('quant.softmax_table_min_bits', 'softmax-table-min-bits', _table_min_bits)
++
++# lr-schedule-variants (anchor tree only; M030, M031). m_mul / t_mul are the anchor [A1] keys
++# train.lr_m_mul / train.lr_t_mul (no code here). New: train.lr_warmup_epochs w, a linear
++# warm-up lr * (epoch + 1) / w for epochs 0 .. w-1 of the first cosine cycle, on top of [A1].
++UNWIRED.pop('train.lr_warmup_epochs', None)
++
++
++def _lr_warmup(value, cfg):
++    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
++        return 'must be an int >= 1 (epochs)'
++    if lookup(cfg, 'train.lr_schedule') != 'chang_cosine_restarts':
++        return 'needs train.lr_schedule "chang_cosine_restarts" (the poly schedule has train.warmup_epochs)'
++    if value >= lookup(cfg, 'train.lr_cycle_epochs', 0):
++        return 'must be shorter than train.lr_cycle_epochs'
++
++
++register('train.lr_warmup_epochs', 'lr-schedule-variants', _lr_warmup, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

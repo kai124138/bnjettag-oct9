@@ -1,0 +1,489 @@
+{
+  "what": "Quantitative read-back evidence that the fp32 PTQ arm `fp32-s3-r14n8-wm-w5a8` realizes the SAME attention weight grid as the W8A8 QAT article `runs/9cc6e336/w8a8-s3-r14n8`, so that a synthesis of the two isolates GRID PROVENANCE (QAT vs PTQ) at EQUAL realized weight width.",
+  "date": "2026-09-03",
+  "method": "emitted firmware only: firmware/weights/w*.txt (the values compiled into the netlist) and firmware/defines.h. No driver flag, no Keras object. Tool: bnjettag/code/hgq2/weight_grid_audit.py.",
+  "correction_to_memo_C1_3": "CORRECTION C1.3 states W8A8's realized attention weight grid is '6-bit / 5 fractional bits'. Measured here from the emitted arrays: the FRACTIONAL width is confirmed at 5 (LSB 2^-5 = 0.03125), but the realized TOTAL width is 5, not 6: pooled absmax 0.4375 fits ap_fixed<5,0> (i = -1). The '6-bit' figure is the named typedef ap_fixed<6,1> that hls4ml emits for the DENSE layers, which is a different set of arrays. The fractional width is the load-bearing quantity (it fixes the lattice and hence strength-reducibility), and it is confirmed.",
+  "why_W5_and_not_W6": "convert_fp32.py's intW_absmax rule sets f = W - 1 - i with i the narrowest signed integer width containing the kernel absmax. All eight fp32-s3 attention kernels have absmax 0.362-0.411 < 0.46875, so i = -1 and therefore f = W. Only W = 5 reproduces f = 5; W = 6 would give f = 6, one bit finer than the target.",
+  "why_activations_stay_at_8": "Both comparators (W8A8 and the A2 W=8 control) feed the attention einsums with 8-bit operands (*_iq_t). Running the ladder at width 5 would coarsen activations to 5 bits and change the multiplier operand width, reintroducing the very confound this arm exists to remove. convert_fp32.py therefore gained an additive --weight-width flag (default None == historical behaviour) so the weight lattice moves alone.",
+  "attention_arrays": [
+    "w5",
+    "w7",
+    "w13",
+    "w18",
+    "w27",
+    "w29",
+    "w35",
+    "w40"
+  ],
+  "pooled": {
+    "target_w8a8_QAT": {
+      "arrays": [
+        "w5",
+        "w7",
+        "w13",
+        "w18",
+        "w27",
+        "w29",
+        "w35",
+        "w40"
+      ],
+      "n": 8192,
+      "n_zero": 414,
+      "distinct": 28,
+      "min": -0.40625,
+      "max": 0.4375,
+      "absmax": 0.4375,
+      "frac_bits": 5,
+      "int_bits": -1,
+      "total_bits": 5,
+      "ap_fixed": "ap_fixed<5,0>",
+      "setbit_hist": {
+        "1": 3288,
+        "2": 3469,
+        "3": 1021
+      },
+      "frac_le2_setbits": 0.868732321933659,
+      "frac_ge4_setbits": 0.0,
+      "mean_setbits": 1.7085368989457443
+    },
+    "matched_control_w5a8_PTQ": {
+      "arrays": [
+        "w5",
+        "w7",
+        "w13",
+        "w18",
+        "w27",
+        "w29",
+        "w35",
+        "w40"
+      ],
+      "n": 8192,
+      "n_zero": 429,
+      "distinct": 27,
+      "min": -0.40625,
+      "max": 0.40625,
+      "absmax": 0.40625,
+      "frac_bits": 5,
+      "int_bits": -1,
+      "total_bits": 5,
+      "ap_fixed": "ap_fixed<5,0>",
+      "setbit_hist": {
+        "1": 3351,
+        "2": 3437,
+        "3": 975
+      },
+      "frac_le2_setbits": 0.8744042251706814,
+      "frac_ge4_setbits": 0.0,
+      "mean_setbits": 1.693932757954399
+    },
+    "unmatched_control_w8_PTQ": {
+      "arrays": [
+        "w5",
+        "w7",
+        "w13",
+        "w18",
+        "w27",
+        "w29",
+        "w35",
+        "w40"
+      ],
+      "n": 8192,
+      "n_zero": 58,
+      "distinct": 199,
+      "min": -0.39453125,
+      "max": 0.41015625,
+      "absmax": 0.41015625,
+      "frac_bits": 8,
+      "int_bits": -1,
+      "total_bits": 8,
+      "ap_fixed": "ap_fixed<8,0>",
+      "setbit_hist": {
+        "1": 739,
+        "2": 1977,
+        "3": 2670,
+        "4": 1911,
+        "5": 732,
+        "6": 105
+      },
+      "frac_le2_setbits": 0.33390705679862304,
+      "frac_ge4_setbits": 0.3378411605606098,
+      "mean_setbits": 3.02889107450209
+    }
+  },
+  "per_array": {
+    "w5": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 24,
+        "absmax": 0.40625,
+        "frac_le2_setbits": 0.8510858324715616,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 405,
+          "2": 418,
+          "3": 144
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 25,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8643371017471737,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 418,
+          "2": 423,
+          "3": 132
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    },
+    "w7": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 24,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8637295081967213,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 436,
+          "2": 407,
+          "3": 133
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 25,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8748707342295761,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 429,
+          "2": 417,
+          "3": 121
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    },
+    "w13": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 25,
+        "absmax": 0.40625,
+        "frac_le2_setbits": 0.863265306122449,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 398,
+          "2": 448,
+          "3": 134
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 25,
+        "absmax": 0.40625,
+        "frac_le2_setbits": 0.8813905930470347,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 431,
+          "2": 431,
+          "3": 116
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    },
+    "w18": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 23,
+        "absmax": 0.34375,
+        "frac_le2_setbits": 0.8698770491803278,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 416,
+          "2": 433,
+          "3": 127
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 25,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8683937823834197,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 413,
+          "2": 425,
+          "3": 127
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    },
+    "w27": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 24,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8721413721413721,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 398,
+          "2": 441,
+          "3": 123
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 24,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8735751295336788,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 446,
+          "2": 397,
+          "3": 122
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    },
+    "w29": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 24,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8729508196721312,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 421,
+          "2": 431,
+          "3": 124
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 24,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8719262295081968,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 407,
+          "2": 444,
+          "3": 125
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    },
+    "w35": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 26,
+        "absmax": 0.4375,
+        "frac_le2_setbits": 0.8741044012282497,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 415,
+          "2": 439,
+          "3": 123
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 27,
+        "absmax": 0.40625,
+        "frac_le2_setbits": 0.895169578622816,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 414,
+          "2": 457,
+          "3": 102
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    },
+    "w40": {
+      "target": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 25,
+        "absmax": 0.375,
+        "frac_le2_setbits": 0.8827800829875518,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 399,
+          "2": 452,
+          "3": 113
+        }
+      },
+      "matched_control": {
+        "frac_bits": 5,
+        "int_bits": -1,
+        "total_bits": 5,
+        "ap_fixed": "ap_fixed<5,0>",
+        "distinct": 26,
+        "absmax": 0.40625,
+        "frac_le2_setbits": 0.865424430641822,
+        "frac_ge4_setbits": 0.0,
+        "setbit_hist": {
+          "1": 393,
+          "2": 443,
+          "3": 130
+        }
+      },
+      "frac_bits_match": true,
+      "ap_fixed_match": true
+    }
+  },
+  "verdict": {
+    "frac_bits_match_all_8": true,
+    "ap_fixed_match_all_8": true,
+    "pooled_distinct_target": 28,
+    "pooled_distinct_control": 27,
+    "pooled_le2_setbits_target": 0.868732321933659,
+    "pooled_le2_setbits_control": 0.8744042251706814,
+    "pooled_ge4_setbits_target": 0.0,
+    "pooled_ge4_setbits_control": 0.0,
+    "statement": "MATCHED. All eight attention arrays realize f = 5 / ap_fixed<5,0> in both arms. Pooled distinct values 27 (control) vs 28 (target); fraction with <=2 set bits 87.4% vs 86.9%; fraction with >=4 set bits 0.0% in both (structural at |w| < 0.5 on a 2^-5 lattice). The unmatched A2 control at W = 8 realizes f = 8, 199 distinct values, 33.4% <=2 set bits and 33.8% >=4 set bits -- that is the arm the 18x DSP gap was measured against."
+  },
+  "whole_model_all_15_arrays": {
+    "target_w8a8_QAT": {
+      "n_arrays": 15,
+      "n": 17664,
+      "n_zero": 970,
+      "distinct": 35,
+      "frac_bits": 5,
+      "frac_le2_setbits": 0.8788786390319875,
+      "frac_ge4_setbits": 0.00017970528333533005,
+      "mean_setbits": 1.6800646939020007
+    },
+    "matched_control_w5a8_PTQ": {
+      "n_arrays": 15,
+      "n": 17664,
+      "n_zero": 1008,
+      "distinct": 32,
+      "frac_bits": 5,
+      "frac_le2_setbits": 0.8804634966378482,
+      "frac_ge4_setbits": 0.0,
+      "mean_setbits": 1.6726705091258405
+    },
+    "unmatched_control_w8_PTQ": {
+      "n_arrays": 15,
+      "n": 17664,
+      "n_zero": 119,
+      "distinct": 227,
+      "frac_bits": 8,
+      "frac_le2_setbits": 0.3457395269307495,
+      "frac_ge4_setbits": 0.32647477913935596,
+      "mean_setbits": 2.988942718723283
+    }
+  },
+  "container_and_operand_match": {
+    "target_w8a8_QAT": {
+      "model_default_t": "ap_fixed<24,12>",
+      "attn_operand_iq_t": {
+        "ap_fixed<8,3>": "bit_block_0_attn_Wv_iq_t",
+        "ap_fixed<8,4>": "bit_block_1_attn_Wv_iq_t"
+      },
+      "named_weight_t": {
+        "input_proj": "ap_fixed<6,1>",
+        "bit_block_0_ffn_fc1": "ap_fixed<6,1>",
+        "bit_block_0_ffn_fc2": "ap_fixed<6,1>",
+        "bit_block_1_ffn_fc1": "ap_fixed<6,1>",
+        "bit_block_1_ffn_fc2": "ap_fixed<6,1>",
+        "head_fc1": "ap_fixed<6,1>",
+        "head_fc2": "ap_fixed<6,1>"
+      },
+      "softmax_inp_norm_t": "ap_fixed<10,7,AP_RND_CONV,AP_SAT,0>"
+    },
+    "matched_control_w5a8_PTQ": {
+      "model_default_t": "ap_fixed<24,12>",
+      "attn_operand_iq_t": {
+        "ap_fixed<8,3>": "bit_block_0_attn_Wv_iq_t",
+        "ap_fixed<8,4>": "bit_block_1_attn_Wv_iq_t"
+      },
+      "named_weight_t": {
+        "input_proj": "ap_fixed<5,1>",
+        "bit_block_0_ffn_fc1": "ap_fixed<6,1>",
+        "bit_block_0_ffn_fc2": "ap_fixed<6,1>",
+        "bit_block_1_ffn_fc1": "ap_fixed<6,1>",
+        "bit_block_1_ffn_fc2": "ap_fixed<6,1>",
+        "head_fc1": "ap_fixed<6,1>",
+        "head_fc2": "ap_fixed<5,1>"
+      },
+      "softmax_inp_norm_t": "ap_fixed<10,7,AP_RND_CONV,AP_SAT,0>"
+    },
+    "unmatched_control_w8_PTQ": {
+      "model_default_t": "ap_fixed<24,12>",
+      "attn_operand_iq_t": {
+        "ap_fixed<8,3>": "bit_block_0_attn_Wv_iq_t",
+        "ap_fixed<8,5>": "bit_block_1_attn_Wv_iq_t"
+      },
+      "named_weight_t": {
+        "input_proj": "ap_fixed<8,0>",
+        "bit_block_0_ffn_fc1": "ap_fixed<9,1>",
+        "bit_block_0_ffn_fc2": "ap_fixed<9,1>",
+        "bit_block_1_ffn_fc1": "ap_fixed<9,1>",
+        "bit_block_1_ffn_fc2": "ap_fixed<9,1>",
+        "head_fc1": "ap_fixed<9,1>",
+        "head_fc2": "ap_fixed<8,1>"
+      },
+      "softmax_inp_norm_t": "ap_fixed<10,7,AP_RND_CONV,AP_SAT,0>"
+    },
+    "notes": [
+      "model_default_t is ap_fixed<24,12> in ALL THREE arms -- the eight attention arrays sit in an identical 24-bit container, which is what C1.3's mechanism analysis requires (container width held fixed, only value density moves).",
+      "All six attention *_iq_t activation operand types are BYTE-IDENTICAL between the target and the matched control (ap_fixed<8,3> x3, ap_fixed<8,4> x3).",
+      "bit_block_0_attn_softmax_inp_norm_t is ap_fixed<10,7> in all three -- the C1.1 BRAM blowup (exp_table_size 2^width) is NOT triggered by this arm.",
+      "RESIDUAL MISMATCH, labelled not fixed: input_proj and head_fc2 get ap_fixed<5,1> (f = 4) here vs ap_fixed<6,1> (f = 5) in the target, because their absmax (0.4857 / 0.6892) exceeds 0.46875 and the intW_absmax rule spends a bit on the integer part. Both are Dense layers with a named <=9-bit weight container, i.e. the 0-DSP class per C1.3, so they do not enter the DSP contrast. They do cost fidelity, and this arm is not an operating point anyway."
+    ]
+  }
+}

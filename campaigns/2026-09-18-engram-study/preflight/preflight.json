@@ -1,0 +1,242 @@
+{
+  "status": "PASS",
+  "checks": [
+    "address_reference_mask_gradient_serialization_[1]_none_1",
+    "address_reference_mask_gradient_serialization_[1]_hard_1",
+    "address_reference_mask_gradient_serialization_[2, 3]_hard_2",
+    "round_to_even_saturation_bin_boundaries",
+    "table_adam_lr_multiplier_and_no_weight_decay",
+    "all_eight_production_configs_fit_declared_module_budgets",
+    "engram_cost_tiebreak_legacy_order_preserved_and_export_rejected",
+    "all_eight_arms_build_binary_initialization_cost_reload",
+    "existing_trainer_resume_matches_uninterrupted_optimizer_pid_outputs"
+  ],
+  "source_manifest": {
+    "files": {
+      "run_engram.py": "8e7c47868834d3144d81dec96965b9e2c590e494699c224efd701c6208987147",
+      "bnhgq2/__init__.py": "9ade8d2c6d17aa146626864038d3ee54a7969535b1dd8bed62d5507887e0aa2a",
+      "bnhgq2/ablation.py": "fe742fb9116768b12a9e8a09e232839fec51820f4456909d0fd26cfd3cf4208f",
+      "bnhgq2/binarize.py": "700c3ef632e1319033331f331a47265dac7627850da1466990272784ea225f4c",
+      "bnhgq2/build.py": "847eafb77dfb2310753afe7b143036206fb6e12103795845da2bb5e2d780a5f9",
+      "bnhgq2/compat.py": "0df1e2949f7c814ca5fa74bcfe84af2f051a1e05482fb165e64542a9b4bf4fce",
+      "bnhgq2/config.py": "aeaabc5a221f588a2ab2b893ae7e86ebc46a8a45b8cd158d81699a2df0b20b20",
+      "bnhgq2/convert.py": "556c34f0c52ba505743bce637ddb0a2ab3e6a0f8634a0b6a42e6316ac80195bf",
+      "bnhgq2/data.py": "070153d60ff2f43c1886cac3d6d8516f6eb467dd2770c8623747cc7fea0769d1",
+      "bnhgq2/ebops_calc.py": "57b48827b4ced02c8c5db927e8cbfaf20310c0797ce8d461c16c669f56d0703e",
+      "bnhgq2/ebops_target.py": "0601d5109bcb8d9e8073bd04b6b82cb82d9bf5145e3044e25e3a20dec88b0817",
+      "bnhgq2/engram.py": "ca86d3483ed932ee98c33be53224d44887f7699f0987e210a2c5000f0feb5d7e",
+      "bnhgq2/extract.py": "c45938b35b9e836f92f43d04ad146e67f1797068a2e8ec2fb544bf90ef5ba0b6",
+      "bnhgq2/gold.py": "72745faf6027982cbb79eec191e35c5d814f85f4a1ed4505ec767baec84600b4",
+      "bnhgq2/monolith.py": "f8c2392d2f45fd33d33a9d8dfb025e9dffa0d963913f71089f55c653b8b3affa",
+      "bnhgq2/port.py": "039ed4836e0315659bb8bb93e0f5314e31c572a9b358a9e75329392281fbaa02",
+      "bnhgq2/qat.py": "d3f2c42b621b14aa7eeadaf13325a88b4aa5072c8b7578b9a01c481bb8b4d2bd",
+      "bnhgq2/store.py": "8d6fc320154205a9c923e4aa67813d01c3516352f90cf9c5fc0fdbf7b2067cd8",
+      "bnhgq2/subln.py": "6300c547a37f894cf6a387e4cb36120ca29bb0900f221f5df2c690de70109a5a",
+      "bnhgq2/train.py": "154657bb3bb6afa232d78830313583e1c5f74f955084a882dc0da4d90b231118",
+      "bnhgq2/verify.py": "c0f9e4b991b468a2f1bbe65a88af87111d7306ac050f124c4bd866b28c17db8e",
+      "bnhgq2/wandb_util.py": "29abe7d7be7be3f329968954c98ce663e314a0b3a7fdb3710f277df45444a8a5"
+    },
+    "versions": {
+      "tensorflow": "2.21.0",
+      "keras": "3.15.0",
+      "hgq2": "0.1.9",
+      "quantizers": "1.2.2",
+      "numpy": "2.4.6",
+      "scikit-learn": "1.9.0"
+    },
+    "sha256": "b57ec19831cfcd482b5845f0d1f418e6ece78344f796611e92dd07547db1f14c"
+  },
+  "production_module_estimates": {
+    "e00": null,
+    "e01": null,
+    "e02": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 17920,
+      "components": {
+        "encoder_comparisons": 5632,
+        "hash_addressing": 0,
+        "table_reduction_adds": 0,
+        "query_key_dot": 0,
+        "gate_affine_clip": 0,
+        "gate_value_products": 0,
+        "residual_adds": 12288
+      },
+      "logical_table_bits": 131072,
+      "logical_table_bytes": 16384,
+      "table_read_bits_per_jet": 4096,
+      "vector_reads_per_jet": 16,
+      "independent_addresses_per_bank_per_jet": 16,
+      "two_read_port_replicas_for_whole_jet_ii1": 8,
+      "replicated_table_bytes_estimate": 131072,
+      "threshold_storage_bits": 336,
+      "encoder_comparisons_per_jet": 352,
+      "hash_words_per_jet": 0,
+      "exact_tuple_addressing": true,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    },
+    "e03": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 78496,
+      "components": {
+        "encoder_comparisons": 5632,
+        "hash_addressing": 0,
+        "table_reduction_adds": 0,
+        "query_key_dot": 43184,
+        "gate_affine_clip": 1008,
+        "gate_value_products": 16384,
+        "residual_adds": 12288
+      },
+      "logical_table_bits": 262144,
+      "logical_table_bytes": 32768,
+      "table_read_bits_per_jet": 8192,
+      "vector_reads_per_jet": 16,
+      "independent_addresses_per_bank_per_jet": 16,
+      "two_read_port_replicas_for_whole_jet_ii1": 8,
+      "replicated_table_bytes_estimate": 262144,
+      "threshold_storage_bits": 336,
+      "encoder_comparisons_per_jet": 352,
+      "hash_words_per_jet": 0,
+      "exact_tuple_addressing": true,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    },
+    "e04": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 78496,
+      "components": {
+        "encoder_comparisons": 5632,
+        "hash_addressing": 0,
+        "table_reduction_adds": 0,
+        "query_key_dot": 43184,
+        "gate_affine_clip": 1008,
+        "gate_value_products": 16384,
+        "residual_adds": 12288
+      },
+      "logical_table_bits": 262144,
+      "logical_table_bytes": 32768,
+      "table_read_bits_per_jet": 8192,
+      "vector_reads_per_jet": 16,
+      "independent_addresses_per_bank_per_jet": 16,
+      "two_read_port_replicas_for_whole_jet_ii1": 8,
+      "replicated_table_bytes_estimate": 262144,
+      "threshold_storage_bits": 336,
+      "encoder_comparisons_per_jet": 352,
+      "hash_words_per_jet": 0,
+      "exact_tuple_addressing": true,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    },
+    "e05": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 51744,
+      "components": {
+        "encoder_comparisons": 5632,
+        "hash_addressing": 0,
+        "table_reduction_adds": 0,
+        "query_key_dot": 24816,
+        "gate_affine_clip": 816,
+        "gate_value_products": 8192,
+        "residual_adds": 12288
+      },
+      "logical_table_bits": 131072,
+      "logical_table_bytes": 16384,
+      "table_read_bits_per_jet": 4096,
+      "vector_reads_per_jet": 16,
+      "independent_addresses_per_bank_per_jet": 16,
+      "two_read_port_replicas_for_whole_jet_ii1": 8,
+      "replicated_table_bytes_estimate": 131072,
+      "threshold_storage_bits": 336,
+      "encoder_comparisons_per_jet": 352,
+      "hash_words_per_jet": 0,
+      "exact_tuple_addressing": true,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    },
+    "e06": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 75424,
+      "components": {
+        "encoder_comparisons": 2560,
+        "hash_addressing": 0,
+        "table_reduction_adds": 0,
+        "query_key_dot": 43184,
+        "gate_affine_clip": 1008,
+        "gate_value_products": 16384,
+        "residual_adds": 12288
+      },
+      "logical_table_bits": 32768,
+      "logical_table_bytes": 4096,
+      "table_read_bits_per_jet": 8192,
+      "vector_reads_per_jet": 16,
+      "independent_addresses_per_bank_per_jet": 16,
+      "two_read_port_replicas_for_whole_jet_ii1": 8,
+      "replicated_table_bytes_estimate": 32768,
+      "threshold_storage_bits": 144,
+      "encoder_comparisons_per_jet": 160,
+      "hash_words_per_jet": 0,
+      "exact_tuple_addressing": true,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    },
+    "e07": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 209568,
+      "components": {
+        "encoder_comparisons": 5632,
+        "hash_addressing": 131072,
+        "table_reduction_adds": 0,
+        "query_key_dot": 43184,
+        "gate_affine_clip": 1008,
+        "gate_value_products": 16384,
+        "residual_adds": 12288
+      },
+      "logical_table_bits": 131584,
+      "logical_table_bytes": 16448,
+      "table_read_bits_per_jet": 8192,
+      "vector_reads_per_jet": 16,
+      "independent_addresses_per_bank_per_jet": 16,
+      "two_read_port_replicas_for_whole_jet_ii1": 8,
+      "replicated_table_bytes_estimate": 131584,
+      "threshold_storage_bits": 336,
+      "encoder_comparisons_per_jet": 352,
+      "hash_words_per_jet": 32,
+      "exact_tuple_addressing": false,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    }
+  },
+  "data": "synthetic only",
+  "accuracy_gain_measured": false,
+  "hardware_validated": false
+}

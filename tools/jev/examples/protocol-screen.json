@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "purpose": "Synthetic fixture for protocol validation; never submit as a research run",
+  "scope": "screen",
+  "dataset": {
+    "id": "synthetic-test-only",
+    "identity_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "train_split": "synthetic training",
+    "validation_split": "synthetic validation",
+    "test_split": "synthetic held-out"
+  },
+  "inputs": {"n_constituents": 8, "features": ["pt", "etarel", "phirel"]},
+  "arms": [
+    {"name": "synthetic-baseline-s1", "group": "baseline", "seed": 1,
+     "quantization": "binary", "changed_factors": [],
+     "schedule": {"epochs": 3, "batch_size": 16, "optimizer": "adam", "learning_rate": 0.0001}}
+  ],
+  "selection": {"split": "validation", "metric": "macro-OvR AUC",
+                "rule": "Highest validation AUC among budget-feasible checkpoints",
+                "cost_checkpoint": "selected"},
+  "metrics": [{"name": "macro-OvR AUC", "split": "synthetic held-out", "n": 10, "status": "synthetic single-seed screen"}],
+  "stop_rules": [],
+  "outputs": ["synthetic-output-only"]
+}

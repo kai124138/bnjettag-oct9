@@ -1,0 +1,44 @@
+{
+  "run": "ebops-n8-20260912-ablation-r4-gradual-w1a8-s1",
+  "checkpoint_sha256": "212c0cf2e41727b5b65548517887b2afedb7806fbc7b38da39422c1c991d72e6",
+  "sample_sha256": "39eede24c0bd439e5207fb1dff9414a91a066696cfccbd75f819e409c1bb00ca",
+  "sample": "first 4096 internal-validation jets, already training-standardized",
+  "rf": 1,
+  "clock_ns": 2.5,
+  "hls_part": "xcvu13p-flga2577-2-e",
+  "beta_mode": "exact constants, legacy affine quantizer fractional width 16",
+  "gate1": {
+    "n": 4096,
+    "corr_scores": 0.9999828804871821,
+    "corr_logits": 0.999984291546069,
+    "corr_per_class": [
+      0.9999697801468445,
+      0.9999920315649209,
+      0.9999822177061726,
+      0.9999751253950426,
+      0.9999874240571375
+    ],
+    "max_abs_diff_scores": 0.06803774985597444,
+    "mean_abs_diff_scores": 6.111150029850472e-05,
+    "max_abs_diff_logits": 0.3453817367553711,
+    "argmax_agreement": 0.99951171875,
+    "pass": true,
+    "thresholds": {
+      "score_correlation": 0.997,
+      "argmax_agreement": 0.995
+    }
+  },
+  "versions": {
+    "keras": "3.15.0",
+    "numpy": "2.4.6"
+  },
+  "native_checkpoint_ebops": 349550,
+  "gate2": {
+    "n": 256,
+    "max_abs_diff": 0.3454151153564453,
+    "mean_abs_diff": 0.07594506442546844,
+    "bit_exact": false,
+    "corr": 0.998225033826066
+  },
+  "gate2_pass": false
+}

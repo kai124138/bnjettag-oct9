@@ -1,0 +1,30 @@
+{
+  "model": "selected_model.keras",
+  "sha256": "579d207239058282cbb54ff8321e61f51367331f6d367489849d452844fd26e4",
+  "architecture": "R1 channel quantization backbone with 14 binary weight layers and 8-bit32x5 final classifier",
+  "input_shape": [
+    8,
+    3
+  ],
+  "features": [
+    "pt",
+    "etarel",
+    "phirel"
+  ],
+  "input_order": "descending constituent pt, stable sort; top8",
+  "standardization": "input_std.json, fitted on original training split",
+  "class_order": [
+    "g",
+    "q",
+    "W",
+    "Z",
+    "t"
+  ],
+  "source_checkpoint_sha256": "d76050090655a68546e8bee51b695ef34c42083bcbd52832758b96f0e06f6e4c",
+  "selection": "validation accuracy under native350k EBOP budget",
+  "test_accuracy": 0.5913961538461538,
+  "test_macro_auc": 0.8559571472396875,
+  "native_ebops": 322510,
+  "hardware_latency": "not measured",
+  "load": "import bnhgq2.qat; apply_keras_compat(); register_subln(); keras.models.load_model(path, compile=False)"
+}

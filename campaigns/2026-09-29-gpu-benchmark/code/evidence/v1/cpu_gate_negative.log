@@ -1,0 +1,23 @@
+# cwd /Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-29-gpu-benchmark/code; tree /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/bundle (extraction of chang0926-code.tar.gz sha256 42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0)
+# driver sha256 4d2dcd7d9cebf85d1da985122053741a18046e3b48bafdbf1082b06877c40c22; cache /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/gate/data (True synthetic); 2026-09-29T07:23:43Z
+# 3a. pod mode again on the same bench root (expect BENCH_ROOT_NOT_EMPTY, exit 11)
+BENCH_ROOT_NOT_EMPTY /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/gatework/pod/cpu-gate ['p2-A07-k2', 'p1-E-k2', 'p3-E-k1'] (move it aside, never delete, before a re-run)
+EXIT 11
+# 3b. arm mode on a used run directory (expect ARM_ROOT_NOT_EMPTY, exit 11)
+BENCH_ARM chang0926-a-n64-s1 tree /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/bundle devices CPU-only tf32_enabled False test_cpu True utc 2026-09-29T07:23:45Z
+ARM_ROOT_NOT_EMPTY /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/gatework/arm1/runs/chang0926-a-n64-s1 (a benchmark arm starts fresh; move the directory aside)
+EXIT 11
+# 3c. a plan whose names are not the first K of the class (expect BENCH_PLAN_ERROR, exit 2)
+BENCH_PLAN_ERROR p1-E-k2: names are not the first 2 of class E
+EXIT 2
+# 3d. test flags inside a Kubernetes pod (KUBERNETES_SERVICE_HOST set; expect BENCH_TEST_FLAGS_REFUSED, exit 2)
+BENCH_TEST_FLAGS_REFUSED: test flags are for the local CPU gate, never a pod
+EXIT 2
+# 3e. no --test-cpu on a machine without a GPU (expect AssertionError 'Training requires GPU', exit 1)
+    assert gpus, 'Training requires GPU'                                   # as run_study.py:100
+AssertionError: Training requires GPU
+EXIT 1
+# 3f. directories 3c-3e would have created (expect No such file or directory for all three):
+ls: /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/gatework/bad: No such file or directory
+ls: /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/gatework/k8s: No such file or directory
+ls: /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/gatework/nogpu: No such file or directory

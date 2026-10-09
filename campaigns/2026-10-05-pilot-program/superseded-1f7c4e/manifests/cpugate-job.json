@@ -1,0 +1,122 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "annotations": {
+      "bnjettag.io/purpose": "pilot-program CPU gate: threshold, cpu_gate.py on 19 configs, full pytest; fail-fast, last line GATE_RESULT"
+    },
+    "labels": {
+      "app": "kai-pilot1005-cpugate",
+      "campaign": "chang-n64-20261005-pilot",
+      "user": "kai"
+    },
+    "name": "kai-pilot1005-cpugate-1f7c4e",
+    "namespace": "cms-ml"
+  },
+  "spec": {
+    "activeDeadlineSeconds": 14400,
+    "backoffLimit": 0,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "kai-pilot1005-cpugate",
+          "campaign": "chang-n64-20261005-pilot",
+          "user": "kai"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "hcc-nrp-shor-c6017.unl.edu",
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "args": [
+              "set -euo pipefail\ntrap 'rc=$?; if [ -z \"${GATE_RESULT_PRINTED:-}\" ]; then echo \"GATE_RESULT FAIL exit=$rc line=${LINENO}\"; fi' EXIT\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '1f7c4e0fb1cf12d633b224f46af8a3574a3a04c4bf7dcccdbeb3bbbb65a7922e  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=/data/chang-n64-20260926/pilot-program-20261005/r1 BNJ_CAMPAIGN_DIR=/work/code/campaigns/pilot1005\nexport BNJ_STAGE=pilot-r1\nexport CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled\npip install -q --no-cache-dir -r /work/code/requirements-cpu.txt\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"3768434df0ee96884063449a91a73942c0fe0aee07c6eaba8be75dded0271606\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\ngate_fail() { GATE_RESULT_PRINTED=1; echo \"GATE_RESULT FAIL $*\"; exit 1; }\nOUT=/data/chang-n64-20260926/pilot-program-20261005/cpu-gate-1f7c4e-r1\ntest ! -e \"$OUT\" || gate_fail \"output_exists $OUT\"\nmkdir -p /data/chang-n64-20260926/pilot-program-20261005 && mkdir \"$OUT\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || gate_fail \"cache_not_ready\"\npip install -q --no-cache-dir pytest==8.4.2\npip freeze > \"$OUT/pip-freeze.txt\"\nTH=0; python -u /work/code/campaigns/pilot1005/nondegenerate_threshold.py --cache /data/chang-n64-20260926/n64/data --out \"$OUT/threshold.json\" > \"$OUT/threshold.log\" 2>&1 || TH=$?\ntest \"$TH\" = 0 || gate_fail \"threshold_script exit=$TH\"\npython -u /work/code/campaigns/pilot1005/gate_check.py threshold --json \"$OUT/threshold.json\" || gate_fail \"threshold_mismatch\"\nGATE=0; python -u /work/code/campaigns/pilot1005/cpu_gate.py --out \"$OUT/cpu_gate.json\" > \"$OUT/cpu_gate.log\" 2>&1 || GATE=$?\ngrep -E \"PID_TRACED_ONLY_OK|PID_HISTORICAL_INPUT_OK|PAIRED_INIT_OK|PREFLIGHT_ALL_PASS|Error|assert\" \"$OUT/cpu_gate.log\" | tail -n 60 || true\npython -u /work/code/campaigns/pilot1005/gate_check.py cpu-gate --log \"$OUT/cpu_gate.log\" --exit-code \"$GATE\" || gate_fail \"cpu_gate exit=$GATE\"\nPT=0; python -m pytest -q -p no:cacheprovider -rs --junitxml \"$OUT/pytest.xml\" tests analysis > \"$OUT/pytest.log\" 2>&1 || PT=$?\ntail -n 30 \"$OUT/pytest.log\"\npython -u /work/code/campaigns/pilot1005/gate_check.py pytest --junit \"$OUT/pytest.xml\" --exit-code \"$PT\" || gate_fail \"pytest exit=$PT\"\nsha256sum \"$OUT\"/*\necho \"CPU_GATE_DONE threshold_exit=$TH cpu_gate_exit=$GATE pytest_exit=$PT\"\nGATE_RESULT_PRINTED=1\necho \"GATE_RESULT PASS\"\n"
+            ],
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "image": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "main",
+            "resources": {
+              "limits": {
+                "cpu": "8",
+                "ephemeral-storage": "12Gi",
+                "memory": "24Gi"
+              },
+              "requests": {
+                "cpu": "8",
+                "ephemeral-storage": "12Gi",
+                "memory": "24Gi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-pilot1005-code-1f7c4e0fb1"
+            },
+            "name": "code"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "12Gi"
+            },
+            "name": "work"
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    },
+    "ttlSecondsAfterFinished": 604800
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "status": "authorized_by_existing_explicit_user_instruction",
+  "recorded_at_utc": "2026-10-01T06:42:41.213503+00:00",
+  "approval_ref": "Kai-20261001-onegpu-confirmation-diagnostic",
+  "source": "Current conversation: ordered recovery and schedule completion followed by Do that please; later explicitly permits one GPU",
+  "user_instruction_excerpts": [
+    "Recover missing evidence: confirmation failure logs/checkpoints and terminal b5 artifacts.",
+    "Do that please",
+    "wiat just use a gpu or something bro its okay if its just one"
+  ],
+  "user_instruction_timestamp": "not supplied; recorded time is operator record time",
+  "interpretation": "Diagnosing the recovered checkpoint verification failure is necessary before authorized schedules can safely continue. Existing task and one-GPU allowance authorize this reviewed bounded no-training inference probe.",
+  "job_name": "kai-confirm1001-replay-a02s3-r1",
+  "reviewed_pending_handoff": "rh-157c4fd65e6fe2df675684f4",
+  "review_sha256": "6d1adfb780ead98396afac6e1c37691547067ba1435dcc64b5c0422b81291a6e",
+  "diagnostic_archive_sha256": "43495e085ae734c232e90003e96e96bf5034e729ff99d1bea6ee59b30a15a1f5",
+  "historical_archive_sha256": "26f3cc40a8f7c9ff378760c5b0d8ce046508cb4de585f9c4b80ea93653515a45",
+  "resources": {
+    "gpu_product": "NVIDIA-A10",
+    "gpu_count": 1,
+    "cpu": "4",
+    "memory": "16Gi",
+    "ephemeral_storage": "12Gi",
+    "deadline_seconds": 1800,
+    "backoff_limit": 0
+  },
+  "operations": [
+    "one supported diagnostic Job launch",
+    "new immutable source and handoff ConfigMaps",
+    "new provenance and exclusive diagnostic output directory",
+    "four validation inference passes, three model loads and two serial processes",
+    "original 256-row cost trace and original 1e-7 validation tolerance",
+    "bounded metadata log export and read-only status/log collection"
+  ],
+  "source_nonmutation": "Supported handoff mounts /data writable for new provenance/output; historical sources are read and hash-checked before/after, all arrays hashed by loader and afterward. Not a read-only PVC mount.",
+  "allowed_finalization": "New immutable record differing only in scoped diagnostic gate and factual brief references/storage review status, preserving reviewed Job execution, helper, source, receiver and data bytes. Independent final identity review and action-time lint required.",
+  "production_gate": "pending",
+  "training_steps": 0,
+  "not_authorized_by_this_record": [
+    "training or resume",
+    "optimizer restoration",
+    "metric tolerance changes or reselection",
+    "automatic retry",
+    "additional GPU",
+    "Mulder access",
+    "production clearance"
+  ]
+}

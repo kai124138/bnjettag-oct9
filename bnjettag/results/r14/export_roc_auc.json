@@ -1,0 +1,273 @@
+{
+ "written": "2026-08-24T16:53:33",
+ "script": "bnjettag/code/hgq2/export_roc_eval.py",
+ "method": "shipped export rebuilt from checkpoint via convert_final.build_export (beta_mode=fx8, no force flags); GATE1 reproduced on the same 4096 linspace jets as the arbiter; AUC = ROC-test macro OvR (sklearn), softmax64, held-out data/val split",
+ "metric": "roc_test_auc_macro_ovr (NOT validation AUC)",
+ "sign_convention": "delta = export_auc - trained_auc_ref (negative = export costs AUC)",
+ "n_eval": 260000,
+ "era": 2,
+ "data_dir": "data/val",
+ "env": {
+  "numpy": "2.4.6",
+  "keras": "3.15.0",
+  "tensorflow": "2.21.0",
+  "python": "3.12.13"
+ },
+ "articles": [
+  {
+   "article": "n8-w1a8-s3",
+   "ckpt": "bnjettag/roc-results/r14/n8/_ckpt_dl/w1a8-s3/model_best.keras",
+   "config": "bnjettag/code/hgq2/configs/r14-l1x3-n8-w1a8.json",
+   "config_hash": "38a20c62",
+   "beta_mode": "fx8",
+   "input_std": "bnjettag/roc-results/r14/n8/_ckpt_dl/w1a8-s3/input_std.json",
+   "gate1_stored": {
+    "corr_scores": 0.9988158043665978,
+    "argmax_agreement": 0.97998046875,
+    "n": 4096,
+    "beta_mode": "fx8",
+    "source": "bnjettag/results/synthesis/runs/38a20c62/w1a8-s3-r14n8/export_verify.json"
+   },
+   "gate1_reproduced": {
+    "corr_scores": 0.9988158043665978,
+    "corr_logits": 0.9993752587548694,
+    "argmax_agreement": 0.97998046875,
+    "n": 4096
+   },
+   "gate1_repro_abs_delta_corr": 0.0,
+   "gate1_repro_exact": true,
+   "npz_ref": "bnjettag/roc-results/r14/n8/W1A8-s3.npz",
+   "npz_y_match": true,
+   "trained_auc_ref": 0.8724101807531749,
+   "trained_auc_ref_md_4dp": 0.8724,
+   "trained_auc_ref_md_source": "bnjettag/roc-results/r14/n8/roc_auc.md",
+   "trained_md_consistent": true,
+   "qat_auc_recomputed_260k": 0.8724091868411709,
+   "qat_vs_npz_auc_abs_delta": 9.939120040325378e-07,
+   "export_auc": 0.8723638828767843,
+   "delta": -4.629787639054417e-05,
+   "per_class": {
+    "g": 0.8165019180192131,
+    "q": 0.8656585300252939,
+    "W": 0.891823744498242,
+    "Z": 0.8741333610715147,
+    "t": 0.9137018607696579
+   },
+   "per_class_trained_ref": {
+    "g": 0.8165468102197566,
+    "q": 0.8656641693550216,
+    "W": 0.8918569988189772,
+    "Z": 0.8742410187334088,
+    "t": 0.9137419066387104
+   },
+   "corr_scores_260k": 0.9987704362521042,
+   "argmax_agreement_260k": 0.9785653846153847,
+   "n": 260000,
+   "elapsed_s": 53.4
+  },
+  {
+   "article": "n8-w1a6-s3",
+   "ckpt": "bnjettag/models/cache/r14-l1x3-n8-w1a6-s3/model_best.keras",
+   "config": "bnjettag/code/hgq2/configs/r14-l1x3-n8-w1a6.json",
+   "config_hash": "794e925f",
+   "beta_mode": "fx8",
+   "input_std": "bnjettag/models/cache/r14-l1x3-n8-w1a6-s3/input_std.json",
+   "gate1_stored": {
+    "corr_scores": 0.9951757931891466,
+    "argmax_agreement": 0.954345703125,
+    "n": 4096,
+    "beta_mode": "fx8",
+    "source": "bnjettag/results/synthesis/runs/794e925f/w1a6-s3/export_verify.json"
+   },
+   "gate1_reproduced": {
+    "corr_scores": 0.9951757931891466,
+    "corr_logits": 0.997500097826713,
+    "argmax_agreement": 0.954345703125,
+    "n": 4096
+   },
+   "gate1_repro_abs_delta_corr": 0.0,
+   "gate1_repro_exact": true,
+   "npz_ref": "bnjettag/roc-results/r14/n8/W1A6-s3.npz",
+   "npz_y_match": true,
+   "trained_auc_ref": 0.8700943453071618,
+   "trained_auc_ref_md_4dp": 0.8701,
+   "trained_auc_ref_md_source": "bnjettag/roc-results/r14/n8/roc_auc.md",
+   "trained_md_consistent": true,
+   "qat_auc_recomputed_260k": 0.8700948183955093,
+   "qat_vs_npz_auc_abs_delta": 4.730883474968195e-07,
+   "export_auc": 0.8699070767965074,
+   "delta": -0.00018726851065442585,
+   "per_class": {
+    "g": 0.8130036640424757,
+    "q": 0.8601885191066195,
+    "W": 0.891015717238261,
+    "Z": 0.8735178561191226,
+    "t": 0.9118096274760578
+   },
+   "per_class_trained_ref": {
+    "g": 0.8129416418313823,
+    "q": 0.8603847989688971,
+    "W": 0.8911250451852928,
+    "Z": 0.8741223410382938,
+    "t": 0.911897899511943
+   },
+   "corr_scores_260k": 0.9950031791022884,
+   "argmax_agreement_260k": 0.9571423076923077,
+   "n": 260000,
+   "elapsed_s": 39.3
+  },
+  {
+   "article": "n8-w1a4-s3",
+   "ckpt": "bnjettag/models/cache/r14-l1x3-n8-w1a4-s3/model_best.keras",
+   "config": "bnjettag/code/hgq2/configs/r14-l1x3-n8-w1a4.json",
+   "config_hash": "5f839ab5",
+   "beta_mode": "fx8",
+   "input_std": "bnjettag/models/cache/r14-l1x3-n8-w1a4-s3/input_std.json",
+   "gate1_stored": {
+    "corr_scores": 0.983398520879593,
+    "argmax_agreement": 0.915283203125,
+    "n": 4096,
+    "beta_mode": "fx8",
+    "source": "bnjettag/results/synthesis/runs/5f839ab5/w1a4-s3/export_verify.json"
+   },
+   "gate1_reproduced": {
+    "corr_scores": 0.983398520879593,
+    "corr_logits": 0.9904537755621273,
+    "argmax_agreement": 0.915283203125,
+    "n": 4096
+   },
+   "gate1_repro_abs_delta_corr": 0.0,
+   "gate1_repro_exact": true,
+   "npz_ref": "bnjettag/roc-results/r14/n8/W1A4-s3.npz",
+   "npz_y_match": true,
+   "trained_auc_ref": 0.8533340146829114,
+   "trained_auc_ref_md_4dp": 0.8533,
+   "trained_auc_ref_md_source": "bnjettag/roc-results/r14/n8/roc_auc.md",
+   "trained_md_consistent": true,
+   "qat_auc_recomputed_260k": 0.8533347549690642,
+   "qat_vs_npz_auc_abs_delta": 7.402861528227334e-07,
+   "export_auc": 0.853249722211995,
+   "delta": -8.429247091634728e-05,
+   "per_class": {
+    "g": 0.8018199401750887,
+    "q": 0.8563716832201922,
+    "W": 0.8544409307488119,
+    "Z": 0.8461866648101781,
+    "t": 0.9074293921057036
+   },
+   "per_class_trained_ref": {
+    "g": 0.8022838098394034,
+    "q": 0.8561344483806361,
+    "W": 0.8541972076468619,
+    "Z": 0.8465240585971188,
+    "t": 0.9075305489505365
+   },
+   "corr_scores_260k": 0.9821218025727715,
+   "argmax_agreement_260k": 0.9123423076923077,
+   "n": 260000,
+   "elapsed_s": 39.0
+  },
+  {
+   "article": "n16-w1a8-s1",
+   "ckpt": "bnjettag/roc-results/r14/n16/_ckpt_dl/w1a8-s1/model_best.keras",
+   "config": "bnjettag/code/hgq2/configs/r14-l1x3-n16-w1a8.json",
+   "config_hash": "2ae656b6",
+   "beta_mode": "fx8",
+   "input_std": "bnjettag/roc-results/r14/n16/_ckpt_dl/w1a8-s1/input_std.json",
+   "gate1_stored": {
+    "corr_scores": 0.9973841842773415,
+    "argmax_agreement": 0.976318359375,
+    "n": 4096,
+    "beta_mode": "fx8",
+    "source": "bnjettag/results/synthesis/runs/2ae656b6/w1a8-s1-r14n16/export_verify.json"
+   },
+   "gate1_reproduced": {
+    "corr_scores": 0.9973841842773415,
+    "corr_logits": 0.9983123152722156,
+    "argmax_agreement": 0.976318359375,
+    "n": 4096
+   },
+   "gate1_repro_abs_delta_corr": 0.0,
+   "gate1_repro_exact": true,
+   "npz_ref": "bnjettag/roc-results/r14/n16/W1A8-s1.npz",
+   "npz_y_match": true,
+   "trained_auc_ref": 0.8958616894496705,
+   "trained_auc_ref_md_4dp": 0.8959,
+   "trained_auc_ref_md_source": "bnjettag/roc-results/r14/n16/roc_auc.md",
+   "trained_md_consistent": true,
+   "qat_auc_recomputed_260k": 0.89586131681513,
+   "qat_vs_npz_auc_abs_delta": 3.7263454044644817e-07,
+   "export_auc": 0.8955289631744987,
+   "delta": -0.00033272627517177966,
+   "per_class": {
+    "g": 0.8521547354603964,
+    "q": 0.8794911841247477,
+    "W": 0.9197601970168494,
+    "Z": 0.9013348799688137,
+    "t": 0.9249038193016869
+   },
+   "per_class_trained_ref": {
+    "g": 0.852472954350107,
+    "q": 0.8791986722884798,
+    "W": 0.9202059445678099,
+    "Z": 0.9023850672979815,
+    "t": 0.9250458087439741
+   },
+   "corr_scores_260k": 0.9972100308776041,
+   "argmax_agreement_260k": 0.9764423076923077,
+   "n": 260000,
+   "elapsed_s": 98.5
+  },
+  {
+   "article": "n8-gamma-sm4i0-s3",
+   "ckpt": "bnjettag/models/cache/r15-gamma-sm4i0-n8-w1a8-s3/model_best.keras",
+   "config": "bnjettag/code/hgq2/configs/r15-gamma-sm4i0-n8-w1a8.json",
+   "config_hash": "ba72a91a",
+   "beta_mode": "fx8",
+   "input_std": "bnjettag/models/cache/r15-gamma-sm4i0-n8-w1a8-s3/input_std.json",
+   "gate1_stored": {
+    "corr_scores": 0.9980516935590654,
+    "argmax_agreement": 0.9765625,
+    "n": 4096,
+    "beta_mode": "fx8",
+    "source": "bnjettag/results/synthesis/runs/ba72a91a/w1a8-s3-r15gamma-sm4i0/export_verify.json"
+   },
+   "gate1_reproduced": {
+    "corr_scores": 0.9980516935590654,
+    "corr_logits": 0.9991129235922339,
+    "argmax_agreement": 0.9765625,
+    "n": 4096
+   },
+   "gate1_repro_abs_delta_corr": 0.0,
+   "gate1_repro_exact": true,
+   "npz_ref": "bnjettag/roc-results/r15-gamma/sm4i0/W1A8-s3.npz",
+   "npz_y_match": true,
+   "trained_auc_ref": 0.8723264418668263,
+   "trained_auc_ref_md_4dp": 0.8723,
+   "trained_auc_ref_md_source": "bnjettag/roc-results/r15-gamma/sm4i0/roc_auc.md",
+   "trained_md_consistent": true,
+   "qat_auc_recomputed_260k": 0.8723263076918368,
+   "qat_vs_npz_auc_abs_delta": 1.341749894523403e-07,
+   "export_auc": 0.8723280517155205,
+   "delta": 1.609848694239524e-06,
+   "per_class": {
+    "g": 0.8163132501484908,
+    "q": 0.8631056896022044,
+    "W": 0.8940296857903406,
+    "Z": 0.8753809715906522,
+    "t": 0.9128106614459142
+   },
+   "per_class_trained_ref": {
+    "g": 0.8162907426447309,
+    "q": 0.8630565323761544,
+    "W": 0.8940507741838412,
+    "Z": 0.8752832731005811,
+    "t": 0.9129508870288243
+   },
+   "corr_scores_260k": 0.997958360667711,
+   "argmax_agreement_260k": 0.9759346153846153,
+   "n": 260000,
+   "elapsed_s": 45.1
+  }
+ ]
+}

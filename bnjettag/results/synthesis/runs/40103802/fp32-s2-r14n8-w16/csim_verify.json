@@ -1,0 +1,1764 @@
+{
+ "written": "2026-09-02T17:48:10",
+ "config": "r14-l1x3-n8-fp32",
+ "config_hash": "40103802",
+ "variant": "fp32-realization",
+ "width": 16,
+ "seed": 2,
+ "tag": "r14n8",
+ "rf": 1,
+ "strategy": "Latency",
+ "backend": "Vitis",
+ "macos_local_csim": true,
+ "csim_headline_n128": {
+  "n": 128,
+  "max_abs_diff": 0.04015636444091797,
+  "mean_abs_diff": 0.0018261674558743834,
+  "bit_exact": false,
+  "corr": 0.9999989061271951
+ },
+ "candidate_bars": {
+  "corr_scores_min": 0.999,
+  "argmax_agreement_min": 0.98,
+  "abs_delta_macro_auc_upper95_max": 0.0005,
+  "abs_delta_per_class_auc_upper95_max": 0.0015,
+  "abs_delta_per_class_eff1pct_upper95_max": 0.01
+ },
+ "gate2_rule": "uncertainty sign-off 2026-09-02: the AUC bar is a paired-bootstrap 95% UPPER BOUND on |delta macro-OvR AUC| at n=32,768, not a point estimate -- |delta| <= 0.0005 is NOT resolvable at n=4,096 (95% half-width 2.5e-4..4.4e-4 there). The 4,096 block is reported for matched-n comparison with the W8A8 precedent only. Physics sign-off 2026-09-02 adds per-class |dOvR-AUC| (bar 0.0015) and per-class |d eps_S @ 1% FPR| (bar 0.010) as 95% upper bounds, plus the tie-plateau check at the 1%-mistag working point, because macro AUC is bulk-weighted and blind to shoulder clipping by an MSE-calibrated static grid -- which is exactly what the realization step is. Both added bars are PROVISIONAL. NO W* is declared by this driver.",
+ "argmax_bar_defect": "DEFECT IN THE PRE-REGISTERED GATE, corrected here (physics sign-off 2026-09-02): memo \u00a75 pre-registers argmax_agreement >= 0.999, but the W8A8 realization the memo cites as its own precedent measured 0.98779 at n=4,096 -- as written the bar REJECTS the one realization already accepted on the record. Set to >= 0.98 (near the precedent). It is NOT a working-point guard: it is bulk-dominated and reads 1.00000 even under top-5% saturation.",
+ "blocks": {
+  "csim_vs_float_export__big": {
+   "label": "C-sim vs FLOAT export (the realization cost)",
+   "n": 32768,
+   "class_order": [
+    "g",
+    "q",
+    "W",
+    "Z",
+    "t"
+   ],
+   "corr_logits": 0.9999993115504471,
+   "corr_scores": 0.9999978181934647,
+   "corr_scores_per_class": [
+    0.999997938741788,
+    0.9999983208176866,
+    0.9999964896875958,
+    0.9999962832120824,
+    0.9999996759318752
+   ],
+   "argmax_agreement": 0.999420166015625,
+   "max_abs_diff_logits": 0.14085936546325684,
+   "mean_abs_diff_logits": 0.0015913073959467282,
+   "max_abs_diff_scores": 0.03947052665127432,
+   "bit_exact": false,
+   "macro_ovr_auc_ref": 0.8852050784996415,
+   "macro_ovr_auc_test": 0.885210856342088,
+   "delta_macro_auc": 5.777842446486048e-06,
+   "per_class_auc_ref": {
+    "g": 0.8370498906188955,
+    "q": 0.8745341573257621,
+    "W": 0.906183094555444,
+    "Z": 0.8890796845223313,
+    "t": 0.9191785654757743
+   },
+   "per_class_auc_test": {
+    "g": 0.8370482558844871,
+    "q": 0.8745374021271779,
+    "W": 0.9061938565546115,
+    "Z": 0.8890893320503056,
+    "t": 0.9191854350938578
+   },
+   "delta_per_class_auc": {
+    "g": -1.6347344083955662e-06,
+    "q": 3.2448014157804295e-06,
+    "W": 1.076199916749676e-05,
+    "Z": 9.647527974276926e-06,
+    "t": 6.869618083493734e-06
+   },
+   "signal_efficiency_at_fixed_mistag": {
+    "source": "code/plots/make_working_points.py::working_points, imported verbatim (physics sign-off 2026-09-02)",
+    "fpr_0.01": {
+     "eff_ref": {
+      "g": 0.10547354379724322,
+      "q": 0.17387283695824735,
+      "W": 0.21829260935143288,
+      "Z": 0.33686934865900386,
+      "t": 0.4014100807065631
+     },
+     "eff_test": {
+      "g": 0.10644879205572846,
+      "q": 0.1740292109858708,
+      "W": 0.21727300150829562,
+      "Z": 0.33733997445721586,
+      "t": 0.40323181564387595
+     },
+     "delta": {
+      "g": 0.0009752482584852451,
+      "q": 0.000156374027623446,
+      "W": -0.0010196078431372602,
+      "Z": 0.0004706257982119988,
+      "t": 0.0018217349373128577
+     },
+     "rel_delta": {
+      "g": 0.009246378033528587,
+      "q": 0.0008993585792874398,
+      "W": -0.004670830799845251,
+      "Z": 0.0013970573460762971,
+      "t": 0.004538338783386394
+     },
+     "macro_ref": 0.24718368389449807,
+     "macro_test": 0.24766455893019734,
+     "delta_macro": 0.0004808750356992686
+    },
+    "fpr_0.10": {
+     "eff_ref": {
+      "g": 0.5097228397806433,
+      "q": 0.6387759961898715,
+      "W": 0.7141752365281777,
+      "Z": 0.6890513409961686,
+      "t": 0.793992690726359
+     },
+     "eff_test": {
+      "g": 0.5097821253890621,
+      "q": 0.6390107273263329,
+      "W": 0.7144645550527904,
+      "Z": 0.6889020251778872,
+      "t": 0.794043300280368
+     },
+     "delta": {
+      "g": 5.9285608418835345e-05,
+      "q": 0.00023473113646144128,
+      "W": 0.0002893185246126695,
+      "Z": -0.0001493158182813703,
+      "t": 5.060955400892908e-05
+     },
+     "note": "free -- one roc_curve per class covers both targets; the physics sign-off records it as nearly inert"
+    }
+   },
+   "tie_plateau_at_1pct_fpr": {
+    "ref": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.6756286229408939,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8430498443564814e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009991929595326852,
+      "fpr_at_or_above_threshold": 0.010030360093770415,
+      "fpr_jump": 3.843049844356322e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7775856223035252,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.7780044580452605e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009973931769239488,
+      "fpr_at_or_above_threshold": 0.01001171181381994,
+      "fpr_jump": 3.778004458045159e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.7741330326011943,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8258474252046826e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009985461779784223,
+      "fpr_at_or_above_threshold": 0.01002372025403627,
+      "fpr_jump": 3.8258474252046704e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7948803344345807,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.810539953511413e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01005982547727013,
+      "fpr_at_or_above_threshold": 0.010097930876805243,
+      "fpr_jump": 3.810539953511341e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8129528423220698,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8166482195336056e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009999618335178047,
+      "fpr_at_or_above_threshold": 0.010037784817373384,
+      "fpr_jump": 3.816648219533668e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    },
+    "test": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.6751005246613496,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8430498443564814e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009991929595326852,
+      "fpr_at_or_above_threshold": 0.010030360093770415,
+      "fpr_jump": 3.843049844356322e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7777391297489419,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.7780044580452605e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009973931769239488,
+      "fpr_at_or_above_threshold": 0.01001171181381994,
+      "fpr_jump": 3.778004458045159e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.7746764655896575,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8258474252046826e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009985461779784223,
+      "fpr_at_or_above_threshold": 0.01002372025403627,
+      "fpr_jump": 3.8258474252046704e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7947912950407909,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.810539953511413e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01005982547727013,
+      "fpr_at_or_above_threshold": 0.010097930876805243,
+      "fpr_jump": 3.810539953511341e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8123226340685838,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8166482195336056e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.010075951299568718,
+      "fpr_at_or_above_threshold": 0.010114117781764055,
+      "fpr_jump": 3.816648219533668e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    }
+   },
+   "paired_bootstrap": {
+    "B": 1000,
+    "seed": 20260902,
+    "rule": "paired over jets, same resampled indices for both arms; the selection statistic is the 95% UPPER BOUND on |delta|, not the point estimate (uncertainty sign-off 2026-09-02). Finite-sample noise only -- NOT a seed-variance interval.",
+    "delta_macro_auc": {
+     "mean": 5.8949526896584505e-06,
+     "std": 3.3927894799624924e-06,
+     "ci95_lo": -8.679482478513023e-07,
+     "ci95_hi": 1.2420523173950481e-05,
+     "abs_delta_upper95": 1.2420523173950481e-05,
+     "ci99_lo": -3.424622376428377e-06,
+     "ci99_hi": 1.5161313797263931e-05,
+     "abs_delta_upper99": 1.5161313797263931e-05
+    },
+    "delta_per_class_auc": {
+     "g": {
+      "mean": -1.4634888665953082e-06,
+      "std": 6.4928873938189195e-06,
+      "ci95_lo": -1.375133771251702e-05,
+      "ci95_hi": 1.1627070169703543e-05,
+      "abs_delta_upper95": 1.375133771251702e-05,
+      "ci99_lo": -2.0259480343942648e-05,
+      "ci99_hi": 1.4474051072859145e-05,
+      "abs_delta_upper99": 2.0259480343942648e-05
+     },
+     "q": {
+      "mean": 3.598811654495382e-06,
+      "std": 6.491730420518253e-06,
+      "ci95_lo": -9.624309458636238e-06,
+      "ci95_hi": 1.7006457004037355e-05,
+      "abs_delta_upper95": 1.7006457004037355e-05,
+      "ci99_lo": -1.2373095464508487e-05,
+      "ci99_hi": 2.0557740376968555e-05,
+      "abs_delta_upper99": 2.0557740376968555e-05
+     },
+     "W": {
+      "mean": 1.079664266860758e-05,
+      "std": 7.268641923894132e-06,
+      "ci95_lo": -3.948366021808147e-06,
+      "ci95_hi": 2.5623569306865154e-05,
+      "abs_delta_upper95": 2.5623569306865154e-05,
+      "ci99_lo": -8.279558226074179e-06,
+      "ci99_hi": 2.982371066084399e-05,
+      "abs_delta_upper99": 2.982371066084399e-05
+     },
+     "Z": {
+      "mean": 9.61978355150661e-06,
+      "std": 7.1505688514551154e-06,
+      "ci95_lo": -4.514995073753858e-06,
+      "ci95_hi": 2.407955213919177e-05,
+      "abs_delta_upper95": 2.407955213919177e-05,
+      "ci99_lo": -7.261757114424006e-06,
+      "ci99_hi": 2.9215229009124653e-05,
+      "abs_delta_upper99": 2.9215229009124653e-05
+     },
+     "t": {
+      "mean": 6.923014440279207e-06,
+      "std": 3.994200755276536e-06,
+      "ci95_lo": -1.0241001740185497e-06,
+      "ci95_hi": 1.4602460110760273e-05,
+      "abs_delta_upper95": 1.4602460110760273e-05,
+      "ci99_lo": -3.3055551237659576e-06,
+      "ci99_hi": 1.800170853765437e-05,
+      "abs_delta_upper99": 1.800170853765437e-05
+     }
+    },
+    "delta_per_class_eff_at_fpr_0.01": {
+     "g": {
+      "mean": 0.00013830798879847938,
+      "std": 0.00048588658912426694,
+      "ci95_lo": -0.0007231575671038639,
+      "ci95_hi": 0.0013238198736747826,
+      "abs_delta_upper95": 0.0013238198736747826,
+      "ci99_lo": -0.0011460365103071561,
+      "ci99_hi": 0.0017502688323877257,
+      "abs_delta_upper99": 0.0017502688323877257
+     },
+     "q": {
+      "mean": 0.00018921274444474109,
+      "std": 0.000989490474658134,
+      "ci95_lo": -0.001700273683121832,
+      "ci95_hi": 0.0023264944844734463,
+      "abs_delta_upper95": 0.0023264944844734463,
+      "ci99_lo": -0.002301964933568661,
+      "ci99_hi": 0.003042914574469616,
+      "abs_delta_upper99": 0.003042914574469616
+     },
+     "W": {
+      "mean": -0.0001802961088393294,
+      "std": 0.001040757460693135,
+      "ci95_lo": -0.002486467787426771,
+      "ci95_hi": 0.0017864023442559183,
+      "abs_delta_upper95": 0.002486467787426771,
+      "ci99_lo": -0.00342223921847416,
+      "ci99_hi": 0.002787739956263041,
+      "abs_delta_upper99": 0.00342223921847416
+     },
+     "Z": {
+      "mean": 7.321794658628639e-05,
+      "std": 0.0009182491787773754,
+      "ci95_lo": -0.0018515983014880874,
+      "ci95_hi": 0.001778791384347525,
+      "abs_delta_upper95": 0.0018515983014880874,
+      "ci99_lo": -0.002444511884327158,
+      "ci99_hi": 0.0031549410292604795,
+      "abs_delta_upper99": 0.0031549410292604795
+     },
+     "t": {
+      "mean": 0.00025052036929011455,
+      "std": 0.0006155997820395435,
+      "ci95_lo": -0.0009288513555287314,
+      "ci95_hi": 0.001550940862940626,
+      "abs_delta_upper95": 0.001550940862940626,
+      "ci99_lo": -0.0016315716861364754,
+      "ci99_hi": 0.0023452531107463906,
+      "abs_delta_upper99": 0.0023452531107463906
+     }
+    },
+    "delta_per_class_eff_at_fpr_0.10": {
+     "g": {
+      "mean": 0.00010177464560089305,
+      "std": 0.0004917888467046474,
+      "ci95_lo": -0.000882110659446983,
+      "ci95_hi": 0.001082985194589253,
+      "abs_delta_upper95": 0.001082985194589253,
+      "ci99_lo": -0.001375535976191397,
+      "ci99_hi": 0.0014818368113134852,
+      "abs_delta_upper99": 0.0014818368113134852
+     },
+     "q": {
+      "mean": -9.05481623981117e-05,
+      "std": 0.00039365220871566604,
+      "ci95_lo": -0.0010317230444484376,
+      "ci95_hi": 0.0005884514258916808,
+      "abs_delta_upper95": 0.0010317230444484376,
+      "ci99_lo": -0.0016345866441873236,
+      "ci99_hi": 0.0008116916603367406,
+      "abs_delta_upper99": 0.0016345866441873236
+     },
+     "W": {
+      "mean": 8.927958552286674e-06,
+      "std": 0.00042114084635389834,
+      "ci95_lo": -0.0009132380842711257,
+      "ci95_hi": 0.0008761406967128454,
+      "abs_delta_upper95": 0.0009132380842711257,
+      "ci99_lo": -0.0012465593552657445,
+      "ci99_hi": 0.0012106712050936514,
+      "abs_delta_upper99": 0.0012465593552657445
+     },
+     "Z": {
+      "mean": 0.0001720761671961183,
+      "std": 0.0005194203141018735,
+      "ci95_lo": -0.0008237705986286481,
+      "ci95_hi": 0.0012195820678604058,
+      "abs_delta_upper95": 0.0012195820678604058,
+      "ci99_lo": -0.0012196287090259445,
+      "ci99_hi": 0.0017111646515107308,
+      "abs_delta_upper99": 0.0017111646515107308
+     },
+     "t": {
+      "mean": 2.7178084485721675e-05,
+      "std": 0.00019677022074268515,
+      "ci95_lo": -0.00039851462454618955,
+      "ci95_hi": 0.0004694483589029544,
+      "abs_delta_upper95": 0.0004694483589029544,
+      "ci99_lo": -0.0006233581409760197,
+      "ci99_hi": 0.0007647058269686478,
+      "abs_delta_upper99": 0.0007647058269686478
+     }
+    }
+   },
+   "worst_class": {
+    "auc": "W",
+    "eff_at_1pct": "W"
+   },
+   "candidate_bar_checks": {
+    "corr_scores": {
+     "value": 0.9999978181934647,
+     "bar": 0.999,
+     "pass": true
+    },
+    "argmax_agreement": {
+     "value": 0.999420166015625,
+     "bar": 0.98,
+     "pass": true,
+     "note": "DEFECT IN THE PRE-REGISTERED GATE, corrected here (physics sign-off 2026-09-02): memo \u00a75 pre-registers argmax_agreement >= 0.999, but the W8A8 realization the memo cites as its own precedent measured 0.98779 at n=4,096 -- as written the bar REJECTS the one realization already accepted on the record. Set to >= 0.98 (near the precedent). It is NOT a working-point guard: it is bulk-dominated and reads 1.00000 even under top-5% saturation."
+    },
+    "abs_delta_macro_auc_upper95": {
+     "value": 1.2420523173950481e-05,
+     "bar": 0.0005,
+     "pass": true
+    },
+    "worst_class_abs_delta_auc_upper95": {
+     "value": 2.5623569306865154e-05,
+     "class": "W",
+     "per_class": {
+      "g": 1.375133771251702e-05,
+      "q": 1.7006457004037355e-05,
+      "W": 2.5623569306865154e-05,
+      "Z": 2.407955213919177e-05,
+      "t": 1.4602460110760273e-05
+     },
+     "bar": 0.0015,
+     "pass": true,
+     "note": "PROVISIONAL calibration, pending uncertainty-analyst ratification"
+    },
+    "worst_class_abs_delta_eff1pct_upper95": {
+     "value": 0.002486467787426771,
+     "class": "W",
+     "per_class": {
+      "g": 0.0013238198736747826,
+      "q": 0.0023264944844734463,
+      "W": 0.002486467787426771,
+      "Z": 0.0018515983014880874,
+      "t": 0.001550940862940626
+     },
+     "bar": 0.01,
+     "pass": true,
+     "note": "PROVISIONAL calibration, pending uncertainty-analyst ratification"
+    },
+    "no_tie_plateau_straddling_1pct": {
+     "value": {
+      "g": true,
+      "q": true,
+      "W": true,
+      "Z": false,
+      "t": false
+     },
+     "pass": false,
+     "note": "a plateau straddling the target mistag rate destroys threshold tunability -- deployment-fatal whatever the AUC says"
+    },
+    "ALL_candidate_bars": {
+     "pass": false,
+     "note": "recorded for convenience ONLY. This driver does NOT declare W*: the per-class AUC and efficiency bars are provisional pending uncertainty-analyst ratification."
+    }
+   }
+  },
+  "csim_vs_float_export__n4096_nested": {
+   "label": "C-sim vs FLOAT export, nested 4,096 (matched-n to the W8A8 precedent)",
+   "n": 4096,
+   "class_order": [
+    "g",
+    "q",
+    "W",
+    "Z",
+    "t"
+   ],
+   "corr_logits": 0.9999993001865876,
+   "corr_scores": 0.9999978932339781,
+   "corr_scores_per_class": [
+    0.9999983419986842,
+    0.9999985220526844,
+    0.9999965520645795,
+    0.9999962301568551,
+    0.9999996580209655
+   ],
+   "argmax_agreement": 0.99951171875,
+   "max_abs_diff_logits": 0.06038779020309448,
+   "mean_abs_diff_logits": 0.0015864106257595268,
+   "max_abs_diff_scores": 0.013059280702250708,
+   "bit_exact": false,
+   "macro_ovr_auc_ref": 0.8860153655442382,
+   "macro_ovr_auc_test": 0.886007850000025,
+   "delta_macro_auc": -7.515544213188008e-06,
+   "per_class_auc_ref": {
+    "g": 0.8374565042766695,
+    "q": 0.874392763649402,
+    "W": 0.9003802289908323,
+    "Z": 0.9013991318963501,
+    "t": 0.9164481989079376
+   },
+   "per_class_auc_test": {
+    "g": 0.8374378983939903,
+    "q": 0.8744203448610807,
+    "W": 0.900364133453713,
+    "Z": 0.9013804685095602,
+    "t": 0.916436404781781
+   },
+   "delta_per_class_auc": {
+    "g": -1.860588267921237e-05,
+    "q": 2.7581211678673334e-05,
+    "W": -1.609553711923173e-05,
+    "Z": -1.8663386789907754e-05,
+    "t": -1.1794126156594587e-05
+   },
+   "signal_efficiency_at_fixed_mistag": {
+    "source": "code/plots/make_working_points.py::working_points, imported verbatim (physics sign-off 2026-09-02)",
+    "fpr_0.01": {
+     "eff_ref": {
+      "g": 0.11827745664739885,
+      "q": 0.160615796519411,
+      "W": 0.23041769041769042,
+      "Z": 0.3442789034564958,
+      "t": 0.3850180505415163
+     },
+     "eff_test": {
+      "g": 0.11809826589595375,
+      "q": 0.160615796519411,
+      "W": 0.23243243243243242,
+      "Z": 0.34905244338498215,
+      "t": 0.3850180505415163
+     },
+     "delta": {
+      "g": -0.00017919075144509633,
+      "q": 0.0,
+      "W": 0.002014742014741999,
+      "Z": 0.004773539928486337,
+      "t": 0.0
+     },
+     "rel_delta": {
+      "g": -0.001515003420975548,
+      "q": 0.0,
+      "W": 0.008743868628705414,
+      "Z": 0.013865328024926559,
+      "t": 0.0
+     },
+     "macro_ref": 0.24772157951650248,
+     "macro_test": 0.2490433977548591,
+     "delta_macro": 0.0013218182383566146
+    },
+    "fpr_0.10": {
+     "eff_ref": {
+      "g": 0.5215028901734103,
+      "q": 0.6411646586345381,
+      "W": 0.6888069888069888,
+      "Z": 0.7111044894715932,
+      "t": 0.7892097874047332
+     },
+     "eff_test": {
+      "g": 0.5211560693641618,
+      "q": 0.6411423471664436,
+      "W": 0.6911343161343162,
+      "Z": 0.711124354390147,
+      "t": 0.7892097874047332
+     },
+     "delta": {
+      "g": -0.000346820809248527,
+      "q": -2.2311468094504683e-05,
+      "W": 0.002327327327327433,
+      "Z": 1.986491855376915e-05,
+      "t": 0.0
+     },
+     "note": "free -- one roc_curve per class covers both targets; the physics sign-off records it as nearly inert"
+    }
+   },
+   "tie_plateau_at_1pct_fpr": {
+    "ref": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.663702912318726,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00030950170225936243,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01021355617455896,
+      "fpr_at_or_above_threshold": 0.010523057876818322,
+      "fpr_jump": 0.000309501702259362,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7805220482104502,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00029859659599880563,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009853687667960586,
+      "fpr_at_or_above_threshold": 0.01015228426395939,
+      "fpr_jump": 0.00029859659599880406,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.7755890897357595,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.0003046922608165753,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009750152346130409,
+      "fpr_at_or_above_threshold": 0.010054844606946984,
+      "fpr_jump": 0.00030469226081657544,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7939623269478541,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00030703101013202335,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009824992324224747,
+      "fpr_at_or_above_threshold": 0.01013202333435677,
+      "fpr_jump": 0.00030703101013202297,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8187075459964462,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00030627871362940275,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009800918836140888,
+      "fpr_at_or_above_threshold": 0.01010719754977029,
+      "fpr_jump": 0.0003062787136294022,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    },
+    "test": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.6639012331245178,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00030950170225936243,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01021355617455896,
+      "fpr_at_or_above_threshold": 0.010523057876818322,
+      "fpr_jump": 0.000309501702259362,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7800643549302668,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00029859659599880563,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009853687667960586,
+      "fpr_at_or_above_threshold": 0.01015228426395939,
+      "fpr_jump": 0.00029859659599880406,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.775443496480537,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.0003046922608165753,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009750152346130409,
+      "fpr_at_or_above_threshold": 0.010054844606946984,
+      "fpr_jump": 0.00030469226081657544,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7909150748782482,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00030703101013202335,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01013202333435677,
+      "fpr_at_or_above_threshold": 0.010439054344488793,
+      "fpr_jump": 0.00030703101013202297,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8188220154196083,
+      "n_unique_scores": 4096,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 0.000244140625,
+      "tie_fraction_background": 0.00030627871362940275,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009800918836140888,
+      "fpr_at_or_above_threshold": 0.01010719754977029,
+      "fpr_jump": 0.0003062787136294022,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    }
+   },
+   "paired_bootstrap": {
+    "B": 1000,
+    "seed": 20260902,
+    "rule": "paired over jets, same resampled indices for both arms; the selection statistic is the 95% UPPER BOUND on |delta|, not the point estimate (uncertainty sign-off 2026-09-02). Finite-sample noise only -- NOT a seed-variance interval.",
+    "delta_macro_auc": {
+     "mean": -7.37128439165935e-06,
+     "std": 1.3072475984981638e-05,
+     "ci95_lo": -3.2485812725022154e-05,
+     "ci95_hi": 1.9098504814107904e-05,
+     "abs_delta_upper95": 3.2485812725022154e-05,
+     "ci99_lo": -4.165240067646736e-05,
+     "ci99_hi": 2.878657843684351e-05,
+     "abs_delta_upper99": 4.165240067646736e-05
+    },
+    "delta_per_class_auc": {
+     "g": {
+      "mean": -1.786328108690971e-05,
+      "std": 2.3722298934450884e-05,
+      "ci95_lo": -6.357547500140392e-05,
+      "ci95_hi": 2.874404043911038e-05,
+      "abs_delta_upper95": 6.357547500140392e-05,
+      "ci99_lo": -7.757175349331735e-05,
+      "ci99_hi": 4.0864702191631955e-05,
+      "abs_delta_upper99": 7.757175349331735e-05
+     },
+     "q": {
+      "mean": 2.824969005270539e-05,
+      "std": 3.478901012529548e-05,
+      "ci95_lo": -3.338697269789359e-05,
+      "ci95_hi": 0.000103624069738456,
+      "abs_delta_upper95": 0.000103624069738456,
+      "ci99_lo": -4.681116294307397e-05,
+      "ci99_hi": 0.0001352847083871439,
+      "abs_delta_upper99": 0.0001352847083871439
+     },
+     "W": {
+      "mean": -1.608800850300718e-05,
+      "std": 2.8464210339023855e-05,
+      "ci95_lo": -7.40790374936795e-05,
+      "ci95_hi": 3.8665206523158516e-05,
+      "abs_delta_upper95": 7.40790374936795e-05,
+      "ci99_lo": -9.006640152964596e-05,
+      "ci99_hi": 5.30279759043356e-05,
+      "abs_delta_upper99": 9.006640152964596e-05
+     },
+     "Z": {
+      "mean": -1.9251968459588097e-05,
+      "std": 2.7606284814664186e-05,
+      "ci95_lo": -7.303254141779181e-05,
+      "ci95_hi": 3.6544577173736005e-05,
+      "abs_delta_upper95": 7.303254141779181e-05,
+      "ci99_lo": -7.995241763897098e-05,
+      "ci99_hi": 5.4645634659181684e-05,
+      "abs_delta_upper99": 7.995241763897098e-05
+     },
+     "t": {
+      "mean": -1.190285396153734e-05,
+      "std": 1.5802587413515797e-05,
+      "ci95_lo": -4.4551273157231176e-05,
+      "ci95_hi": 1.5392827892876627e-05,
+      "abs_delta_upper95": 4.4551273157231176e-05,
+      "ci99_lo": -5.3052378719358194e-05,
+      "ci99_hi": 2.964494683687646e-05,
+      "abs_delta_upper99": 5.3052378719358194e-05
+     }
+    },
+    "delta_per_class_eff_at_fpr_0.01": {
+     "g": {
+      "mean": 9.372716025058763e-06,
+      "std": 0.0011727032958897049,
+      "ci95_lo": -0.0028205645431697264,
+      "ci95_hi": 0.0022783813137852824,
+      "abs_delta_upper95": 0.0028205645431697264,
+      "ci99_lo": -0.005283542183622829,
+      "ci99_hi": 0.004436381675228809,
+      "abs_delta_upper99": 0.005283542183622829
+     },
+     "q": {
+      "mean": 0.00013342579809862726,
+      "std": 0.002009726180996239,
+      "ci95_lo": -0.003885412938439516,
+      "ci95_hi": 0.004574057381516894,
+      "abs_delta_upper95": 0.004574057381516894,
+      "ci99_lo": -0.006591908559569197,
+      "ci99_hi": 0.007162719121077506,
+      "abs_delta_upper99": 0.007162719121077506
+     },
+     "W": {
+      "mean": 0.00021398892031882993,
+      "std": 0.002142921146423563,
+      "ci95_lo": -0.00467705443371377,
+      "ci95_hi": 0.004621880532838705,
+      "abs_delta_upper95": 0.00467705443371377,
+      "ci99_lo": -0.006985527648063312,
+      "ci99_hi": 0.007540076335877837,
+      "abs_delta_upper99": 0.007540076335877837
+     },
+     "Z": {
+      "mean": 0.0002320159072528547,
+      "std": 0.0029713020690954293,
+      "ci95_lo": -0.005127031116217272,
+      "ci95_hi": 0.007358861502347399,
+      "abs_delta_upper95": 0.007358861502347399,
+      "ci99_lo": -0.008356221885934096,
+      "ci99_hi": 0.010920714506193594,
+      "abs_delta_upper99": 0.010920714506193594
+     },
+     "t": {
+      "mean": 0.00025413697073576995,
+      "std": 0.001065398227701305,
+      "ci95_lo": -0.0017613667908539647,
+      "ci95_hi": 0.003021722909991903,
+      "abs_delta_upper95": 0.003021722909991903,
+      "ci99_lo": -0.0026454483635918236,
+      "ci99_hi": 0.004983160431021513,
+      "abs_delta_upper99": 0.004983160431021513
+     }
+    },
+    "delta_per_class_eff_at_fpr_0.10": {
+     "g": {
+      "mean": -5.301646693925932e-05,
+      "std": 0.0015581498881822452,
+      "ci95_lo": -0.0034042404562214966,
+      "ci95_hi": 0.0030862226893707523,
+      "abs_delta_upper95": 0.0034042404562214966,
+      "ci99_lo": -0.005926927502876801,
+      "ci99_hi": 0.005182714452823089,
+      "abs_delta_upper99": 0.005926927502876801
+     },
+     "q": {
+      "mean": -0.00018941893535386178,
+      "std": 0.0011598726613880797,
+      "ci95_lo": -0.0029749085955983272,
+      "ci95_hi": 0.0019207527258072062,
+      "abs_delta_upper95": 0.0029749085955983272,
+      "ci99_lo": -0.005628255624157395,
+      "ci99_hi": 0.0037697628458498457,
+      "abs_delta_upper99": 0.005628255624157395
+     },
+     "W": {
+      "mean": -0.00029708250697769225,
+      "std": 0.001113728311310683,
+      "ci95_lo": -0.0031719163347771777,
+      "ci95_hi": 0.0019517001081340852,
+      "abs_delta_upper95": 0.0031719163347771777,
+      "ci99_lo": -0.004344193781381437,
+      "ci99_hi": 0.0025988903569548723,
+      "abs_delta_upper99": 0.004344193781381437
+     },
+     "Z": {
+      "mean": 0.0004977034290192781,
+      "std": 0.0016367059426215616,
+      "ci95_lo": -0.002182828282828167,
+      "ci95_hi": 0.0049383442265795606,
+      "abs_delta_upper95": 0.0049383442265795606,
+      "ci99_lo": -0.003526697793312982,
+      "ci99_hi": 0.007603296310320114,
+      "abs_delta_upper99": 0.007603296310320114
+     },
+     "t": {
+      "mean": -8.792265317892122e-06,
+      "std": 0.0002972749962841326,
+      "ci95_lo": -0.0006812941522762321,
+      "ci95_hi": 0.00038202516984701306,
+      "abs_delta_upper95": 0.0006812941522762321,
+      "ci99_lo": -0.001395797835597476,
+      "ci99_hi": 0.0016384290655841614,
+      "abs_delta_upper99": 0.0016384290655841614
+     }
+    }
+   },
+   "worst_class": {
+    "auc": "q",
+    "eff_at_1pct": "Z"
+   },
+   "candidate_bar_checks": {
+    "corr_scores": {
+     "value": 0.9999978932339781,
+     "bar": 0.999,
+     "pass": true
+    },
+    "argmax_agreement": {
+     "value": 0.99951171875,
+     "bar": 0.98,
+     "pass": true,
+     "note": "DEFECT IN THE PRE-REGISTERED GATE, corrected here (physics sign-off 2026-09-02): memo \u00a75 pre-registers argmax_agreement >= 0.999, but the W8A8 realization the memo cites as its own precedent measured 0.98779 at n=4,096 -- as written the bar REJECTS the one realization already accepted on the record. Set to >= 0.98 (near the precedent). It is NOT a working-point guard: it is bulk-dominated and reads 1.00000 even under top-5% saturation."
+    },
+    "abs_delta_macro_auc_upper95": {
+     "value": 3.2485812725022154e-05,
+     "bar": 0.0005,
+     "pass": true
+    },
+    "worst_class_abs_delta_auc_upper95": {
+     "value": 0.000103624069738456,
+     "class": "q",
+     "per_class": {
+      "g": 6.357547500140392e-05,
+      "q": 0.000103624069738456,
+      "W": 7.40790374936795e-05,
+      "Z": 7.303254141779181e-05,
+      "t": 4.4551273157231176e-05
+     },
+     "bar": 0.0015,
+     "pass": true,
+     "note": "PROVISIONAL calibration, pending uncertainty-analyst ratification"
+    },
+    "worst_class_abs_delta_eff1pct_upper95": {
+     "value": 0.007358861502347399,
+     "class": "Z",
+     "per_class": {
+      "g": 0.0028205645431697264,
+      "q": 0.004574057381516894,
+      "W": 0.00467705443371377,
+      "Z": 0.007358861502347399,
+      "t": 0.003021722909991903
+     },
+     "bar": 0.01,
+     "pass": true,
+     "note": "PROVISIONAL calibration, pending uncertainty-analyst ratification"
+    },
+    "no_tie_plateau_straddling_1pct": {
+     "value": {
+      "g": false,
+      "q": true,
+      "W": true,
+      "Z": false,
+      "t": true
+     },
+     "pass": false,
+     "note": "a plateau straddling the target mistag rate destroys threshold tunability -- deployment-fatal whatever the AUC says"
+    },
+    "ALL_candidate_bars": {
+     "pass": false,
+     "note": "recorded for convenience ONLY. This driver does NOT declare W*: the per-class AUC and efficiency bars are provisional pending uncertainty-analyst ratification."
+    }
+   }
+  },
+  "csim_vs_realization_keras__big": {
+   "label": "C-sim vs REALIZATION keras (port check: should be near-bit-exact under bit_exact=True)",
+   "n": 32768,
+   "class_order": [
+    "g",
+    "q",
+    "W",
+    "Z",
+    "t"
+   ],
+   "corr_logits": 0.9999998405785345,
+   "corr_scores": 0.9999996255100315,
+   "corr_scores_per_class": [
+    0.9999993611642578,
+    0.9999995556743899,
+    0.9999995830571781,
+    0.9999995705306063,
+    0.9999998741620063
+   ],
+   "argmax_agreement": 0.999603271484375,
+   "max_abs_diff_logits": 0.0167732834815979,
+   "mean_abs_diff_logits": 0.0009421665360378028,
+   "max_abs_diff_scores": 0.004156940463352465,
+   "bit_exact": false,
+   "macro_ovr_auc_ref": 0.8852075892011539,
+   "macro_ovr_auc_test": 0.885210856342088,
+   "delta_macro_auc": 3.2671409340157e-06,
+   "per_class_auc_ref": {
+    "g": 0.8370454705704603,
+    "q": 0.8745373961293933,
+    "W": 0.9061894882793462,
+    "Z": 0.8890846601239257,
+    "t": 0.919180930902644
+   },
+   "per_class_auc_test": {
+    "g": 0.8370482558844871,
+    "q": 0.8745374021271779,
+    "W": 0.9061938565546115,
+    "Z": 0.8890893320503056,
+    "t": 0.9191854350938578
+   },
+   "delta_per_class_auc": {
+    "g": 2.785314026754193e-06,
+    "q": 5.997784602307377e-09,
+    "W": 4.36827526528738e-06,
+    "Z": 4.671926379873348e-06,
+    "t": 4.504191213783315e-06
+   },
+   "signal_efficiency_at_fixed_mistag": {
+    "source": "code/plots/make_working_points.py::working_points, imported verbatim (physics sign-off 2026-09-02)",
+    "fpr_0.01": {
+     "eff_ref": {
+      "g": 0.10606639988142878,
+      "q": 0.173738688680743,
+      "W": 0.21708597285067874,
+      "Z": 0.33733997445721586,
+      "t": 0.4018745241358307
+     },
+     "eff_test": {
+      "g": 0.10644879205572846,
+      "q": 0.1740292109858708,
+      "W": 0.21727300150829562,
+      "Z": 0.33733997445721586,
+      "t": 0.40323181564387595
+     },
+     "delta": {
+      "g": 0.0003823921742996811,
+      "q": 0.0002905223051277994,
+      "W": 0.00018702865761688336,
+      "Z": 0.0,
+      "t": 0.0013572915080452552
+     },
+     "rel_delta": {
+      "g": 0.0036052149853974098,
+      "q": 0.0016721796816462366,
+      "W": 0.0008615418820520932,
+      "Z": 0.0,
+      "t": 0.0033774012198556297
+     },
+     "macro_ref": 0.2472211120011794,
+     "macro_test": 0.24766455893019734,
+     "delta_macro": 0.00044344692901793215
+    },
+    "fpr_0.10": {
+     "eff_ref": {
+      "g": 0.5091299836964577,
+      "q": 0.638829796616747,
+      "W": 0.7146787330316743,
+      "Z": 0.6888020434227331,
+      "t": 0.7939838079285315
+     },
+     "eff_test": {
+      "g": 0.5097821253890621,
+      "q": 0.6390107273263329,
+      "W": 0.7144645550527904,
+      "Z": 0.6889020251778872,
+      "t": 0.794043300280368
+     },
+     "delta": {
+      "g": 0.0006521416926044132,
+      "q": 0.00018093070958591362,
+      "W": -0.00021417797888390044,
+      "Z": 9.998175515413266e-05,
+      "t": 5.949235183644319e-05
+     },
+     "note": "free -- one roc_curve per class covers both targets; the physics sign-off records it as nearly inert"
+    }
+   },
+   "tie_plateau_at_1pct_fpr": {
+    "ref": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.6753433226820837,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8430498443564814e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009991929595326852,
+      "fpr_at_or_above_threshold": 0.010030360093770415,
+      "fpr_jump": 3.843049844356322e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7774689039724286,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.7780044580452605e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009973931769239488,
+      "fpr_at_or_above_threshold": 0.01001171181381994,
+      "fpr_jump": 3.778004458045159e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.7747007907082064,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8258474252046826e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009985461779784223,
+      "fpr_at_or_above_threshold": 0.01002372025403627,
+      "fpr_jump": 3.8258474252046704e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7951438634849181,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.810539953511413e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01005982547727013,
+      "fpr_at_or_above_threshold": 0.010097930876805243,
+      "fpr_jump": 3.810539953511341e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8128729741223565,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8166482195336056e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009999618335178047,
+      "fpr_at_or_above_threshold": 0.010037784817373384,
+      "fpr_jump": 3.816648219533668e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    },
+    "test": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.6751005246613496,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8430498443564814e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009991929595326852,
+      "fpr_at_or_above_threshold": 0.010030360093770415,
+      "fpr_jump": 3.843049844356322e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7777391297489419,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.7780044580452605e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009973931769239488,
+      "fpr_at_or_above_threshold": 0.01001171181381994,
+      "fpr_jump": 3.778004458045159e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.7746764655896575,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8258474252046826e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009985461779784223,
+      "fpr_at_or_above_threshold": 0.01002372025403627,
+      "fpr_jump": 3.8258474252046704e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7947912950407909,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.810539953511413e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01005982547727013,
+      "fpr_at_or_above_threshold": 0.010097930876805243,
+      "fpr_jump": 3.810539953511341e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8123226340685838,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8166482195336056e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.010075951299568718,
+      "fpr_at_or_above_threshold": 0.010114117781764055,
+      "fpr_jump": 3.816648219533668e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    }
+   }
+  },
+  "realization_keras_vs_float_export__big": {
+   "label": "REALIZATION keras vs FLOAT export (quantization cost alone, no hls4ml)",
+   "n": 32768,
+   "class_order": [
+    "g",
+    "q",
+    "W",
+    "Z",
+    "t"
+   ],
+   "corr_logits": 0.9999993131637973,
+   "corr_scores": 0.9999978197031728,
+   "corr_scores_per_class": [
+    0.9999979528109952,
+    0.999998319806512,
+    0.9999964897209369,
+    0.999996294290642,
+    0.9999996757911926
+   ],
+   "argmax_agreement": 0.99951171875,
+   "max_abs_diff_logits": 0.1394667625427246,
+   "mean_abs_diff_logits": 0.00159081615307457,
+   "max_abs_diff_scores": 0.03929517800212401,
+   "bit_exact": false,
+   "macro_ovr_auc_ref": 0.8852050784996415,
+   "macro_ovr_auc_test": 0.8852075892011539,
+   "delta_macro_auc": 2.510701512470348e-06,
+   "per_class_auc_ref": {
+    "g": 0.8370498906188955,
+    "q": 0.8745341573257621,
+    "W": 0.906183094555444,
+    "Z": 0.8890796845223313,
+    "t": 0.9191785654757743
+   },
+   "per_class_auc_test": {
+    "g": 0.8370454705704603,
+    "q": 0.8745373961293933,
+    "W": 0.9061894882793462,
+    "Z": 0.8890846601239257,
+    "t": 0.919180930902644
+   },
+   "delta_per_class_auc": {
+    "g": -4.420048435149759e-06,
+    "q": 3.238803631178122e-06,
+    "W": 6.393723902209381e-06,
+    "Z": 4.975601594403578e-06,
+    "t": 2.3654268697104186e-06
+   },
+   "signal_efficiency_at_fixed_mistag": {
+    "source": "code/plots/make_working_points.py::working_points, imported verbatim (physics sign-off 2026-09-02)",
+    "fpr_0.01": {
+     "eff_ref": {
+      "g": 0.10547354379724322,
+      "q": 0.17387283695824735,
+      "W": 0.21829260935143288,
+      "Z": 0.33686934865900386,
+      "t": 0.4014100807065631
+     },
+     "eff_test": {
+      "g": 0.10606639988142878,
+      "q": 0.173738688680743,
+      "W": 0.21708597285067874,
+      "Z": 0.33733997445721586,
+      "t": 0.4018745241358307
+     },
+     "delta": {
+      "g": 0.000592856084185564,
+      "q": -0.00013414827750435343,
+      "W": -0.0012066365007541435,
+      "Z": 0.0004706257982119988,
+      "t": 0.0004644434292676025
+     },
+     "rel_delta": {
+      "g": 0.005620898500625326,
+      "q": -0.0007715309639571067,
+      "W": -0.005527610414018,
+      "Z": 0.0013970573460762971,
+      "t": 0.001157029809640276
+     },
+     "macro_ref": 0.24718368389449807,
+     "macro_test": 0.2472211120011794,
+     "delta_macro": 3.742810668133645e-05
+    },
+    "fpr_0.10": {
+     "eff_ref": {
+      "g": 0.5097228397806433,
+      "q": 0.6387759961898715,
+      "W": 0.7141752365281777,
+      "Z": 0.6890513409961686,
+      "t": 0.793992690726359
+     },
+     "eff_test": {
+      "g": 0.5091299836964577,
+      "q": 0.638829796616747,
+      "W": 0.7146787330316743,
+      "Z": 0.6888020434227331,
+      "t": 0.7939838079285315
+     },
+     "delta": {
+      "g": -0.0005928560841855779,
+      "q": 5.380042687552766e-05,
+      "W": 0.0005034965034965699,
+      "Z": -0.00024929757343550296,
+      "t": -8.88279782751411e-06
+     },
+     "note": "free -- one roc_curve per class covers both targets; the physics sign-off records it as nearly inert"
+    }
+   },
+   "tie_plateau_at_1pct_fpr": {
+    "ref": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.6756286229408939,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8430498443564814e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009991929595326852,
+      "fpr_at_or_above_threshold": 0.010030360093770415,
+      "fpr_jump": 3.843049844356322e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7775856223035252,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.7780044580452605e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009973931769239488,
+      "fpr_at_or_above_threshold": 0.01001171181381994,
+      "fpr_jump": 3.778004458045159e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.7741330326011943,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8258474252046826e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009985461779784223,
+      "fpr_at_or_above_threshold": 0.01002372025403627,
+      "fpr_jump": 3.8258474252046704e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7948803344345807,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.810539953511413e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01005982547727013,
+      "fpr_at_or_above_threshold": 0.010097930876805243,
+      "fpr_jump": 3.810539953511341e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8129528423220698,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8166482195336056e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009999618335178047,
+      "fpr_at_or_above_threshold": 0.010037784817373384,
+      "fpr_jump": 3.816648219533668e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    },
+    "test": {
+     "g": {
+      "target_fpr": 0.01,
+      "threshold": 0.6753433226820837,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8430498443564814e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009991929595326852,
+      "fpr_at_or_above_threshold": 0.010030360093770415,
+      "fpr_jump": 3.843049844356322e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "q": {
+      "target_fpr": 0.01,
+      "threshold": 0.7774689039724286,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.7780044580452605e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009973931769239488,
+      "fpr_at_or_above_threshold": 0.01001171181381994,
+      "fpr_jump": 3.778004458045159e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "W": {
+      "target_fpr": 0.01,
+      "threshold": 0.7747007907082064,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8258474252046826e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009985461779784223,
+      "fpr_at_or_above_threshold": 0.01002372025403627,
+      "fpr_jump": 3.8258474252046704e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "Z": {
+      "target_fpr": 0.01,
+      "threshold": 0.7951438634849181,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.810539953511413e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.01005982547727013,
+      "fpr_at_or_above_threshold": 0.010097930876805243,
+      "fpr_jump": 3.810539953511341e-05,
+      "straddles_target": false,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     },
+     "t": {
+      "target_fpr": 0.01,
+      "threshold": 0.8128729741223565,
+      "n_unique_scores": 32768,
+      "unique_fraction": 1.0,
+      "tie_fraction_all": 3.0517578125e-05,
+      "tie_fraction_background": 3.8166482195336056e-05,
+      "tie_fraction_signal": 0.0,
+      "fpr_strictly_above_threshold": 0.009999618335178047,
+      "fpr_at_or_above_threshold": 0.010037784817373384,
+      "fpr_jump": 3.816648219533668e-05,
+      "straddles_target": true,
+      "note": "straddles_target=True means NO threshold realizes the target mistag rate: the working point is untunable, which is fatal for a fixed-rate L1 algorithm regardless of AUC"
+     }
+    }
+   },
+   "paired_bootstrap": {
+    "B": 1000,
+    "seed": 20260902,
+    "rule": "paired over jets, same resampled indices for both arms; the selection statistic is the 95% UPPER BOUND on |delta|, not the point estimate (uncertainty sign-off 2026-09-02). Finite-sample noise only -- NOT a seed-variance interval.",
+    "delta_macro_auc": {
+     "mean": 2.5849533197760397e-06,
+     "std": 3.3234747932960642e-06,
+     "ci95_lo": -4.253617762942085e-06,
+     "ci95_hi": 9.076366752741592e-06,
+     "abs_delta_upper95": 9.076366752741592e-06,
+     "ci99_lo": -6.251805678388345e-06,
+     "ci99_hi": 1.1509380242377132e-05,
+     "abs_delta_upper99": 1.1509380242377132e-05
+    },
+    "delta_per_class_auc": {
+     "g": {
+      "mean": -4.4092149406568246e-06,
+      "std": 6.486565126817688e-06,
+      "ci95_lo": -1.6972485711821972e-05,
+      "ci95_hi": 7.864168762669596e-06,
+      "abs_delta_upper95": 1.6972485711821972e-05,
+      "ci99_lo": -2.2308246149715384e-05,
+      "ci99_hi": 1.1844593399165102e-05,
+      "abs_delta_upper99": 2.2308246149715384e-05
+     },
+     "q": {
+      "mean": 3.584120263499191e-06,
+      "std": 6.354154999025543e-06,
+      "ci95_lo": -7.961299582123771e-06,
+      "ci95_hi": 1.7104173162313384e-05,
+      "abs_delta_upper95": 1.7104173162313384e-05,
+      "ci99_lo": -1.1419967807352881e-05,
+      "ci99_hi": 2.1186910714574012e-05,
+      "abs_delta_upper99": 2.1186910714574012e-05
+     },
+     "W": {
+      "mean": 6.483668547843657e-06,
+      "std": 7.012670210382909e-06,
+      "ci95_lo": -7.58575910588255e-06,
+      "ci95_hi": 2.0394677001447925e-05,
+      "abs_delta_upper95": 2.0394677001447925e-05,
+      "ci99_lo": -1.1588368083852995e-05,
+      "ci99_hi": 2.4578083454688815e-05,
+      "abs_delta_upper99": 2.4578083454688815e-05
+     },
+     "Z": {
+      "mean": 4.957562504329993e-06,
+      "std": 7.363526190721722e-06,
+      "ci95_lo": -8.82022062034804e-06,
+      "ci95_hi": 2.0476996291551864e-05,
+      "abs_delta_upper95": 2.0476996291551864e-05,
+      "ci99_lo": -1.2741434628347759e-05,
+      "ci99_hi": 2.3926723023156016e-05,
+      "abs_delta_upper99": 2.3926723023156016e-05
+     },
+     "t": {
+      "mean": 2.3086302238619626e-06,
+      "std": 3.806244478390345e-06,
+      "ci95_lo": -5.021560825710369e-06,
+      "ci95_hi": 1.045407853390856e-05,
+      "abs_delta_upper95": 1.045407853390856e-05,
+      "ci99_lo": -7.197520962107795e-06,
+      "ci99_hi": 1.1766329642263761e-05,
+      "abs_delta_upper99": 1.1766329642263761e-05
+     }
+    },
+    "delta_per_class_eff_at_fpr_0.01": {
+     "g": {
+      "mean": 7.90764235729701e-05,
+      "std": 0.00043890380379557403,
+      "ci95_lo": -0.0007665949615533431,
+      "ci95_hi": 0.0010757613386781213,
+      "abs_delta_upper95": 0.0010757613386781213,
+      "ci99_lo": -0.0013033627424041184,
+      "ci99_hi": 0.001478245469510782,
+      "abs_delta_upper99": 0.001478245469510782
+     },
+     "q": {
+      "mean": 1.0862167305972587e-05,
+      "std": 0.0009966985179287484,
+      "ci95_lo": -0.0019646012651544655,
+      "ci95_hi": 0.0020899920365706867,
+      "abs_delta_upper95": 0.0020899920365706867,
+      "ci99_lo": -0.002628085687088172,
+      "ci99_hi": 0.002712823027469753,
+      "abs_delta_upper99": 0.002712823027469753
+     },
+     "W": {
+      "mean": -0.0001557169837752259,
+      "std": 0.001091072088688439,
+      "ci95_lo": -0.0024837543216329116,
+      "ci95_hi": 0.0020194478033051144,
+      "abs_delta_upper95": 0.0024837543216329116,
+      "ci99_lo": -0.0033789650390106383,
+      "ci99_hi": 0.0030349450782342054,
+      "abs_delta_upper99": 0.0033789650390106383
+     },
+     "Z": {
+      "mean": 0.00016706475118018628,
+      "std": 0.0009644350994156897,
+      "ci95_lo": -0.0018077540604943944,
+      "ci95_hi": 0.002193694889031468,
+      "abs_delta_upper95": 0.002193694889031468,
+      "ci99_lo": -0.002478575983978843,
+      "ci99_hi": 0.0029310487972141544,
+      "abs_delta_upper99": 0.0029310487972141544
+     },
+     "t": {
+      "mean": 0.00020405716625010827,
+      "std": 0.0006235291383366263,
+      "ci95_lo": -0.0010647251423759841,
+      "ci95_hi": 0.0015335815302006282,
+      "abs_delta_upper95": 0.0015335815302006282,
+      "ci99_lo": -0.0014998093268848206,
+      "ci99_hi": 0.0020281972677732353,
+      "abs_delta_upper99": 0.0020281972677732353
+     }
+    },
+    "delta_per_class_eff_at_fpr_0.10": {
+     "g": {
+      "mean": 1.006776907229684e-05,
+      "std": 0.0004925562766274912,
+      "ci95_lo": -0.0010494900692481878,
+      "ci95_hi": 0.0010395197040388865,
+      "abs_delta_upper95": 0.0010494900692481878,
+      "ci99_lo": -0.0013296376045861763,
+      "ci99_hi": 0.0014753942590860281,
+      "abs_delta_upper99": 0.0014753942590860281
+     },
+     "q": {
+      "mean": -3.251418210836665e-05,
+      "std": 0.0003466764797152448,
+      "ci95_lo": -0.00084242723679476,
+      "ci95_hi": 0.0006339271954396874,
+      "abs_delta_upper95": 0.00084242723679476,
+      "ci99_lo": -0.0014289127217301189,
+      "ci99_hi": 0.0009547776262744062,
+      "abs_delta_upper99": 0.0014289127217301189
+     },
+     "W": {
+      "mean": 1.8547404169591773e-05,
+      "std": 0.00046606175867510883,
+      "ci95_lo": -0.0010732773924774953,
+      "ci95_hi": 0.0009067550878690265,
+      "abs_delta_upper95": 0.0010732773924774953,
+      "ci99_lo": -0.0015401442708995493,
+      "ci99_hi": 0.0014011983000196077,
+      "abs_delta_upper99": 0.0015401442708995493
+     },
+     "Z": {
+      "mean": 0.0001671586871541365,
+      "std": 0.0005411582392959511,
+      "ci95_lo": -0.0009316367420773491,
+      "ci95_hi": 0.0012253589014562416,
+      "abs_delta_upper95": 0.0012253589014562416,
+      "ci99_lo": -0.001276507297719598,
+      "ci99_hi": 0.001761473891141855,
+      "abs_delta_upper99": 0.001761473891141855
+     },
+     "t": {
+      "mean": 4.076885438415989e-05,
+      "std": 0.0002094061487261556,
+      "ci95_lo": -0.00044865188120574715,
+      "ci95_hi": 0.0005719942821450913,
+      "abs_delta_upper95": 0.0005719942821450913,
+      "ci99_lo": -0.0006067293309076182,
+      "ci99_hi": 0.0008320881269664049,
+      "abs_delta_upper99": 0.0008320881269664049
+     }
+    }
+   },
+   "worst_class": {
+    "auc": "Z",
+    "eff_at_1pct": "W"
+   },
+   "candidate_bar_checks": {
+    "corr_scores": {
+     "value": 0.9999978197031728,
+     "bar": 0.999,
+     "pass": true
+    },
+    "argmax_agreement": {
+     "value": 0.99951171875,
+     "bar": 0.98,
+     "pass": true,
+     "note": "DEFECT IN THE PRE-REGISTERED GATE, corrected here (physics sign-off 2026-09-02): memo \u00a75 pre-registers argmax_agreement >= 0.999, but the W8A8 realization the memo cites as its own precedent measured 0.98779 at n=4,096 -- as written the bar REJECTS the one realization already accepted on the record. Set to >= 0.98 (near the precedent). It is NOT a working-point guard: it is bulk-dominated and reads 1.00000 even under top-5% saturation."
+    },
+    "abs_delta_macro_auc_upper95": {
+     "value": 9.076366752741592e-06,
+     "bar": 0.0005,
+     "pass": true
+    },
+    "worst_class_abs_delta_auc_upper95": {
+     "value": 2.0476996291551864e-05,
+     "class": "Z",
+     "per_class": {
+      "g": 1.6972485711821972e-05,
+      "q": 1.7104173162313384e-05,
+      "W": 2.0394677001447925e-05,
+      "Z": 2.0476996291551864e-05,
+      "t": 1.045407853390856e-05
+     },
+     "bar": 0.0015,
+     "pass": true,
+     "note": "PROVISIONAL calibration, pending uncertainty-analyst ratification"
+    },
+    "worst_class_abs_delta_eff1pct_upper95": {
+     "value": 0.0024837543216329116,
+     "class": "W",
+     "per_class": {
+      "g": 0.0010757613386781213,
+      "q": 0.0020899920365706867,
+      "W": 0.0024837543216329116,
+      "Z": 0.002193694889031468,
+      "t": 0.0015335815302006282
+     },
+     "bar": 0.01,
+     "pass": true,
+     "note": "PROVISIONAL calibration, pending uncertainty-analyst ratification"
+    },
+    "no_tie_plateau_straddling_1pct": {
+     "value": {
+      "g": true,
+      "q": true,
+      "W": true,
+      "Z": false,
+      "t": true
+     },
+     "pass": false,
+     "note": "a plateau straddling the target mistag rate destroys threshold tunability -- deployment-fatal whatever the AUC says"
+    },
+    "ALL_candidate_bars": {
+     "pass": false,
+     "note": "recorded for convenience ONLY. This driver does NOT declare W*: the per-class AUC and efficiency bars are provisional pending uncertainty-analyst ratification."
+    }
+   }
+  }
+ },
+ "relu_sat_fix": 0,
+ "relu_parse_fix": false,
+ "widen_accum": false,
+ "widen_accum_note": "deliberately OFF: accumulator widening is the binary DSP-0 trick; this baseline exists to measure real multipliers",
+ "csim_predict_seconds_big": 52.89156699180603
+}

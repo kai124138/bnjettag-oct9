@@ -1,0 +1,198 @@
+{
+ "written": "2026-08-15T03:57:01",
+ "config": "r14-l1x3-n8-w1a8",
+ "config_hash": "38a20c62",
+ "variant": "w1a8",
+ "seed": 3,
+ "tag": "r14n8-da13rf",
+ "rf": 1,
+ "strategy": "Latency",
+ "beta_mode": "fx8",
+ "attn_grids": "build_default",
+ "backend": "Vitis",
+ "macos_local_csim": true,
+ "csim": {
+  "n": 128,
+  "max_abs_diff": 0.0,
+  "mean_abs_diff": 0.0,
+  "bit_exact": true,
+  "corr": 1.0
+ },
+ "gate2_pass": true,
+ "gate2_threshold": 0.997,
+ "relu_sat_fix": "applied (fix_relu_saturation)",
+ "relu_parse_fix": true,
+ "widen_accum": false,
+ "widen_min_frac": 16,
+ "n_layers_widened": 0,
+ "accum_audit": {
+  "min_frac": 16,
+  "n_weighted_layers": 15,
+  "n_accums_found": 15,
+  "per_layer": {
+   "input_proj": {
+    "typedef": "ap_fixed<22,6> input_proj_accum_t;",
+    "width": 22,
+    "integer": 6,
+    "frac": 16,
+    "wide": true
+   },
+   "bit_block_0_attn_Wq": {
+    "typedef": "ap_fixed<13,7> bit_block_0_attn_Wq_accum_t;",
+    "width": 13,
+    "integer": 7,
+    "frac": 6,
+    "wide": false
+   },
+   "bit_block_0_attn_Wk": {
+    "typedef": "ap_fixed<13,7> bit_block_0_attn_Wk_accum_t;",
+    "width": 13,
+    "integer": 7,
+    "frac": 6,
+    "wide": false
+   },
+   "bit_block_0_attn_Wv": {
+    "typedef": "ap_fixed<13,7> bit_block_0_attn_Wv_accum_t;",
+    "width": 13,
+    "integer": 7,
+    "frac": 6,
+    "wide": false
+   },
+   "bit_block_0_attn_Wo": {
+    "typedef": "ap_fixed<13,7> bit_block_0_attn_Wo_accum_t;",
+    "width": 13,
+    "integer": 7,
+    "frac": 6,
+    "wide": false
+   },
+   "bit_block_0_ffn_fc1": {
+    "typedef": "ap_fixed<13,8> bit_block_0_ffn_fc1_accum_t;",
+    "width": 13,
+    "integer": 8,
+    "frac": 5,
+    "wide": false
+   },
+   "bit_block_0_ffn_fc2": {
+    "typedef": "ap_fixed<14,9> bit_block_0_ffn_fc2_accum_t;",
+    "width": 14,
+    "integer": 9,
+    "frac": 5,
+    "wide": false
+   },
+   "bit_block_1_attn_Wq": {
+    "typedef": "ap_fixed<13,8> bit_block_1_attn_Wq_accum_t;",
+    "width": 13,
+    "integer": 8,
+    "frac": 5,
+    "wide": false
+   },
+   "bit_block_1_attn_Wk": {
+    "typedef": "ap_fixed<13,8> bit_block_1_attn_Wk_accum_t;",
+    "width": 13,
+    "integer": 8,
+    "frac": 5,
+    "wide": false
+   },
+   "bit_block_1_attn_Wv": {
+    "typedef": "ap_fixed<13,8> bit_block_1_attn_Wv_accum_t;",
+    "width": 13,
+    "integer": 8,
+    "frac": 5,
+    "wide": false
+   },
+   "bit_block_1_attn_Wo": {
+    "typedef": "ap_fixed<13,8> bit_block_1_attn_Wo_accum_t;",
+    "width": 13,
+    "integer": 8,
+    "frac": 5,
+    "wide": false
+   },
+   "bit_block_1_ffn_fc1": {
+    "typedef": "ap_fixed<13,8> bit_block_1_ffn_fc1_accum_t;",
+    "width": 13,
+    "integer": 8,
+    "frac": 5,
+    "wide": false
+   },
+   "bit_block_1_ffn_fc2": {
+    "typedef": "ap_fixed<14,8> bit_block_1_ffn_fc2_accum_t;",
+    "width": 14,
+    "integer": 8,
+    "frac": 6,
+    "wide": false
+   },
+   "head_fc1": {
+    "typedef": "ap_fixed<13,7> head_fc1_accum_t;",
+    "width": 13,
+    "integer": 7,
+    "frac": 6,
+    "wide": false
+   },
+   "head_fc2": {
+    "typedef": "ap_fixed<13,7> head_fc2_accum_t;",
+    "width": 13,
+    "integer": 7,
+    "frac": 6,
+    "wide": false
+   }
+  },
+  "narrow_frac_offenders": [
+   "bit_block_0_attn_Wk",
+   "bit_block_0_attn_Wo",
+   "bit_block_0_attn_Wq",
+   "bit_block_0_attn_Wv",
+   "bit_block_0_ffn_fc1",
+   "bit_block_0_ffn_fc2",
+   "bit_block_1_attn_Wk",
+   "bit_block_1_attn_Wo",
+   "bit_block_1_attn_Wq",
+   "bit_block_1_attn_Wv",
+   "bit_block_1_ffn_fc1",
+   "bit_block_1_ffn_fc2",
+   "head_fc1",
+   "head_fc2"
+  ],
+  "all_wide": false
+ },
+ "layer_configs": {
+  "input_proj": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_0_attn_Wq": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_0_attn_Wk": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_0_attn_Wv": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_0_attn_Wo": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_0_ffn_fc1": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_0_ffn_fc2": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_1_attn_Wq": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_1_attn_Wk": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_1_attn_Wv": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_1_attn_Wo": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_1_ffn_fc1": {
+   "Strategy": "distributed_arithmetic"
+  },
+  "bit_block_1_ffn_fc2": {
+   "Strategy": "distributed_arithmetic"
+  }
+ }
+}

@@ -1,0 +1,164 @@
+{
+  "_about": "Base arms for generate_delta.py (2026-09-27, replaces the provisional delta-on-A07 file). Every cell is built from the anchor's OWN generated arm config at the cell's seed, read from the sha-checked anchor bundle named in anchor_bundle (42abed4b since 2026-09-28) (member pattern below); nothing is re-derived. The config's own name / experiment.arm / campaign block are replaced by Delta identity and a delta_study provenance block. base_text_rules map an entry's free-text base[target] (delta.json) to an arm (first match wins; an unmatched text is an error). The stand-in section is kept ONLY to regenerate configs-standin/ for the tarball series' slug tests (tests_patches/slug_tests.py); stand-in configs are never packed.",
+  "anchor_bundle": {
+    "sha256": "42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0",
+    "configmap": "kai-chang0926-code-42abed4b5d",
+    "manifest_sha256": "041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42",
+    "commit": "3dabcd2",
+    "paths_tried_in_order": [
+      "campaigns/2026-09-26-training-batch/manifests/chang0926-code.tar.gz",
+      "campaigns/2026-09-26-training-batch/manifests/configmap-42abed4b.json"
+    ],
+    "note": "leak-fixed regime-B freeze (training-batch PREFLIGHT.md 'Current freeze: 42abed4b'); every arm config carries train.ebops_trace_every 10, carried into every Delta config unchanged. Superseded bases: 77f1ca4e (regime A; configmap-77f1ca4e.json, use --anchor-bundle/--anchor-sha), e90327d4, f2107a04, ceb174db (not launchable, wave-2 STUDY gate 11)"
+  },
+  "config_member": "code/campaigns/chang0926/configs/chang0926-{file_arm}-n64-s{seed}.json",
+  "anchor_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "order_seed_rule": {
+    "base": 20260926,
+    "formula": "base * 100 + seed",
+    "source": "anchor bundle code/campaigns/chang0926/generate.py:37 ([D9] order_seed = ORDER_SEED_BASE * 100 + s); asserted against every anchor config read; applied by formula only for seeds with no anchor config (teachers, seed 101)"
+  },
+  "arms": {
+    "A": {
+      "file_arm": "a",
+      "target": 350000,
+      "note": "E at 350k ([D21]); the 350k base"
+    },
+    "A07-350": {
+      "file_arm": "a07-350",
+      "target": 350000,
+      "note": "A07 at 350k: descriptive arm, floor-family base, G2 k_base; M010 runs it at 1.4M"
+    },
+    "B": {
+      "file_arm": "b",
+      "target": 250000
+    },
+    "C": {
+      "file_arm": "c",
+      "target": 5000000,
+      "note": "A07 at 5M"
+    },
+    "D": {
+      "file_arm": "d",
+      "target": 350000
+    },
+    "F": {
+      "file_arm": "f",
+      "target": 350000
+    },
+    "R": {
+      "file_arm": "r",
+      "target": 350000
+    }
+  },
+  "base_text_rules": [
+    {
+      "regex": "^no 350k screen cell",
+      "arm": null,
+      "note": "no cell at this target"
+    },
+    {
+      "regex": "^arm A \\(E at 350k",
+      "arm": "A",
+      "note": "[D21] arm A = E at 350k (FF2, accuracy screens, E probes)"
+    },
+    {
+      "regex": "^floor family on the A07-350 base",
+      "arm": "A07-350"
+    },
+    {
+      "regex": "^the 1\\.4M rung on the A07-350 base",
+      "arm": "A07-350",
+      "note": "A07 at 1.4M (M010): the A07-350 config at the cell's own target"
+    },
+    {
+      "regex": "^C$",
+      "arm": "C"
+    },
+    {
+      "regex": "^([BDFR])$",
+      "arm": "\\1"
+    }
+  ],
+  "cache": {
+    "identity_keys": [
+      "arch.n_part",
+      "arch.features",
+      "arch.pt_gate_gev",
+      "arch.derived_features",
+      "data.std_scope",
+      "train.validation_split",
+      "train.split_seed"
+    ],
+    "identity_source": "run_engram.load_cache on the apply_anchor.sh tree (n_part, features, split_seed, pt_gate_gev + validation_split, derived_features, std_scope); order_seed is not in the anchor cache (cache_configs/n64.json order_seed_in_cache false)",
+    "anchor_data_root": "/data/chang-n64-20260926",
+    "anchor_cache_note": "the anchor's gated 90/10 cache, split_seed 1 (PREFLIGHT.md l. 512, y_val sha256 63049d9b...7709); required for pairing with the anchor; read only",
+    "delta_cache_root": "/data/delta-20260927/caches",
+    "delta_run_root": "/data/delta-20260927"
+  },
+  "standin": {
+    "about": "stand-in arm deltas on const0922-a07-n64-s1-fast50-fp32.json (screen tarball 26f3cc40); only for configs-standin/ (tarball slug tests); never packed",
+    "arms": {
+      "A": {
+        "target": 350000,
+        "delta": {
+          "arch.d_model": 24,
+          "arch.n_heads": 2,
+          "arch.pos_enc": "none"
+        }
+      },
+      "A07-350": {
+        "target": 350000,
+        "delta": {}
+      },
+      "B": {
+        "target": 250000,
+        "delta": {
+          "arch.d_model": 24,
+          "arch.n_heads": 2,
+          "arch.pos_enc": "none"
+        }
+      },
+      "C": {
+        "target": 5000000,
+        "delta": {}
+      },
+      "D": {
+        "target": 350000,
+        "delta": {
+          "arch.d_model": 24,
+          "arch.n_heads": 2,
+          "arch.pos_enc": "none",
+          "train.optimizer": "ours",
+          "train.beta2": 0.98,
+          "train.weight_decay": 0.01,
+          "train.clipvalue": 1.0
+        }
+      },
+      "F": {
+        "target": 350000,
+        "delta": {
+          "arch.d_model": 24,
+          "arch.n_heads": 2
+        }
+      },
+      "R": {
+        "target": 350000,
+        "delta": {
+          "arch.d_model": 24,
+          "arch.n_heads": 2,
+          "arch.pos_enc": "none"
+        }
+      }
+    }
+  }
+}

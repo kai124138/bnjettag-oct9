@@ -1,0 +1,109 @@
+{
+  "mode": "snapshot-500",
+  "devices": [
+    "/physical_device:CPU:0"
+  ],
+  "gpu_details": [],
+  "tf32": false,
+  "runs": [
+    {
+      "name": "chang0926-c-n64-s1",
+      "arm": "C",
+      "seed": 1,
+      "checkpoints": [
+        {
+          "which": "snapshot500_primary",
+          "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-c-n64-s1/snapshots/epoch-0500/model_best.keras",
+          "checkpoint_sha256": "a49eae3bfe0a448a9a28fe02712fa48a9878dd83cf11cd7f8189a18f4400003d",
+          "logged_ebops": 4880224,
+          "retraced_ebops": 4880224,
+          "stored_ebops": 4880224,
+          "relative_difference": 0.0,
+          "tolerance": 1e-06,
+          "zero_floor_ebops": 343053,
+          "ebops_above_floor": 4537171,
+          "target_ebops": 5000000.0,
+          "epoch": 19,
+          "trace_rows": 558000,
+          "trace_batch": 2048,
+          "trace_seconds": 1975.740902469959,
+          "status": "CERTIFIED"
+        },
+        {
+          "which": "snapshot500_auc_sensitivity",
+          "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-c-n64-s1/snapshots/epoch-0500/model_best_auc_feasible.keras",
+          "checkpoint_sha256": "a49eae3bfe0a448a9a28fe02712fa48a9878dd83cf11cd7f8189a18f4400003d",
+          "logged_ebops": 4880224,
+          "retraced_ebops": 4880224,
+          "stored_ebops": 4880224,
+          "relative_difference": 0.0,
+          "tolerance": 1e-06,
+          "zero_floor_ebops": 343053,
+          "ebops_above_floor": 4537171,
+          "target_ebops": 5000000.0,
+          "epoch": 19,
+          "trace_rows": 558000,
+          "trace_batch": 2048,
+          "trace_seconds": 1930.117881911341,
+          "status": "CERTIFIED"
+        }
+      ],
+      "status": "checked"
+    },
+    {
+      "name": "chang0926-f-n64-s1",
+      "arm": "F",
+      "seed": 1,
+      "checkpoints": [
+        {
+          "which": "snapshot500_primary",
+          "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-f-n64-s1/snapshots/epoch-0500/model_best.keras",
+          "checkpoint_sha256": "0ecc5c8e4fbe5feeef6f9259cb60e0b6f31d0174d51144972127da5c95f09c2b",
+          "logged_ebops": 325319,
+          "retraced_ebops": 325319,
+          "stored_ebops": 325319,
+          "relative_difference": 0.0,
+          "tolerance": 1e-06,
+          "zero_floor_ebops": 171526,
+          "ebops_above_floor": 153793,
+          "target_ebops": 350000.0,
+          "epoch": 289,
+          "trace_rows": 558000,
+          "trace_batch": 2048,
+          "trace_seconds": 900.7633638619445,
+          "status": "CERTIFIED"
+        },
+        {
+          "which": "snapshot500_auc_sensitivity",
+          "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-f-n64-s1/snapshots/epoch-0500/model_best_auc_feasible.keras",
+          "checkpoint_sha256": "0ecc5c8e4fbe5feeef6f9259cb60e0b6f31d0174d51144972127da5c95f09c2b",
+          "logged_ebops": 325319,
+          "retraced_ebops": 325319,
+          "stored_ebops": 325319,
+          "relative_difference": 0.0,
+          "tolerance": 1e-06,
+          "zero_floor_ebops": 171526,
+          "ebops_above_floor": 153793,
+          "target_ebops": 350000.0,
+          "epoch": 289,
+          "trace_rows": 558000,
+          "trace_batch": 2048,
+          "trace_seconds": 893.519156654831,
+          "status": "CERTIFIED"
+        }
+      ],
+      "status": "checked"
+    },
+    {
+      "name": "chang0926-a07-350-n64-s1",
+      "arm": "A07-350",
+      "seed": 1,
+      "checkpoints": [],
+      "status": "no feasible checkpoint"
+    }
+  ],
+  "summary": {
+    "checkpoints": 4,
+    "not_certified": []
+  }
+}

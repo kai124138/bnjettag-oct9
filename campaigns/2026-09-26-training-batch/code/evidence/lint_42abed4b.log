@@ -1,0 +1,47 @@
+
+== pilot-b-k5-job.json :: kai-chang0926-pilotb5-42abed ==
+  note   required pool = 4 products / 109 nodes cluster-wide
+  note   no activeDeadlineSeconds (NRP has no universal 6 h cap — fine if deliberate)
+  note   [rule PACK] 5 arms per pod declared.
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+pilot-b-k5-job.json rc=0
+pilot-b-k5-job.json BASH_N_OK
+
+== pilot-b-k3-job.json :: kai-chang0926-pilotb3-42abed ==
+  note   required pool = 4 products / 109 nodes cluster-wide
+  note   no activeDeadlineSeconds (NRP has no universal 6 h cap — fine if deliberate)
+  note   [rule PACK] 3 arms per pod declared.
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+pilot-b-k3-job.json rc=0
+pilot-b-k3-job.json BASH_N_OK
+
+== readout-a-job.json :: kai-chang0926-readouta-77f1ca ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+readout-a-job.json rc=0
+readout-a-job.json BASH_N_OK
+
+== readout-b5-job.json :: kai-chang0926-readoutb5-42abed ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+readout-b5-job.json rc=0
+readout-b5-job.json BASH_N_OK
+
+== readout-b3-job.json :: kai-chang0926-readoutb3-42abed ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+readout-b3-job.json rc=0
+readout-b3-job.json BASH_N_OK

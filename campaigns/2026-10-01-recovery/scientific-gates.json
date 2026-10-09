@@ -1,0 +1,591 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-01T00:51:32.055314+00:00",
+  "scope": "offline gates audit; not launch authorization",
+  "production_scientific_gate": "pending",
+  "chang_k1": "triggered_option_c_selected_pending_full_b5_and_replacement_pilot",
+  "local_matched_python": "/home/kaimoe/lab/.venvs/preflight-20261001/bin/python",
+  "cpu_environment": {
+    "CUDA_VISIBLE_DEVICES": "-1",
+    "WANDB_MODE": "disabled",
+    "KERAS_BACKEND": "tensorflow",
+    "TF_NUM_INTRAOP_THREADS": "2",
+    "TF_NUM_INTEROP_THREADS": "2",
+    "OMP_NUM_THREADS": "2"
+  },
+  "source_file": "campaigns/2026-10-01-recovery/SCIENTIFIC_GATES.md",
+  "commands_are_templates_unless_marked_executed": true,
+  "gates": [
+    {
+      "id": "frozen_payload_integrity",
+      "status": "pass",
+      "runtime": "local_stdlib",
+      "depends_on": [],
+      "acceptance": [
+        "Recorded bundle hashes equal original decoded ConfigMap payload hashes.",
+        "All recorded member hashes and inventories agree."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/manifests/bundle-manifest.json",
+        "campaigns/2026-09-27-delta-screen/bundle/bundle-manifest.json",
+        "campaigns/2026-10-01-recovery/gates-evidence/frozen-bundle-audit.json"
+      ],
+      "commands": [],
+      "notes": [
+        "Standalone tarballs absent locally; recover original bytes from ConfigMap, do not regenerate historical bundle.",
+        "Chang 250 members; Delta 577 members checked."
+      ]
+    },
+    {
+      "id": "chang_b5_readout",
+      "status": "pending_evidence",
+      "runtime": "original_runtime_and_pvc",
+      "depends_on": [
+        "frozen_payload_integrity"
+      ],
+      "acceptance": [
+        "Terminal evidence for A-s1,A-s2,D-s1,Cprime-s1,E1-s1 with immutable snapshot/checkpoint hashes or explicit divergence/failure.",
+        "READOUT_JOB_DONE certify_exit=0 a26_exit=0 missing= none, or documented failure.",
+        "Full A, Cprime, attention/entropy, K1 and matched-regime readouts.",
+        "Fresh trace relative cost difference <=1e-6; stored mismatch is defect; CPU trace disagreement rerun once on original A10 only if stored equals logged."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/READOUT_epoch500.md",
+        "campaigns/2026-09-26-training-batch/STUDY.md",
+        "campaigns/2026-09-26-training-batch/RUN.md"
+      ],
+      "commands": [
+        {
+          "cwd": "<new verified extraction>/code",
+          "command": "python campaigns/chang0926/certify_ebops.py --run-root /data/chang-n64-20260926/pilot-b/runs --cache /data/chang-n64-20260926/n64/data --snapshot 500 --only chang0926-a-n64-s1,chang0926-a-n64-s2,chang0926-d-n64-s1,chang0926-cprime-n64-s1,chang0926-e1-n64-s1 --out <new readout output>/certify-snapshot-0500.json",
+          "kind": "template",
+          "prerequisites": [
+            "Original checkpoint bytes, exact training split/cache and matching runtime; verify cache CLI layout against recovered Job before execution.",
+            "Full readout wrapper also required for attention entropy and completion contract."
+          ]
+        }
+      ],
+      "notes": [
+        "All five epoch500 snapshot states recovered and source-associated; actual registered certification and entropy files missing; activation_widths.jsonl was outside first recovery allowlist."
+      ]
+    },
+    {
+      "id": "chang_k1_choice",
+      "status": "option_c_selected_implementation_pending",
+      "runtime": "decision",
+      "depends_on": [],
+      "acceptance": [
+        "Kai explicitly chooses c or d in dated amendment; K1 remains triggered until replacement evidence resolves production gate."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/STUDY.md",
+        "campaigns/2026-09-26-training-batch/READOUT_epoch500.md",
+        "campaigns/2026-09-26-training-batch/review/STUDY_arbiter_v10.md",
+        "local/2026-10-01-execution/chang-option-c-decision.json"
+      ],
+      "commands": [],
+      "notes": [
+        "b3 already fires K1; b5 cannot negate it.",
+        "Kai explicitly selected (c); decision does not clear K1 or waive historical readout, amendment, preflight, new freeze or replacement pilot."
+      ]
+    },
+    {
+      "id": "chang_option_c_focused_tests",
+      "status": "pass",
+      "runtime": "matched_cpu",
+      "depends_on": [],
+      "acceptance": [
+        "test_pid_traced_only.py and test_trace_every.py pass; this is implementation evidence only."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/code/patches-staged/0032-option-c-pid-traced-only.patch",
+        "campaigns/2026-09-26-training-batch/plan.md",
+        "campaigns/2026-10-01-recovery/gates-evidence/option-c-focused-tests.log"
+      ],
+      "commands": [
+        {
+          "cwd": "campaigns/2026-09-26-training-batch/code/staged-option-c/code",
+          "command": "/home/kaimoe/lab/.venvs/preflight-20261001/bin/python -m pytest -p no:cacheprovider tests/test_pid_traced_only.py tests/test_trace_every.py -q",
+          "environment": {
+            "CUDA_VISIBLE_DEVICES": "-1",
+            "WANDB_MODE": "disabled",
+            "KERAS_BACKEND": "tensorflow",
+            "TF_NUM_INTRAOP_THREADS": "2",
+            "TF_NUM_INTEROP_THREADS": "2",
+            "OMP_NUM_THREADS": "2"
+          },
+          "kind": "executed"
+        }
+      ],
+      "notes": [],
+      "observed_result": "13 passed"
+    },
+    {
+      "id": "chang_option_c_replacement",
+      "status": "required_selected_c_pending_amendment_preflight_and_pilot",
+      "runtime": "matched_cpu_then_gpu",
+      "depends_on": [
+        "chang_k1_choice",
+        "chang_option_c_focused_tests"
+      ],
+      "acceptance": [
+        "Dated controller/gain/integral convention amendment.",
+        "New 58 configs, exact-byte freeze, full CPU suite/build/reload, A17 pairing, floors, fingerprint.",
+        "New epoch-500 pilot and readout; do not resume old hash-incompatible checkpoints."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/plan.md",
+        "campaigns/2026-09-26-training-batch/RUN.md",
+        "campaigns/2026-09-26-training-batch/manifests/freeze.py"
+      ],
+      "commands": [
+        {
+          "cwd": "<new frozen extraction>/code",
+          "command": "/home/kaimoe/lab/.venvs/preflight-20261001/bin/python campaigns/chang0926/cpu_gate.py --out <new evidence directory>/cpu-gate.json",
+          "environment": {
+            "CUDA_VISIBLE_DEVICES": "-1",
+            "WANDB_MODE": "disabled",
+            "KERAS_BACKEND": "tensorflow",
+            "TF_NUM_INTRAOP_THREADS": "2",
+            "TF_NUM_INTEROP_THREADS": "2",
+            "OMP_NUM_THREADS": "2"
+          },
+          "kind": "template",
+          "prerequisites": [
+            "Reviewed c revision and verified new payload extraction."
+          ]
+        }
+      ],
+      "notes": [
+        "Real plant stability unresolved; regime-A fit confounded by drift.",
+        "Existing freeze.py writes historical locations and pins manifest: prepare a new revision destination before executing existing freeze workflow."
+      ]
+    },
+    {
+      "id": "chang_option_d_calibration",
+      "status": "not_selected_historical_alternative",
+      "runtime": "decision_then_matched_cpu",
+      "depends_on": [
+        "chang_k1_choice"
+      ],
+      "acceptance": [
+        "Define per-arm estimator, trace window, seeds, formula, B/no-ratio handling, controller-free arms and immutable traced feasibility target.",
+        "New config hashes, validated implementation and frozen calibration artifact.",
+        "Reviewed replacement pilot/readout scope and new hashes; no old-checkpoint resume."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/STUDY.md",
+        "campaigns/2026-09-26-training-batch/review/STUDY_arbiter_v10.md"
+      ],
+      "commands": [],
+      "notes": [
+        "No complete calibration generator found.",
+        "T*r^-0.9 stationary toy relation is not itself validated calibration."
+      ]
+    },
+    {
+      "id": "chang_production_guards",
+      "status": "pending_implementation_or_decision",
+      "runtime": "matched_cpu",
+      "depends_on": [
+        "chang_k1_choice"
+      ],
+      "acceptance": [
+        "Resolve P1 RSS-failure retry, P2 automatic per-epoch RSS ceiling, P3 production RSS/short resumes, P4 all-arm epoch0 divergence, P5 original-product replay.",
+        "Any code changes frozen with newly tested resume behavior before production."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/PREFLIGHT.md"
+      ],
+      "commands": [],
+      "notes": [
+        "Production P1-P5 at PREFLIGHT lines 990-1015 remain open in source."
+      ]
+    },
+    {
+      "id": "gpu_live_capacity",
+      "status": "pending_remote",
+      "runtime": "nrp_read_only_and_reviewed_probe",
+      "depends_on": [],
+      "acceptance": [
+        "Fresh quota, taints, schedulable capacity Gp and queue-time evidence for requested CPU/RAM/K shape.",
+        "Projected campaign finish and tie rule recalculated; node allocatable count is not free capacity."
+      ],
+      "sources": [
+        "docs/infrastructure/gpu-selection-policy.md",
+        "campaigns/2026-09-29-gpu-benchmark/VERIFY.md",
+        "campaigns/2026-09-29-gpu-benchmark/STUDY.md"
+      ],
+      "commands": [
+        {
+          "cwd": "campaigns/2026-09-29-gpu-benchmark",
+          "command": "python3 code/gen_bench.py --survey <fresh survey.json> --probe <exact-product>:<K>:<N> --out-dir <new probe directory>",
+          "kind": "template",
+          "prerequisites": [
+            "Reviewed intended probe resource shape and new output directory.",
+            "Generation is offline; a compatible reviewed handoff adapter and explicit launch authorization are required before submission."
+          ]
+        },
+        {
+          "cwd": "campaigns/2026-09-29-gpu-benchmark",
+          "command": "python3 code/bench_summary.py probe --job <saved job.json> --pods <saved pods.json> --window-min 30 --pod-logs <saved logs directory> --out <new probe summary.json>",
+          "kind": "template",
+          "prerequisites": [
+            "Actual probe results; no simulated capacity substituted."
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "id": "delta_gpu_eligibility_interpretation",
+      "status": "pending_reconciliation",
+      "runtime": "review",
+      "depends_on": [
+        "gpu_live_capacity"
+      ],
+      "acceptance": [
+        "Record explicit interpretation of dated GPU policy against benchmark A1 and Delta final RUN entry.",
+        "Select actual product/K by safe measured completion time with product pairing."
+      ],
+      "sources": [
+        "docs/infrastructure/gpu-selection-policy.md",
+        "campaigns/2026-09-27-delta-screen/RUN.md",
+        "campaigns/2026-09-29-gpu-benchmark/VERIFY.md"
+      ],
+      "commands": [],
+      "notes": [
+        "Final Delta RUN says fixed memory pools superseded; GPU VERIFY still excludes 24GB under A1 absent override.",
+        "Do not silently change benchmark eligibility."
+      ]
+    },
+    {
+      "id": "gpu_110_epoch_canaries",
+      "status": "pending_gpu",
+      "runtime": "selected_gpu_and_pvc",
+      "depends_on": [
+        "gpu_live_capacity",
+        "delta_gpu_eligibility_interpretation"
+      ],
+      "acceptance": [
+        "E and A07 at intended K for 110 epochs with same code/cache/batch/precision/cadence.",
+        "No OOM/NaN; GPU memory peak <=90%; checkpoint reproduction; fingerprint and EBOP certification.",
+        "Complete RSS window/projected horizon; Delta slope <=5 MB/epoch/arm and limit 2100+5*H MiB.",
+        "One-minute telemetry; rolling three-hour active-training utilization mean >=40%; latest A10 aligned timing-window check and chosen-product <=10% screen slowdown gate."
+      ],
+      "sources": [
+        "docs/infrastructure/gpu-selection-policy.md",
+        "campaigns/2026-09-29-gpu-benchmark/VERIFY.md",
+        "campaigns/2026-09-27-delta-screen/STUDY.md",
+        "campaigns/2026-09-27-delta-screen/RUN.md"
+      ],
+      "commands": [
+        {
+          "cwd": "campaigns/2026-09-29-gpu-benchmark",
+          "command": "python3 code/bench_summary.py a10 --pack <label>=<current pilot-b logs glob> --pod-log <label>=<current pod log> --offset <multiple-of-10> --out <new baseline check.json>",
+          "kind": "template",
+          "prerequisites": [
+            "Latest complete aligned window before decision."
+          ]
+        },
+        {
+          "cwd": "<new Delta payload>/code",
+          "command": "python campaigns/delta0926/fingerprint_check.py --env-report",
+          "kind": "template",
+          "prerequisites": [
+            "Selected GPU visible, correct campaign path and exact cache present; never use --allow-cpu in GPU launch."
+          ]
+        }
+      ],
+      "notes": [
+        "A10 K3 failure with k_accepted2 does not constitute clean complete K2 certification.",
+        "4090 E K5 excluded by short-screen memory failure; benchmark 21 epochs does not certify RSS projection."
+      ]
+    },
+    {
+      "id": "delta_horizon_steps",
+      "status": "pending_probe_implementation",
+      "runtime": "matched_cpu",
+      "depends_on": [],
+      "acceptance": [
+        "Few actual training steps at restart boundaries and H give identical LR, PID inputs and trace schedule for H/1000/2000/7000; M031/M032 intentional differences preserved."
+      ],
+      "sources": [
+        "campaigns/2026-09-27-delta-screen/STUDY.md",
+        "campaigns/2026-09-27-delta-screen/PREFLIGHT.md",
+        "campaigns/2026-09-27-delta-screen/bundle/preflight_checks.py"
+      ],
+      "commands": [],
+      "notes": [
+        "Existing function-level preflight does not satisfy step-level gate."
+      ]
+    },
+    {
+      "id": "delta_bop_measurement",
+      "status": "pending_probe_implementation",
+      "runtime": "bounded_nrp_training_runtime",
+      "depends_on": [],
+      "acceptance": [
+        "C binary-latent |m| distribution, A reference, few hundred steps gamma1e-4 and flip fraction tau1e-8; descriptive, no tau selection."
+      ],
+      "sources": [
+        "campaigns/2026-09-27-delta-screen/STUDY.md",
+        "campaigns/2026-09-27-delta-screen/PREFLIGHT.md",
+        "campaigns/2026-09-26-delta/code/newmods/bop.py"
+      ],
+      "commands": [],
+      "notes": []
+    },
+    {
+      "id": "delta_determinism_probe",
+      "status": "pending_manifest_and_comparison",
+      "runtime": "selected_gpu_and_pvc",
+      "depends_on": [
+        "gpu_live_capacity"
+      ],
+      "acceptance": [
+        "One config/seed in two pods of one product per E/A07 class for21 epochs.",
+        "Compare every epoch weight hashes and loss; explicitly report staged/committed trace set and nondeterminism."
+      ],
+      "sources": [
+        "campaigns/2026-09-27-delta-screen/STUDY.md",
+        "campaigns/2026-09-27-delta-screen/PREFLIGHT.md"
+      ],
+      "commands": [],
+      "notes": [
+        "No existing manifest located; cannot be satisfied by single-pod short benchmark."
+      ]
+    },
+    {
+      "id": "delta_scoped_cpu_gates",
+      "status": "pending_if_new_revision",
+      "runtime": "matched_cpu",
+      "depends_on": [
+        "frozen_payload_integrity"
+      ],
+      "acceptance": [
+        "Shipped entry build/one-step/reload within1e-7; placebo/config identity and diagnostics invariance; always-on patches gated.",
+        "Missing caches/teachers/non-binary paths remain excluded; use current705a554b M006 inclusion instead of superseded list."
+      ],
+      "sources": [
+        "campaigns/2026-09-27-delta-screen/PREFLIGHT.md",
+        "campaigns/2026-09-26-delta/code/README.md"
+      ],
+      "commands": [
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "PYTHONPATH=<verified extraction>/code /home/kaimoe/lab/.venvs/preflight-20261001/bin/python campaigns/2026-09-27-delta-screen/bundle/preflight_checks.py <verified extraction>/code",
+          "environment": {
+            "CUDA_VISIBLE_DEVICES": "-1",
+            "WANDB_MODE": "disabled",
+            "KERAS_BACKEND": "tensorflow",
+            "TF_NUM_INTRAOP_THREADS": "2",
+            "TF_NUM_INTEROP_THREADS": "2",
+            "OMP_NUM_THREADS": "2"
+          },
+          "kind": "template",
+          "prerequisites": [
+            "Original-byte verified extraction; this command only covers existing function-level horizon, placebo, diagnostics and cache-identity checks."
+          ]
+        },
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "PYTHONPATH=<verified extraction>/code /home/kaimoe/lab/.venvs/preflight-20261001/bin/python -P campaigns/2026-09-26-delta/code/gate_cpu.py <explicit shipped config paths> --json-out <new evidence output.json>",
+          "environment": {
+            "CUDA_VISIBLE_DEVICES": "-1",
+            "WANDB_MODE": "disabled",
+            "KERAS_BACKEND": "tensorflow",
+            "TF_NUM_INTRAOP_THREADS": "2",
+            "TF_NUM_INTEROP_THREADS": "2",
+            "OMP_NUM_THREADS": "2"
+          },
+          "kind": "template",
+          "prerequisites": [
+            "Explicit shipped configs only; -P prevents unpatched newmods import shadowing."
+          ]
+        }
+      ],
+      "notes": [
+        "Do not run full-index run_study.py preflight on W2-only bundle."
+      ]
+    },
+    {
+      "id": "delta_launch_order_and_packing",
+      "status": "pending_preflight",
+      "runtime": "review_then_nrp",
+      "depends_on": [
+        "chang_b5_readout",
+        "gpu_110_epoch_canaries",
+        "delta_horizon_steps",
+        "delta_bop_measurement",
+        "delta_determinism_probe",
+        "delta_scoped_cpu_gates"
+      ],
+      "acceptance": [
+        "Record DK defaults/overrides and canonical tree.",
+        "Pack replicas then release cells under replica epoch500 gate; same-product matched blocks; long horizons first and T2 last.",
+        "Measured complete K and <=10 Delta pods."
+      ],
+      "sources": [
+        "campaigns/2026-09-27-delta-screen/STUDY.md",
+        "campaigns/2026-09-27-delta-screen/PREFLIGHT.md",
+        "campaigns/2026-09-26-delta/code/manifest_wave2.py"
+      ],
+      "commands": [
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "python3 campaigns/2026-09-26-delta/code/manifest_wave2.py --gpu-product <exact-product> --k-result <complete measured k_result.json> --out <new packs directory>",
+          "kind": "template",
+          "prerequisites": [
+            "Chosen eligible product; all relevant K classes complete and safe."
+          ]
+        },
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "python3 campaigns/2026-09-27-delta-screen/bundle/freeze_delta.py --tree <reviewed revision>/code --packs-dir <new packs directory> --out-dir <new bundle directory>",
+          "kind": "template",
+          "prerequisites": [
+            "Reviewed working files and pack scope; never overwrite historical bundle."
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "id": "launch_handoff",
+      "status": "pending_scientific_gates",
+      "runtime": "offline_then_authorized_nrp",
+      "depends_on": [
+        "chang_k1_choice",
+        "chang_production_guards",
+        "delta_launch_order_and_packing"
+      ],
+      "acceptance": [
+        "Exact payload, factual brief, actual data-info, cleared scientific gate, lint and current explicit launch authorization.",
+        "Supported launcher with immutable record installed before training; missing legacy context labelled unavailable."
+      ],
+      "sources": [
+        "AGENTS.md",
+        "docs/infrastructure/run-handoff.md"
+      ],
+      "commands": [
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "python3 tools/run_handoff.py prepare --job <new job.json> --configmap <new configmap.json> --brief <reviewed brief.json> --data-info <actual data_info.json> --data-path <actual PVC data_info.json> --out local/run-handoffs",
+          "kind": "template",
+          "prerequisites": [
+            "Reviewed exact run/pack context."
+          ]
+        },
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "python3 tools/run_handoff.py validate <prepared handoff directory>",
+          "kind": "template"
+        },
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "python3 tools/run_handoff.py launch <prepared handoff directory>",
+          "kind": "template",
+          "notes": [
+            "Offline only."
+          ]
+        },
+        {
+          "cwd": "/home/kaimoe/lab/bnjettag",
+          "command": "python3 tools/run_handoff.py launch <prepared handoff directory> --submit --approval-ref <exact brief approval_ref>",
+          "kind": "template",
+          "prerequisites": [
+            "Action-time launch authorization, cleared scientific gate, validation and lint."
+          ]
+        }
+      ],
+      "notes": [
+        "Dependency graph is a consolidated audit: actual brief gates must be scoped to its own campaign; a Delta gate does not block unrelated Chang work."
+      ]
+    },
+    {
+      "id": "full_schedule_verification",
+      "status": "pending_runs",
+      "runtime": "matched_training_and_analysis",
+      "depends_on": [
+        "launch_handoff"
+      ],
+      "acceptance": [
+        "Complete registered schedules and matched seed blocks; exact selected checkpoint/cost certification.",
+        "Held-out arrays and paired seed uncertainty intervals; VERIFY review before promoted claims."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-training-batch/STUDY.md",
+        "campaigns/2026-09-27-delta-screen/STUDY.md",
+        "docs/conventions/jet-tagging-metrics.md"
+      ],
+      "commands": [],
+      "notes": []
+    },
+    {
+      "id": "code_line_merge",
+      "status": "engineering_pass_historical_pending",
+      "runtime": "matched_cpu",
+      "depends_on": [],
+      "acceptance": [
+        "Both code lines reconciled in canonical lab; existing config builds and checkpoints reload <=1e-7.",
+        "Reviewed scoped preflight covers contracts, 100 config identities and attributable checkpoints; applicable historical metric and width gates remain explicit. No second active editing tree."
+      ],
+      "sources": [
+        "campaigns/2026-09-26-code-line-merge/STUDY.md",
+        "campaigns/2026-09-26-code-line-merge/STUDY_v3.md",
+        "AGENTS.md",
+        "campaigns/2026-09-26-code-line-merge/PREFLIGHT.md",
+        "campaigns/2026-09-26-code-line-merge/review/PREFLIGHT_critical_v2.md"
+      ],
+      "commands": [],
+      "notes": [
+        "Local217-row engineering preflight and independent critical review PASS; source/probe evidence immutable. Historical metrics/calibration and74 unattributed checkpoint paths remain pending. Draft PR1 published; no full migration or hardware clearance.",
+        "Budget limits were per invocation; cumulative session CPU compliance was not established. Future continuation needs a persistent session ledger before claiming session-budget compliance."
+      ]
+    },
+    {
+      "id": "hardware_conversion_and_synthesis",
+      "status": "pending_candidate_and_toolchain",
+      "runtime": "matched_export_then_mulder",
+      "depends_on": [
+        "code_line_merge",
+        "full_schedule_verification"
+      ],
+      "acceptance": [
+        "Selected certified current candidate checkpoint SHA from VERIFY; frozen converter/runtime and fixed sample.",
+        "Binary and learned-width gates; export fidelity/C simulation and disagreement counts.",
+        "Diagnose R4 frontend failure; disk/TMPDIR/toolchain and serialized resource guards before new synthesis; C-synthesis needs no device license; check licenses only for stages requiring them.",
+        "Raw report JSON; part/clock/reuse/II/latency/resource labels and separate HLS/Vivado stages."
+      ],
+      "sources": [
+        "docs/conventions/fpga-synthesis.md",
+        "publication/docs/current-work/R4_HARDWARE_SYNTHESIS.md"
+      ],
+      "commands": [],
+      "notes": [
+        "Existing baseline conversion diagnostics may proceed independently, but current-candidate result claims require its selected checkpoint.",
+        "Old R4 C simulation is not synthesis evidence for current candidates."
+      ]
+    }
+  ],
+  "access_update": {
+    "scope": "subsequent read-only observations; no scientific gate cleared",
+    "nrp_access": "verified",
+    "capture_review": "LIVE_CAPTURE_REVIEW.md",
+    "access_receipt": "captures/access-20261001T0518Z/receipt.json",
+    "pvc_export": "completed253files_transport_reviewPASS_metadata_diagnosis_complete_science_pending",
+    "actual_schedulable_gpu_capacity": "not measured",
+    "mulder": "Kai explicit permission and UCSD-verified MacBook connection required",
+    "transport_review": "PVC_TRANSPORT_REVIEW.md",
+    "metadata_review": "PVC_READOUT_REVIEW.md"
+  },
+  "updated_at_utc": "2026-10-01T06:07:22.251784+00:00",
+  "chang_decision": {
+    "option": "c",
+    "source": "local/2026-10-01-execution/chang-option-c-decision.json",
+    "sha256": "bccbc0adc43ec0063aeae15da7ecfabdb2f6b2fc7c498eb86391d9d6d5a5918b",
+    "recorded_at_utc": "2026-10-01T06:00:02.706672Z",
+    "production_cleared": false
+  }
+}

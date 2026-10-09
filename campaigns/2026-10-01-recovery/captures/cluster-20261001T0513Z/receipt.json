@@ -1,0 +1,135 @@
+{
+  "collected_at_utc": "2026-10-01T05:13:12.975881+00:00",
+  "operations": [
+    {
+      "command": [
+        "kubectl",
+        "--context",
+        "nautilus",
+        "-n",
+        "cms-ml",
+        "--request-timeout=20s",
+        "get",
+        "jobs",
+        "-l",
+        "user=kai",
+        "--field-selector",
+        "metadata.name=kai-confirm-onegpu-0924-e0c0a3-r2",
+        "-o",
+        "json"
+      ],
+      "exit_code": 0,
+      "file": "kai-confirm-onegpu-0924-e0c0a3-r2.job.json",
+      "source_stdout_sha256": "af44708ec56e3f42bc438e13a6666c6dcba24521c32b63b08ddaa0102a83cde9",
+      "status": "collected_sanitized_derivative",
+      "stored_sha256": "efc7bc841ee5cdf810b4d6e7e12ec0b410e80bbccf0e4a2c52b5a2def1286583"
+    },
+    {
+      "command": [
+        "kubectl",
+        "--context",
+        "nautilus",
+        "-n",
+        "cms-ml",
+        "--request-timeout=20s",
+        "get",
+        "pods",
+        "-l",
+        "user=kai,job-name=kai-confirm-onegpu-0924-e0c0a3-r2",
+        "-o",
+        "json"
+      ],
+      "exit_code": 0,
+      "file": "kai-confirm-onegpu-0924-e0c0a3-r2.pods.json",
+      "source_stdout_sha256": "7a779468a2dde976a9b896541df1e4ef805e813093bd5edb40ef1a6eea588edf",
+      "status": "collected_sanitized_derivative",
+      "stored_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "command": [
+        "kubectl",
+        "--context",
+        "nautilus",
+        "-n",
+        "cms-ml",
+        "--request-timeout=20s",
+        "get",
+        "jobs",
+        "-l",
+        "user=kai",
+        "--field-selector",
+        "metadata.name=kai-chang0926-pilotb5-42abed",
+        "-o",
+        "json"
+      ],
+      "exit_code": 0,
+      "file": "kai-chang0926-pilotb5-42abed.job.json",
+      "source_stdout_sha256": "25ac5947c14bd155812c0c379cae6644c36b1609951f4379094f41d13ff8c37d",
+      "status": "collected_sanitized_derivative",
+      "stored_sha256": "ea0fbc66b13ca4f31112dee7448dbd7491b2246f299a4d82cc2312d4d4622afe"
+    },
+    {
+      "command": [
+        "kubectl",
+        "--context",
+        "nautilus",
+        "-n",
+        "cms-ml",
+        "--request-timeout=20s",
+        "get",
+        "pods",
+        "-l",
+        "user=kai,job-name=kai-chang0926-pilotb5-42abed",
+        "-o",
+        "json"
+      ],
+      "exit_code": 0,
+      "file": "kai-chang0926-pilotb5-42abed.pods.json",
+      "source_stdout_sha256": "7a779468a2dde976a9b896541df1e4ef805e813093bd5edb40ef1a6eea588edf",
+      "status": "collected_sanitized_derivative",
+      "stored_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "command": [
+        "kubectl",
+        "--context",
+        "nautilus",
+        "-n",
+        "cms-ml",
+        "--request-timeout=20s",
+        "get",
+        "jobs",
+        "-l",
+        "user=kai",
+        "--field-selector",
+        "metadata.name=kai-chang0926-readoutb5-42abed",
+        "-o",
+        "json"
+      ],
+      "exit_code": 0,
+      "file": "kai-chang0926-readoutb5-42abed.job.json",
+      "source_stdout_sha256": "7a779468a2dde976a9b896541df1e4ef805e813093bd5edb40ef1a6eea588edf",
+      "status": "collected_sanitized_derivative",
+      "stored_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "ownership_checks": [
+    {
+      "job": "kai-confirm-onegpu-0924-e0c0a3-r2",
+      "job_uid": "1a00632f-62d5-4bd0-aa4e-4a9afb13c54f",
+      "status": "job_observed_uid_bound"
+    },
+    {
+      "job": "kai-chang0926-pilotb5-42abed",
+      "job_uid": "d1821ce8-49fd-4389-95ba-a59bc78ec4f8",
+      "status": "job_observed_uid_bound"
+    },
+    {
+      "job": "kai-chang0926-readoutb5-42abed",
+      "job_uid": null,
+      "logs": "skipped_no_orphan_recovery",
+      "status": "job_observed_absent"
+    }
+  ],
+  "scope": "one-shot read-only; logs and metadata are sanitized derivatives"
+}

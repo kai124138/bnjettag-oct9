@@ -1,0 +1,40 @@
+CWD /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/55b94aea-21b0-4ef6-9435-0cb981bfec52/scratchpad/wrap; python3 wrapper_gate_v3_test.py <tmp> <42abed4b extraction>; Mon Sep 28 20:09:17 UTC 2026
+CASE fp_mismatch job=pilot-b-k5-job.json exit=9 run_pack_called=False
+    <scratch>/wrap/t/fp_mismatch/cmfp/fingerprint_check.py: OK
+    FINGERPRINT_STUB -u <scratch>/wrap/t/fp_mismatch/cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --d
+    GPU_FINGERPRINT_MISMATCH 8287058
+    FINGERPRINT_GATE_FAIL exit=9 node=test-node; no arm started
+CASE fp_ok_all_div0 job=pilot-b-k5-job.json exit=10 run_pack_called=True
+    <scratch>/wrap/t/fp_ok_all_div0/cmfp/fingerprint_check.py: OK
+    FINGERPRINT_STUB -u <scratch>/wrap/t/fp_ok_all_div0/cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 
+    RUN_PACK_CALLED -u run_pack.py pilot_b_k5_packs.json 500
+    PACK_EPOCH0_CHECK chang0926-a-n64-s1=0 chang0926-a-n64-s2=0 chang0926-d-n64-s1=0 chang0926-cprime-n64-s1=0 chang0926-e1-n64-s1=0
+    POD_EPOCH0_ALL_DIVERGED node=test-node run_pack_exit=0
+CASE fp_ok_4of5_div0 job=pilot-b-k5-job.json exit=0 run_pack_called=True
+    <scratch>/wrap/t/fp_ok_4of5_div0/cmfp/fingerprint_check.py: OK
+    FINGERPRINT_STUB -u <scratch>/wrap/t/fp_ok_4of5_div0/cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681
+    RUN_PACK_CALLED -u run_pack.py pilot_b_k5_packs.json 500
+    PACK_EPOCH0_CHECK chang0926-a-n64-s1=0 chang0926-a-n64-s2=0 chang0926-d-n64-s1=0 chang0926-cprime-n64-s1=0 chang0926-e1-n64-s1=None
+CASE all_div_epoch3 job=pilot-b-k5-job.json exit=0 run_pack_called=True
+    <scratch>/wrap/t/all_div_epoch3/cmfp/fingerprint_check.py: OK
+    FINGERPRINT_STUB -u <scratch>/wrap/t/all_div_epoch3/cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 
+    RUN_PACK_CALLED -u run_pack.py pilot_b_k5_packs.json 500
+    PACK_EPOCH0_CHECK chang0926-a-n64-s1=3 chang0926-a-n64-s2=3 chang0926-d-n64-s1=3 chang0926-cprime-n64-s1=3 chang0926-e1-n64-s1=3
+CASE runpack_fail job=pilot-b-k5-job.json exit=1 run_pack_called=True
+    <scratch>/wrap/t/runpack_fail/cmfp/fingerprint_check.py: OK
+    FINGERPRINT_STUB -u <scratch>/wrap/t/runpack_fail/cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --
+    RUN_PACK_CALLED -u run_pack.py pilot_b_k5_packs.json 500
+    PACK_EPOCH0_CHECK chang0926-a-n64-s1=None chang0926-a-n64-s2=None chang0926-d-n64-s1=None chang0926-cprime-n64-s1=None chang0926-e1-n64-s1=None
+CASE fp_sha_tamper job=pilot-b-k5-job.json exit=1 run_pack_called=False
+    <scratch>/wrap/t/fp_sha_tamper/cmfp/fingerprint_check.py: FAILED
+CASE fb_live job=pilot-b-fb48-job.json exit=1 run_pack_called=False
+    ARM_STILL_LIVE chang0926-a07-350-n64-s1
+CASE fb_nockpt job=pilot-b-fb48-job.json exit=1 run_pack_called=False
+    ARM_NO_CHECKPOINT chang0926-a07-350-n64-s1: rename <scratch>/wrap/t/fb_nockpt/data/chang-n64-20260926/pilot-b/runs/chang0
+CASE fb_ok job=pilot-b-fb48-job.json exit=0 run_pack_called=True
+    <scratch>/wrap/t/fb_ok/cmfp/fingerprint_check.py: OK
+    FINGERPRINT_STUB -u <scratch>/wrap/t/fb_ok/cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --data-ro
+    RUN_PACK_CALLED -u run_pack.py <scratch>/wrap/t/fb_ok/work/fallback_packs.json 500
+    PACK_EPOCH0_CHECK chang0926-a07-350-n64-s1=None
+WRAP_TESTS {"fp_mismatch": true, "fp_ok_all_div0": true, "fp_ok_4of5_div0": true, "all_div_epoch3": true, "runpack_fail": true, "fp_sha_tamper": true, "fb_live": true, "fb_nockpt": true, "fb_ok": true}
+WRAP_TESTS_ALL_PASS

@@ -1,0 +1,362 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "batch.kubernetes.io/job-completion-index": "6",
+            "batch.kubernetes.io/job-index-failure-count": "0",
+            "cni.projectcalico.org/containerID": "23d3a927d44771a4e7f13fb0e96f88e6dbed642812152a6836bbdf64476cfb5e",
+            "cni.projectcalico.org/podIP": "10.244.168.78/32",
+            "cni.projectcalico.org/podIPs": "10.244.168.78/32",
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-15T07:31:53Z",
+        "finalizers": [
+            "batch.kubernetes.io/job-tracking"
+        ],
+        "generateName": "kai-ebops-abl-0912-e1000-6-",
+        "generation": 1,
+        "labels": {
+            "app": "kai-ebops-ablation",
+            "batch.kubernetes.io/controller-uid": "9aa18b0a-9ac8-4764-954a-b39fc9653341",
+            "batch.kubernetes.io/job-completion-index": "6",
+            "batch.kubernetes.io/job-name": "kai-ebops-abl-0912-e1000",
+            "controller-uid": "9aa18b0a-9ac8-4764-954a-b39fc9653341",
+            "job-name": "kai-ebops-abl-0912-e1000"
+        },
+        "name": "kai-ebops-abl-0912-e1000-6-rbzb8",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+            {
+                "apiVersion": "batch/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "Job",
+                "name": "kai-ebops-abl-0912-e1000",
+                "uid": "9aa18b0a-9ac8-4764-954a-b39fc9653341"
+            }
+        ],
+        "resourceVersion": "14815830986",
+        "uid": "6ab8a8d6-f67d-4421-a9fc-1110e96ca160"
+    },
+    "spec": {
+        "affinity": {
+            "nodeAffinity": {
+                "preferredDuringSchedulingIgnoredDuringExecution": [
+                    {
+                        "preference": {
+                            "matchExpressions": [
+                                {
+                                    "key": "nvidia.com/gpu.product",
+                                    "operator": "In",
+                                    "values": [
+                                        "NVIDIA-GeForce-RTX-4090",
+                                        "NVIDIA-L40S"
+                                    ]
+                                }
+                            ]
+                        },
+                        "weight": 100
+                    }
+                ],
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                    "nodeSelectorTerms": [
+                        {
+                            "matchExpressions": [
+                                {
+                                    "key": "nvidia.com/gpu.product",
+                                    "operator": "In",
+                                    "values": [
+                                        "NVIDIA-GeForce-RTX-4090",
+                                        "NVIDIA-L40S",
+                                        "NVIDIA-L40"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "containers": [
+            {
+                "args": [
+                    "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=4 TF_NUM_INTRAOP_THREADS=4 TF_NUM_INTEROP_THREADS=2\nmkdir -p /work/code /data/ebops-n8-20260912-ablation\necho '64d7fd909bd71c731f882bc3344e69c055d7abed10087a460c767787882e063c  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=64d7fd909bd71c731f882bc3344e69c055d7abed10087a460c767787882e063c\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-EBOPs-N8 WANDB_GROUP=ebops-n8-20260912-ablation\npip install -q --no-cache-dir 'tensorflow[and-cuda]==2.21.0' keras==3.15.0 hgq2==0.1.9 quantizers==1.2.2 scikit-learn==1.9.0 h5py==3.14.0 wandb==0.28.0 hls4ml==1.3.0 numpy==2.5.0\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('[gpu] TensorFlow GPU gate PASS')\"\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication PASS')\"\nCONFIGS=(ebops-n8-20260912-ablation-r0-baseline-w1a8 ebops-n8-20260912-ablation-r1-channel-w1a8 ebops-n8-20260912-ablation-r2-ffn32-w1a8 ebops-n8-20260912-ablation-r3-prob8-w1a8 ebops-n8-20260912-ablation-r4-gradual-w1a8 ebops-n8-20260912-ablation-r5-recovery-w1a8 ebops-n8-20260912-ablation-r6-distill-w1a8)\nCONFIG=${CONFIGS[$JOB_COMPLETION_INDEX]}\necho \"[run] index=$JOB_COMPLETION_INDEX config=$CONFIG\"\npython -u /work/code/run_ablation.py train --config \"/work/code/configs/$CONFIG.json\" --root /data/ebops-n8-20260912-ablation\n"
+                ],
+                "command": [
+                    "bash",
+                    "-c"
+                ],
+                "env": [
+                    {
+                        "name": "WANDB_API_KEY",
+                        "valueFrom": {
+                            "secretKeyRef": {
+                                "key": "WANDB_API_KEY",
+                                "name": "kai-wandb"
+                            }
+                        }
+                    },
+                    {
+                        "name": "JOB_COMPLETION_INDEX",
+                        "valueFrom": {
+                            "fieldRef": {
+                                "apiVersion": "v1",
+                                "fieldPath": "metadata.labels['batch.kubernetes.io/job-completion-index']"
+                            }
+                        }
+                    }
+                ],
+                "image": "python:3.12",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "train",
+                "resources": {
+                    "limits": {
+                        "cpu": "4",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "12Gi",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "requests": {
+                        "cpu": "4",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "12Gi",
+                        "nvidia.com/gpu": "1"
+                    }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    },
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-jlppj",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "hostname": "kai-ebops-abl-0912-e1000-6",
+        "nodeName": "rci-tide-gpu-03.sdsu.edu",
+        "nodeSelector": {
+            "kubernetes.io/arch": "amd64"
+        },
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 180,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "PreferNoSchedule",
+                "key": "nvidia.com/gpu",
+                "operator": "Exists"
+            }
+        ],
+        "volumes": [
+            {
+                "configMap": {
+                    "defaultMode": 420,
+                    "name": "kai-ebops-abl-code-64d7fd909b"
+                },
+                "name": "code"
+            },
+            {
+                "emptyDir": {
+                    "sizeLimit": "24Gi"
+                },
+                "name": "work"
+            },
+            {
+                "name": "persistent",
+                "persistentVolumeClaim": {
+                    "claimName": "kai-data"
+                }
+            },
+            {
+                "name": "kube-api-access-jlppj",
+                "projected": {
+                    "defaultMode": 420,
+                    "sources": [
+                        {
+                            "serviceAccountToken": {
+                                "expirationSeconds": 3607,
+                                "path": "token"
+                            }
+                        },
+                        {
+                            "configMap": {
+                                "items": [
+                                    {
+                                        "key": "ca.crt",
+                                        "path": "ca.crt"
+                                    }
+                                ],
+                                "name": "kube-root-ca.crt"
+                            }
+                        },
+                        {
+                            "downwardAPI": {
+                                "items": [
+                                    {
+                                        "fieldRef": {
+                                            "apiVersion": "v1",
+                                            "fieldPath": "metadata.namespace"
+                                        },
+                                        "path": "namespace"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-15T08:33:03Z",
+                "status": "True",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-15T08:32:51Z",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-15T08:33:03Z",
+                "status": "True",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-15T08:33:03Z",
+                "status": "True",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-15T08:32:51Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "4",
+                    "ephemeral-storage": "24Gi",
+                    "memory": "12Gi",
+                    "nvidia.com/gpu": "1"
+                },
+                "containerID": "containerd://82c90067f8456d9db4c49ae59aa2bffae37c6fa7308253ec3f4ccadfc02d90df",
+                "image": "docker.io/library/python:3.12",
+                "imageID": "docker.io/library/python@sha256:cd7c412d000912f29075a1b8803e43cb2f38bb67f104019df526df5ceaf30569",
+                "lastState": {},
+                "name": "train",
+                "ready": true,
+                "resources": {
+                    "limits": {
+                        "cpu": "4",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "12Gi",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "requests": {
+                        "cpu": "4",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "12Gi",
+                        "nvidia.com/gpu": "1"
+                    }
+                },
+                "restartCount": 0,
+                "started": true,
+                "state": {
+                    "running": {
+                        "startedAt": "2026-09-15T08:33:03Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0
+                        ],
+                        "uid": 0
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    },
+                    {
+                        "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                        "name": "kube-api-access-jlppj",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "146.244.204.26",
+        "hostIPs": [
+            {
+                "ip": "146.244.204.26"
+            }
+        ],
+        "phase": "Running",
+        "podIP": "10.244.168.78",
+        "podIPs": [
+            {
+                "ip": "10.244.168.78"
+            }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2026-09-15T08:32:51Z"
+    }
+}

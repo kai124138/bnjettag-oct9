@@ -1,0 +1,11 @@
+PASS pre-arm failure at 0 s: exit 75 (want 75) | POD_EXIT_RETRYABLE rc=1 phase=pre elapsed_s=0 exit=75
+PASS pre-arm failure at 4 s (> window): exit 76 (want 76) | POD_EXIT_FINAL rc=1 phase=pre elapsed_s=4 exit=76
+PASS fingerprint-style exit 7 early: exit 75 (want 75) | POD_EXIT_RETRYABLE rc=7 phase=pre elapsed_s=0 exit=75
+PASS run_pack exit 0: exit 0 (want 0) | ARM_DEADLINE pod_deadline_s=8 run_pack_budget_s=6
+PASS run_pack exceeds budget (TERM honoured): exit 124 (want 124) | ARM_DEADLINE_EXCEEDED armx run_pack_exit=124 budget_s=6 POD_EXIT_FINAL rc=124 exit=124 elapsed_s=6
+PASS run_pack ignores TERM -> KILL: exit 124 (want 124) | ARM_DEADLINE_EXCEEDED armx run_pack_exit=137 budget_s=6 POD_EXIT_FINAL rc=137 exit=124 elapsed_s=7
+PASS run_pack exit 1 with RSS_GATE_FAIL.json: exit 5 (want 5) | ARM_RSS_GATE_FINAL armx run_pack_exit=1 POD_EXIT_FINAL rc=1 exit=5 elapsed_s=1
+PASS run_pack exit 1, no marker (training failure): exit 76 (want 76) | ARM_DEADLINE pod_deadline_s=8 run_pack_budget_s=6 POD_EXIT_FINAL rc=1 phase=train elapsed_s=0 exit=76
+PASS epoch-0 all diverged exit 10: exit 10 (want 10) | ARM_DEADLINE pod_deadline_s=8 run_pack_budget_s=6
+PASS budget already spent before start: exit 124 (want 124) | ARM_DEADLINE_EXCEEDED armx before_start POD_EXIT_FINAL rc=124 exit=124 elapsed_s=7
+TRAP_HARNESS ALL_PASS 10

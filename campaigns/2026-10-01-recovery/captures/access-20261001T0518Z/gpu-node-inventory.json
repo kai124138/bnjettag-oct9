@@ -1,0 +1,4532 @@
+{
+  "observed_at_utc": "2026-10-01T05:19:51.118279+00:00",
+  "command": [
+    "/home/kaimoe/.local/bin/kubectl",
+    "--context",
+    "nautilus",
+    "--request-timeout=30s",
+    "get",
+    "nodes",
+    "-o",
+    "json"
+  ],
+  "source_stdout_sha256": "1cc970d7270cb39ba37750aaea99ca8e7ca1b0d5cbd1e4170b40864facaf9224",
+  "scope": "advertised GPU resources and scheduling metadata only; not free capacity or demonstrated schedulability",
+  "nodes": [
+    {
+      "name": "bak-hpc1.csub.edu",
+      "product": "NVIDIA-A40",
+      "resources": {
+        "nvidia.com/a40": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1731"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "bak-hpc2.csub.edu",
+      "product": "NVIDIA-L40S",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1731"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "bw6600-01.ts.fresnostate.edu",
+      "product": "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtx6000bw": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "fresno"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "bw6600-02.ts.fresnostate.edu",
+      "product": "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtx6000bw": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "fresno"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cenic-nrp1.hpc.cpp.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/rtxa6000": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/testing",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "name": "chi-dgx-node01.csuchico.edu",
+      "product": "Tesla-V100-SXM2-16GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "chi-dgx-node02.csuchico.edu",
+      "product": "Tesla-V100-SXM2-16GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "chi-dgx-node03.csuchico.edu",
+      "product": "Tesla-V100-SXM2-16GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "chi-dgx-node04.csuchico.edu",
+      "product": "Tesla-V100-SXM2-16GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu"
+        }
+      ]
+    },
+    {
+      "name": "clu-fiona2.ucmerced.edu",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8",
+        "nvidia.com/gtx1080ti": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node1.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/hardware",
+          "value": "large-gpu"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node2.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node4.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node5.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node6.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node7.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node8.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "cph-dgx-node9.humboldt.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "csn-nrp-node1.csun.edu",
+      "product": "NVIDIA-A2",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "Unknown",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1593-1685"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-07-03T22:41:24Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:03Z"
+        }
+      ]
+    },
+    {
+      "name": "csusb-sci-103-11.csusb.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csusb"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "discover-nrp-01.sdccd.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtxa6000": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "sdccd"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "dtn-gpu2.kreonet.net",
+      "product": "NVIDIA-TITAN-Xp",
+      "resources": {
+        "nvidia.com/gpu": "5"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "remediation.medik8s.io/self-node-remediation",
+          "timeAdded": "2026-10-01T00:51:08Z"
+        }
+      ]
+    },
+    {
+      "name": "emporia.gp-argo.greatplains.net",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "epic001.clemson.edu",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "6"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "evldtn.evl.uic.edu",
+      "product": "Quadro-M4000",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/system",
+          "value": "storage"
+        }
+      ]
+    },
+    {
+      "name": "exp-19-09.sdsc.optiputer.net",
+      "product": "NVIDIA-H100-80GB-HBM3",
+      "resources": {
+        "nvidia.com/h100": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "exp-19-10.sdsc.optiputer.net",
+      "product": "NVIDIA-H100-80GB-HBM3",
+      "resources": {
+        "nvidia.com/h100": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "exp-19-11.sdsc.optiputer.net",
+      "product": "NVIDIA-H100-80GB-HBM3",
+      "resources": {
+        "nvidia.com/h100": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "exp-19-12.sdsc.optiputer.net",
+      "product": "NVIDIA-H100-80GB-HBM3",
+      "resources": {
+        "nvidia.com/h100": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "fiona-1.famu.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "fiona-prg1.cesnet.cz",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "6"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "remediation.medik8s.io/self-node-remediation",
+          "timeAdded": "2026-10-01T03:35:06Z"
+        }
+      ]
+    },
+    {
+      "name": "fiona8-0.calit2.uci.edu",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "fiona8-1.calit2.uci.edu",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "6"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "fiona8.ucsc.edu",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gp-argo.usd.edu",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gp-engine.beocat.ksu.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gp-engine.hpc.okstate.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gp-engine.usd.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpengine-uams.areon.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpengine-uark.areon.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "3",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-1.rnet.missouri.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "mizzou"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-2.rnet.missouri.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "mizzou"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-3.rnet.missouri.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-4.rnet.missouri.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/mig-small": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-5.rnet.missouri.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/mig-small": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-6.rnet.missouri.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-7.rnet.missouri.edu",
+      "product": "Tesla-V100-PCIE-16GB",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-8.rnet.missouri.edu",
+      "product": "Tesla-V100-PCIE-16GB",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-9.rnet.missouri.edu",
+      "product": "Tesla-V100-PCIE-16GB",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpn-fiona-mizzou-gh1.rnet.missouri.edu",
+      "product": "NVIDIA-GH200-480GB",
+      "resources": {
+        "nvidia.com/gh200": "1",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/hardware",
+          "value": "arm64"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-01.csusb.edu",
+      "product": "NVIDIA-RTX-A5000",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csusb"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-01.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/hardware",
+          "value": "large-gpu"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-02.csusb.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csusb"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-02.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/hardware",
+          "value": "large-gpu"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-03.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "nrp-llm-test"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-04.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-05.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-06.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-07.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "sage"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-08.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/GA102GL_A10": "0",
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nautilus.io/demo",
+          "value": "added-dynamically"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-09.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/GA102GL_A10": "0",
+        "nvidia.com/a10": "0",
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-11.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-12.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-13.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-14.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-15.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-16.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-17.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu-18.nrp.mghpcc.org",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "gpu00.nrp.hpc.udel.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtxa6000": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-chase-shor-c4705.unl.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "Unknown",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-29T21:23:02Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:00Z"
+        }
+      ]
+    },
+    {
+      "name": "hcc-chase-shor-c4709.unl.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "Unknown",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-29T18:23:54Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:20Z"
+        }
+      ]
+    },
+    {
+      "name": "hcc-chase-shor-c4715.unl.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-gpengine-shor-c5303.unl.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-gpn-argo-1.unl.edu",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "1",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-pki-c1703.unl.edu",
+      "product": "NVIDIA-L40S",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-pki-c1705.unl.edu",
+      "product": "NVIDIA-L40S",
+      "resources": {
+        "nvidia.com/26b9": "0",
+        "nvidia.com/AD102GL_L40S": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-sdc-dgx01.unl.edu",
+      "product": "NVIDIA-H100-80GB-HBM3",
+      "resources": {
+        "nvidia.com/h100": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "unl-coe-ai-makerspace"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-sec-c1109.unl.edu",
+      "product": "NVIDIA-H200-NVL",
+      "resources": {
+        "nvidia.com/h200": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5226.unl.edu",
+      "product": "NVIDIA-GeForce-RTX-4090",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5805.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5809.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/GA102GL_A10": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5813.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5817.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5821.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5825.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5834.unl.edu",
+      "product": "NVIDIA-GeForce-RTX-4090",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5905.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5909.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/GA102GL_A10": "0",
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5913.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5917.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5921.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5925.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c5934.unl.edu",
+      "product": "NVIDIA-GeForce-RTX-4090",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "Unknown",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-22T19:14:23Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:40Z"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c6009.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c6013.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c6017.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c6021.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/GA102GL_A10": "0",
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c6025.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-nrp-shor-c6029.unl.edu",
+      "product": "NVIDIA-A10",
+      "resources": {
+        "nvidia.com/GA102GL_A10": "0",
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hcc-prp-c5036.unl.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtxa6000": "8"
+      },
+      "ready": "Unknown",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-30T20:01:58Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:30Z"
+        }
+      ]
+    },
+    {
+      "name": "hd200-01.ts.fresnostate.edu",
+      "product": "NVIDIA-H200-NVL",
+      "resources": {
+        "nvidia.com/h200": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "fresno"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "hpc-nrp-g1.nmsu.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-3090-01.usd.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-3090-02.clemson.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-4090-01.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-4090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-a100-01.suncorridor.org",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "2",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-a6000-01.csus.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtxa6000": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-a6000-01.unm.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/GA102GL_RTX_A6000": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtxa6000": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu"
+        }
+      ]
+    },
+    {
+      "name": "k8s-chase-ci-01.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "nodeshutdown"
+        }
+      ]
+    },
+    {
+      "name": "k8s-chase-ci-02.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-chase-ci-04.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "6"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-chase-ci-05.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "Unknown",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-08-29T20:21:12Z"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-09-11T20:38:30Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:02Z"
+        }
+      ]
+    },
+    {
+      "name": "k8s-chase-ci-07.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "6"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "remediation.medik8s.io/self-node-remediation",
+          "timeAdded": "2026-10-01T01:08:53Z"
+        }
+      ]
+    },
+    {
+      "name": "k8s-chase-ci-10.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-dtn-01.uog.edu",
+      "product": "NVIDIA-TITAN-X-Pascal",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": []
+    },
+    {
+      "name": "k8s-gen4-01.ampath.net",
+      "product": "Tesla-T4",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/system",
+          "value": "storage"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gen4-05.calit2.optiputer.net",
+      "product": "Quadro-RTX-6000",
+      "resources": {
+        "nvidia.com/TU102GL_QUADRO_RTX_6000_8000": "0",
+        "nvidia.com/gpu": "1",
+        "nvidia.com/rtx6000": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gpu-01.calit2.optiputer.net",
+      "product": "NVIDIA-GeForce-GTX-1080",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gpu-03.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/testing",
+          "value": "true"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1693"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-07-09T16:43:42Z"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gpu-1.ucsc.edu",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gpu-2.ucr.edu",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1708"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gpu-2.ucsc.edu",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gpu-3.ucr.edu",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1708"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-gpu-6.ucsc.edu",
+      "product": "NVIDIA-RTX-5000-Ada-Generation",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-h200-01.csus.edu",
+      "product": "NVIDIA-H200-NVL",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/h200": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "nrp-llm"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-05.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "Unknown",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1726"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-30T23:33:12Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:48Z"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-10-01T04:47:56Z"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-07.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "5"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-10.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "Unknown",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1713"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-08-03T17:24:54Z"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-02T20:31:55Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:13:08Z"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-11.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "5"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-15.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-18.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-22.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-23.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-haosu-24.sdsc.optiputer.net",
+      "product": "NVIDIA-TITAN-RTX",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-ravi-01.calit2.optiputer.net",
+      "product": "NVIDIA-TITAN-Xp",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "k8s-u200-00.calit2.optiputer.net",
+      "product": "Quadro-RTX-8000",
+      "resources": {
+        "nvidia.com/TU102GL_QUADRO_RTX_6000_8000": "0",
+        "nvidia.com/TU102_HIGH_DEFINITION_AUDIO_CONTROLLER": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtx-8000": "0",
+        "nvidia.com/rtx8000": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu"
+        }
+      ]
+    },
+    {
+      "name": "k8s-usra-01.calit2.optiputer.net",
+      "product": "NVIDIA-A40",
+      "resources": {
+        "nvidia.com/a40": "2",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "moff.sdstate.edu",
+      "product": "Quadro-RTX-6000",
+      "resources": {
+        "nvidia.com/gpu": "1",
+        "nvidia.com/rtx6000": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-ext-gpu01.fullerton.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "5"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "remediation.medik8s.io/self-node-remediation",
+          "timeAdded": "2026-10-01T00:49:22Z"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu01.fullerton.edu",
+      "product": "NVIDIA-L4",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csuf"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu02.fullerton.edu",
+      "product": "NVIDIA-L4",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csuf"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu03.fullerton.edu",
+      "product": "NVIDIA-L4",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csuf"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu04.fullerton.edu",
+      "product": "NVIDIA-L4",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csuf"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu05.fullerton.edu",
+      "product": "NVIDIA-L4",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu06.fullerton.edu",
+      "product": "NVIDIA-L4",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu07.fullerton.edu",
+      "product": "NVIDIA-A100-80GB-PCIe",
+      "resources": {
+        "nvidia.com/a100": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus-it-gpu08.fullerton.edu",
+      "product": "NVIDIA-A100-80GB-PCIe",
+      "resources": {
+        "nvidia.com/a100": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilus01.hsrn.nyu.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "3"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilusg01.sci.cwru.edu",
+      "product": "NVIDIA-RTX-A5000",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nautilusg02.sci.cwru.edu",
+      "product": "NVIDIA-RTX-A5000",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "node-1-1.sdsc.optiputer.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "node-1-2.sdsc.optiputer.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/hardware",
+          "value": "large-gpu"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "node-1-3.sdsc.optiputer.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "node-1-4.sdsc.optiputer.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "Unknown",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/upgrading",
+          "value": "true"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1685"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-05-26T05:16:38Z"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-06-11T20:42:42Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:11:55Z"
+        }
+      ]
+    },
+    {
+      "name": "node-2-2.sdsc.optiputer.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "node-2-3.sdsc.optiputer.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "node-2-4.sdsc.optiputer.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/hardware",
+          "value": "large-gpu"
+        }
+      ]
+    },
+    {
+      "name": "nrp-01.csumb.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtxa6000": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": []
+    },
+    {
+      "name": "nrp-01.laccd.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nrp-a6000-01.csuchico.edu",
+      "product": "NVIDIA-RTX-A6000",
+      "resources": {
+        "nvidia.com/GA102GL_RTX_A6000": "0",
+        "nvidia.com/GA102_HIGH_DEFINITION_AUDIO_CONTROLLER": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/rtxa6000": "6"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu"
+        }
+      ]
+    },
+    {
+      "name": "nrp-fiona-001.sdmz.amnh.org",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "nrp-g1.nysernet.org",
+      "product": "NVIDIA-GeForce-RTX-2080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "7"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "oru.gp-argo.greatplains.net",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "1",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "name": "osg-houston-stashcache.nrp.internet2.edu",
+      "product": "Tesla-T4",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "osdf"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "osg-sunnyvale-stashcache.nrp.internet2.edu",
+      "product": "Tesla-T4",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "osdf"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "pas.macc.net.internet2.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "nrp-llm"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "patternlab.calit2.optiputer.net",
+      "product": "NVIDIA-TITAN-Xp",
+      "resources": {
+        "nvidia.com/GP102_TITAN_XP": "0",
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "prp01.ifa.hawaii.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "osdf"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nautilus01.msu.montana.edu",
+      "product": "NVIDIA-A40",
+      "resources": {
+        "nvidia.com/a40": "2",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-01.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe-MIG-1g.10gb",
+      "resources": {
+        "nvidia.com/a100": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/mig-small": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "sdsuinstruction"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-02.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe-MIG-1g.10gb",
+      "resources": {
+        "nvidia.com/a100": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/mig-small": "28"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "sdsuinstruction"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-03.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe-MIG-1g.10gb",
+      "resources": {
+        "nvidia.com/a100": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/mig-small": "21"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "sdsuinstruction"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-04.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe-MIG-1g.10gb",
+      "resources": {
+        "nvidia.com/a100": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/mig-small": "28"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "sdsuinstruction"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-05.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0",
+        "nvidia.com/mig-small": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-06.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-07.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-nrp-gpu-08.sdsu.edu",
+      "product": "NVIDIA-A100-80GB-PCIe",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/a100-80g": "0",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-01.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-02.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-03.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-04.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-05.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-06.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-07.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-08.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-09.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-10.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-11.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-12.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-13.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-14.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-15.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-16.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rci-tide-gpu-17.sdsu.edu",
+      "product": "NVIDIA-L40",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "csu-tide"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ren-gp-argo-01.madren.org",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "1",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "rincewind.crbs.ucsd.edu",
+      "product": "NVIDIA-TITAN-RTX",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "Unknown",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-30T23:41:22Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:12:32Z"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-01.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-02.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-03.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-04.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-05.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "Unknown",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1742"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-22T14:27:08Z"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-09-29T03:19:56Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:11:54Z"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-06.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-07.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-08.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-09.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-10.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "remediation.medik8s.io/self-node-remediation",
+          "timeAdded": "2026-10-01T03:14:29Z"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-11.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-12.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-13.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-14.sdsc.optiputer.net",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "cogrob"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-15.sdsc.optiputer.net",
+      "product": "NVIDIA-RTX-A4000",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ry-gpu-16.sdsc.optiputer.net",
+      "product": "NVIDIA-RTX-A4000",
+      "resources": {
+        "nvidia.com/gpu": "16"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "sdsmt.gp-argo.greatplains.net",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "1",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "sdsu.gp-argo.greatplains.net",
+      "product": "NVIDIA-A100-PCIE-40GB",
+      "resources": {
+        "nvidia.com/a100": "1",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "sphinx.sdstate.edu",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "3",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "stratus1.nrp-espm.berkeley.edu",
+      "product": "NVIDIA-RTX-4000-Ada-Generation",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-0",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "Unknown",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-08-02T02:48:14Z"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-09-08T21:17:12Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/unreachable",
+          "timeAdded": "2026-10-01T01:11:54Z"
+        }
+      ]
+    },
+    {
+      "name": "suncave-1",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-10",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-11",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-12",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-13",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-14",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-15",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-17",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-2",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-3",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-4",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-5",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-6",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-7",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-8",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-9",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "suncave-head",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "1"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/reservation",
+          "value": "suncave"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "swan-interlink",
+      "product": "NVIDIA-L40S",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "False",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "virtual-node.interlink/no-schedule",
+          "value": "true"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "virtual-node.interlink/workload",
+          "value": "swan"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/not-ready"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/network-unavailable",
+          "timeAdded": "2026-10-01T01:17:21Z"
+        },
+        {
+          "effect": "NoExecute",
+          "key": "node.kubernetes.io/not-ready",
+          "timeAdded": "2026-10-01T01:17:24Z"
+        }
+      ]
+    },
+    {
+      "name": "tu.gp-engine.greatplains.net",
+      "product": "NVIDIA-A100-SXM4-80GB",
+      "resources": {
+        "nvidia.com/a100": "4",
+        "nvidia.com/gpu": "0"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "ucm-fiona01.ucmerced.edu",
+      "product": "NVIDIA-GeForce-GTX-1080-Ti",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "uicnrp-fiona.evl.uic.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1712"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-07-30T16:28:04Z"
+        }
+      ]
+    },
+    {
+      "name": "uicnrp-fiona2.evl.uic.edu",
+      "product": "NVIDIA-GeForce-RTX-3090",
+      "resources": {
+        "nvidia.com/gpu": "8"
+      },
+      "ready": "True",
+      "unschedulable": true,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        },
+        {
+          "effect": "NoSchedule",
+          "key": "node.kubernetes.io/unschedulable",
+          "timeAdded": "2026-10-01T04:47:19Z"
+        }
+      ]
+    },
+    {
+      "name": "unseenu.crbs.ucsd.edu",
+      "product": "NVIDIA-TITAN-RTX",
+      "resources": {
+        "nvidia.com/gpu": "2"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    },
+    {
+      "name": "v100-cc-star-01.noc.ucsb.edu",
+      "product": "Tesla-V100-SXM2-32GB",
+      "resources": {
+        "nvidia.com/gpu": "4"
+      },
+      "ready": "True",
+      "unschedulable": false,
+      "taints": [
+        {
+          "effect": "NoSchedule",
+          "key": "nautilus.io/issue",
+          "value": "1722"
+        },
+        {
+          "effect": "PreferNoSchedule",
+          "key": "nvidia.com/gpu",
+          "value": "Exists"
+        }
+      ]
+    }
+  ]
+}

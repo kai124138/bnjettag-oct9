@@ -1,0 +1,141 @@
+From 35b0d7ddb4691c9275fb4bf52f66153ae643a3de Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:47:43 -0700
+Subject: [PATCH 16/22] D20: opt-in train.ebops_reload_check "stored":
+ post-reload check compares every variable and the stored per-layer ebops
+ instead of a second trace
+
+Default "retrace" keeps the screen behaviour. Under "stored" the per-epoch candidate
+check pairs model.weights of the in-memory and reloaded model in order (paths compared
+with auto-numbered suffixes stripped), requires byte equality of every variable
+(kernels, PE, every quantizer i/f/b/k, each layer's stored ebops), and compares the
+stored ebops sum to the traced total. One full-split trace per epoch instead of two.
+Test: tests/test_reload_check.py (a moved WRAP i is caught; retrace agrees).
+---
+ bnhgq2/ablation.py         | 31 ++++++++++++++++++++++++++-
+ tests/test_d20_trace.py    |  2 ++
+ tests/test_reload_check.py | 43 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 75 insertions(+), 1 deletion(-)
+ create mode 100644 tests/test_reload_check.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 2058595..dfa9a12 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -464,6 +464,30 @@ def model_ebops(model):
+     return float(sum(float(layer.ebops) for layer in model.layers if hasattr(layer, 'ebops')))
+ 
+ 
++def stored_state_ebops(model, loaded):
++    """[D20] post-reload check without a second trace (`train.ebops_reload_check: "stored"`).
++
++    Every variable of the reloaded model (kernels, biases, PE, every quantizer's i/f/b/k,
++    and each layer's stored `ebops`) must equal the in-memory model's byte for byte. EBOPs
++    are a function of those widths only, so equal variables give equal EBOPs; the stored
++    per-layer `ebops`, summed as trace_minmax sums them, is returned for the equality test.
++    Stronger than `raw_widths` (which skips KBI tables and k)."""
++    import re
++
++    def role(path):   # auto-numbered sublayer names (quantizer_kif_17) differ per build
++        return re.sub(r'_\d+(?=/|$)', '', path)
++
++    a, b = list(model.weights), list(loaded.weights)
++    if [role(v.path) for v in a] != [role(v.path) for v in b]:
++        raise AssertionError('Variable layout differs after reload')
++    for var, other in zip(a, b):
++        x, y = np.asarray(var), np.asarray(other)
++        if x.dtype != y.dtype or x.shape != y.shape or x.tobytes() != y.tobytes():
++            raise AssertionError(f'{var.path} changed after reload')
++    total = sum(int(layer.ebops) for layer in loaded.layers if getattr(layer, 'enable_ebops', False))
++    return {'total': int(total)}
++
++
+ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=False, stop_after=None,
+                  model_builder=None, epoch_observer=None):
+     """Pause at a cumulative epoch for screening/tests without changing config hashes."""
+@@ -479,6 +503,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+     sample = xt[:256]   # engram epoch_observer diagnostics (unchanged)
+     # [D20] opt-in: the trace sample of every compute_ebops below. Absent key => xt[:256].
+     d20 = cfg['train'].get('ebops_trace_sample') is not None
++    if cfg['train'].get('ebops_reload_check', 'retrace') not in ('retrace', 'stored'):
++        raise ValueError("train.ebops_reload_check must be 'retrace' or 'stored'")
+     trace_rows = ebops_trace_sample(cfg, xt)
+     trace_batch = ebops_trace_batch(cfg)
+ 
+@@ -557,7 +583,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         candidate = out / 'validation_candidate.keras'
+         model.save(candidate)
+         validation_model = keras.models.load_model(candidate, compile=False)
+-        verified_cost = traced_ebops(validation_model)
++        if cfg['train'].get('ebops_reload_check', 'retrace') == 'stored':
++            verified_cost = stored_state_ebops(model, validation_model)
++        else:
++            verified_cost = traced_ebops(validation_model)
+         assert verified_cost['total'] == cost['total'], 'Candidate cost changed after reload'
+         logits = np.asarray(validation_model.predict(xv, batch_size=cfg['train']['val_batch'], verbose=0))
+         if not np.isfinite(logits).all():
+diff --git a/tests/test_d20_trace.py b/tests/test_d20_trace.py
+index 3e4e794..fc09222 100644
+--- a/tests/test_d20_trace.py
++++ b/tests/test_d20_trace.py
+@@ -77,6 +77,8 @@ def test_prefix_trace_undercovers_full_split():
+     import keras
+     from bnhgq2 import ablation
+     from bnhgq2.ebops_target import width_snapshot
++    from bnhgq2.compat import apply_keras_compat
++    apply_keras_compat()
+     cfg = tiny_cfg()
+     (xt, _, _, _), _ = arrays(n_train=4000)
+     keras.backend.clear_session()
+diff --git a/tests/test_reload_check.py b/tests/test_reload_check.py
+new file mode 100644
+index 0000000..dd789f3
+--- /dev/null
++++ b/tests/test_reload_check.py
+@@ -0,0 +1,43 @@
++"""[D20] stored-variable post-reload check: equal after save/load, catches a moved width,
++agrees with a reset retrace of the same rows. CPU, synthetic."""
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_d20_trace import arrays
++from test_resume_cadence import tiny_cfg
++
++
++def test_stored_check(tmp_path):
++    import keras
++    from bnhgq2 import ablation
++    from bnhgq2.compat import apply_keras_compat
++    apply_keras_compat()
++    (xt, _, _, _), _ = arrays()
++    keras.backend.clear_session()
++    model, _ = ablation.matching_initialization(tiny_cfg(), xt[:256], 1)
++    cost = ablation.compute_ebops(model, xt)
++    model.save(tmp_path / 'm.keras')
++    loaded = keras.models.load_model(tmp_path / 'm.keras', compile=False)
++    stored = ablation.stored_state_ebops(model, loaded)
++    assert stored['total'] == cost['total']
++    assert ablation.compute_ebops(loaded, xt)['total'] == cost['total']   # the retrace agrees
++    # a moved WRAP integer width (what a different trace sample would do) is caught
++    wrap_i = [v for v in loaded.weights if v.path.endswith('/i') or v.path.endswith('_i')]
++    assert wrap_i, [v.path for v in loaded.weights][:20]
++    wrap_i[0].assign(np.asarray(wrap_i[0]) + 1)
++    with pytest.raises(AssertionError):
++        ablation.stored_state_ebops(model, loaded)
++
++
++def test_run_training_stored_mode(tmp_path):
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=2, ebops_trace_sample='train_full', ebops_reload_check='stored')
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    cfg['train']['ebops_reload_check'] = 'nope'
++    with pytest.raises(ValueError):
++        ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'bad')
+-- 
+2.50.1 (Apple Git-155)
+

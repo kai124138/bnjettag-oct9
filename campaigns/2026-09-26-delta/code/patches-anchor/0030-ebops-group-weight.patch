@@ -1,0 +1,90 @@
+From 738f679f05146ba32fd985dce30b12226eb695c2 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:37:09 -0700
+Subject: [PATCH 30/38] ebops-group-weight: quant.ebops_group_weight multiplies
+ the per-layer beta of the attention group vs the rest, through BetaPID or the
+ schedule controller (M008, M057)
+
+---
+ code/bnhgq2/ablation.py   | 25 +++++++++++++++++++++++++
+ code/bnhgq2/delta_keys.py | 17 +++++++++++++++++
+ 2 files changed, 42 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 9cf54d1..dbd3470 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -10,6 +10,7 @@ import gc
+ import hashlib
+ import json
+ import os
++import re
+ from pathlib import Path
+ import shutil
+ import time
+@@ -237,6 +238,28 @@ def beta_controller(cfg):
+     return ScheduleBeta(eb['beta_schedule'], eb['pid']['target_ebops'])
+ 
+ 
++ATTENTION_GROUP = re.compile(r'^bit_block_\d+_attn_')
++
++
++def group_weighted_beta(controller, model, weights):
++    """Delta (ebops-group-weight): wrap the controller's set_beta (BetaPID or the 0013 schedule;
++    hgq2 BaseBetaPID.set_beta gives every layer the same beta) so each top-level layer and its
++    sublayers get beta * w[group]: group "attention" = bit_block_<i>_attn_* (Wq, Wk, Wv, scores,
++    softmax and its tables, ctx, Wo, and the pre-block LUT), "rest" = every other layer. The
++    controller's own beta (logged, PID state) is unchanged; only the per-layer _beta differ."""
++    import types
++    w_attn, w_rest = float(weights['attention']), float(weights.get('rest', 1.0))
++
++    def set_beta(self, beta):
++        for layer in model.layers:
++            w = w_attn if ATTENTION_GROUP.match(layer.name) else w_rest
++            for sub in layer._flatten_layers():
++                if getattr(sub, '_beta', None) is not None:
++                    sub._beta.assign(keras.ops.convert_to_tensor(beta * w, dtype=sub._beta.dtype))
++    controller.set_beta = types.MethodType(set_beta, controller)
++    return controller
++
++
+ def learning_rate(cfg, epoch):
+     tr = cfg['train']
+     if tr.get('lr_schedule') == 'chang_cosine_restarts':
+@@ -1020,6 +1043,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+     final_target = cfg['train']['ebops']['pid']['target_ebops']
+     pid = beta_controller(cfg)
+     pid.set_model(model)
++    if cfg['quant'].get('ebops_group_weight'):  # Delta (ebops-group-weight)
++        group_weighted_beta(pid, model, cfg['quant']['ebops_group_weight'])
+     pid.on_train_begin({})
+     if state['pid']:
+         p = state['pid']
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 19fec15..ae3a85b 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -563,3 +563,20 @@ def _granularity(value, cfg):
+ 
+ 
+ register('quant.act_granularity', 'act-granularity-element', _granularity, active=lambda value: value == 'element')
++
++# ebops-group-weight (anchor tree only; M008, M057): per-layer-group multiplier on the beta*EBOPs
++# term, attention group (bit_block_<i>_attn_*: Wq, Wk, Wv, scores, softmax + tables, ctx, Wo)
++# vs the rest (ablation.group_weighted_beta). Works through BetaPID and the 0013 schedule alike.
++UNWIRED.pop('quant.ebops_group_weight', None)
++_DEEPSETS_EXCLUSIVE += ('quant.ebops_group_weight',)
++
++
++def _group_weight(value, cfg):
++    if not isinstance(value, dict) or set(value) - {'attention', 'rest'} or 'attention' not in value:
++        return 'must be {"attention": w, "rest": w} ("rest" defaults to 1.0)'
++    for w in value.values():
++        if isinstance(w, bool) or not isinstance(w, (int, float)) or not w >= 0:
++            return 'weights must be numbers >= 0'
++
++
++register('quant.ebops_group_weight', 'ebops-group-weight', _group_weight, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,85 @@
+From 841f6b4fd274725e7f9e1ae068c32e37dcb26455 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:41:34 -0700
+Subject: [PATCH 37/38] attn-relu-over-n: arch.attn_kind relu_over_n,
+ ReLU(scores)/N (shift) in place of the softmax, A.V input on the [A20]
+ learned WRAP quantizer; export refused (M005, M059)
+
+---
+ code/bnhgq2/delta_keys.py | 26 ++++++++++++++++++++++++++
+ code/bnhgq2/qat.py        | 12 +++++++++---
+ 2 files changed, 35 insertions(+), 3 deletions(-)
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 4411ac8..c982e19 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -704,3 +704,29 @@ def _mask_keys(value, cfg):
+ 
+ 
+ register('arch.mask_gated_keys', 'gated-key-mask', _mask_keys)
++
++# attn-relu-over-n (anchor tree only; M005, M059): arch.attn_kind "relu_over_n" replaces the
++# softmax by ReLU(scores) / N (N = arch.n_part, a power of two: a shift; DELTA.md §12 has no
++# 1/sqrt(E) factor, so none is applied). The A.V input keeps the [A20] learned WRAP quantizer,
++# so quant.softmax_quant "chang" is required (the fixed path's SAT [0, 2) grid would clip
++# ReLU(scores) / N). No exp/inv tables in the EBOPs trace; ReLU and the shift are unbilled.
++# Diagnostics that read {blk}_attn_softmax (the [A26] entropy script, kd-attention-map) do not
++# apply. No HLS path: export refused.
++ATTN_KINDS['relu_over_n'] = 'attn-relu-over-n'
++_attn_kind_linformer = _attn_kind
++
++
++def _attn_kind(value, cfg):
++    message = _attn_kind_linformer(value, cfg)
++    if message or value != 'relu_over_n':
++        return message
++    n = lookup(cfg, 'arch.n_part', 0)
++    if not n or n & (n - 1):
++        return 'arch.n_part must be a power of two (the 1/N is a shift)'
++    if lookup(cfg, 'quant.softmax_quant') != 'chang':
++        return 'needs quant.softmax_quant "chang" (the learned WRAP A.V input quantizer)'
++    if lookup(cfg, 'arch.mask_gated_keys'):
++        return 'not combined with arch.mask_gated_keys'
++
++
++REGISTRY['arch.attn_kind']['check'] = _attn_kind
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index d128c3b..e74513b 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -897,14 +897,20 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                 q = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_q_pqshift")(q)
+                 k = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_k_pqshift")(k)
+                 v = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_v_pqshift")(v)
+-            attn_kind = A.get("attn_kind")  # Delta: "linformer" (newmods) | None (softmax attention)
+-            if attn_kind is None:
++            attn_kind = A.get("attn_kind")  # Delta: "linformer" (newmods) | "relu_over_n" | None (softmax)
++            if attn_kind in (None, "relu_over_n"):
+                 scores = einsum(f"{blk}_attn_scores", "bthe,bshe->bhts", [q, k],
+                                 [stream_iq(), stream_iq()])
+                 if pair_bias_tensor is not None:                        # add shared pair bias
+                     scores = keras.layers.Add(name=f"{blk}_attn_pairbias")(
+                         [scores, pair_bias_tensor])
++            if attn_kind is None:
+                 attn = softmax(f"{blk}_attn_softmax", scores, 1.0 / np.sqrt(E), mask=key_mask)
++            elif attn_kind == "relu_over_n":
++                # Delta (attn-relu-over-n): ReLU(scores) / N (DELTA.md §12: no 1/sqrt(E) factor,
++                # N = n_part a power of two, so the division is a shift); no exp/inv tables.
++                attn = keras.layers.ReLU(name=f"{blk}_attn_relu")(scores)
++                attn = keras.layers.Rescaling(1.0 / T, name=f"{blk}_attn_relu_over_n")(attn)
+             if fp32:
+                 attn_iq = _dummy("datalane")
+             elif softmax_quant == "chang":
+@@ -919,7 +925,7 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                 attn_iq = QuantizerConfig("kif", "datalane", k0=0, i0=sm_out_i, f0=sm_out_bits - sm_out_i,
+                                           round_mode="RND_CONV", overflow_mode="SAT",
+                                           trainable=False, heterogeneous_axis=())
+-            if attn_kind is None:
++            if attn_kind in (None, "relu_over_n"):
+                 ctx = QEinsum("bhts,bshe->bthe",
+                               iq_confs=[attn_iq, stream_iq()],
+                               name=f"{blk}_attn_ctx")([attn, v])
+-- 
+2.50.1 (Apple Git-155)
+

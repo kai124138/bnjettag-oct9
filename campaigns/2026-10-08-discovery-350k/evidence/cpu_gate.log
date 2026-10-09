@@ -1,0 +1,18 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791433843.786479   12052 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1791433843.786873   12052 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791433844.536433   12052 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1791433844.536675   12052 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+PID_TRACED_ONLY_OK d350-baseline-e-350k-s1 warmup 1 first_feedback 10 span 9 steps 701
+E0000 00:00:1791433845.334331   12052 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+CONFIG_PREFLIGHT_PASS d350-baseline-e-350k-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK d350-baseline-e-350k-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK d350-baseline-e-350k-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK d350-reference-e-5m-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS d350-reference-e-5m-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK d350-reference-e-5m-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK d350-reference-e-5m-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PAIRED_INIT_OK E seed 1 arms 2 d350-baseline-e-350k-s1 d350-reference-e-5m-s1
+PREFLIGHT_ALL_PASS 2 production 0 pilot_only 2
+cpu_gate_exit=0

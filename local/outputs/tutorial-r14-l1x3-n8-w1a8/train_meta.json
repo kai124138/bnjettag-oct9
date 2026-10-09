@@ -1,0 +1,240 @@
+{
+  "variant": "w1a8",
+  "seed": 1,
+  "config": "r14-l1x3-n8-w1a8",
+  "config_hash": "38a20c62",
+  "params": 18657,
+  "trainable_params": 18511,
+  "best_epoch": 1,
+  "best_val_macro_auc": 0.5287063516338841,
+  "act_bits": 8,
+  "weight": "binary_absmean",
+  "lr": 2e-05,
+  "clip_mode": "value",
+  "epochs_run": 3,
+  "smoke": true,
+  "n_train": 16000,
+  "n_val": 4000,
+  "n_files": 2,
+  "features": [
+    "pt",
+    "etarel",
+    "phirel"
+  ],
+  "train_seconds": 12.0,
+  "act_calib_i": {
+    "input_proj": 3,
+    "bit_block_0_attn_Wq": 1,
+    "bit_block_0_attn_Wk": 1,
+    "bit_block_0_attn_Wv": 1,
+    "bit_block_0_attn_scores__in0": 2,
+    "bit_block_0_attn_scores__in1": 2,
+    "bit_block_0_attn_Wo": 1,
+    "bit_block_0_ffn_fc1": 1,
+    "bit_block_0_ffn_fc2": 1,
+    "bit_block_1_attn_Wq": 2,
+    "bit_block_1_attn_Wk": 2,
+    "bit_block_1_attn_Wv": 2,
+    "bit_block_1_attn_scores__in0": 2,
+    "bit_block_1_attn_scores__in1": 2,
+    "bit_block_1_attn_Wo": 2,
+    "bit_block_1_ffn_fc1": 2,
+    "bit_block_1_ffn_fc2": 2,
+    "head_fc1": 1,
+    "head_fc2": 1
+  },
+  "act_calib": "trainable",
+  "act_recalib_epochs": [],
+  "act_grid_before": {
+    "input_proj": [
+      3.0,
+      4.0
+    ],
+    "bit_block_0_attn_Wq": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_Wk": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_Wv": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_0_attn_ctx__in1": [
+      6.0,
+      1.0
+    ],
+    "bit_block_0_attn_Wo": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_ffn_fc1": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_ffn_fc2": [
+      1.0,
+      6.0
+    ],
+    "bit_block_1_attn_Wq": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wk": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wv": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_1_attn_ctx__in1": [
+      6.0,
+      1.0
+    ],
+    "bit_block_1_attn_Wo": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc2": [
+      2.0,
+      5.0
+    ],
+    "head_fc1": [
+      1.0,
+      6.0
+    ],
+    "head_fc2": [
+      1.0,
+      6.0
+    ]
+  },
+  "act_grid_after": {
+    "input_proj": [
+      3.0,
+      4.0
+    ],
+    "bit_block_0_attn_Wq": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_Wk": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_0_attn_Wv": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_0_attn_ctx__in1": [
+      6.0,
+      1.0
+    ],
+    "bit_block_0_attn_Wo": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_ffn_fc1": [
+      1.0,
+      6.0
+    ],
+    "bit_block_0_ffn_fc2": [
+      1.0,
+      6.0
+    ],
+    "bit_block_1_attn_Wq": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wk": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in0": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_scores__in1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_Wv": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_attn_ctx__in0": [
+      1.0,
+      9.0
+    ],
+    "bit_block_1_attn_ctx__in1": [
+      6.0,
+      1.0
+    ],
+    "bit_block_1_attn_Wo": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc1": [
+      2.0,
+      5.0
+    ],
+    "bit_block_1_ffn_fc2": [
+      2.0,
+      5.0
+    ],
+    "head_fc1": [
+      1.0,
+      6.0
+    ],
+    "head_fc2": [
+      1.0,
+      6.0
+    ]
+  },
+  "front": [],
+  "front_selected": null,
+  "started": "2026-09-08T22:47:00",
+  "finished": "2026-09-08T22:47:12"
+}

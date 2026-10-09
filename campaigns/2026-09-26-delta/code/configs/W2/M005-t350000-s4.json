@@ -1,0 +1,155 @@
+{
+  "name": "delta0926-w2-m005-t350000-s4",
+  "era": 2,
+  "arch": {
+    "n_part": 64,
+    "n_feat": 3,
+    "features": [
+      "pt",
+      "etarel",
+      "phirel"
+    ],
+    "d_model": 32,
+    "n_heads": 4,
+    "n_layers": 1,
+    "ffn_dim": 32,
+    "n_classes": 5,
+    "pool": "gap",
+    "ffn_act": "relu",
+    "norm": "none",
+    "norm_placement": "per_linear",
+    "pos_enc": "learned",
+    "softmax_free": false,
+    "input_std": true,
+    "pt_gate_gev": 2.0,
+    "attn_kind": "relu_over_n"
+  },
+  "quant": {
+    "weight": "binary_absmean",
+    "act_bits": 8,
+    "act_policy": "learned_per_tensor_width",
+    "calib_n": 8192,
+    "act_calib": "free",
+    "act_bw_l1": 1e-08,
+    "beta0": 1e-07,
+    "act_granularity": "channel",
+    "softmax_out_bits": 10,
+    "softmax_out_i": 1,
+    "act_overflow": "WRAP",
+    "softmax_quant": "chang",
+    "i_decay_speed": 0.001
+  },
+  "train": {
+    "data": "data/train",
+    "validation_split": 0.1,
+    "epochs": 500,
+    "batch": 2790,
+    "lr": 0.003,
+    "clip_mode": "value",
+    "clipnorm": 1.0,
+    "es_patience": 0,
+    "wandb_project": "BNJetTag-Delta",
+    "ebops": {
+      "enable": true,
+      "monitor_widths": true,
+      "controller": "pid",
+      "beta_schedule": null,
+      "front_dir": "front",
+      "metrics": [
+        "val_macro_auc",
+        "ebops"
+      ],
+      "sides": [
+        1,
+        -1
+      ],
+      "pid": {
+        "init_beta": 1e-07,
+        "p": 1.0,
+        "i": 0.05,
+        "d": 0.0,
+        "warmup": 1,
+        "log": true,
+        "min_beta": 1e-10,
+        "max_beta": 0.001,
+        "damp_beta_on_target": 0.0,
+        "target_ebops": 350000
+      },
+      "selection": "max_accuracy",
+      "stop_on_target": false
+    },
+    "jit_compile": false,
+    "split_seed": 1,
+    "order_seed": 2026092604,
+    "val_batch": 1024,
+    "lr_schedule": "chang_cosine_restarts",
+    "lr_cycle_epochs": 500,
+    "lr_t_mul": 1.0,
+    "lr_m_mul": 1.0,
+    "lr_alpha": 1e-06,
+    "lr_alpha_epochs": 10,
+    "optimizer": "adam_default",
+    "ebops_trace_sample": "train_full",
+    "ebops_trace_batch": 2048,
+    "ebops_reload_check": "stored",
+    "ebops_trace_every": 10
+  },
+  "hls": {
+    "backend": "Vitis",
+    "part": "xcvu13p-flga2577-2-e",
+    "clock_ns": 2.5,
+    "rf": 1,
+    "io": "io_parallel"
+  },
+  "experiment": {
+    "arm": "delta0926-w2-m005-t350000-s4",
+    "group": "delta-20260926-w2",
+    "seed": 4,
+    "selection_metric": "val_categorical_accuracy",
+    "cost_before_auc": false,
+    "keep_auc_selected_feasible": true,
+    "checkpoint_every_epochs": 25,
+    "snapshot_every_epochs": 500,
+    "remote_every_epochs": 500,
+    "nondegenerate": {
+      "zero_floor_ebops": 0,
+      "se_multiple": 5
+    },
+    "collapse_stop": {
+      "threshold": 0.25,
+      "patience": 10,
+      "after_epoch": 20
+    },
+    "accumulator_metric": true
+  },
+  "engram_study": {
+    "module": null,
+    "question": "delta0926 M005 (Softmax-free ReLU/N attention) on arm A07-350 at 350000, seed 4, H 500",
+    "memory_lr_multiplier": 5.0,
+    "memory_weight_decay": 0.0,
+    "wandb_entity": "kayamaguchi-uc-san-diego",
+    "wandb_project_access": "PRIVATE",
+    "max_logical_table_bytes": 65536,
+    "max_replicated_table_bytes": 2097152,
+    "cost_convention": "native_hgq2_plus_custom_estimate",
+    "status": "experimental; training ready, HLS unsupported"
+  },
+  "delta_study": {
+    "campaign": "campaigns/2026-09-26-delta",
+    "entry": "M005",
+    "kind": "single",
+    "wave": "W2",
+    "tier": "screen",
+    "base_arm": "A07-350",
+    "target_ebops": 350000,
+    "seed": 4,
+    "horizon_epochs": 500,
+    "base": "anchor bundle 42abed4b (campaigns/2026-09-26-training-batch/manifests/chang0926-code.tar.gz), per-seed arm configs",
+    "base_config": "code/campaigns/chang0926/configs/chang0926-a07-350-n64-s4.json",
+    "base_config_sha256": "1efb99202f9dab755c4ce5cb009dddb510312a23a10b84e0b1de5052ffe329e8",
+    "stand_in_base": false,
+    "flags": [
+      "zero_floor_retraced"
+    ]
+  }
+}

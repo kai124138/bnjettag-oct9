@@ -1,0 +1,99 @@
+2026-09-19T01:28:30.563104507Z /cmcode/hgq2.tar.gz: OK
+2026-09-19T01:30:42.259517754Z WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+2026-09-19T01:30:42.623392457Z 
+2026-09-19T01:30:42.623445907Z [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+2026-09-19T01:30:42.623460349Z [notice] To update, run: pip install --upgrade pip
+2026-09-19T01:30:44.591448482Z {"project": "BNJetTag-Engram-Experimental", "entity": "kayamaguchi-uc-san-diego", "access": "PRIVATE", "anonymous_read": "denied", "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental"}
+2026-09-19T01:30:44.631989661Z Tesla V100-SXM2-16GB, 16384 MiB
+2026-09-19T01:30:45.116160334Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-09-19T01:30:45.116197245Z I0000 00:00:1789781445.115938      69 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-09-19T01:30:45.116201740Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-09-19T01:30:49.218803589Z GPU_GATE_PASS
+2026-09-19T01:31:22.668739643Z [train] engram-e03-s1 params=42485 resume_epoch=100 initial_ebops=2237124
+2026-09-19T01:31:22.686537497Z wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+2026-09-19T01:31:23.609010037Z wandb: Resuming run engram-e03-s1
+2026-09-19T01:31:23.609127221Z wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/02559056a181
+2026-09-19T01:31:23.795012491Z wandb: uploading summary; updating run metadata
+2026-09-19T01:31:24.197047073Z wandb: uploading wandb-metadata.json; uploading requirements.txt; uploading wandb-summary.json; uploading config.yaml
+2026-09-19T01:31:25.201637641Z wandb: uploading summary
+2026-09-19T01:31:25.246952387Z wandb: 🚀 View run engram-e03-s1 at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/02559056a181
+2026-09-19T01:31:25.246977875Z wandb: ⭐️ View project at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental
+2026-09-19T01:31:25.246981920Z wandb: Synced 4 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+2026-09-19T01:31:43.013580843Z wandb: setting up run 02559056a181
+2026-09-19T01:31:43.371059130Z wandb: Resuming run engram-e03-s1
+2026-09-19T01:31:43.371090905Z wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/02559056a181
+2026-09-19T01:31:48.944976704Z [wandb] artifact engram-review-engram-e03-s1:v0 committed (14 files)
+2026-09-19T01:31:49.048429246Z wandb: updating run metadata
+2026-09-19T01:31:49.450414881Z wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+2026-09-19T01:31:49.816826844Z wandb: 🚀 View run engram-e03-s1 at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/02559056a181
+2026-09-19T01:31:49.816847763Z wandb: ⭐️ View project at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental
+2026-09-19T01:31:49.816851995Z wandb: Synced 5 W&B file(s), 0 media file(s), 15 artifact file(s) and 0 other file(s)
+2026-09-19T01:31:49.817398209Z {
+2026-09-19T01:31:49.817435208Z   "selection_cost": 578158,
+2026-09-19T01:31:49.817445893Z   "selection_cost_convention": "native_hgq2_plus_custom_estimate",
+2026-09-19T01:31:49.817452154Z   "native_hgq2_backbone_ebops": 499662,
+2026-09-19T01:31:49.817472362Z   "custom_estimated_bitops": 78496,
+2026-09-19T01:31:49.817476164Z   "modules": {
+2026-09-19T01:31:49.817480091Z     "jet_engram": {
+2026-09-19T01:31:49.817483325Z       "convention": "engram_structural_bitops_v1_estimate",
+2026-09-19T01:31:49.817486306Z       "estimated_bitops": 78496,
+2026-09-19T01:31:49.817489305Z       "components": {
+2026-09-19T01:31:49.817492160Z         "encoder_comparisons": 5632,
+2026-09-19T01:31:49.817495366Z         "hash_addressing": 0,
+2026-09-19T01:31:49.817498184Z         "table_reduction_adds": 0,
+2026-09-19T01:31:49.817500922Z         "query_key_dot": 43184,
+2026-09-19T01:31:49.817503702Z         "gate_affine_clip": 1008,
+2026-09-19T01:31:49.817506379Z         "gate_value_products": 16384,
+2026-09-19T01:31:49.817509094Z         "residual_adds": 12288
+2026-09-19T01:31:49.817511764Z       },
+2026-09-19T01:31:49.817514598Z       "logical_table_bits": 262144,
+2026-09-19T01:31:49.817517517Z       "logical_table_bytes": 32768,
+2026-09-19T01:31:49.817520401Z       "table_read_bits_per_jet": 8192,
+2026-09-19T01:31:49.817523355Z       "vector_reads_per_jet": 16,
+2026-09-19T01:31:49.817526276Z       "independent_addresses_per_bank_per_jet": 16,
+2026-09-19T01:31:49.817529202Z       "two_read_port_replicas_for_whole_jet_ii1": 8,
+2026-09-19T01:31:49.817531966Z       "replicated_table_bytes_estimate": 262144,
+2026-09-19T01:31:49.817534771Z       "threshold_storage_bits": 336,
+2026-09-19T01:31:49.817537622Z       "encoder_comparisons_per_jet": 352,
+2026-09-19T01:31:49.817541070Z       "hash_words_per_jet": 0,
+2026-09-19T01:31:49.817543831Z       "exact_tuple_addressing": true,
+2026-09-19T01:31:49.817546732Z       "unpriced_operations": [
+2026-09-19T01:31:49.817549544Z         "round/saturate quantizers",
+2026-09-19T01:31:49.817552343Z         "validity masks and multiplexers",
+2026-09-19T01:31:49.817555351Z         "control and wiring",
+2026-09-19T01:31:49.817558232Z         "physical memory block rounding/routing"
+2026-09-19T01:31:49.817560938Z       ],
+2026-09-19T01:31:49.817564700Z       "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+2026-09-19T01:31:49.817567565Z     }
+2026-09-19T01:31:49.817570368Z   },
+2026-09-19T01:31:49.817575170Z   "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals.",
+2026-09-19T01:31:49.817578477Z   "run": "engram-e03-s1",
+2026-09-19T01:31:49.817581513Z   "checkpoint": "model_min_ebops.keras",
+2026-09-19T01:31:49.817585719Z   "checkpoint_sha256": "c24430788612f0350c344a16b0d5c86aaf243ea77a919e9c8735833645bc2874",
+2026-09-19T01:31:49.817588913Z   "completed_epochs": 100,
+2026-09-19T01:31:49.817591897Z   "selected": {
+2026-09-19T01:31:49.817594795Z     "epoch": 99,
+2026-09-19T01:31:49.817597549Z     "val_macro_auc": 0.8639880799773201,
+2026-09-19T01:31:49.817600515Z     "val_categorical_accuracy": 0.6018467741935484,
+2026-09-19T01:31:49.817603304Z     "ebops": 578158
+2026-09-19T01:31:49.817606235Z   },
+2026-09-19T01:31:49.817609220Z   "budget_met": false,
+2026-09-19T01:31:49.817612190Z   "validation_accuracy": 0.6018467741935484,
+2026-09-19T01:31:49.817615455Z   "validation_macro_auc": 0.8639880318540216,
+2026-09-19T01:31:49.817618689Z   "validation_per_class_auc": [
+2026-09-19T01:31:49.817621345Z     0.8334595697441611,
+2026-09-19T01:31:49.817624571Z     0.8668100207741356,
+2026-09-19T01:31:49.817627390Z     0.857391410277304,
+2026-09-19T01:31:49.817630079Z     0.845055276717951,
+2026-09-19T01:31:49.817633118Z     0.9172238817565564
+2026-09-19T01:31:49.817636087Z   ],
+2026-09-19T01:31:49.817639594Z   "validation_labels_sha256": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e",
+2026-09-19T01:31:49.817650659Z   "validation_inputs_sha256": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+2026-09-19T01:31:49.817653907Z   "seed": 1,
+2026-09-19T01:31:49.817656816Z   "test_set_used": false,
+2026-09-19T01:31:49.817659810Z   "hardware_validated": false,
+2026-09-19T01:31:49.817662914Z   "train_sample_occupied_slots": [
+2026-09-19T01:31:49.817666085Z     512
+2026-09-19T01:31:49.817669036Z   ],
+2026-09-19T01:31:49.817672423Z   "occupancy_note": "Occupancy is not a hash-collision measurement."
+2026-09-19T01:31:49.817688317Z }

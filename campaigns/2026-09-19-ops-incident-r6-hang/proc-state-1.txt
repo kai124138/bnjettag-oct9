@@ -1,0 +1,106 @@
+Sat Sep 19 19:51:01 UTC 2026
+    PID    PPID STAT WCHAN                                ELAPSED     TIME CMD
+      1       0 Ssl  futex_wait_queue                  4-11:17:58 17:01:36 python -u /work/code/run_ablation.py train --config /work/code/configs/ebops-n8-20260912-ablation-r6-distill-w1a8.json --root /data/ebops-n8-2026
+    105       1 Ssl  futex_wait_queue                  4-11:16:28 00:06:41 /usr/local/lib/python3.12/site-packages/wandb/bin/wandb-core --port-filename /tmp/tmpo2nps6oa/port-1.txt --pid 1
+    541     105 Sl   futex_wait_queue                  4-11:15:51 00:00:22 /usr/local/lib/python3.12/site-packages/wandb/bin/wandb-xpu --portfile /tmp/wandb-xpu-portfile-858695591 --parent-pid 105
+  11856       0 Ss   do_wait                                00:00 00:00:00 sh -c date -u; ps -eo pid,ppid,stat,wchan:32,etime,time,cmd 2>/dev/null | cut -c1-220; for p in 1 $(pgrep -f wandb); do echo "=== pid $p"; cat /p
+  11863   11856 R    -                                      00:00 00:00:00 ps -eo pid,ppid,stat,wchan:32,etime,time,cmd
+  11864   11856 S    pipe_read                              00:00 00:00:00 cut -c1-220
+=== pid 1
+futex_wait_queue
+cat: /proc/1/stack: Permission denied
+Name:	python
+Umask:	0022
+State:	S (sleeping)
+Tgid:	1
+Ngid:	0
+Pid:	1
+PPid:	0
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	128
+Groups:	0 44 109 
+rchar: 13186614925
+wchar: 13463690104
+syscr: 5814380
+syscw: 7219301
+read_bytes: 223412224
+write_bytes: 14526849024
+cancelled_write_bytes: 10719232
+      3 do_poll.constprop.0 State:	S (sleeping)
+      1 ep_poll State:	S (sleeping)
+     29 futex_wait_queue State:	S (sleeping)
+      2 hrtimer_nanosleep State:	S (sleeping)
+=== pid 105
+futex_wait_queue
+cat: /proc/105/stack: Permission denied
+Name:	wandb-core
+Umask:	0022
+State:	S (sleeping)
+Tgid:	105
+Ngid:	0
+Pid:	105
+PPid:	1
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	0 44 109 
+rchar: 1075470054
+wchar: 293410435
+syscr: 7874044
+syscw: 6503855
+read_bytes: 0
+write_bytes: 253333504
+cancelled_write_bytes: 140197888
+      1 ep_poll State:	S (sleeping)
+      9 futex_wait_queue State:	S (sleeping)
+=== pid 541
+futex_wait_queue
+cat: /proc/541/stack: Permission denied
+Name:	wandb-xpu
+Umask:	0022
+State:	S (sleeping)
+Tgid:	541
+Ngid:	0
+Pid:	541
+PPid:	105
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	0 44 109 
+rchar: 1058970
+wchar: 13167006
+syscr: 78444
+syscw: 180326
+read_bytes: 0
+write_bytes: 4096
+cancelled_write_bytes: 0
+      1 do_poll.constprop.0 State:	S (sleeping)
+      1 ep_poll State:	S (sleeping)
+      4 futex_wait_queue State:	S (sleeping)
+=== pid 11856
+do_wait
+cat: /proc/11856/stack: Permission denied
+Name:	sh
+Umask:	0022
+State:	S (sleeping)
+Tgid:	11856
+Ngid:	0
+Pid:	11856
+PPid:	0
+TracerPid:	0
+Uid:	0	0	0	0
+Gid:	0	0	0	0
+FDSize:	64
+Groups:	0 
+rchar: 1211617
+wchar: 9937
+syscr: 1915
+syscw: 205
+read_bytes: 577536
+write_bytes: 0
+cancelled_write_bytes: 0
+      1 do_wait State:	S (sleeping)

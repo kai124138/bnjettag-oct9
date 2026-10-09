@@ -1,0 +1,202 @@
+{
+  "approval_ref": "PENDING: Kai must authorize this exact recovery-only exception before any create or port-forward.",
+  "authorization_status": "pending_explicit_recovery_exception",
+  "caches": [
+    {
+      "expected_array_sha256": {
+        "x_train": "fdefd6fd8bc3c8951ca4aedb9047cc41c979647e9229566cdded67098ae82d1a",
+        "x_val": "dcdb76db132fb211f64f5ef7aefd6f09458bc18613a216b9b5e8d2366e7dd62a",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "expected_n_train": 496000,
+      "expected_n_val": 124000,
+      "path": "/data/constituent-study-20260922/n8/data/data_info.json",
+      "source": "confirmation/preflight-result.json"
+    },
+    {
+      "expected_array_sha256": {
+        "x_train": "b58d18330ba7f147ed4262f1bd5509c5056bcc32cb82b8edd13ab2e056f7ecff",
+        "x_val": "5b040d2dd7dcba38dec6985cf0335c0dea17b657888bd7e076414605a139bea4",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "expected_n_train": 496000,
+      "expected_n_val": 124000,
+      "path": "/data/constituent-study-20260922/n64/data/data_info.json",
+      "source": "confirmation/n64-full-preflight-result.json"
+    },
+    {
+      "expected_array_sha256": {
+        "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+        "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+        "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+        "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+      },
+      "expected_cache_code_sha256": "ac5a5c867c6e06957bf17079b210532ee34989276edc51ffc1f539f195d895b2",
+      "expected_n_train": 558000,
+      "expected_n_val": 62000,
+      "expected_pt_gate_gev": 2.0,
+      "path": "/data/chang-n64-20260926/n64/data/data_info.json",
+      "source": "training-batch/PREFLIGHT.md DATA_INFO; full actual cache export still required"
+    }
+  ],
+  "changes": "New finite read-only recovery transport; existing training/readout Jobs and historical source bundles unchanged.",
+  "existing_adapter_status": "No compliant read-only recovery adapter is implemented in tools/run_handoff.py; that tool remains unchanged.",
+  "expected_metrics": [
+    {
+      "expectation": "Actual terminal status, checkpoints and cache metadata are unknown until exported; absence/mismatch remains explicit.",
+      "name": "evidence presence, byte identity and source stability",
+      "split": "not applicable: opaque evidence transport"
+    }
+  ],
+  "limits": {
+    "checkpoint_file_bytes": 134217728,
+    "file_count": 640,
+    "job_deadline_seconds": 2100,
+    "log_file_bytes": 16777216,
+    "metadata_file_bytes": 2097152,
+    "reader_seconds": 1800,
+    "source_byte_budget": 2147483648
+  },
+  "outputs": [
+    "new local transport directory with PVC-shaped mirror and transfer receipt",
+    "new recover.py export-pvc directory and export receipt",
+    "terminal reader Job/pod status and bounded readiness log"
+  ],
+  "purpose": "Recover missing terminal confirmation and Chang b5 evidence from the existing kai-data PVC without modifying its contents.",
+  "pvc": {
+    "name": "kai-data",
+    "namespace": "cms-ml",
+    "read_only": true,
+    "uid": "c5be55ec-3362-40a9-b283-f8d0750dcf95"
+  },
+  "readout_directory": "/data/chang-n64-20260926/pilot-b/readout-epoch-0500-42abed-b5",
+  "required_exception": "One immutable ConfigMap plus one finite read-only CPU reader Job and one loopback kubectl port-forward may use the explicitly reviewed create route instead of the supported training handoff. The training adapter requires cache identity not yet recovered and writes provenance via its init container; both are inapplicable to this recovery-only bootstrap. No data identity, scientific approval or historical launch context is invented. No training/readout launch, resume, PVC write, permission change, Service, RBAC, service account or persistent monitor is included.",
+  "runs": [
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a00-s2-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a00-s2-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a02-s2-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a02-s2-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a03-s2-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a03-s2-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a00-s3-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a00-s3-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a02-s3-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a03-s3-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-a07-n64-s2-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e02-n64-s2-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e05-n64-s2-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s2-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-a07-n64-s3-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s3-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e02-n64-s3-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s3-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e05-n64-s3-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s3-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-a-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s1"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-a-n64-s2",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s2"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-d-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-d-n64-s1"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-cprime-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-cprime-n64-s1"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-e1-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-e1-n64-s1"
+    }
+  ],
+  "scientific_gate": {
+    "applicability": "No scientific computation; this recovery transport cannot clear the gate.",
+    "reference": "pending: terminal b5 readout plus Kai (c)/(d); K1 not cleared",
+    "status": "pending"
+  },
+  "stop_rules": [
+    {
+      "action": "terminate reader",
+      "approval_ref": "part of requested finite-reader exception",
+      "condition": "1800 seconds since reader startup; 2100-second Job deadline"
+    },
+    {
+      "action": "refuse affected evidence; retain incomplete receipt",
+      "approval_ref": "part of requested finite-reader exception",
+      "condition": "hash mismatch, unsafe path, symlink, nonregular file, limit or source mutation"
+    },
+    {
+      "action": "clean server exit",
+      "approval_ref": "part of requested finite-reader exception",
+      "condition": "verified client finishes all accepted blobs"
+    }
+  ]
+}

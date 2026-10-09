@@ -1,0 +1,253 @@
+From bd9e1cbe4231133f7745166a0a8e4df6328721a2 Mon Sep 17 00:00:00 2001
+From: Kai <kayamaguchi@ucsd.edu>
+Date: Sun, 27 Sep 2026 08:47:24 -0700
+Subject: [PATCH 20/22] Non-degeneracy condition (arbiter v3 fix 1, opt-in
+ experiment.nondegenerate {zero_floor_ebops, se_multiple}): feasible = EBOPs
+ <= target AND EBOPs - 0-bit floor > 0 AND val accuracy > p_maj + k*SE from
+ the validation class counts; 'feasible, degenerate' counted, never selected;
+ ebops_above_floor in every log record and print line; rule fixed at run start
+ and checked on resume. D20: i_decay_speed per quantizer recorded
+ (i_decay_speed.json, ebops_budget.json)
+
+---
+ bnhgq2/ablation.py          | 77 +++++++++++++++++++++++++++++-
+ tests/test_nondegenerate.py | 95 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 170 insertions(+), 2 deletions(-)
+ create mode 100644 tests/test_nondegenerate.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index dfa9a12..c257805 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -488,6 +488,47 @@ def stored_state_ebops(model, loaded):
+     return {'total': int(total)}
+ 
+ 
++def i_decay_speeds(model):
++    """[D20] per datalane quantizer, HGQ2's `i_decay_speed`: in training, a WRAP quantizer's
++    integer bits follow i <- max(i - i_decay_speed, i_batch) every step (0.1.9
++    `FixedPointQuantizerKIF.call`), so between two per-epoch traces the range can shrink by
++    this much per step. Recorded, not changed."""
++    return {name: float(np.asarray(q.i_decay_speed)) for name, q in activation_quantizers(model)
++            if hasattr(q, '_i_decay_speed')}
++
++
++def majority_rule(yv, se_multiple):
++    """[ND, arbiter v3 fix 1] validation-accuracy floor of the non-degeneracy condition, from the class counts
++    of the validation labels actually used: p_maj + k * sqrt(p_maj (1 - p_maj) / n_val).
++    A constant classifier that always predicts the majority class scores p_maj."""
++    yv = np.asarray(yv)
++    labels = yv.argmax(axis=-1) if yv.ndim == 2 else yv.astype(int)
++    counts = np.bincount(labels, minlength=yv.shape[-1] if yv.ndim == 2 else 0)
++    n = int(len(labels))
++    p_maj = float(counts.max() / n)
++    se = float(np.sqrt(p_maj * (1.0 - p_maj) / n))
++    return {'class_counts': [int(c) for c in counts], 'n_val': n, 'p_maj': p_maj, 'se': se,
++            'se_multiple': float(se_multiple), 'val_accuracy_threshold': p_maj + float(se_multiple) * se,
++            'labels_sha256': array_hash(np.ascontiguousarray(labels))}
++
++
++def nondegenerate_rule(cfg, yv):
++    """[ND, arbiter v3 fix 1] opt-in `experiment.nondegenerate` = {zero_floor_ebops, se_multiple}. Absent:
++    feasible means EBOPs <= target, as before. Present: a checkpoint is feasible only if
++    EBOPs <= target AND EBOPs - zero_floor_ebops > 0 AND val accuracy > the majority rule;
++    EBOPs <= target without the other two is 'feasible, degenerate' (counted, never
++    selected)."""
++    spec = cfg['experiment'].get('nondegenerate')
++    if spec is None:
++        return None
++    if set(spec) != {'zero_floor_ebops', 'se_multiple'}:
++        raise ValueError(f'experiment.nondegenerate needs exactly zero_floor_ebops, se_multiple: {sorted(spec)}')
++    floor = spec['zero_floor_ebops']
++    if isinstance(floor, bool) or not isinstance(floor, int) or floor < 0:
++        raise ValueError(f'experiment.nondegenerate.zero_floor_ebops must be an int >= 0, got {floor!r}')
++    return {**majority_rule(yv, spec['se_multiple']), 'zero_floor_ebops': int(floor)}
++
++
+ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=False, stop_after=None,
+                  model_builder=None, epoch_observer=None):
+     """Pause at a cumulative epoch for screening/tests without changing config hashes."""
+@@ -510,6 +551,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+ 
+     def traced_ebops(m):
+         return compute_ebops(m, trace_rows, batch_size=trace_batch)
++    rule = nondegenerate_rule(cfg, yv)
+     resumed = restore_checkpoint(out, cfg, data_info)
+     if resumed:
+         model, optimizer, state = resumed
+@@ -529,6 +571,14 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         atomic_json(out / 'config.json', cfg)
+         atomic_json(out / 'data_info.json', data_info)
+         atomic_json(out / 'input_std.json', data_info['input_std'])
++        if d20:
++            state['i_decay_speed'] = i_decay_speeds(model)
++            atomic_json(out / 'i_decay_speed.json', state['i_decay_speed'])
++        if rule is not None:
++            state.update(nondegenerate_rule=rule, feasible_degenerate_epochs=0, first_feasible_degenerate=None)
++            atomic_json(out / 'nondegenerate_rule.json', rule)
++    if rule is not None and state.get('nondegenerate_rule') != rule:
++        raise RuntimeError('Non-degeneracy rule differs from the one fixed at the start of this run')
+     binary_gate(model, cfg)
+     print(f"[train] {cfg['name']} params={model.count_params()} resume_epoch={state['completed_epochs']} initial_ebops={state['initial_ebops']}", flush=True)
+     final_target = cfg['train']['ebops']['pid']['target_ebops']
+@@ -599,9 +649,20 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         widths = width_snapshot(model)
+         if state['recovery_frozen']:
+             assert raw_widths(model) == state['freeze_widths'], 'Frozen activation grids moved'
+-        feasible = cost['total'] <= final_target
++        budget_met = cost['total'] <= final_target
++        feasible = budget_met
+         point = {'epoch': epoch, 'val_macro_auc': auc,
+                  'val_categorical_accuracy': val_accuracy, 'ebops': cost['total']}
++        if rule is not None:
++            # [ND, arbiter v3 fix 1] feasible = budget met AND above the 0-bit floor AND above the majority rule.
++            above_floor = cost['total'] - rule['zero_floor_ebops']
++            nondegenerate = above_floor > 0 and val_accuracy > rule['val_accuracy_threshold']
++            feasible = budget_met and nondegenerate
++            point['ebops_above_floor'] = above_floor
++            if budget_met and not nondegenerate:
++                state['feasible_degenerate_epochs'] += 1
++                if state['first_feasible_degenerate'] is None:
++                    state['first_feasible_degenerate'] = point
+         if not np.isfinite(auc):
+             record_divergence(out, cfg, state, epoch, 'nonfinite validation AUC',
+                               {'loss': loss, 'train_categorical_accuracy': accuracy,
+@@ -650,6 +711,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                 'activation_bits_mean': float(np.mean(np.concatenate(free))),
+                 'recovery_frozen': int(state['recovery_frozen']), 'epoch_seconds': elapsed,
+                 **{f'val_auc_{i}': v for i, v in enumerate(per_auc)}}
++        if rule is not None:
++            logs.update(ebops_budget_met=int(budget_met), ebops_above_floor=above_floor,
++                        nondegenerate=int(nondegenerate), feasible_degenerate=int(budget_met and not nondegenerate),
++                        val_accuracy_threshold=rule['val_accuracy_threshold'])
+         if d20:
+             logs.update(ebops_in_training=in_training_ebops, pid_ebops=float(pid._ebops),
+                         ebops_in_training_over_traced=in_training_ebops / max(cost['total'], 1),
+@@ -680,7 +745,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         if snapshot_every and (epoch + 1) % int(snapshot_every) == 0:
+             assert saved is not None, 'snapshot_every_epochs must be a multiple of checkpoint_every_epochs'
+             save_snapshot(out, state)
+-        print(f"[epoch {epoch + 1}/{epochs}] EBOPs={cost['total']} target={final_target} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name if saved else '-'}", flush=True)
++        floor_text = '' if rule is None else f" above_floor={above_floor} feasible={int(feasible)} degenerate={int(budget_met and not nondegenerate)}"
++        print(f"[epoch {epoch + 1}/{epochs}] EBOPs={cost['total']} target={final_target}{floor_text} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name if saved else '-'}", flush=True)
+         if wandb_run:
+             import wandb
+             wandb_run.log(logs, step=epoch + 1)
+@@ -709,6 +775,13 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                             else 'max_auc_under_final_budget' if selection_metric == 'val_macro_auc'
+                             else 'max_accuracy_under_final_budget'),
+               'code_sha256': state['code_sha256']}
++    if rule is not None:
++        result.update(feasibility_rule='nondegenerate (arbiter v3 fix 1)', nondegenerate_rule=rule,
++                      checkpoint_ebops_above_floor=measured['total'] - rule['zero_floor_ebops'],
++                      feasible_degenerate_epochs=state['feasible_degenerate_epochs'],
++                      first_feasible_degenerate=state['first_feasible_degenerate'])
++    if d20:
++        result['i_decay_speed'] = state.get('i_decay_speed')
+     if keep_auc_feasible(cfg):
+         result['auc_selected_feasible'] = state.get('best_feasible_auc')
+         result['auc_selected_checkpoint'] = ('model_best_auc_feasible.keras'
+diff --git a/tests/test_nondegenerate.py b/tests/test_nondegenerate.py
+new file mode 100644
+index 0000000..68b6fe1
+--- /dev/null
++++ b/tests/test_nondegenerate.py
+@@ -0,0 +1,95 @@
++"""[ND, arbiter v3 fix 1] non-degeneracy condition and [D20] i_decay_speed record. CPU, tiny model, synthetic."""
++import json
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_d20_trace import arrays
++from test_resume_cadence import tiny_cfg
++
++
++def records(out):
++    return [json.loads(line) for line in (out / 'activation_widths.jsonl').read_text().splitlines()]
++
++
++def test_majority_rule_formula():
++    from bnhgq2.ablation import majority_rule
++    y = np.eye(3, dtype='float32')[np.repeat([0, 1, 2], [50, 30, 20])]
++    r = majority_rule(y, 5)
++    assert r['class_counts'] == [50, 30, 20] and r['n_val'] == 100
++    assert r['p_maj'] == 0.5 and r['se'] == pytest.approx(0.05)
++    assert r['val_accuracy_threshold'] == pytest.approx(0.75)
++    assert majority_rule(y.argmax(1), 5)['val_accuracy_threshold'] == r['val_accuracy_threshold']
++
++
++def test_spec_checked():
++    from bnhgq2.ablation import nondegenerate_rule
++    cfg = tiny_cfg()
++    y = np.eye(5, dtype='float32')[np.arange(10) % 5]
++    assert nondegenerate_rule(cfg, y) is None
++    for bad in ({'zero_floor_ebops': 1}, {'zero_floor_ebops': -1, 'se_multiple': 5},
++                {'zero_floor_ebops': 1.5, 'se_multiple': 5}, {'zero_floor_ebops': 1, 'se_multiple': 5, 'x': 0}):
++        cfg['experiment']['nondegenerate'] = bad
++        with pytest.raises(ValueError):
++            nondegenerate_rule(cfg, y)
++
++
++def run(tmp_path, floor, se_multiple, epochs=2):
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=epochs, ebops_trace_sample='train_full', ebops_reload_check='stored')
++    cfg['experiment']['nondegenerate'] = {'zero_floor_ebops': floor, 'se_multiple': se_multiple}
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    return cfg, json.loads((tmp_path / 'ebops_budget.json').read_text()), records(tmp_path)
++
++
++def test_below_floor_is_degenerate(tmp_path):
++    # floor above any EBOPs the tiny model can have: every epoch meets the budget (10^9) but
++    # is degenerate, so nothing is selected as feasible
++    _, result, recs = run(tmp_path, 10 ** 9 - 1, -100.0)
++    assert result['best_feasible'] is None and result['feasible_degenerate_epochs'] == 2
++    assert result['checkpoint'] == 'model_min_ebops.keras'
++    assert result['first_feasible_degenerate']['epoch'] == 0
++    for r in recs:
++        assert r['ebops_budget_met'] == 1 and r['feasible_degenerate'] == 1 and r['budget_met'] == 0
++        assert r['ebops_above_floor'] == r['ebops'] - (10 ** 9 - 1) < 0
++    assert not (tmp_path / 'model_best.keras').exists()
++    assert not (tmp_path / 'model_best_auc_feasible.keras').exists()
++
++
++def test_accuracy_rule_is_degenerate(tmp_path):
++    # floor 0, threshold p_maj + 5 SE: 64 rows, counts 13,13,13,13,12, p_maj 13/64
++    _, result, recs = run(tmp_path, 0, 5.0)
++    rule = result['nondegenerate_rule']
++    p = 13 / 64
++    assert rule['class_counts'] == [13, 13, 13, 13, 12] and rule['n_val'] == 64
++    assert rule['p_maj'] == p and rule['val_accuracy_threshold'] == pytest.approx(p + 5 * np.sqrt(p * (1 - p) / 64))
++    for r in recs:
++        assert r['ebops_above_floor'] == r['ebops'] > 0
++        assert r['nondegenerate'] == int(r['val_categorical_accuracy'] > rule['val_accuracy_threshold'])
++    if all(r['nondegenerate'] == 0 for r in recs):
++        assert result['best_feasible'] is None
++
++
++def test_nondegenerate_selects_and_records(tmp_path):
++    _, result, recs = run(tmp_path, 0, -100.0)
++    assert result['best_feasible'] is not None and result['feasible_degenerate_epochs'] == 0
++    assert result['best_feasible']['ebops_above_floor'] == result['best_feasible']['ebops']
++    assert all(r['nondegenerate'] == 1 and r['budget_met'] == 1 for r in recs)
++    decay = json.loads((tmp_path / 'i_decay_speed.json').read_text())
++    assert decay and result['i_decay_speed'] == decay
++    # HGQ2 0.1.9 default for a KIF datalane quantizer built without the key (jsc150 scopes 1e-3)
++    assert decay['input_proj'] == pytest.approx(0.01)
++    # a changed rule on resume is refused
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=2, ebops_trace_sample='train_full', ebops_reload_check='stored')
++    cfg['experiment']['nondegenerate'] = {'zero_floor_ebops': 0, 'se_multiple': -100.0}
++    (xt, yt, xv, yv), info = arrays()
++    yv2 = yv.copy()
++    yv2[:5] = np.eye(5, dtype='float32')[0]
++    with pytest.raises(RuntimeError):
++        ablation.run_training(cfg, (xt, yt, xv, yv2), info, tmp_path)
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,36 @@
+\documentclass[tikz,border=4pt]{standalone}
+\input{../style/bnjettag.tikzstyles.tex}
+\begin{document}
+\begin{tikzpicture}[
+  bn,
+]
+\node[box] (q) {question\\hypothesis + null};
+\node[box, right=of q] (d) {design\\arms, seeds,\\selection rule};
+\node[box, right=of d] (run) {run\\NRP Job /\\mulder csynth};
+\node[gate, right=of run] (v) {verify\\recompute from\\.npz / csynth};
+\node[box, right=of v] (rec) {record\\README,\\RESEARCH.md,\\experiment-log};
+\draw[arr] (q) -- (d);
+\draw[arr] (d) -- (run);
+\draw[arr] (run) -- (v);
+\draw[arr] (v) -- (rec);
+\draw[arr] (rec.north) -- ++(0,6mm) -| (q.north) node[pos=0.25, above] {next question};
+
+\node[gate, text width=48mm, above=14mm of v] (newton) {newton, on a schedule\\claim $\le$ evidence, matched comparisons,\\seeds + interval, design followed};
+\draw[arr, dashed] (newton.south) -- (v.north);
+\draw[arr, dashed] (newton.east) -| (rec.north east);
+
+\node[store, below=16mm of q] (prefs) {user-wide CLAUDE.md\\how Kai works\\(follows him everywhere)};
+\node[store, right=of prefs] (facts) {repo CLAUDE.md\\+ project-context\\stable facts, one tree};
+\node[store, right=of facts] (logs) {memory logs\\question first;\\ops to cluster-inventory};
+\node[store, right=of logs] (vault) {sessions/ + INDEX.md\\session notes,\\one table of everything};
+\node[store, right=of vault] (figs) {docs/figures/\\TikZ .tex + .svg\\rendered locally};
+
+\draw[arr, gray] (prefs.north) -- (q.south);
+\draw[arr, gray] (facts.north) -- (d.south);
+\draw[both, gray] (logs.north) -- (run.south);
+\draw[both, gray] (vault.north) -- (v.south);
+\draw[arr, gray] (rec.south) -- (figs.north);
+
+\node[above=1mm of newton, font=\scriptsize\rmfamily\itshape, gray, text width=70mm, align=center] {the loop is the science; everything below only serves it};
+\end{tikzpicture}
+\end{document}

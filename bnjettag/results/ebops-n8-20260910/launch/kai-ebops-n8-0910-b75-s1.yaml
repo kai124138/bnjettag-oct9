@@ -1,0 +1,212 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-ebops-n8-0910-b75-s1
+  namespace: cms-ml
+  labels:
+    app: kai-ebops-n8
+    arm: b75
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 21600
+  template:
+    metadata:
+      labels:
+        app: kai-ebops-n8
+        arm: b75
+    spec:
+      restartPolicy: Never
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - k8s-chase-ci-07.calit2.optiputer.net
+                - k8s-chase-ci-10.calit2.optiputer.net
+                - k8s-haosu-22.sdsc.optiputer.net
+                - ry-gpu-08.sdsc.optiputer.net
+                - suncave-1
+                - suncave-2
+                - suncave-3
+                - suncave-4
+                - suncave-5
+                - suncave-6
+                - suncave-7
+                - suncave-8
+                - suncave-9
+                - suncave-10
+                - suncave-11
+                - suncave-12
+                - suncave-13
+                - suncave-14
+                - suncave-15
+                - suncave-16
+                - suncave-17
+                - suncave-18
+                - suncave-19
+                - suncave-20
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-A100-SXM4-80GB
+                - NVIDIA-A100-80GB-PCIe
+                - NVIDIA-A100-PCIE-40GB
+                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-L40S
+                - NVIDIA-L40
+                - NVIDIA-RTX-A6000
+                - NVIDIA-A10
+                - NVIDIA-L4
+                - NVIDIA-GeForce-RTX-2080-Ti
+                - Tesla-V100-SXM2-32GB
+                - Tesla-V100-PCIE-32GB
+                - NVIDIA-A40
+                - NVIDIA-RTX-A5000
+                - NVIDIA-GeForce-RTX-3090
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-A10
+                - NVIDIA-L4
+                - NVIDIA-GeForce-RTX-2080-Ti
+                - Tesla-V100-SXM2-32GB
+                - Tesla-V100-PCIE-32GB
+                - NVIDIA-A40
+                - NVIDIA-RTX-A5000
+                - NVIDIA-GeForce-RTX-3090
+          - weight: 60
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-L40S
+                - NVIDIA-L40
+                - NVIDIA-RTX-A6000
+          - weight: 20
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-A100-SXM4-80GB
+                - NVIDIA-A100-80GB-PCIe
+                - NVIDIA-A100-PCIE-40GB
+          - weight: 10
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-H200-NVL
+                - NVIDIA-H100-80GB-HBM3
+                - NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition
+      containers:
+      - name: train
+        image: python:3.12
+        command:
+        - bash
+        - -c
+        args:
+        - "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\n\
+          mkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-b75-w1a8-s1\n\
+          mkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911\
+          \ (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\n\
+          md5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\",\
+          \ $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic\
+          \ feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on\
+          \ ALL 16 features \u2014 the\n# exact confound this round removes \u2014\
+          \ or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\"\
+          \ ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-b75-w1a8.json\
+          \ -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal]\
+          \ rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\n\
+          grep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"\
+          [fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE\
+          \ ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\"\
+          \ || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout\
+          \ -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-b75-w1a8.json\
+          \ + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911\
+          \ is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\n\
+          echo \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\
+          \  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\
+          \necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install\
+          \ -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"\
+          hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\"\
+          \ \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's\
+          \ RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit\
+          \ LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\n\
+          NVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\"\
+          )\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+          \necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total\
+          \ --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit\
+          \ 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow');\
+          \ import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert\
+          \ g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport\
+          \ WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\n\
+          export WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer;\
+          \ print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML\
+          \ LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c\
+          \ 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\"\
+          , \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz);\
+          \ echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo\
+          \ \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104\
+          \ B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz\
+          \ -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find\
+          \ /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] ||\
+          \ { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"\
+          [data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"\
+          $DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n\
+          # ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new\
+          \ inputs, new\n# project so r14 numbers can never be conflated with the\
+          \ 16-feature tables.\n# Grouped per constituent count for the sweep comparison.\
+          \ ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\n\
+          export WANDB_RUN_NAME=ebops-n8-20260910-b75-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\n\
+          export WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b75\n# ---- ROUND 14\
+          \ (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe\
+          \ = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\n\
+          echo \"[train] $(date) ebops-n8-20260910-b75-w1a8-s1  config=ebops-n8-20260910-b75-w1a8.json\
+          \ seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config\
+          \ \"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\" --seed 1 --out-dir \"\
+          $OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-b75-w1a8-s1\"\
+          \n"
+        env:
+        - name: WANDB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kai-wandb
+              key: WANDB_API_KEY
+        resources:
+          limits:
+            nvidia.com/gpu: '1'
+            cpu: '2'
+            memory: 8Gi
+            ephemeral-storage: 16Gi
+          requests:
+            nvidia.com/gpu: '1'
+            cpu: '2'
+            memory: 8Gi
+            ephemeral-storage: 16Gi
+        volumeMounts:
+        - name: cmcode
+          mountPath: /cmcode
+        - name: work
+          mountPath: /work
+      volumes:
+      - name: cmcode
+        configMap:
+          name: kai-ebops-n8-code-9ab88f4911
+      - name: work
+        emptyDir:
+          sizeLimit: 16Gi

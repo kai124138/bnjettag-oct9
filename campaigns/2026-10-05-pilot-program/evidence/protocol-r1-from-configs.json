@@ -1,0 +1,515 @@
+{
+ "version": 1,
+ "purpose": "R1 broad sweep of the pilot program: directional tests of H1, H2, H4 (STUDY.md section 4); pilots select the next round only, never quoted. [derived from the generated pilot1005 configs, bundle build half]",
+ "scope": "screen",
+ "dataset": {
+  "id": "hls4ml LHC jet (Zenodo 3602260), N=64 cache chang-n64-20260926",
+  "identity_sha256": "c6d058f5d79bcf063a1dc74452d5204ea38bb82300d524872e2bf56b66c9e228",
+  "train_split": "training archive 90 % (split_seed 1), n=558000",
+  "validation_split": "training archive 10 % (split_seed 1), n=62000",
+  "test_split": "held-out validation archive (ROC-test); not read by any pilot"
+ },
+ "inputs": {
+  "n_constituents": 64,
+  "features": [
+   "pt",
+   "etarel",
+   "phirel"
+  ]
+ },
+ "arms": [
+  {
+   "name": "A350-C-s1",
+   "group": "A350-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": []
+  },
+  {
+   "name": "A350-C-s2",
+   "group": "A350-C",
+   "seed": 2,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": []
+  },
+  {
+   "name": "A350-noC-s1",
+   "group": "A350-noC",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": false,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.option_c"
+   ]
+  },
+  {
+   "name": "A350-noC-s2",
+   "group": "A350-noC",
+   "seed": 2,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": false,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.option_c"
+   ]
+  },
+  {
+   "name": "E250k-C-s1",
+   "group": "E250k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 250000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "E500k-C-s1",
+   "group": "E500k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 500000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "E750k-C-s1",
+   "group": "E750k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 750000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "E1000k-C-s1",
+   "group": "E1000k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 1000000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "E2000k-C-s1",
+   "group": "E2000k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 2000000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "E5000k-C-s1",
+   "group": "E5000k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 5000000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "A07-350k-C-s1",
+   "group": "A07-350k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "A07",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.model_arch"
+   ]
+  },
+  {
+   "name": "A07-500k-C-s1",
+   "group": "A07-500k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "A07",
+    "ebops_target": 500000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.model_arch",
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "A07-1000k-C-s1",
+   "group": "A07-1000k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "A07",
+    "ebops_target": 1000000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.model_arch",
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "A07-2000k-C-s1",
+   "group": "A07-2000k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "A07",
+    "ebops_target": 2000000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.model_arch",
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "A07-5000k-C-s1",
+   "group": "A07-5000k-C",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "A07",
+    "ebops_target": 5000000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.model_arch",
+    "quantization.ebops_target"
+   ]
+  },
+  {
+   "name": "A350-C-w50-s1",
+   "group": "A350-C-w50",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 50,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.pid_warmup"
+   ]
+  },
+  {
+   "name": "A350-C-w50-s2",
+   "group": "A350-C-w50",
+   "seed": 2,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 50,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.pid_warmup"
+   ]
+  },
+  {
+   "name": "A350-C-w150-s1",
+   "group": "A350-C-w150",
+   "seed": 1,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 150,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.pid_warmup"
+   ]
+  },
+  {
+   "name": "A350-C-w150-s2",
+   "group": "A350-C-w150",
+   "seed": 2,
+   "schedule": {
+    "epochs": 500,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 500 of 7000"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 150,
+    "regime": "B"
+   },
+   "changed_factors": [
+    "quantization.pid_warmup"
+   ]
+  }
+ ],
+ "selection": {
+  "split": "validation",
+  "metric": "top-1 accuracy, ties by macro-OvR AUC, -EBOPs, -epoch",
+  "rule": "best checkpoint meeting (a) traced EBOPs <= target, (b) above 0-bit floor, (c) val acc > 0.2109624456315518 (training-batch STUDY.md:995-1012)",
+  "cost_checkpoint": "selected"
+ },
+ "metrics": [
+  {
+   "name": "best_feasible_val_acc",
+   "split": "validation",
+   "n": 62000,
+   "status": "single seed, pilot, not quotable"
+  },
+  {
+   "name": "best_feasible_val_auc (macro-OvR)",
+   "split": "validation",
+   "n": 62000,
+   "status": "single seed, pilot, not quotable"
+  },
+  {
+   "name": "attn_entropy_norm_mean",
+   "split": "validation",
+   "n": 62000,
+   "status": "single seed, pilot, not quotable"
+  }
+ ],
+ "stop_rules": [
+  {
+   "condition": "any row status != complete, readout integrity failure, GPU util < 40 % at 30 min, non-3090 node, cap reached",
+   "action": "autopilot stops and notifies; launches nothing further",
+   "approval_ref": "STUDY.md section 10 (unsigned draft)"
+  }
+ ],
+ "outputs": [
+  "readout.json per round (fields STUDY.md section 5)",
+  "W&B BNJetTag-ChangRecipe group per round (PREFLIGHT)"
+ ]
+}

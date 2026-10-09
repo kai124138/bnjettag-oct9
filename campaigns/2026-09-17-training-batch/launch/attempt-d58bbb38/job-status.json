@@ -1,0 +1,127 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "annotations": {
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-17T14:58:18Z",
+        "generation": 1,
+        "labels": {
+            "app": "kai-batch0917-preflight"
+        },
+        "name": "kai-batch0917-preflight-d58bbb38",
+        "namespace": "cms-ml",
+        "resourceVersion": "14839469118",
+        "uid": "dfc33482-2dd0-46f9-8692-576ed4c5ff67"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 1800,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+            "matchLabels": {
+                "batch.kubernetes.io/controller-uid": "dfc33482-2dd0-46f9-8692-576ed4c5ff67"
+            }
+        },
+        "suspend": false,
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "kai-batch0917-preflight",
+                    "batch.kubernetes.io/controller-uid": "dfc33482-2dd0-46f9-8692-576ed4c5ff67",
+                    "batch.kubernetes.io/job-name": "kai-batch0917-preflight-d58bbb38",
+                    "controller-uid": "dfc33482-2dd0-46f9-8692-576ed4c5ff67",
+                    "job-name": "kai-batch0917-preflight-d58bbb38"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nexport KERAS_BACKEND=tensorflow CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled\nexport TF_CPP_MIN_LOG_LEVEL=2 OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nexport BNHGQ2_CODE_SHA256=d58bbb3885454019a465eb282e1971302af4732b637375224d039dab107f41d8\nmkdir -p /work/code\nprintf '%s  %s\\n' 'd58bbb3885454019a465eb282e1971302af4732b637375224d039dab107f41d8' '/cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\npip install -q --no-cache-dir -r /work/code/requirements-cpu.txt\npython -u /work/code/launch/prepare_batch_cache.py --configs /work/code/configs/batch20260917 --root /data/batch20260917 --raw /data/hls4ml_lhc_jet/train/train\npython -u /work/code/check_training_batch_preflight.py --configs /work/code/configs/batch20260917 --output /data/batch20260917/preflight-result.json\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "preflight",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "ephemeral-storage": "8Gi",
+                                "memory": "8Gi"
+                            },
+                            "requests": {
+                                "cpu": "2",
+                                "ephemeral-storage": "8Gi",
+                                "memory": "8Gi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "data"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-batch0917-code-d58bbb3885"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "8Gi"
+                        },
+                        "name": "work"
+                    },
+                    {
+                        "name": "data",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data"
+                        }
+                    }
+                ]
+            }
+        },
+        "ttlSecondsAfterFinished": 86400
+    },
+    "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-17T14:58:18Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+    }
+}

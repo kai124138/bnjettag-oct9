@@ -1,0 +1,51 @@
+[
+  {
+    "kind": "Job",
+    "metadata": {
+      "name": "kai-chang0926-pilotb5-42abed",
+      "namespace": "cms-ml",
+      "uid": "d1821ce8-49fd-4389-95ba-a59bc78ec4f8",
+      "creationTimestamp": "2026-09-28T23:45:45Z",
+      "labels": {
+        "user": "kai"
+      },
+      "annotations": {
+        "bnjettag.io/active-deadline": "unset on purpose (STUDY Resume)",
+        "bnjettag.io/gpu-fingerprint": "kai-chang0926-fp-e9511d1aeb sha256 e9511d1aeb39c7c8: chang0926-a-n64-s1 initial_ebops == 11559681 before any arm, else exit 9 (Delta REGRESSION_TICKET)",
+        "bnjettag.io/pack": "pilot_b_k5_packs.json [[0, 1, 24, 56, 57]]",
+        "bnjettag.io/per-arm-memory": "8Gi: measured start RSS 2,106-2,160 MB; RSS gate requires baseline + slope x train.epochs <= 8192 MiB (INCIDENT_stall_20260928)",
+        "bnjettag.io/regime": "B: [D20] trace every 10 epochs (train.ebops_trace_every)",
+        "bnjettag.io/rss-gate": "projection <= 8192 MiB, fit over process epochs 5:105"
+      }
+    },
+    "status": {
+      "completedIndexes": "0",
+      "completionTime": "2026-09-29T20:52:06Z",
+      "conditions": [
+        {
+          "lastProbeTime": "2026-09-29T20:52:06Z",
+          "lastTransitionTime": "2026-09-29T20:52:06Z",
+          "message": "Reached expected number of succeeded pods",
+          "reason": "CompletionsReached",
+          "status": "True",
+          "type": "SuccessCriteriaMet"
+        },
+        {
+          "lastProbeTime": "2026-09-29T20:52:06Z",
+          "lastTransitionTime": "2026-09-29T20:52:06Z",
+          "message": "Reached expected number of succeeded pods",
+          "reason": "CompletionsReached",
+          "status": "True",
+          "type": "Complete"
+        }
+      ],
+      "failedIndexes": "",
+      "ready": 0,
+      "startTime": "2026-09-28T23:45:45Z",
+      "succeeded": 1,
+      "terminating": 0,
+      "uncountedTerminatedPods": {}
+    },
+    "nodeName": null
+  }
+]

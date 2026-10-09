@@ -1,0 +1,156 @@
+{
+  "plan": {
+    "product": "CPU-gate",
+    "slug": "cpu-gate",
+    "stop_after": 2,
+    "phases": [
+      {
+        "phase": "p1-E-k2",
+        "class": "E",
+        "k": 2,
+        "names": [
+          "chang0926-a-n64-s1",
+          "chang0926-a-n64-s2"
+        ]
+      },
+      {
+        "phase": "p2-A07-k2",
+        "class": "A07",
+        "k": 2,
+        "names": [
+          "chang0926-c-n64-s1",
+          "chang0926-c-n64-s2"
+        ]
+      },
+      {
+        "phase": "p3-E-k1",
+        "class": "E",
+        "k": 1,
+        "names": [
+          "chang0926-a-n64-s1"
+        ]
+      }
+    ]
+  },
+  "phases": [
+    {
+      "phase": "p1-E-k2",
+      "class": "E",
+      "k": 2,
+      "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2"
+      ],
+      "stop_after": 2,
+      "start_utc": "2026-09-29T07:21:03Z",
+      "end_utc": "2026-09-29T07:21:55Z",
+      "wall_seconds": 52.1,
+      "arms": [
+        {
+          "name": "chang0926-a-n64-s1",
+          "pid": 99254,
+          "exit_code": 0,
+          "outcome": "ok",
+          "epochs_done": 2,
+          "verification": "PASS",
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T07:21:03Z",
+          "ended_utc": "2026-09-29T07:21:50Z"
+        },
+        {
+          "name": "chang0926-a-n64-s2",
+          "pid": 99266,
+          "exit_code": 0,
+          "outcome": "ok",
+          "epochs_done": 2,
+          "verification": "PASS",
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T07:21:05Z",
+          "ended_utc": "2026-09-29T07:21:50Z"
+        }
+      ],
+      "outcomes": {
+        "ok": 2
+      }
+    },
+    {
+      "phase": "p2-A07-k2",
+      "class": "A07",
+      "k": 2,
+      "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+      ],
+      "stop_after": 2,
+      "start_utc": "2026-09-29T07:21:55Z",
+      "end_utc": "2026-09-29T07:23:02Z",
+      "wall_seconds": 67.1,
+      "arms": [
+        {
+          "name": "chang0926-c-n64-s1",
+          "pid": 99585,
+          "exit_code": 0,
+          "outcome": "ok",
+          "epochs_done": 2,
+          "verification": "PASS",
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T07:21:55Z",
+          "ended_utc": "2026-09-29T07:22:57Z"
+        },
+        {
+          "name": "chang0926-c-n64-s2",
+          "pid": 99588,
+          "exit_code": 7,
+          "outcome": "oom",
+          "epochs_done": 0,
+          "verification": "none",
+          "oom_lines": [
+            "ARM_OOM chang0926-c-n64-s2 RESOURCE_EXHAUSTED: injected by --test-inject-oom (CPU gate only)"
+          ],
+          "nan": false,
+          "started_utc": "2026-09-29T07:21:57Z",
+          "ended_utc": "2026-09-29T07:22:02Z"
+        }
+      ],
+      "outcomes": {
+        "ok": 1,
+        "oom": 1
+      }
+    },
+    {
+      "phase": "p3-E-k1",
+      "class": "E",
+      "k": 1,
+      "names": [
+        "chang0926-a-n64-s1"
+      ],
+      "stop_after": 2,
+      "start_utc": "2026-09-29T07:23:02Z",
+      "end_utc": "2026-09-29T07:23:42Z",
+      "wall_seconds": 40.1,
+      "arms": [
+        {
+          "name": "chang0926-a-n64-s1",
+          "pid": 99760,
+          "exit_code": 0,
+          "outcome": "ok",
+          "epochs_done": 2,
+          "verification": "PASS",
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T07:23:02Z",
+          "ended_utc": "2026-09-29T07:23:37Z"
+        }
+      ],
+      "outcomes": {
+        "ok": 1
+      }
+    }
+  ],
+  "samples": 17,
+  "driver_sha256": "4d2dcd7d9cebf85d1da985122053741a18046e3b48bafdbf1082b06877c40c22",
+  "end_utc": "2026-09-29T07:23:42Z"
+}

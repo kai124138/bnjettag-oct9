@@ -1,0 +1,343 @@
+{
+  "versions": {
+    "numpy": "2.5.0",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.0"
+  },
+  "devices": [
+    "/physical_device:CPU:0"
+  ],
+  "data_info": {
+    "n_train": 496000,
+    "n_val": 124000,
+    "n_files": 62,
+    "split_seed": 1,
+    "order_seed": 20260912,
+    "permutation_sha256": "90b091cef669dfeec9b220c85ab7b86d028871817d9ced55b8945134c2fbcc8a",
+    "input_std": {
+      "mu": [
+        89.4967269897461,
+        -2.5604047550586984e-05,
+        -5.3199059948383365e-06
+      ],
+      "sigma": [
+        84.39064025878906,
+        0.0629049688577652,
+        0.06301674991846085
+      ],
+      "computed_from": "train split only"
+    },
+    "train_sha256": "fdefd6fd8bc3c8951ca4aedb9047cc41c979647e9229566cdded67098ae82d1a",
+    "val_sha256": "dcdb76db132fb211f64f5ef7aefd6f09458bc18613a216b9b5e8d2366e7dd62a"
+  },
+  "runs": [
+    {
+      "arm": "r0-baseline",
+      "generation": "epoch-1000",
+      "completed_epochs": 1000,
+      "complete": true,
+      "selected": {
+        "epoch": 893,
+        "val_macro_auc": 0.8452665068986779,
+        "ebops": 348526
+      },
+      "checkpoint_sha256": "95097bf8e6f5045344f57d6eec02ca0976ec9e90837d5ae76c7255b92b85961f",
+      "ebops": {
+        "total": 348526,
+        "per_layer": {
+          "input_proj": 5376,
+          "bit_block_0_attn_Wq": 8192,
+          "bit_block_0_attn_Wk": 8192,
+          "bit_block_0_attn_scores": 4096,
+          "bit_block_0_attn_softmax": 42583,
+          "bit_block_0_attn_Wv": 16384,
+          "bit_block_0_attn_ctx": 40960,
+          "bit_block_0_attn_Wo": 8192,
+          "bit_block_0_ffn_fc1": 16384,
+          "bit_block_0_ffn_fc2": 32768,
+          "bit_block_1_attn_Wq": 8192,
+          "bit_block_1_attn_Wk": 8192,
+          "bit_block_1_attn_scores": 8192,
+          "bit_block_1_attn_softmax": 42583,
+          "bit_block_1_attn_Wv": 16384,
+          "bit_block_1_attn_ctx": 20480,
+          "bit_block_1_attn_Wo": 8192,
+          "bit_block_1_ffn_fc1": 16384,
+          "bit_block_1_ffn_fc2": 32768,
+          "head_fc1": 3072,
+          "head_fc2": 960
+        }
+      },
+      "validation_accuracy": 0.5767096774193549,
+      "test_accuracy": 0.5747576923076924,
+      "validation_inference_seconds": 17.20935041201301,
+      "test_inference_seconds": 34.87917713797651,
+      "timing_note": "CPU/GPU batch throughput with batch=2048, includes host conversion; not FPGA latency",
+      "prediction_sha256": "8e8055c94ceee2ae89fb24f9bbed55fbeb89909c384c47658a666256fc2f3d76"
+    },
+    {
+      "arm": "r1-channel",
+      "generation": "epoch-1000",
+      "completed_epochs": 1000,
+      "complete": true,
+      "selected": {
+        "epoch": 998,
+        "val_macro_auc": 0.851884371427292,
+        "ebops": 317890
+      },
+      "checkpoint_sha256": "d76050090655a68546e8bee51b695ef34c42083bcbd52832758b96f0e06f6e4c",
+      "ebops": {
+        "total": 317890,
+        "per_layer": {
+          "input_proj": 5376,
+          "bit_block_0_attn_Wq": 8192,
+          "bit_block_0_attn_Wk": 8448,
+          "bit_block_0_attn_scores": 3328,
+          "bit_block_0_attn_softmax": 42583,
+          "bit_block_0_attn_Wv": 11008,
+          "bit_block_0_attn_ctx": 27520,
+          "bit_block_0_attn_Wo": 10496,
+          "bit_block_0_ffn_fc1": 17920,
+          "bit_block_0_ffn_fc2": 23040,
+          "bit_block_1_attn_Wq": 8192,
+          "bit_block_1_attn_Wk": 11008,
+          "bit_block_1_attn_scores": 3968,
+          "bit_block_1_attn_softmax": 42583,
+          "bit_block_1_attn_Wv": 14080,
+          "bit_block_1_attn_ctx": 26240,
+          "bit_block_1_attn_Wo": 11264,
+          "bit_block_1_ffn_fc1": 17408,
+          "bit_block_1_ffn_fc2": 20736,
+          "head_fc1": 3840,
+          "head_fc2": 660
+        }
+      },
+      "validation_accuracy": 0.5888790322580645,
+      "test_accuracy": 0.5874307692307692,
+      "validation_inference_seconds": 16.66626087296754,
+      "test_inference_seconds": 34.86322499089874,
+      "timing_note": "CPU/GPU batch throughput with batch=2048, includes host conversion; not FPGA latency",
+      "prediction_sha256": "5ca5c9424c471786a8eed2229fe964235ee02268d211df9139f90f028eb67629"
+    },
+    {
+      "arm": "r2-ffn32",
+      "generation": "epoch-1000",
+      "completed_epochs": 1000,
+      "complete": true,
+      "selected": {
+        "epoch": 725,
+        "val_macro_auc": 0.8544567158464471,
+        "ebops": 329838
+      },
+      "checkpoint_sha256": "cf3894ba89e0427bcf92d3e6aa16068d82adc7e7f9fceea8e13b2703ac5af86c",
+      "ebops": {
+        "total": 329838,
+        "per_layer": {
+          "input_proj": 6144,
+          "bit_block_0_attn_Wq": 8192,
+          "bit_block_0_attn_Wk": 8192,
+          "bit_block_0_attn_scores": 8192,
+          "bit_block_0_attn_softmax": 42583,
+          "bit_block_0_attn_Wv": 16384,
+          "bit_block_0_attn_ctx": 40960,
+          "bit_block_0_attn_Wo": 16384,
+          "bit_block_0_ffn_fc1": 24576,
+          "bit_block_0_ffn_fc2": 24576,
+          "bit_block_1_attn_Wq": 8192,
+          "bit_block_1_attn_Wk": 8192,
+          "bit_block_1_attn_scores": 8192,
+          "bit_block_1_attn_softmax": 42583,
+          "bit_block_1_attn_Wv": 8192,
+          "bit_block_1_attn_ctx": 20480,
+          "bit_block_1_attn_Wo": 8192,
+          "bit_block_1_ffn_fc1": 8192,
+          "bit_block_1_ffn_fc2": 16384,
+          "head_fc1": 4096,
+          "head_fc2": 960
+        }
+      },
+      "validation_accuracy": 0.5852338709677419,
+      "test_accuracy": 0.5831307692307692,
+      "validation_inference_seconds": 15.55098138214089,
+      "test_inference_seconds": 32.53390980302356,
+      "timing_note": "CPU/GPU batch throughput with batch=2048, includes host conversion; not FPGA latency",
+      "prediction_sha256": "973a02627956a87bdc5340296b1ba88c45da6f09762ebf44bf7c353c99ee480f"
+    },
+    {
+      "arm": "r3-prob8",
+      "generation": "epoch-1000",
+      "completed_epochs": 1000,
+      "complete": true,
+      "selected": {
+        "epoch": 592,
+        "val_macro_auc": 0.8462618106862676,
+        "ebops": 340174
+      },
+      "checkpoint_sha256": "c86e2322478be7562b4d33228d8663e2187cda4d115d41c713a573239b6ec32c",
+      "ebops": {
+        "total": 340174,
+        "per_layer": {
+          "input_proj": 5376,
+          "bit_block_0_attn_Wq": 8192,
+          "bit_block_0_attn_Wk": 8192,
+          "bit_block_0_attn_scores": 2048,
+          "bit_block_0_attn_softmax": 42583,
+          "bit_block_0_attn_Wv": 8192,
+          "bit_block_0_attn_ctx": 32768,
+          "bit_block_0_attn_Wo": 16384,
+          "bit_block_0_ffn_fc1": 16384,
+          "bit_block_0_ffn_fc2": 32768,
+          "bit_block_1_attn_Wq": 8192,
+          "bit_block_1_attn_Wk": 8192,
+          "bit_block_1_attn_scores": 4096,
+          "bit_block_1_attn_softmax": 42583,
+          "bit_block_1_attn_Wv": 16384,
+          "bit_block_1_attn_ctx": 32768,
+          "bit_block_1_attn_Wo": 16384,
+          "bit_block_1_ffn_fc1": 16384,
+          "bit_block_1_ffn_fc2": 16384,
+          "head_fc1": 5120,
+          "head_fc2": 800
+        }
+      },
+      "validation_accuracy": 0.5762258064516129,
+      "test_accuracy": 0.5734346153846154,
+      "validation_inference_seconds": 16.636696548899636,
+      "test_inference_seconds": 34.781649079872295,
+      "timing_note": "CPU/GPU batch throughput with batch=2048, includes host conversion; not FPGA latency",
+      "prediction_sha256": "873184855bf1924f12279dc0e4b10a4add34b99b14e5d6a4d60e17a6405285e1"
+    },
+    {
+      "arm": "r4-gradual",
+      "generation": "epoch-1000",
+      "completed_epochs": 1000,
+      "complete": true,
+      "selected": {
+        "epoch": 959,
+        "val_macro_auc": 0.8476823303826355,
+        "ebops": 349550
+      },
+      "checkpoint_sha256": "212c0cf2e41727b5b65548517887b2afedb7806fbc7b38da39422c1c991d72e6",
+      "ebops": {
+        "total": 349550,
+        "per_layer": {
+          "input_proj": 5376,
+          "bit_block_0_attn_Wq": 8192,
+          "bit_block_0_attn_Wk": 8192,
+          "bit_block_0_attn_scores": 4096,
+          "bit_block_0_attn_softmax": 42583,
+          "bit_block_0_attn_Wv": 16384,
+          "bit_block_0_attn_ctx": 40960,
+          "bit_block_0_attn_Wo": 16384,
+          "bit_block_0_ffn_fc1": 32768,
+          "bit_block_0_ffn_fc2": 32768,
+          "bit_block_1_attn_Wq": 8192,
+          "bit_block_1_attn_Wk": 8192,
+          "bit_block_1_attn_scores": 8192,
+          "bit_block_1_attn_softmax": 42583,
+          "bit_block_1_attn_Wv": 8192,
+          "bit_block_1_attn_ctx": 20480,
+          "bit_block_1_attn_Wo": 8192,
+          "bit_block_1_ffn_fc1": 16384,
+          "bit_block_1_ffn_fc2": 16384,
+          "head_fc1": 4096,
+          "head_fc2": 960
+        }
+      },
+      "validation_accuracy": 0.5779596774193548,
+      "test_accuracy": 0.5750846153846154,
+      "validation_inference_seconds": 16.605006873840466,
+      "test_inference_seconds": 34.8084436559584,
+      "timing_note": "CPU/GPU batch throughput with batch=2048, includes host conversion; not FPGA latency",
+      "prediction_sha256": "401c3b7f50e93233641aafa56a801625ff7513635b99c0026a2866c3f1be92da"
+    },
+    {
+      "arm": "r5-recovery",
+      "generation": "epoch-1000",
+      "completed_epochs": 1000,
+      "complete": true,
+      "selected": {
+        "epoch": 204,
+        "val_macro_auc": 0.8410189691382677,
+        "ebops": 349390
+      },
+      "checkpoint_sha256": "e622ef71f7f4f87ad04170efd4de7b0a24c39aaff3ada7db961b2af662b24e3d",
+      "ebops": {
+        "total": 349390,
+        "per_layer": {
+          "input_proj": 5376,
+          "bit_block_0_attn_Wq": 8192,
+          "bit_block_0_attn_Wk": 8192,
+          "bit_block_0_attn_scores": 4096,
+          "bit_block_0_attn_softmax": 42583,
+          "bit_block_0_attn_Wv": 8192,
+          "bit_block_0_attn_ctx": 20480,
+          "bit_block_0_attn_Wo": 8192,
+          "bit_block_0_ffn_fc1": 16384,
+          "bit_block_0_ffn_fc2": 32768,
+          "bit_block_1_attn_Wq": 8192,
+          "bit_block_1_attn_Wk": 16384,
+          "bit_block_1_attn_scores": 8192,
+          "bit_block_1_attn_softmax": 42583,
+          "bit_block_1_attn_Wv": 24576,
+          "bit_block_1_attn_ctx": 40960,
+          "bit_block_1_attn_Wo": 16384,
+          "bit_block_1_ffn_fc1": 16384,
+          "bit_block_1_ffn_fc2": 16384,
+          "head_fc1": 4096,
+          "head_fc2": 800
+        }
+      },
+      "validation_accuracy": 0.5703790322580645,
+      "test_accuracy": 0.5694038461538462,
+      "validation_inference_seconds": 16.64957771403715,
+      "test_inference_seconds": 34.73409871198237,
+      "timing_note": "CPU/GPU batch throughput with batch=2048, includes host conversion; not FPGA latency",
+      "prediction_sha256": "7315df8f8262de61cf0a6533a389d6d2adf794f4a28c32089fe43534cbc6879d"
+    },
+    {
+      "arm": "r6-distill",
+      "generation": "epoch-0898",
+      "completed_epochs": 898,
+      "complete": false,
+      "selected": {
+        "epoch": 183,
+        "val_macro_auc": 0.8419752161356773,
+        "ebops": 348366
+      },
+      "checkpoint_sha256": "5d4979bfb53d6fc9e2547908f89d01f00f065eca5453d12798fc371f71fa4add",
+      "ebops": {
+        "total": 348366,
+        "per_layer": {
+          "input_proj": 5376,
+          "bit_block_0_attn_Wq": 8192,
+          "bit_block_0_attn_Wk": 8192,
+          "bit_block_0_attn_scores": 2048,
+          "bit_block_0_attn_softmax": 42583,
+          "bit_block_0_attn_Wv": 8192,
+          "bit_block_0_attn_ctx": 20480,
+          "bit_block_0_attn_Wo": 8192,
+          "bit_block_0_ffn_fc1": 16384,
+          "bit_block_0_ffn_fc2": 32768,
+          "bit_block_1_attn_Wq": 8192,
+          "bit_block_1_attn_Wk": 16384,
+          "bit_block_1_attn_scores": 8192,
+          "bit_block_1_attn_softmax": 42583,
+          "bit_block_1_attn_Wv": 24576,
+          "bit_block_1_attn_ctx": 40960,
+          "bit_block_1_attn_Wo": 16384,
+          "bit_block_1_ffn_fc1": 16384,
+          "bit_block_1_ffn_fc2": 16384,
+          "head_fc1": 5120,
+          "head_fc2": 800
+        }
+      },
+      "validation_accuracy": 0.5712258064516129,
+      "test_accuracy": 0.569123076923077,
+      "validation_inference_seconds": 16.602791902143508,
+      "test_inference_seconds": 34.89799713715911,
+      "timing_note": "CPU/GPU batch throughput with batch=2048, includes host conversion; not FPGA latency",
+      "prediction_sha256": "f279fa54ae68692b0ba8ff22d7a59f6bf7be859621ea6e7426e8231e46321ad6"
+    }
+  ]
+}

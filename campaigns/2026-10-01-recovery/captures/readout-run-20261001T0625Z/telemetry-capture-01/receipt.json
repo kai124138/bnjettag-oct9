@@ -1,0 +1,32 @@
+{
+  "observed_at_utc": "2026-10-01T06:52:58.335570+00:00",
+  "status": "partial_metadata_capture_telemetry_copy_refused_in_original_readout",
+  "job_uid": "d0b7eb2f-baf9-4af2-89b6-de3c33cec225",
+  "pod_uid": "88911bcc-9e16-4435-acf7-fb0149c0c469",
+  "method": "read-only kubectl exec head of fixed authorized readout outputs; read-only stat of its five exact historical telemetry sources",
+  "captured_outputs": [
+    "identity.json",
+    "input-manifest.json",
+    "runtime.json"
+  ],
+  "not_captured": [
+    "telemetry-chang0926-a-n64-s1.jsonl",
+    "telemetry-chang0926-a-n64-s2.jsonl",
+    "telemetry-chang0926-d-n64-s1.jsonl",
+    "telemetry-chang0926-cprime-n64-s1.jsonl",
+    "telemetry-chang0926-e1-n64-s1.jsonl"
+  ],
+  "driver_report": "All five original telemetry reads report missing_or_refused with ValueError; cannot call the readout complete even if certification later passes.",
+  "file_hashes": {
+    "pod.json": "240c129798a341ed2f9b156807d540f6807e906f990d30a5dcafa8cb1ed3033f",
+    "pod-after.json": "240c129798a341ed2f9b156807d540f6807e906f990d30a5dcafa8cb1ed3033f",
+    "history-source-stat.txt": "7f6e7d725705a670c48816c66af45c62b15281b7282c6e9e77b73f10d4467cb9",
+    "identity.json": "2be4666f378b639d0c5460167fe031581c9d85a6cb35a5339ebfc29873d3599b",
+    "input-manifest.json": "d8d2a7c041bd078a50abb8e1ff452e0b9483894986fe6a7f0c188a3ac73c116c",
+    "runtime.json": "1dfa8e492f0ea0c969bdf1abef6b5467a0d96cb93d1b2f11fc6dc646091b560a",
+    "job.json": "e3e2fc1da1b57850b5ead4722f60334a2aa0ede3089ad1873249cd228611a276"
+  },
+  "scope_sha256": "c330367a8073f5b17b72d99f0a1e88b8c4fd5b88606999792d655f5281880ca3",
+  "scientific_readout_completed": false,
+  "production_cleared": false
+}

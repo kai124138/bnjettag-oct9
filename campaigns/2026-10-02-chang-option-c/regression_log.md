@@ -1,0 +1,1 @@
+2026-10-05 | trigger: cpugate-691946 6 failed in tests/test_run_pack.py | cause: test env inherits BNJ_CAMPAIGN_DIR from gate Job (test_run_pack.py:40), real index.json used, all fake arms fail; not run_pack/0033 | confidence high | re-run: new sha -> PREFLIGHT -> CPU gate | ticket REGRESSION_TICKET.md

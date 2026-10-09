@@ -1,0 +1,194 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-chang0926-pilotb3-42abed",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "chang-n64-20260926",
+      "app": "kai-chang0926-pilot-b3",
+      "bnjettag.io/arms-per-pod": "3"
+    },
+    "annotations": {
+      "bnjettag.io/pack": "pilot_b_k3_packs.json [[48, 16, 32]]",
+      "bnjettag.io/gpu-fingerprint": "kai-chang0926-fp-e9511d1aeb sha256 e9511d1aeb39c7c8: chang0926-a-n64-s1 initial_ebops == 11559681 before any arm, else exit 9 (Delta REGRESSION_TICKET)",
+      "bnjettag.io/regime": "B: [D20] trace every 10 epochs (train.ebops_trace_every)",
+      "bnjettag.io/active-deadline": "unset on purpose (STUDY Resume)",
+      "bnjettag.io/per-arm-memory": "8Gi: measured start RSS 2,106-2,160 MB; RSS gate requires baseline + slope x train.epochs <= 8192 MiB (INCIDENT_stall_20260928)",
+      "bnjettag.io/rss-gate": "projection <= 8192 MiB, fit over process epochs 5:105"
+    }
+  },
+  "spec": {
+    "completionMode": "Indexed",
+    "completions": 1,
+    "parallelism": 1,
+    "backoffLimitPerIndex": 2,
+    "podReplacementPolicy": "Failed",
+    "ttlSecondsAfterFinished": 604800,
+    "podFailurePolicy": {
+      "rules": [
+        {
+          "action": "Ignore",
+          "onPodConditions": [
+            {
+              "type": "DisruptionTarget"
+            }
+          ]
+        },
+        {
+          "action": "FailJob",
+          "onExitCodes": {
+            "containerName": "train",
+            "operator": "In",
+            "values": [
+              10
+            ]
+          }
+        }
+      ]
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "chang-n64-20260926",
+          "app": "kai-chang0926-pilot-b3",
+          "bnjettag.io/arms-per-pod": "3"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "hcc-nrp-shor-c6017.unl.edu",
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "containers": [
+          {
+            "name": "train",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=/data/chang-n64-20260926/pilot-b BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nexport BNJ_STAGE=pilot-b\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nunset WANDB_PROJECT\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_MODE=online\nexport WANDB_TAGS=chang0926,pilot,pilot-b,regime-b,validation-only\nexport BNJ_RSS_GATE_LIMIT_MB=8192 BNJ_RSS_GATE_WINDOW=5:105\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true\ndf -h /data\necho 'e9511d1aeb39c7c8e48cc7dbc148ac623f3b2d9844d108da38f1ecfa2bdff1f1  /cmfp/fingerprint_check.py' | sha256sum -c -\nFP=0\npython -u /cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --data-root /data/chang-n64-20260926 --campaign-dir /work/code/campaigns/chang0926 --env-report || FP=$?\nif [ \"$FP\" != 0 ]; then echo \"FINGERPRINT_GATE_FAIL exit=$FP node=${NODE_NAME:-na}; no arm started\"; exit \"$FP\"; fi\nPACKS=pilot_b_k3_packs.json\nRP=0; E0=0\npython -u /work/code/run_pack.py \"$PACKS\" 500 || RP=$?\npython - \"$PACKS\" <<'PY' || E0=$?\nimport json, os, sys\nfrom pathlib import Path\ncamp = Path(os.environ['BNJ_CAMPAIGN_DIR'])\nruns = Path(os.environ['BNJ_RUN_ROOT']) / 'runs'\npack = json.loads((camp / sys.argv[1]).read_text())[int(os.environ['JOB_COMPLETION_INDEX'])]\nrows = json.loads((camp / 'index.json').read_text())['runs']\nseen = []\nfor i in pack:\n    marker = runs / rows[i]['name'] / 'DIVERGED.json'\n    seen.append((rows[i]['name'], json.loads(marker.read_text()).get('divergence_epoch_zero_based') if marker.exists() else None))\nprint('PACK_EPOCH0_CHECK', ' '.join(f'{n}={e}' for n, e in seen), flush=True)\nsys.exit(10 if seen and all(e == 0 for _, e in seen) else 0)\nPY\nif [ \"$E0\" = 10 ]; then echo \"POD_EPOCH0_ALL_DIVERGED node=${NODE_NAME:-na} run_pack_exit=$RP\"; exit 10; fi\nif [ \"$E0\" != 0 ]; then echo \"PACK_EPOCH0_CHECK_ERROR $E0\"; fi\nexit \"$RP\"\n"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "kai-wandb",
+                    "key": "WANDB_API_KEY"
+                  }
+                }
+              },
+              {
+                "name": "NODE_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.nodeName"
+                  }
+                }
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "6",
+                "memory": "24Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "limits": {
+                "cpu": "6",
+                "memory": "24Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              },
+              {
+                "mountPath": "/cmfp",
+                "name": "fingerprint",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-chang0926-code-42abed4b5d",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          },
+          {
+            "name": "fingerprint",
+            "configMap": {
+              "name": "kai-chang0926-fp-e9511d1aeb",
+              "defaultMode": 420
+            }
+          }
+        ]
+      }
+    }
+  }
+}

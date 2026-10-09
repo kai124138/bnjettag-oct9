@@ -1,0 +1,35 @@
+{
+  "status": "source_audit_complete",
+  "request": "Reevaluate the best available compact-model results and diagnose low accuracy relative to Sub-microsecond Transformers for Jet Tagging on FPGAs.",
+  "scope": "Read-only scientific source and artifact audit; local diagnostic notes only. No scientific metric recomputation, training, checkpoint mutation, launch, resume, or publication.",
+  "target": {
+    "performance": "Paper-level N64 top-1 tagging accuracy, with split and evaluation status explicit",
+    "model_size": "Approximately 19000 parameters; distinguish learned model coefficients from quantizer variables and eBOPs",
+    "weight_requirement": "User clarification pending: binary mandatory or HGQ baseline first"
+  },
+  "steps": [
+    "Inventory best historical held-out, exploratory validation, and current pilot results separately",
+    "Verify actual dataset sizes, split definitions, feature ordering, preprocessing, and batch coverage from frozen source",
+    "Read recorded parameter counts and inspect model architecture differences from released Chang code",
+    "Inspect saved trajectories, task loss versus resource penalty, activation widths, attention state, and controller timing",
+    "Distinguish established mechanisms from hypotheses requiring new controlled NRP measurements",
+    "Use Jev advisory triage on narrow factual excerpts and cross-check against original source",
+    "Record source hashes, unresolved findings, and a concrete next-comparison proposal without changing active campaigns"
+  ],
+  "acceptance": [
+    "Every quoted performance number has a source, metric, split size, seed status, and limitation",
+    "No causal attribution to binary weights, dataset size, or controller gain without matched evidence",
+    "Legacy immutable launch context remains unavailable; historical payloads are never rebuilt",
+    "K1 and production gates remain pending",
+    "No scientific result is computed in the local kernel or promoted to the record"
+  ],
+  "scientific_review_status": "diagnostic only; no scientific phase advanced",
+  "outputs": [
+    "findings.json",
+    "result-inventory.json",
+    "snapshot-integrity.json",
+    "sources-sha256.json",
+    "jev-advisory.json",
+    "check-results.json"
+  ]
+}

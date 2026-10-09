@@ -1,0 +1,15 @@
+/cmcode/hgq2.tar.gz: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+Traceback (most recent call last):
+  File "/work/code/diagnostics/probe.py", line 111, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ^^^^^^
+  File "/work/code/diagnostics/probe.py", line 93, in main
+    out=Path(scope['output']);out.mkdir(exist_ok=False);identity={k:os.environ[k.upper()] for k in ('run_id','handoff_sha256','job_name','pod_uid')};raw=Path('/data/run-handoffs/'+identity['run_id']+'/record.json').read_bytes();need(sha(raw)==identity['handoff_sha256'],'handoff record mismatch');need(json.loads(raw)['job']['metadata']['name']==identity['job_name'],'handoff Job mismatch')
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/confirmation-20260923/diagnostics/replay-a02s3-20261001-r1'

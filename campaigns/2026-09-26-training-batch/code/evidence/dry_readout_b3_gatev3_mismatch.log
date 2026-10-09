@@ -1,0 +1,39 @@
+CWD <scratch> Mon Sep 28 21:37:50 UTC 2026 case b3_gatev3_mismatch
+DRY_RUN_JOB kai-chang0926-readoutb3-42abed
+/Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-26-training-batch/manifests/chang0926-code.tar.gz: OK
+MANIFEST_SHA_OK 041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42
+READOUT_ARMS only=chang0926-a07-350-n64-s1,chang0926-c-n64-s1,chang0926-f-n64-s1 indices= 48 16 32 missing= none
+CERTIFIED chang0926-c-n64-s1 snapshot500_primary 14598422 14598422
+EBOPS_MISMATCH chang0926-f-n64-s1 snapshot500_primary 10429606 10428606
+CERTIFIED chang0926-a07-350-n64-s1 snapshot500_primary 14598422 14598422
+CERTIFICATION_FAIL 3 1
+/Users/kaiyamaguchi/.cache/uv/archive-v0/UtMx_Ttft48eFZdN/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_1']
+Received: inputs=Tensor(shape=(1024, 64, 3))
+  warnings.warn(msg)
+/Users/kaiyamaguchi/.cache/uv/archive-v0/UtMx_Ttft48eFZdN/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['input_1']
+Received: inputs=Tensor(shape=(560, 64, 3))
+  warnings.warn(msg)
+A26_ENTROPY chang0926-a07-350-n64-s1 bit_block_0 head 0 H_over_logN 0.999559 unrenormalized 0.999549 split validation n 62000
+A26_ENTROPY chang0926-a07-350-n64-s1 bit_block_0 head 1 H_over_logN 0.998407 unrenormalized 0.998407 split validation n 62000
+A26_ENTROPY chang0926-a07-350-n64-s1 bit_block_0 head 2 H_over_logN 0.999313 unrenormalized 0.999312 split validation n 62000
+A26_ENTROPY chang0926-a07-350-n64-s1 bit_block_0 head 3 H_over_logN 0.998084 unrenormalized 0.998074 split validation n 62000
+A26_ROWSUM chang0926-a07-350-n64-s1 bit_block_0 {"min": 0.9850616455078125, "mean": 1.0000020147136472, "max": 1.0151445865631104}
+A26_ZEROBIT chang0926-a07-350-n64-s1 bit_block_0 QK 0.000000 V 0.000000 Q 0 / 32 K 0 / 32 V 0 / 32 labels 'true zero, 0 EBOPs'
+A26_ENTROPY chang0926-c-n64-s1 bit_block_0 head 0 H_over_logN 0.999559 unrenormalized 0.999549 split validation n 62000
+A26_ENTROPY chang0926-c-n64-s1 bit_block_0 head 1 H_over_logN 0.998407 unrenormalized 0.998407 split validation n 62000
+A26_ENTROPY chang0926-c-n64-s1 bit_block_0 head 2 H_over_logN 0.999313 unrenormalized 0.999312 split validation n 62000
+A26_ENTROPY chang0926-c-n64-s1 bit_block_0 head 3 H_over_logN 0.998084 unrenormalized 0.998074 split validation n 62000
+A26_ROWSUM chang0926-c-n64-s1 bit_block_0 {"min": 0.9850616455078125, "mean": 1.0000020147136472, "max": 1.0151445865631104}
+A26_ZEROBIT chang0926-c-n64-s1 bit_block_0 QK 0.000000 V 0.000000 Q 0 / 32 K 0 / 32 V 0 / 32 labels 'true zero, 0 EBOPs'
+A26_ENTROPY chang0926-f-n64-s1 bit_block_0 head 0 H_over_logN 0.998791 unrenormalized 0.998793 split validation n 62000
+A26_ENTROPY chang0926-f-n64-s1 bit_block_0 head 1 H_over_logN 0.997474 unrenormalized 0.997473 split validation n 62000
+A26_ROWSUM chang0926-f-n64-s1 bit_block_0 {"min": 0.9850895404815674, "mean": 1.000009187501735, "max": 1.0151681900024414}
+A26_ZEROBIT chang0926-f-n64-s1 bit_block_0 QK 0.000000 V 0.000000 Q 0 / 24 K 0 / 24 V 0 / 24 labels 'true zero, 0 EBOPs'
+A26_WROTE <scratch>/dry/chang-n64-20260926/pilot-b/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json sha256 6a3dc3517384ef1ea52b98cbe34a8217bcb5db13a3a6fb3fca9df6cbd6686d58
+A26_DONE
+6a3dc3517384ef1ea52b98cbe34a8217bcb5db13a3a6fb3fca9df6cbd6686d58  <scratch>/dry/chang-n64-20260926/pilot-b/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json
+a7decb8a5a8b0eecd4224b5f28677d747135b5fcebf57ffe3e4d628191eb4efc  <scratch>/dry/chang-n64-20260926/pilot-b/readout-epoch-0500-42abed-b3/certify-snapshot-0500.json
+READOUT_JOB_DONE certify_exit=4 a26_exit=0 missing= none
+DRY_RUN_EXIT kai-chang0926-readoutb3-42abed 1

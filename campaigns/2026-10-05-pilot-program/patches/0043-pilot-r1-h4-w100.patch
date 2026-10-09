@@ -1,0 +1,351 @@
+diff --git a/campaigns/pilot1005/config_map.json b/campaigns/pilot1005/config_map.json
+index 0db52c3..78f3400 100644
+--- a/campaigns/pilot1005/config_map.json
++++ b/campaigns/pilot1005/config_map.json
+@@ -849,13 +849,13 @@
+   },
+   {
+    "index": 16,
+-   "name": "pilot1005-h4-e-350k-c-w150-s1",
++   "name": "pilot1005-h4-e-350k-c-w100-s1",
+    "base": {
+     "name": "chang1002c-a-n64-s1",
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "4309784eda0a4cb3f766cbafdd332c1481de4e4c88324df4e19e5605826cd5da",
++   "sha256": "8253f380df86e7dbdc303d832faa34c37d38db73c869f077f18740e4113dfc2a",
+    "exhaustive_flat_diff": {
+     "changed": {
+      "campaign.production": [
+@@ -872,7 +872,7 @@
+      ],
+      "experiment.arm": [
+       "chang1002c-a-n64-s1",
+-      "pilot1005-h4-e-350k-c-w150-s1"
++      "pilot1005-h4-e-350k-c-w100-s1"
+      ],
+      "experiment.group": [
+       "chang-n64-20261002-c",
+@@ -880,35 +880,35 @@
+      ],
+      "name": [
+       "chang1002c-a-n64-s1",
+-      "pilot1005-h4-e-350k-c-w150-s1"
++      "pilot1005-h4-e-350k-c-w100-s1"
+      ],
+      "train.ebops.pid.warmup": [
+       1,
+-      150
++      100
+      ]
+     },
+     "removed": {},
+     "added": {
+      "campaign.pilot.arch": "E",
+-     "campaign.pilot.arm": "A350-C-w150",
++     "campaign.pilot.arm": "A350-C-w100",
+      "campaign.pilot.budget": 350000,
+      "campaign.pilot.hypothesis": "H4",
+      "campaign.pilot.option_c": true,
+      "campaign.pilot.round": "R1",
+      "campaign.pilot.variant": null,
+-     "campaign.pilot.warmup": 150
++     "campaign.pilot.warmup": 100
+     }
+    }
+   },
+   {
+    "index": 17,
+-   "name": "pilot1005-h4-e-350k-c-w150-s2",
++   "name": "pilot1005-h4-e-350k-c-w100-s2",
+    "base": {
+     "name": "chang1002c-a-n64-s2",
+     "sha256": "44a10fe030dcd38ee8473caeeef84ee3408f02530a83ae03906cabf1f59dccc1",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s2.json"
+    },
+-   "sha256": "8167315e3e6f0864215a038735f98b7abfef5f4e67f3953f95deafff5ca13f27",
++   "sha256": "77f47ad43a81f222071121a3d87b79b8eb53ef4fb77591c690291c33ae2613a0",
+    "exhaustive_flat_diff": {
+     "changed": {
+      "campaign.production": [
+@@ -925,7 +925,7 @@
+      ],
+      "experiment.arm": [
+       "chang1002c-a-n64-s2",
+-      "pilot1005-h4-e-350k-c-w150-s2"
++      "pilot1005-h4-e-350k-c-w100-s2"
+      ],
+      "experiment.group": [
+       "chang-n64-20261002-c",
+@@ -933,23 +933,23 @@
+      ],
+      "name": [
+       "chang1002c-a-n64-s2",
+-      "pilot1005-h4-e-350k-c-w150-s2"
++      "pilot1005-h4-e-350k-c-w100-s2"
+      ],
+      "train.ebops.pid.warmup": [
+       1,
+-      150
++      100
+      ]
+     },
+     "removed": {},
+     "added": {
+      "campaign.pilot.arch": "E",
+-     "campaign.pilot.arm": "A350-C-w150",
++     "campaign.pilot.arm": "A350-C-w100",
+      "campaign.pilot.budget": 350000,
+      "campaign.pilot.hypothesis": "H4",
+      "campaign.pilot.option_c": true,
+      "campaign.pilot.round": "R1",
+      "campaign.pilot.variant": null,
+-     "campaign.pilot.warmup": 150
++     "campaign.pilot.warmup": 100
+     }
+    }
+   },
+diff --git a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s1.json
+similarity index 95%
+rename from campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json
+rename to campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s1.json
+index 628e699..67bf6ba 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s1.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "pilot1005-h4-e-350k-c-w150-s1",
++  "name": "pilot1005-h4-e-350k-c-w100-s1",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -68,7 +68,7 @@
+         "p": 1.0,
+         "i": 0.05,
+         "d": 0.0,
+-        "warmup": 150,
++        "warmup": 100,
+         "log": true,
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+@@ -104,7 +104,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "pilot1005-h4-e-350k-c-w150-s1",
++    "arm": "pilot1005-h4-e-350k-c-w100-s1",
+     "group": "chang-n64-20261005",
+     "seed": 1,
+     "selection_metric": "val_categorical_accuracy",
+@@ -143,12 +143,12 @@
+     "amendment": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md",
+     "pilot": {
+       "round": "R1",
+-      "arm": "A350-C-w150",
++      "arm": "A350-C-w100",
+       "hypothesis": "H4",
+       "arch": "E",
+       "budget": 350000,
+       "option_c": true,
+-      "warmup": 150,
++      "warmup": 100,
+       "variant": null
+     }
+   }
+diff --git a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s2.json
+similarity index 95%
+rename from campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json
+rename to campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s2.json
+index 688d2ab..fba42f1 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json
++++ b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s2.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "pilot1005-h4-e-350k-c-w150-s2",
++  "name": "pilot1005-h4-e-350k-c-w100-s2",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -68,7 +68,7 @@
+         "p": 1.0,
+         "i": 0.05,
+         "d": 0.0,
+-        "warmup": 150,
++        "warmup": 100,
+         "log": true,
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+@@ -104,7 +104,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "pilot1005-h4-e-350k-c-w150-s2",
++    "arm": "pilot1005-h4-e-350k-c-w100-s2",
+     "group": "chang-n64-20261005",
+     "seed": 2,
+     "selection_metric": "val_categorical_accuracy",
+@@ -143,12 +143,12 @@
+     "amendment": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md",
+     "pilot": {
+       "round": "R1",
+-      "arm": "A350-C-w150",
++      "arm": "A350-C-w100",
+       "hypothesis": "H4",
+       "arch": "E",
+       "budget": 350000,
+       "option_c": true,
+-      "warmup": 150,
++      "warmup": 100,
+       "variant": null
+     }
+   }
+diff --git a/campaigns/pilot1005/generate.py b/campaigns/pilot1005/generate.py
+index d595de2..9ba68b5 100644
+--- a/campaigns/pilot1005/generate.py
++++ b/campaigns/pilot1005/generate.py
+@@ -70,7 +70,7 @@ R1 = ([('H1', 'E', 350_000, True, 1, s) for s in (1, 2)]
+       + [('H1', 'E', 350_000, False, 1, s) for s in (1, 2)]
+       + [('H2', 'E', t, True, 1, 1) for t in (250_000, 500_000, 750_000, 1_000_000, 2_000_000, 5_000_000)]
+       + [('H2', 'A07', t, True, 1, 1) for t in (500_000, 1_000_000, 2_000_000, 5_000_000)]   # [A3] no A07 350k
+-      + [('H4', 'E', 350_000, True, w, s) for w in (50, 150) for s in (1, 2)]
++      + [('H4', 'E', 350_000, True, w, s) for w in (50, 100) for s in (1, 2)]   # [A3] D3: Kai chose w100 (2026-10-05)
+       + [(VARIANTS[v]['hyp'], 'E', 350_000, True, 1, s, v) for v in ('nb', 'qkv1') for s in (1, 2)]
+       + [('H3', 'E', 450_000, True, 1, 1, 'qkv1'),          # [A3] matched-headroom H3 arm, A350-C-qkv1-450k
+          ('control', 'E', UNC_TARGET, True, 1, 1, 'unc')])  # [A3] E-unc-C positive control
+diff --git a/campaigns/pilot1005/index.json b/campaigns/pilot1005/index.json
+index 24221cf..24f5ed7 100644
+--- a/campaigns/pilot1005/index.json
++++ b/campaigns/pilot1005/index.json
+@@ -466,11 +466,11 @@
+     },
+     {
+       "index": 16,
+-      "name": "pilot1005-h4-e-350k-c-w150-s1",
++      "name": "pilot1005-h4-e-350k-c-w100-s1",
+       "arm": "A",
+       "seed": 1,
+       "n_part": 64,
+-      "file": "pilot1005-h4-e-350k-c-w150-s1.json",
++      "file": "pilot1005-h4-e-350k-c-w100-s1.json",
+       "production": false,
+       "target_ebops": 350000,
+       "zero_floor_ebops": 171526,
+@@ -483,23 +483,23 @@
+       },
+       "quant_set": "chang",
+       "round": "R1",
+-      "program_arm": "A350-C-w150",
++      "program_arm": "A350-C-w100",
+       "hypothesis": "H4",
+       "arch_name": "E",
+       "budget": 350000,
+       "option_c": true,
+-      "warmup": 150,
++      "warmup": 100,
+       "variant": null,
+-      "pack": "packs/pilot1005-h4-e-350k-c-w150-s1.json",
+-      "config_sha256": "4309784eda0a4cb3f766cbafdd332c1481de4e4c88324df4e19e5605826cd5da"
++      "pack": "packs/pilot1005-h4-e-350k-c-w100-s1.json",
++      "config_sha256": "8253f380df86e7dbdc303d832faa34c37d38db73c869f077f18740e4113dfc2a"
+     },
+     {
+       "index": 17,
+-      "name": "pilot1005-h4-e-350k-c-w150-s2",
++      "name": "pilot1005-h4-e-350k-c-w100-s2",
+       "arm": "A",
+       "seed": 2,
+       "n_part": 64,
+-      "file": "pilot1005-h4-e-350k-c-w150-s2.json",
++      "file": "pilot1005-h4-e-350k-c-w100-s2.json",
+       "production": false,
+       "target_ebops": 350000,
+       "zero_floor_ebops": 171526,
+@@ -512,15 +512,15 @@
+       },
+       "quant_set": "chang",
+       "round": "R1",
+-      "program_arm": "A350-C-w150",
++      "program_arm": "A350-C-w100",
+       "hypothesis": "H4",
+       "arch_name": "E",
+       "budget": 350000,
+       "option_c": true,
+-      "warmup": 150,
++      "warmup": 100,
+       "variant": null,
+-      "pack": "packs/pilot1005-h4-e-350k-c-w150-s2.json",
+-      "config_sha256": "8167315e3e6f0864215a038735f98b7abfef5f4e67f3953f95deafff5ca13f27"
++      "pack": "packs/pilot1005-h4-e-350k-c-w100-s2.json",
++      "config_sha256": "77f47ad43a81f222071121a3d87b79b8eb53ef4fb77591c690291c33ae2613a0"
+     },
+     {
+       "index": 18,
+diff --git a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s1.json b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w100-s1.json
+similarity index 100%
+rename from campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s1.json
+rename to campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w100-s1.json
+diff --git a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s2.json b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w100-s2.json
+similarity index 100%
+rename from campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s2.json
+rename to campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w100-s2.json
+diff --git a/tests/test_pilot1005.py b/tests/test_pilot1005.py
+index 8de6de8..dc0acc5 100644
+--- a/tests/test_pilot1005.py
++++ b/tests/test_pilot1005.py
+@@ -1,7 +1,7 @@
+ """Pilot program R1 (patch 0035): the pilot1005 generator, its 19 configs and the warmup-aware monitor.
+ 
+ Synthetic only (no model, no training): the generator's byte checks against chang0926/chang1002c,
+-the arm table, the option-(c) schedule for warmup 1/50/150 through the runner's own functions, and
++the arm table, the option-(c) schedule for warmup 1/50/100 through the runner's own functions, and
+ monitor_p.py on telemetry from hgq2's real BetaPID driven by a scalar plant
+ (test_option_c_amendment.simulate).
+ """
+@@ -60,7 +60,7 @@ class Generator(unittest.TestCase):
+         want = sorted([('H1', 'E', 350000, c, 1, s, 'None') for c in (True, False) for s in (1, 2)]
+                       + [('H2', 'E', t, True, 1, 1, 'None') for t in (250000, 500000, 750000, 1000000, 2000000, 5000000)]
+                       + [('H2', 'A07', t, True, 1, 1, 'None') for t in (500000, 1000000, 2000000, 5000000)]
+-                      + [('H4', 'E', 350000, True, w, s, 'None') for w in (50, 150) for s in (1, 2)]
++                      + [('H4', 'E', 350000, True, w, s, 'None') for w in (50, 100) for s in (1, 2)]
+                       + [('H5', 'E', 350000, True, 1, s, 'nb') for s in (1, 2)]
+                       + [('H3', 'E', 350000, True, 1, s, 'qkv1') for s in (1, 2)]
+                       + [('H3', 'E', 450000, True, 1, 1, 'qkv1'), ('control', 'E', 100000000, True, 1, 1, 'unc')])
+@@ -100,13 +100,13 @@ class Generator(unittest.TestCase):
+             w = r['warmup']
+             self.assertEqual(ablation.pid_traced_only(cfg), 'per_epoch')    # raises if warmup - 1 untraced
+             self.assertEqual(ablation.pid_step_epochs(cfg, w), (True, 1))
+-            first = {1: 10, 50: 60, 150: 160}[w]
++            first = {1: 10, 50: 60, 100: 110}[w]
+             self.assertEqual(ablation.pid_step_epochs(cfg, first), (True, first - w))
+             self.assertTrue(all(not ablation.pid_step_epochs(cfg, e)[0] for e in range(w + 1, first)))
+ 
+     def test_illegal_warmup_rejected(self):
+         self.assertFalse(generate.warmup_ok(45))
+-        self.assertTrue(generate.warmup_ok(50) and generate.warmup_ok(150) and generate.warmup_ok(1))
++        self.assertTrue(generate.warmup_ok(50) and generate.warmup_ok(100) and generate.warmup_ok(1))
+ 
+ 
+ class MonitorWarmup(unittest.TestCase):
+@@ -121,7 +121,7 @@ class MonitorWarmup(unittest.TestCase):
+ 
+     def test_canary_follows_warmup(self):
+         for name, first in (('pilot1005-h1-e-350k-c-s1', 10), ('pilot1005-h4-e-350k-c-w50-s1', 60),
+-                            ('pilot1005-h4-e-350k-c-w150-s2', 160)):
++                            ('pilot1005-h4-e-350k-c-w100-s2', 110)):
+             rows, report = self.run_monitor(name, first + 15)
+             self.assertEqual(report['canary']['first_feedback_epoch'], first)
+             self.assertTrue(report['canary']['CANARY_PID_FIRST'], (name, report['canary']))
+diff --git a/tests/test_readout_pilot.py b/tests/test_readout_pilot.py
+index 649a0db..c9b8d8e 100644
+--- a/tests/test_readout_pilot.py
++++ b/tests/test_readout_pilot.py
+@@ -228,7 +228,7 @@ class ReadoutTests(unittest.TestCase):
+         self.assertFalse(top['complete'])
+         self.assertTrue(all(a['status'] == 'failed' and a['epochs_done'] == 0 for a in top['arms']))
+         ids = sorted({a['arm'] for a in top['arms']})
+-        self.assertEqual(ids, sorted(['A350-noC', 'A350-C', 'A350-C-w50', 'A350-C-w150', 'E250k-C', 'E500k-C',
++        self.assertEqual(ids, sorted(['A350-noC', 'A350-C', 'A350-C-w50', 'A350-C-w100', 'E250k-C', 'E500k-C',
+                                       'E750k-C', 'E1000k-C', 'E2000k-C', 'E5000k-C', 'A07-500k-C',
+                                       'A07-1000k-C', 'A07-2000k-C', 'A07-5000k-C', 'NB350-C', 'A350-C-qkv1',
+                                       'A350-C-qkv1-450k', 'E-unc-C']))

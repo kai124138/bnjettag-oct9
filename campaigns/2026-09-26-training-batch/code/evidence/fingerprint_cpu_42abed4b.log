@@ -1,0 +1,25 @@
+# fingerprint_check.py (sha256 e9511d1a…) on CPU, pinned env campaigns/2026-09-26-delta/code/tests_patches/pyenv.sh (tensorflow 2.21.0, keras 3.15.0, hgq2 0.1.9, quantizers 1.2.2, numpy 2.5.0, scikit-learn 1.9.0); cache rebuilt locally from the 62 raw train files with the 42abed4b prepare_cache.py + cache_configs/n64.json; x_train 420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc. A check, not a result.
+CWD <scratch>/x42 TREE <scratch>/x42 (extraction of chang0926-code.tar.gz sha256 42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0) SCRIPT sha256 e9511d1aeb39c7c8e48cc7dbc148ac623f3b2d9844d108da38f1ecfa2bdff1f1 CACHE x_train 420ac79d
+== chang0926-a-n64-s1
+FINGERPRINT_TREE <scratch>/x42
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1
+FINGERPRINT_OK chang0926-a-n64-s1
+EXIT 0
+== chang0926-a-n64-s2
+FINGERPRINT_TREE <scratch>/x42
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11295521 expected 11295521 chang0926-a-n64-s2
+FINGERPRINT_OK chang0926-a-n64-s2
+EXIT 0
+== negative --expect 1
+FINGERPRINT_TREE <scratch>/x42
+FINGERPRINT_DEVICES CPU-only
+FINGERPRINT 11559681 expected 1 chang0926-a-n64-s1
+GPU_FINGERPRINT_MISMATCH 11559681
+EXIT 9
+== no GPU, no --allow-cpu
+FINGERPRINT_TREE <scratch>/x42
+FINGERPRINT_DEVICES CPU-only
+GPU_FINGERPRINT_NO_GPU
+EXIT 8

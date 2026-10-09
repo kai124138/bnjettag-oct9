@@ -1,0 +1,29 @@
+== tree=wbase (base 6919462c tree (42abed+0032+0033)) BNJ_CAMPAIGN_DIR=/tmp/claude-1000/-home-kaimoe-lab-bnjettag/e92600b4-dce3-4d77-b804-05a4a62d92c5/scratchpad/wt/campaigns/chang1002c
+E         PACK_DONE diverged ['chang1002c-a-n64-s2'] failed ['chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1']
+E        +  where 1 = CompletedProcess(args=['/home/kaimoe/venv-hgq2/bin/python', '/tmp/pytest-of-kaimoe/pytest-4/test_isolation_and_retry0/...hang1002c-a-n64-s2\'] failed [\'chang1002c-b-n64-s1\', \'chang1002c-d-n64-s1\', \'chang1002c-f-n64-s1\']\n', stderr='').returncode
+E       assert ('ARM_FAILED_AFTER_RETRIES dead' in "ARM_STARTED 0 chang1002c-a-n64-s1 pid 730792 attempt 0\nARM_STARTED 8 chang1002c-b-n64-s1 pid 730793 attempt 0\nARM_S...DONE diverged [] failed ['chang1002c-a-n64-s1', 'chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1']\n")
+E        +  where "ARM_STARTED 0 chang1002c-a-n64-s1 pid 730792 attempt 0\nARM_STARTED 8 chang1002c-b-n64-s1 pid 730793 attempt 0\nARM_S...DONE diverged [] failed ['chang1002c-a-n64-s1', 'chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1']\n" = CompletedProcess(args=['/home/kaimoe/venv-hgq2/bin/python', '/tmp/pytest-of-kaimoe/pytest-4/test_unrecorded_failure_fa...led [\'chang1002c-a-n64-s1\', \'chang1002c-b-n64-s1\', \'chang1002c-d-n64-s1\', \'chang1002c-f-n64-s1\']\n', stderr='').stdout
+E         PACK_DONE diverged [] failed ['chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1', 'chang1002c-a-n64-s2']
+E         PACK_DONE diverged [] failed ['chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1']
+E        +  where 1 = CompletedProcess(args=['/home/kaimoe/venv-hgq2/bin/python', '/tmp/pytest-of-kaimoe/pytest-4/test_pod_wide_stall_is_not...PACK_DONE diverged [] failed [\'chang1002c-b-n64-s1\', \'chang1002c-d-n64-s1\', \'chang1002c-f-n64-s1\']\n', stderr='').returncode
+E         PACK_DONE diverged [] failed ['chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1']
+E        +  where 1 = CompletedProcess(args=['/home/kaimoe/venv-hgq2/bin/python', '/tmp/pytest-of-kaimoe/pytest-4/test_single_arm_stall_is_c...PACK_DONE diverged [] failed [\'chang1002c-b-n64-s1\', \'chang1002c-d-n64-s1\', \'chang1002c-f-n64-s1\']\n', stderr='').returncode
+E       assert 'ARM_MEMORY_GATE_FAILED memgate' in "ARM_STARTED 0 chang1002c-a-n64-s1 pid 730863 attempt 0\nARM_STARTED 8 chang1002c-b-n64-s1 pid 730864 attempt 0\nARM_S...DONE diverged [] failed ['chang1002c-a-n64-s1', 'chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1']\n"
+E        +  where "ARM_STARTED 0 chang1002c-a-n64-s1 pid 730863 attempt 0\nARM_STARTED 8 chang1002c-b-n64-s1 pid 730864 attempt 0\nARM_S...DONE diverged [] failed ['chang1002c-a-n64-s1', 'chang1002c-b-n64-s1', 'chang1002c-d-n64-s1', 'chang1002c-f-n64-s1']\n" = CompletedProcess(args=['/home/kaimoe/venv-hgq2/bin/python', '/tmp/pytest-of-kaimoe/pytest-4/test_memory_gate_exit_is_n...led [\'chang1002c-a-n64-s1\', \'chang1002c-b-n64-s1\', \'chang1002c-d-n64-s1\', \'chang1002c-f-n64-s1\']\n', stderr='').stdout
+PASSED tests/test_run_pack.py::test_pod_mem_line_reads_cgroup_and_process_groups
+FAILED tests/test_run_pack.py::test_isolation_and_retry - AssertionError: ARM...
+FAILED tests/test_run_pack.py::test_unrecorded_failure_fails_pod_after_others
+FAILED tests/test_run_pack.py::test_relaunch_starts_a_fresh_heartbeat_clock
+FAILED tests/test_run_pack.py::test_pod_wide_stall_is_not_charged_to_retry_budgets
+FAILED tests/test_run_pack.py::test_single_arm_stall_is_charged - AssertionEr...
+FAILED tests/test_run_pack.py::test_memory_gate_exit_is_not_retried - assert ...
+6 failed, 1 passed in 9.28s
+== tree=wt (0034 test_run_pack: BNJ_CAMPAIGN_DIR=fixture dir) BNJ_CAMPAIGN_DIR=/tmp/claude-1000/-home-kaimoe-lab-bnjettag/e92600b4-dce3-4d77-b804-05a4a62d92c5/scratchpad/wt/campaigns/chang1002c
+PASSED tests/test_run_pack.py::test_isolation_and_retry
+PASSED tests/test_run_pack.py::test_unrecorded_failure_fails_pod_after_others
+PASSED tests/test_run_pack.py::test_relaunch_starts_a_fresh_heartbeat_clock
+PASSED tests/test_run_pack.py::test_pod_wide_stall_is_not_charged_to_retry_budgets
+PASSED tests/test_run_pack.py::test_single_arm_stall_is_charged
+PASSED tests/test_run_pack.py::test_memory_gate_exit_is_not_retried
+PASSED tests/test_run_pack.py::test_pod_mem_line_reads_cgroup_and_process_groups
+7 passed in 9.04s

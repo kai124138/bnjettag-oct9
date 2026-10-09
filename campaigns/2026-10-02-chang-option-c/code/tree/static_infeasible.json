@@ -1,0 +1,49 @@
+[
+  {
+    "index": 37,
+    "name": "const0922-e07-n64-s1-fast50-fp32",
+    "variant": "e07",
+    "n_part": 64,
+    "file": "const0922-e07-n64-s1-fast50-fp32.json",
+    "aliases": [
+      "engram-e07-s1"
+    ],
+    "config_sha256": "f9a90e4f9f04550eedb5bd9cea5e1adfb549797b93dad7c2b543598919853737",
+    "status": "static_infeasible",
+    "reason": "fixed memory arithmetic alone exceeds total budget",
+    "ledger": {
+      "convention": "engram_structural_bitops_v1_estimate",
+      "estimated_bitops": 838272,
+      "components": {
+        "encoder_comparisons": 22528,
+        "hash_addressing": 524288,
+        "table_reduction_adds": 0,
+        "query_key_dot": 172736,
+        "gate_affine_clip": 4032,
+        "gate_value_products": 65536,
+        "residual_adds": 49152
+      },
+      "logical_table_bits": 131584,
+      "logical_table_bytes": 16448,
+      "table_read_bits_per_jet": 32768,
+      "vector_reads_per_jet": 64,
+      "independent_addresses_per_bank_per_jet": 64,
+      "two_read_port_replicas_for_whole_jet_ii1": 32,
+      "replicated_table_bytes_estimate": 526336,
+      "threshold_storage_bits": 336,
+      "encoder_comparisons_per_jet": 1408,
+      "hash_words_per_jet": 128,
+      "exact_tuple_addressing": false,
+      "unpriced_operations": [
+        "round/saturate quantizers",
+        "validity masks and multiplexers",
+        "control and wiring",
+        "physical memory block rounding/routing"
+      ],
+      "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+    },
+    "target_ebops": 350000,
+    "epochs_run": 0,
+    "budget_met": false
+  }
+]

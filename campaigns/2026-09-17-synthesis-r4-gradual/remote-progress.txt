@@ -1,0 +1,121 @@
+{"stage": "Linux C simulation on Mulder", "n": 4096, "max_abs_diff": 0.0, "mean_abs_diff": 0.0, "argmax_agreement": 1.0, "bit_exact": true, "input_sha256": "39eede24c0bd439e5207fb1dff9414a91a066696cfccbd75f819e409c1bb00ca", "reference_sha256": "0b3c8e1c87e6a29f28778060ee0bb92c392e2e9eb531205d6af67a15322609b4", "numpy_version": "1.26.4"}
+INFO: [HLS 200-1510] Running: set_part xcvu13p-flga2577-2-e 
+INFO: [HLS 200-1611] Setting target device to 'xcvu13p-flga2577-2-e'
+INFO: [XFORM 203-1161] The maximum of name length is set to 80.
+INFO: [HLS 200-1510] Running: config_schedule -enable_dsp_full_reg=false 
+INFO: [HLS 200-1510] Running: create_clock -period 2.5 -name default 
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 2.5ns.
+INFO: [HLS 200-1510] Running: set_clock_uncertainty 27% default 
+INFO: [SYN 201-201] Setting up clock 'default' with an uncertainty of 0.675ns.
+***** C/RTL SYNTHESIS *****
+INFO: [HLS 200-1510] Running: csynth_design 
+INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 0.08 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.09 seconds; current allocated memory: 262.910 MB.
+INFO: [HLS 200-10] Analyzing design file 'firmware/myproject.cpp' ... 
+{
+  "runner_pid": 3196619,
+  "started_utc": "2026-09-17T17:55:44.442234Z",
+  "phase": "hls_running",
+  "hls_part": "xcvu13p-flga2577-2-e",
+  "ooc_part": "xczu7ev-ffvc1156-2-e",
+  "clock_ns": 2.5,
+  "reuse_factor": 1,
+  "vivado_threads": 4,
+  "limits": {
+    "group_rss_bytes": 68719476736,
+    "minimum_start_mem_available_bytes": 85899345920,
+    "minimum_mem_available_bytes": 8589934592,
+    "directory_bytes": 53687091200,
+    "minimum_disk_free_bytes": 21474836480,
+    "stage_wall_seconds": {
+      "linux_csim_build": 600,
+      "linux_csim": 600,
+      "hls": 21600,
+      "vivado": 28800
+    }
+  },
+  "stages": {
+    "linux_csim_build": {
+      "started_utc": "2026-09-17T17:55:44.854823Z",
+      "command": [
+        "bash",
+        "build_lib.sh"
+      ],
+      "cwd": "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1",
+      "pid": 3196624,
+      "process_group": 3196624,
+      "stdout_log": "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/logs/linux_csim_build.log",
+      "wall_limit_seconds": 600,
+      "completed_utc": "2026-09-17T17:56:05.064625Z",
+      "elapsed_seconds": 20.212902080267668,
+      "exit_code": 0
+    },
+    "linux_csim": {
+      "started_utc": "2026-09-17T17:56:05.133053Z",
+      "command": [
+        "/home/users/kayamaguchi/micromamba/envs/bnjet/bin/python",
+        "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/remote_csim.py",
+        "--project",
+        "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1",
+        "--inputs",
+        "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/export/csim_inputs.npy",
+        "--reference",
+        "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/export/csim_reference.npy"
+      ],
+      "cwd": "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1",
+      "pid": 3196643,
+      "process_group": 3196643,
+      "stdout_log": "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/logs/linux_csim.log",
+      "wall_limit_seconds": 600,
+      "completed_utc": "2026-09-17T17:56:25.334427Z",
+      "elapsed_seconds": 20.203841080889106,
+      "exit_code": 0
+    },
+    "hls": {
+      "started_utc": "2026-09-17T17:56:25.397914Z",
+      "command": [
+        "/data/software/xilinx/Vitis_HLS/2023.2/bin/vitis_hls",
+        "-f",
+        "build_prj.tcl"
+      ],
+      "cwd": "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1",
+      "pid": 3196678,
+      "process_group": 3196678,
+      "stdout_log": "/home/users/kayamaguchi/bnjet_ebops_r4_20260917/logs/hls.log",
+      "wall_limit_seconds": 21600
+    }
+  },
+  "updated_utc": "2026-09-17T17:56:25.445575Z",
+  "input_archive_sha256": "4aac36b59641a12ee2abc4f271ff06949dae099406daf5b19696ee0e7f085e93",
+  "verification_sha256": "c64181aa1496e2043c61f5b0b095e071c506dadb288d0b567e9aef40943b93f3",
+  "checkpoint_sha256": "212c0cf2e41727b5b65548517887b2afedb7806fbc7b38da39422c1c991d72e6",
+  "gate1_pass": true,
+  "gate2_pass": true,
+  "tools": {
+    "vitis_hls": "/data/software/xilinx/Vitis_HLS/2023.2/bin/vitis_hls",
+    "vivado": "/data/software/xilinx/Vivado/2023.2/bin/vivado"
+  },
+  "child_pid": 3196678,
+  "child_process_group": 3196678,
+  "last_sample": {
+    "utc": "2026-09-17T17:56:25.406352Z",
+    "stage": "hls",
+    "elapsed_seconds": 0.01138423103839159,
+    "process_group": 3196678,
+    "rss_bytes": 3366912,
+    "mem_available_bytes": 127153491968,
+    "directory_bytes": 3886155,
+    "disk_free_bytes": 898693267456
+  },
+  "linux_csim_pass": true,
+  "linux_csim_verification": {
+    "stage": "Linux C simulation on Mulder",
+    "n": 4096,
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "argmax_agreement": 1.0,
+    "bit_exact": true,
+    "input_sha256": "39eede24c0bd439e5207fb1dff9414a91a066696cfccbd75f819e409c1bb00ca",
+    "reference_sha256": "0b3c8e1c87e6a29f28778060ee0bb92c392e2e9eb531205d6af67a15322609b4",
+    "numpy_version": "1.26.4"
+  }
+}

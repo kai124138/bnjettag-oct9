@@ -1,0 +1,83 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-confirm-eval-a02-a11-0923-r4
+  namespace: cms-ml
+  labels:
+    user: kai
+    campaign: confirmation-20260923
+    app: kai-confirm-eval
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 1800
+  ttlSecondsAfterFinished: 604800
+  template:
+    metadata:
+      labels:
+        user: kai
+        campaign: confirmation-20260923
+        app: kai-confirm-eval
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - nautilus-ext-gpu01.fullerton.edu
+                      - ren-gp-argo-01.madren.org
+      containers:
+        - name: evaluate
+          image: python:3.12
+          command: [bash, -c]
+          args:
+            - |
+              set -euo pipefail
+              export KERAS_BACKEND=tensorflow WANDB_MODE=disabled CUDA_VISIBLE_DEVICES=-1
+              export NVIDIA_TF32_OVERRIDE=0 TF_CPP_MIN_LOG_LEVEL=2
+              export OMP_NUM_THREADS=4 TF_NUM_INTRAOP_THREADS=4 TF_NUM_INTEROP_THREADS=2 OPENBLAS_NUM_THREADS=1
+              mkdir -p /work/code
+              echo 'ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d  /cmcode/hgq2.tar.gz' | sha256sum -c -
+              tar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1
+              export PYTHONPATH=/work/code
+              pip install -q --no-cache-dir -r /work/code/requirements-training.txt
+              python -u /eval/evaluate_a02_a11.py
+          resources:
+            requests:
+              cpu: "4"
+              memory: 12Gi
+              ephemeral-storage: 12Gi
+            limits:
+              cpu: "4"
+              memory: 12Gi
+              ephemeral-storage: 12Gi
+          volumeMounts:
+            - name: training-code
+              mountPath: /cmcode
+              readOnly: true
+            - name: evaluation-code
+              mountPath: /eval
+              readOnly: true
+            - name: persistent
+              mountPath: /data
+            - name: work
+              mountPath: /work
+      volumes:
+        - name: training-code
+          configMap:
+            name: kai-batch0917-code-ddd3761d2a
+        - name: evaluation-code
+          configMap:
+            name: kai-confirm-eval-code-0923-r4
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: kai-data
+        - name: work
+          emptyDir:
+            sizeLimit: 12Gi

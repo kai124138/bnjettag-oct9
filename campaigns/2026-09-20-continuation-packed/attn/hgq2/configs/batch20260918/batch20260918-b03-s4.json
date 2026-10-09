@@ -1,0 +1,102 @@
+{
+  "name": "batch20260918-b03-s4",
+  "era": 2,
+  "arch": {
+    "n_part": 16,
+    "n_feat": 3,
+    "features": [
+      "pt",
+      "etarel",
+      "phirel"
+    ],
+    "d_model": 32,
+    "n_heads": 4,
+    "n_layers": 2,
+    "ffn_dim": 32,
+    "n_classes": 5,
+    "pool": "gap",
+    "ffn_act": "relu",
+    "norm": "none",
+    "norm_placement": "per_linear",
+    "pos_enc": "learned",
+    "softmax_free": false,
+    "input_std": true
+  },
+  "quant": {
+    "weight": "binary_absmean",
+    "act_bits": 8,
+    "act_policy": "learned_per_tensor_width",
+    "calib_n": 8192,
+    "act_calib": "free",
+    "act_bw_l1": 1e-08,
+    "beta0": 1e-07,
+    "act_granularity": "channel",
+    "softmax_out_bits": 8,
+    "softmax_out_i": 1
+  },
+  "train": {
+    "data": "data/train",
+    "validation_split": 0.2,
+    "epochs": 1000,
+    "batch": 256,
+    "lr": 2e-05,
+    "warmup_epochs": 1,
+    "decay_epochs": 999,
+    "decay_power": 1.0,
+    "beta2": 0.98,
+    "weight_decay": 0.01,
+    "clip_mode": "value",
+    "clipvalue": 1.0,
+    "clipnorm": 1.0,
+    "es_patience": 0,
+    "wandb_project": "BNJetTag-Batch20260917",
+    "ebops": {
+      "enable": true,
+      "monitor_widths": true,
+      "controller": "pid",
+      "beta_schedule": null,
+      "front_dir": "front",
+      "metrics": [
+        "val_macro_auc",
+        "ebops"
+      ],
+      "sides": [
+        1,
+        -1
+      ],
+      "pid": {
+        "init_beta": 1e-07,
+        "p": 1.0,
+        "i": 0.05,
+        "d": 0.0,
+        "warmup": 10,
+        "log": true,
+        "min_beta": 1e-10,
+        "max_beta": 0.001,
+        "damp_beta_on_target": 0.0,
+        "target_ebops": 350000
+      },
+      "selection": "max_auc",
+      "stop_on_target": false
+    },
+    "jit_compile": false,
+    "split_seed": 1,
+    "order_seed": 20260912,
+    "val_batch": 1024
+  },
+  "hls": {
+    "backend": "Vitis",
+    "part": "xcvu13p-flga2577-2-e",
+    "clock_ns": 2.5,
+    "rf": 1,
+    "io": "io_parallel"
+  },
+  "experiment": {
+    "arm": "batch20260918-b03-s4",
+    "group": "batch20260918",
+    "seed": 4,
+    "checkpoint_every_epochs": 1,
+    "remote_every_epochs": 25,
+    "selection_metric": "val_categorical_accuracy"
+  }
+}

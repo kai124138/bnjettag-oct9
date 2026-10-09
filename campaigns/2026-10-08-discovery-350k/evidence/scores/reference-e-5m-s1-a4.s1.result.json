@@ -1,0 +1,132 @@
+{
+ "certification": {
+  "checkpoint": "/data/discovery-350k-20261008/attempts/reference-e-5m-s1-a1/runs/d350-reference-e-5m-s1/snapshots/epoch-1000/model_best.keras",
+  "checkpoint_sha256": "44fbd774d28d0bdae7e1d037ebacdca06fd88bea8c2668e39b6763257204b0e4",
+  "ebops_above_floor": 3089088,
+  "epoch": 29,
+  "logged_ebops": 3260614,
+  "relative_difference": 0.0,
+  "retraced_ebops": 3260614,
+  "status": "CERTIFIED",
+  "stored_ebops": 3260614,
+  "target_ebops": 5000000.0,
+  "tolerance": 1e-06,
+  "trace_batch": 2048,
+  "trace_rows": 558000,
+  "zero_floor_ebops": 171526
+ },
+ "config_json_sha256": "c0b6539502f6836940b0fd8c160d6db4f3c52ca57d09e3d281c9d1570679049b",
+ "config_name": "d350-reference-e-5m-s1",
+ "cpu_replay": {
+  "abs_acc_difference": 0.0,
+  "tolerance": 0.001,
+  "val_acc": 0.6497741935483871,
+  "val_macro_auc": 0.886444920598094
+ },
+ "definition": "PROPOSAL.md \u00a74: best feasible validation top-1 accuracy over epochs < stop epoch, key (acc, macro AUC, -EBOPs, -epoch); feasible = traced EBOPs <= target, above the 0-bit floor, acc > threshold, certify_ebops CERTIFIED",
+ "eval_manifest_sha256": "edb04f7a556e51d95bae98e9bb169dd7c326daf48fe15643aa7ec2ba5bb8dc7e",
+ "invalid_reason": null,
+ "labels_sha256": "e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617",
+ "n_val": 62000,
+ "run_dir": "/data/discovery-350k-20261008/attempts/reference-e-5m-s1-a1/runs/d350-reference-e-5m-s1",
+ "schema": 1,
+ "score": 0.6497741935483871,
+ "score_attempt": 1,
+ "secondary": {
+  "at_epoch": {
+   "1000": {
+    "best_feasible_as_of_snapshot_epoch": 29,
+    "best_feasible_as_of_snapshot_val_acc": 0.6497741935483871,
+    "ebops": 5034020,
+    "epoch_zero_based": 999,
+    "feasible": false,
+    "snapshot_present": true,
+    "traced": true,
+    "val_acc": 0.3641129032258065,
+    "val_acc_if_feasible": null
+   },
+   "500": {
+    "best_feasible_as_of_snapshot_epoch": 29,
+    "best_feasible_as_of_snapshot_val_acc": 0.6497741935483871,
+    "ebops": 5174723,
+    "epoch_zero_based": 499,
+    "feasible": false,
+    "snapshot_present": true,
+    "traced": true,
+    "val_acc": 0.4045967741935484,
+    "val_acc_if_feasible": null
+   }
+  },
+  "attention_entropy": {
+   "definition": "attn_entropy.analyze: mean over jets and query rows of -sum p log p / log 64, p row-renormalized; mean over blocks and heads",
+   "excluded_reason": null,
+   "heads": [
+    0.9905140305755553,
+    0.5655601177361906
+   ],
+   "mean": 0.778037074155873,
+   "n_heads": 2,
+   "n_heads_excluded": 0,
+   "n_val_rows": 62000,
+   "reason": null
+  },
+  "best_feasible_acc_by_window_one_based": {
+   "1-200": 0.6497741935483871,
+   "201-400": 0.5289677419354839,
+   "401-600": 0.49256451612903224,
+   "601-800": 0.5235161290322581,
+   "801-1000": 0.5271935483870968
+  },
+  "feasible_epochs": 49,
+  "feasible_epochs_acc_ge_050": 22,
+  "first_budget_met_epoch_one_based": 10,
+  "first_budget_met_epoch_zero_based": 9,
+  "min_traced_ebops": 3132715,
+  "selected_activation_bits": {
+   "activation_bits_mean": 3.472907566993271,
+   "per_site_mean_bits": {
+    "bit_block_0_attn_Wk": 6.458333333333333,
+    "bit_block_0_attn_Wo": 4.0,
+    "bit_block_0_attn_Wq": 6.458333333333333,
+    "bit_block_0_attn_Wv": 5.958333333333333,
+    "bit_block_0_attn_ctx__in0": 3.4100341796875,
+    "bit_block_0_attn_ctx__in1": 3.2916666666666665,
+    "bit_block_0_attn_scores__in0": 4.666666666666667,
+    "bit_block_0_attn_scores__in1": 3.3333333333333335,
+    "bit_block_0_attn_softmax__exp_iq": 5.0,
+    "bit_block_0_attn_softmax__exp_oq": 4.0,
+    "bit_block_0_attn_softmax__inv_iq": 9.0,
+    "bit_block_0_attn_softmax__inv_oq": 4.0,
+    "bit_block_0_ffn_fc1": 6.541666666666667,
+    "bit_block_0_ffn_fc2": 3.375,
+    "head_fc1": 8.041666666666666,
+    "head_fc2": 6.375,
+    "input_proj": 10.333333333333334
+   }
+  },
+  "selected_val_macro_auc": 0.8864449110426327
+ },
+ "selected": {
+  "checkpoint": "/data/discovery-350k-20261008/attempts/reference-e-5m-s1-a1/runs/d350-reference-e-5m-s1/snapshots/epoch-1000/model_best.keras",
+  "checkpoint_sha256": "44fbd774d28d0bdae7e1d037ebacdca06fd88bea8c2668e39b6763257204b0e4",
+  "ebops": 3260614,
+  "epoch": 29,
+  "epoch_one_based": 30,
+  "val_categorical_accuracy": 0.6497741935483871,
+  "val_macro_auc": 0.8864449110426327
+ },
+ "split": "validation (n from nondegenerate_rule.json)",
+ "status": "valid",
+ "stop_epoch": 1000,
+ "target_ebops": 5000000,
+ "test_set_used": false,
+ "threshold": 0.2109624456315518,
+ "threshold_rederived": {
+  "labels_sha256": "e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617",
+  "n_val": 62000,
+  "p_maj": 0.20288709677419356,
+  "se": 0.0016150697714716518,
+  "val_accuracy_threshold": 0.2109624456315518
+ },
+ "zero_floor_ebops": 171526
+}

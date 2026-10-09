@@ -1,0 +1,116 @@
+--- evidence/r2/freeze_p.pre-r2.py	2026-10-05 15:26:17.883926858 +0900
++++ freeze_p.py	2026-10-07 07:34:56.515734179 +0900
+@@ -79,6 +79,12 @@
+ EXIT_RSS_GATE, EXIT_ARM_FINAL, EXIT_PREARM_RETRY, EXIT_ARM_DEADLINE = 5, 76, 75, 124
+ FINAL_EXIT_CODES = [EXIT_RSS_GATE, EXIT_ARM_FINAL, EXIT_ARM_DEADLINE, 137, 143]   # 137/143: pod-deadline kill of PID 1
+ OPTS = {'readout_pythonpath': False, 'bounded': False, 'diag': False}
++# R1 relaunch r2 (Kai 2026-10-07, local/2026-10-07-execution/r1b-relaunch-approval.json; opt-in, defaults reproduce
++# the 98dd28 freeze). --no-rss-gate: the GPU Job script exports no BNJ_RSS_GATE_* (ablation.rss_gate_from_env:
++# 'Unset: no gate'; env only, config_sha256 unchanged) and drops the RSS_GATE_FAIL.json exit-5 classification,
++# because the killed arms keep a stale RSS_GATE_FAIL.json from the 98dd28 attempt. --job-suffix: appended to
++# the GPU Job names only (BNJ_STAGE, run dirs and W&B run ids are unchanged, so the arms resume their own runs).
++R2 = {'rss_gate': True, 'job_suffix': ''}
+ # F5 (STUDY_arbiter_v1; constructive A2/A3): readout_diag.json, descriptive only, never a rule input and never
+ # read by readout_pilot.py or PROGRAM.json. Standard library; runs after readout.json is written; its exit
+ # status does not enter the Job's exit status.
+@@ -317,7 +323,8 @@
+             'unset WANDB_PROJECT',
+             'export WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_MODE=online',
+             f'export WANDB_TAGS={TAGS}',
+-            f'export BNJ_RSS_GATE_LIMIT_MB={RSS_GATE_LIMIT_MB} BNJ_RSS_GATE_WINDOW={RSS_GATE_WINDOW}',
++        ] + ([f'export BNJ_RSS_GATE_LIMIT_MB={RSS_GATE_LIMIT_MB} BNJ_RSS_GATE_WINDOW={RSS_GATE_WINDOW}']
++             if R2['rss_gate'] else []) + [
+             'export WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data '
+             'WANDB_DISABLE_CODE=true WANDB_QUIET=true',
+             'pip install -q --no-cache-dir -r /work/code/requirements-training.txt',
+@@ -408,9 +415,9 @@
+         f'{STOP_AFTER} || RP=$?',
+         'if [ "$RP" = 124 ] || { [ "$RP" = 137 ] && [ $(( $(date +%s) - TS )) -ge "$ARM_BUDGET_S" ]; }; then '
+         f'ARM_FINAL_RC={EXIT_ARM_DEADLINE}; echo "ARM_DEADLINE_EXCEEDED {name} run_pack_exit=$RP budget_s=$ARM_BUDGET_S"; fi',
+-        f'if [ "$RP" != 0 ] && [ -z "$ARM_FINAL_RC" ] && test -f {RUN_ROOT}/runs/{name}/RSS_GATE_FAIL.json; then '
+-        f'ARM_FINAL_RC={EXIT_RSS_GATE}; echo "ARM_RSS_GATE_FINAL {name} run_pack_exit=$RP"; fi',
+-    ]
++    ] + ([f'if [ "$RP" != 0 ] && [ -z "$ARM_FINAL_RC" ] && test -f {RUN_ROOT}/runs/{name}/RSS_GATE_FAIL.json; then '
++          f'ARM_FINAL_RC={EXIT_RSS_GATE}; echo "ARM_RSS_GATE_FINAL {name} run_pack_exit=$RP"; fi']
++         if R2['rss_gate'] else [])
+ 
+ 
+ def monitor_loop(name):
+@@ -582,7 +589,8 @@
+                     if OPTS['bounded'] else
+                     'unset in the build half; cluster-ops sets it at the launch half (STUDY §11)'),
+                 'bnjettag.io/per-arm-memory': f'{PER_ARM_MEMORY_GI}Gi host RAM, {PER_ARM_CPU} CPU, one arm',
+-                'bnjettag.io/rss-gate': f'projection <= {RSS_GATE_LIMIT_MB} MiB, fit over process epochs {RSS_GATE_WINDOW}'}},
++                'bnjettag.io/rss-gate': (f'projection <= {RSS_GATE_LIMIT_MB} MiB, fit over process epochs {RSS_GATE_WINDOW}'
++                                         if R2['rss_gate'] else 'off: BNJ_RSS_GATE_* unset (r2 relaunch, Kai 2026-10-07)')}},
+             'spec': {'completionMode': 'Indexed', 'completions': 1, 'parallelism': 1,
+                      'backoffLimitPerIndex': BACKOFF_PER_INDEX_BOUNDED if OPTS['bounded'] else 2,
+                      'podReplacementPolicy': 'Failed', 'ttlSecondsAfterFinished': 604800,
+@@ -649,7 +657,19 @@
+     ap.add_argument('--manifests-dir', help='write manifests here (relative to the campaign) instead of manifests/; '
+                                             'a new bundle never overwrites the frozen files of an earlier one')
+     ap.add_argument('--expect-bundle', help='refuse unless the rebuilt bundle sha256 starts with this')
++    ap.add_argument('--no-rss-gate', action='store_true',
++                    help='r2: GPU Jobs export no BNJ_RSS_GATE_* and do not map a stale RSS_GATE_FAIL.json to exit 5')
++    ap.add_argument('--job-suffix', default='', help='r2: suffix for the GPU Job names, e.g. -r2 (stage and run ids unchanged)')
++    ap.add_argument('--prepared-out', help='write the prepared record to this new file (relative to the campaign) '
++                                           'instead of PREPARED.json; never merges, never overwrites')
+     args = ap.parse_args()
++    assert not args.job_suffix or (args.job_suffix.startswith('-') and args.job_suffix[1:].isalnum()
++                                   and args.job_suffix == args.job_suffix.lower()), args.job_suffix
++    R2.update(rss_gate=not args.no_rss_gate, job_suffix=args.job_suffix)
++    if args.no_rss_gate:
++        OPTS['rss_gate'] = False
++    if args.job_suffix:
++        OPTS['job_suffix'] = args.job_suffix
+     OPTS.update(readout_pythonpath=args.readout_pythonpath, bounded=args.bounded, diag=args.diag)
+     if args.manifests_dir:
+         OUT = HERE / args.manifests_dir
+@@ -717,13 +737,16 @@
+     for row in rows:
+         tag = tag_of(row['name'])
+         trap = pod_exit_trap() if OPTS['bounded'] else None
+-        job = pilot_job(f'kai-p1005r1-{tag}-{b6}', row, cm, header(bundle, msha, cpu=False, trap=trap) + pilot_tail(row))
++        job = pilot_job(f"kai-p1005r1-{tag}-{b6}{R2['job_suffix']}", row, cm, header(bundle, msha, cpu=False, trap=trap) + pilot_tail(row))
+         assert len(job['metadata']['name']) <= 52, job['metadata']['name']
+         script = job['spec']['template']['spec']['containers'][0]['args'][0]
+         assert script.index('fingerprint_check.py --run') < script.index('run_pack.py')
+         jobs[f'r1-{tag}'] = (job, brief(
+             f"Pilot-program R1 arm {row['program_arm']} seed {row['seed']} ({row['hypothesis']}): from initialization "
+-            'to the epoch-500 pause, one arm per RTX 3090.',
++            'to the epoch-500 pause, one arm per RTX 3090.' + ('' if R2['rss_gate'] and not R2['job_suffix'] else
++            ' Relaunch' + (f" {R2['job_suffix'].lstrip('-')}" if R2['job_suffix'] else '') + ': resumes from the '
++            "arm's latest committed checkpoint under the same run dir, W&B run id and bundle"
++            + ('; RSS gate off (BNJ_RSS_GATE_* unset)' if not R2['rss_gate'] else '') + '.'),
+             f"Config {row['name']} ({row['arch_name']}, budget {row['budget']}, option (c) {row['option_c']}, "
+             f"warmup {row['warmup']}, variant {row['variant']}); generated by campaigns/pilot1005/generate.py from the byte-checked "
+             'chang0926/chang1002c config; only target, warmup, the NB/H3 quant key and its floor, and identity '
+@@ -731,7 +754,8 @@
+             [row['name']],
+             [{'name': 'readout fields', 'split': 'validation n=62000, traced epochs < 500',
+               'expectation': 'reported, not predicted (STUDY.md §5)'}],
+-            [{'condition': 'divergence, nonfinite metrics, RSS projection gate, epoch-0 divergence, fingerprint mismatch',
++            [{'condition': 'divergence, nonfinite metrics, ' + ('RSS projection gate, ' if R2['rss_gate'] else '')
++              + 'epoch-0 divergence, fingerprint mismatch',
+               'action': 'existing-runner-guard', 'approval_ref': 'run_pack/ablation guards in the frozen bundle'},
+              {'condition': 'CANARY_* FAIL or CONTROLLER_AUDIT FAIL in a MONITOR line', 'action': 'notify-only',
+               'approval_ref': 'option-(c) amendment canary; monitor_p.py (warmup-aware)'},
+@@ -784,6 +808,18 @@
+                 '(patches/PATCHES.json)',
+         'run_root': RUN_ROOT, 'stage': STAGE, 'data_root': DATA_ROOT,
+         'files': {rel: sha(p.read_bytes()) for rel, p in files}}))
++    if args.prepared_out:               # r2: a separate record; PREPARED.json and its entries are not touched
++        target = HERE / args.prepared_out
++        assert not target.exists() and target.resolve() != (HERE / 'PREPARED.json').resolve(), target
++        target.write_bytes(enc({'status': 'offline_prepared_not_submitted' if GATE['status'] != 'cleared' else 'cleared',
++                                'gate': GATE, 'bundle_sha256': bundle, 'manifest_sha256': msha, 'configmap': cm,
++                                'image': IMAGE, 'gpu_product': GPU_PRODUCT, 'run_root': RUN_ROOT, 'jobs': prepared,
++                                'options': {k: dict(OPTS) for k in prepared},
++                                'manifests_dir': str(OUT.relative_to(HERE)) if OUT.is_relative_to(HERE) else str(OUT)}))
++        for key, value in prepared.items():
++            print('PREPARED', key, value['job'], value['handoff'])
++        print('PREPARED_RECORD', target)
++        return
+     if GATE['status'] == 'cleared':     # one record per invocation, never overwritten (option-(c) review C6)
+         target = HERE / f"PREPARED-cleared-{'-'.join(sorted(prepared))[:80]}.json"
+         assert not target.exists(), target

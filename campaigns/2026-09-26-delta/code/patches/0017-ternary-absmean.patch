@@ -1,0 +1,134 @@
+From cffb428ba00974f443672d895544452cfd41fd78 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 08:40:01 -0700
+Subject: [PATCH 17/24] ternary-absmean: quant.weight ternary_absmean, LABELLED
+ ternary baseline with its own gate, billed 2 bits (M047)
+
+---
+ code/bnhgq2/ablation.py   |  7 +++++++
+ code/bnhgq2/delta_keys.py |  3 +++
+ code/bnhgq2/qat.py        | 35 ++++++++++++++++++++++++++++++++++-
+ 3 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 6d5ba7f..6221f29 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -453,6 +453,13 @@ def binary_gate(model, cfg=None):
+     channels = qat.channel_weight_values(model)  # Delta: per-channel gain layers, else {}
+     values = {name: v for name, v in values.items() if name not in channels}
+     assert all(len(v) == 2 and not (v == 0).any() and np.isclose(v[0], -v[1]) for v in values.values()), 'Binary gate failed'
++    ternary = qat.ternary_weight_values(model)  # Delta: LABELLED ternary baseline, else {}
++    if cfg.get('quant', {}).get('weight') == 'ternary_absmean':
++        assert set(ternary) == projection_layers(cfg), 'Ternary projection names/count mismatch'
++        assert all(len(v) <= 3 and np.allclose(v, -v[::-1]) and len(np.unique(np.abs(v[v != 0]))) == 1 for v in ternary.values()), 'Ternary gate failed'
++        print('[gate] LABELLED TERNARY BASELINE: {-g, 0, +g} per tensor, not binary', flush=True)
++    else:
++        assert not ternary, 'Ternary layers in a non-ternary model'
+     # per channel: values in {-b_c, +b_c}, never 0 (a fan-in-3 column may carry one sign only)
+     assert all(len(v) in (1, 2) and not (v == 0).any() and np.allclose(np.abs(v), np.abs(v[0])) for c in channels.values() for v in c), 'Per-channel binary gate failed'
+ 
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index ed340c0..55f0393 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -280,3 +280,6 @@ register('arch.head_dims', 'head-dims', _head_dims)
+ # pre-block-tanh-lut: hgq2 QAffinedUnaryFunctionLUT('tanh') before attention and before the FFN
+ # (Chang; cards Q09, A14; M016). Its table EBOPs are traced at W1; no HLS export path yet.
+ register('arch.pre_block_act', 'pre-block-tanh-lut', _one_of('tanh_lut'))
++
++# ternary-absmean: LABELLED ternary {-g, 0, +g} baseline (card B14; M047). Billed 2 bits.
++WEIGHT_SCHEMES.add('ternary_absmean')
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index c9985af..60cd010 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -95,6 +95,16 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True, ste: str =
+     return wq * beta                                 # in {-beta, +beta}
+ 
+ 
++def ternary_absmean_ste(w, eps: float = EPS_BETA):
++    """LABELLED TERNARY BASELINE (BitNet b1.58, card B14; never the thesis): gamma = mean|W|,
++    q = clip(round(W / gamma), -1, 1) in {-1, 0, +1}, forward q*gamma, identity STE on W/gamma."""
++    w = ops.cast(w, "float32")
++    gamma = ops.mean(ops.abs(w)) + eps
++    ws = w / ops.stop_gradient(gamma)
++    q = ops.clip(ops.round(ws), -1.0, 1.0)
++    return (ws + ops.stop_gradient(q - ws)) * gamma
++
++
+ def _pow2(e):
+     return ops.power(2.0, e)
+ 
+@@ -207,6 +217,8 @@ def _delta_binarize(layer, w):
+     opts = layer.binary
+     if not opts:
+         return bitnet_binary_ste(w)
++    if opts.get("scheme") == "ternary_absmean":
++        return ternary_absmean_ste(w)
+     wq = bitnet_binary_ste(w, center=opts.get("center", True), ste=opts.get("ste", "bounded"),
+                            beta_mode=_beta_mode_now(layer), beta_log2=getattr(layer, "beta_log2", None))
+     if opts.get("channel_gain") == "pow2" and hasattr(layer, "channel_gain_log2"):  # absent only inside build
+@@ -491,6 +503,12 @@ def _static_w8(i0: int = 2):
+                            trainable=False, heterogeneous_axis=())
+ 
+ 
++def _ternary_kq():
++    """Ternary weights billed 2 bits to EBOPs (3 levels need 2 bits; labelled baseline)."""
++    return QuantizerConfig("kbi", "weight", k0=1, b0=2, i0=1, round_mode="RND", overflow_mode="SAT_SYM",
++                           trainable=False, heterogeneous_axis=())
++
++
+ def _dummy(place="datalane"):
+     return QuantizerConfig("dummy", place)
+ 
+@@ -595,11 +613,16 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         elif lmode == "none":  # Delta override: float kernel behind the quantized input
+             kq, iq = _dummy("weight"), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
+             cls = QEinsumDense
++        elif lmode == "ternary_absmean":  # Delta: LABELLED ternary baseline
++            kq, iq = _ternary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            cls = BitQEinsumDense
+         else:  # w8a8
+             kq, iq = _static_w8(), act_iq()
+             cls = QEinsumDense
+         lbin = not fp32 and lmode == "binary_absmean"
+         extra = {"binary": delta_binary_options(cfg, name)} if lbin and delta_binary_options(cfg, name) else {}
++        if not fp32 and lmode == "ternary_absmean":
++            extra = {"binary": {"scheme": "ternary_absmean"}}
+         return cls(equation, output_shape=out_shape, bias_axes=bias_axes,
+                    iq_conf=iq, kq_conf=kq,
+                    bq_conf=(bias_conf() if bias_axes is not None else None),
+@@ -615,10 +638,14 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             kq, iq, cls = _binary_kq(), act_iq(), BitQDense
+         elif lmode == "none":  # Delta override: float kernel behind the quantized input
+             kq, iq, cls = _dummy("weight"), act_iq(), QDense
++        elif lmode == "ternary_absmean":  # Delta: LABELLED ternary baseline
++            kq, iq, cls = _ternary_kq(), act_iq(), BitQDense
+         else:
+             kq, iq, cls = _static_w8(), act_iq(), QDense
+         lbin = not fp32 and lmode == "binary_absmean"
+         extra = {"binary": delta_binary_options(cfg, name)} if lbin and delta_binary_options(cfg, name) else {}
++        if not fp32 and lmode == "ternary_absmean":
++            extra = {"binary": {"scheme": "ternary_absmean"}}
+         return cls(units, use_bias=use_bias, iq_conf=iq, kq_conf=kq,
+                    bq_conf=bias_conf(), name=name, **extra)(x)
+ 
+@@ -839,7 +866,13 @@ def effective_weight_values(model):
+     binary layer — the binary gate (must be exactly two values, symmetric, no zero)."""
+     out = {}
+     for ly in model.layers:
+-        if isinstance(ly, (BitQEinsumDense, BitQDense)):
++        if isinstance(ly, (BitQEinsumDense, BitQDense)) and ly.binary.get("scheme") != "ternary_absmean":
+             w = ops.convert_to_numpy(ly.qkernel)
+             out[ly.name] = np.unique(np.round(w, 10))
+     return out
++
++
++def ternary_weight_values(model):
++    """{layer: sorted unique effective values} of LABELLED ternary layers (Delta)."""
++    return {ly.name: np.unique(np.round(ops.convert_to_numpy(ly.qkernel), 10)) for ly in model.layers
++            if isinstance(ly, (BitQEinsumDense, BitQDense)) and ly.binary.get("scheme") == "ternary_absmean"}
+-- 
+2.50.1 (Apple Git-155)
+

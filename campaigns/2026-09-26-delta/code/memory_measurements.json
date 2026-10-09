@@ -1,0 +1,91 @@
+{
+  "_about": "Inputs to the CPU-side arms-per-pod (K) estimate in manifest_wave2.py. Every number is quoted from its source line; none is a result. K rule (campaigns/2026-09-27-delta-screen/STUDY.md (frozen 24c3c90) launch gate 7 (l. 441-452) and Budget 'Arms per pod' (l. 916-925); [DK11]): K is accepted per architecture class and GPU class only if peak GPU memory stays <= 90 % of the card's memory. Estimate: K = floor(0.90 * card_MiB / per_process_MiB). The production packs read K from k_result.json (the memory canary, canary_k.py) when it covers the (class, GPU product); otherwise the manifest is a PLANNING manifest.",
+  "rule_fraction": 0.9,
+  "measurements": [
+    {
+      "class": "E",
+      "gpu_product": "NVIDIA-A10",
+      "card_mib": 23028,
+      "per_process_mib": 4354,
+      "what": "anchor arms A-s1, A-s2, D-s1 (E: d24/h2/L1/FFN32, no PE, batch 2,790, Chang quantizers), nvidia-smi --query-compute-apps, stable across samples, K=6 pilot pod with 5 processes resident",
+      "source": "campaigns/2026-09-26-training-batch/RUN.md l. 35-39 (card 23,028 MiB) and l. 215-217 (per process), commit c9c9942",
+      "status": "measured (in-pod nvidia-smi), not a result"
+    },
+    {
+      "class": "E1",
+      "gpu_product": "NVIDIA-A10",
+      "card_mib": 23028,
+      "per_process_mib": 2830,
+      "what": "anchor E1-s1 (one head); no Delta cell uses E1",
+      "source": "RUN.md l. 216-217",
+      "status": "measured; unused here"
+    },
+    {
+      "class": "A07-proxy-Cprime",
+      "gpu_product": "NVIDIA-A10",
+      "card_mib": 23028,
+      "per_process_mib": 5172,
+      "what": "anchor C'-s1 3rd attempt (A07 on the OLD SAT quantizer, pilot-only arm); a proxy, not A07 under the Chang quantizers. A07-350-s1 (A07, Chang quantizers) OOM'd on all 3 attempts at K=6 and has no reading",
+      "source": "RUN.md l. 73, 98, 217",
+      "status": "measured proxy; not used for K, shown beside the planning value"
+    }
+  ],
+  "planning_k": {
+    "_about": "used only where no measurement or canary covers the (class, GPU class); labelled PLANNING in every pack",
+    "A07": {
+      "24GB": 2,
+      "40GB": 4,
+      "45GB+": 5,
+      "80GB": 5,
+      "source": "wave-2 STUDY (frozen 24c3c90) Budget 'Arms per pod' l. 916-920: A07 at K = 3 on 23-24 GB products (A10, 3090), K = 5-6 on >= 45 GB. 24GB changed 3 -> 2 on 2026-09-29 by the orchestrator: the Delta A07 canary (A10, bundle 705a554b) ran out of memory at K=3 (8,446 MiB per process; k_result.json k_accepted 2; campaigns/2026-09-27-delta-screen/RUN.md 2026-09-29 03:22Z and 06:08Z). The rest of this file's uncommitted edits are another session's (2026-09-29 ~03:32Z)."
+    },
+    "E": {
+      "24GB": 4,
+      "40GB": 5,
+      "45GB+": 5,
+      "80GB": 5,
+      "source": "wave-2 STUDY (frozen 24c3c90) Budget l. 917-919: E at K = 4 on 23-24 GB (floor(0.9 x 23,028 / 4,354)); K = 5 only if the measured peak fits"
+    },
+    "other": {
+      "source": "no basis: an architecture class other than E or A07 takes the planning K of its base arm's class and is flagged k_class_unmeasured (STUDY launch gate 7 asks for its own canary)"
+    }
+  },
+  "gpu_classes": {
+    "24GB": {
+      "products": [
+        "NVIDIA-A10",
+        "NVIDIA-GeForce-RTX-3090",
+        "NVIDIA-GeForce-RTX-4090"
+      ],
+      "card_mib_measured": {
+        "NVIDIA-A10": 23028
+      },
+      "note": "product names verbatim from the anchor pilot-job.json nodeAffinity; K is set by the smallest card of the class (A10, measured); RTX-3090 memory not measured here"
+    },
+    "45GB+": {
+      "products": [
+        "NVIDIA-L40",
+        "NVIDIA-L40S",
+        "NVIDIA-A40",
+        "NVIDIA-RTX-A6000"
+      ],
+      "card_mib_measured": {},
+      "note": "no card memory measured; planning K only until the canary runs on this product"
+    },
+    "40GB": {
+      "products": ["NVIDIA-A100-PCIE-40GB"],
+      "card_mib_measured": {},
+      "note": "planning K only; a product-specific canary and full pack-size search are required"
+    },
+    "80GB": {
+      "products": ["NVIDIA-A100-SXM4-80GB", "NVIDIA-A100-80GB-PCIe"],
+      "card_mib_measured": {},
+      "note": "baseline K=5 is only a starting point; increase K in a product-specific canary and certify throughput/utilization before production"
+    }
+  },
+  "access_policy": "A100 is eligible when live quota and node capacity permit, subject to the same product-specific timing, memory, utilization and matching gates as other GPUs (Kai decision 2026-09-28; docs/infrastructure/gpu-selection-policy.md)",
+  "host_memory_rule": {
+    "rule": "per pack: BNJ_RSS_GATE_LIMIT_MB = 2,100 + 5 x H MiB; pod memory per arm = max(6, ceil(limit/1,024)) Gi",
+    "source": "wave-2 STUDY (frozen 24c3c90) Budget PACK-MEM l. 920-925 (baseline 2.1 GB + slope x H at the gate-14 limit of 5 MB/epoch; 4.6 / 7.1 / 12.1 GB at H 500 / 1,000 / 2,000) and gate 14 l. 471-476; anchor gate code ablation.rss_gate_from_env (42abed4b)"
+  }
+}

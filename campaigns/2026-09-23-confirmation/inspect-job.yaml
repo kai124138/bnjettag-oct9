@@ -1,0 +1,101 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-confirm-inspect-0923-r2
+  namespace: cms-ml
+  labels:
+    user: kai
+    campaign: confirmation-20260923
+    app: kai-confirm-inspect
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  ttlSecondsAfterFinished: 604800
+  template:
+    metadata:
+      labels:
+        user: kai
+        campaign: confirmation-20260923
+        app: kai-confirm-inspect
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - nautilus-ext-gpu01.fullerton.edu
+                      - ren-gp-argo-01.madren.org
+      containers:
+        - name: inspect
+          image: python:3.12
+          command: [python, -u, -c]
+          args:
+            - |
+              import hashlib, json
+              from pathlib import Path
+              P = Path
+              def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+              report = {'architecture': [], 'engram': [], 'data': {}}
+              for arm in ('batch20260917-a02-s1', 'batch20260917-a11-s1'):
+                  run = P('/data/batch20260917/n8/runs') / arm
+                  latest = json.loads((run / 'latest.json').read_text())
+                  source = run / 'checkpoints' / latest['checkpoint']
+                  state = json.loads((source / 'state.json').read_text())
+                  report['architecture'].append({
+                      'arm': arm,
+                      'complete': (run / 'COMPLETE.json').exists(),
+                      'latest': latest,
+                      'state_completed_epochs': state['completed_epochs'],
+                      'best_feasible': state['best_feasible'],
+                      'checkpoint_generation': source.name,
+                      'models': {p.name: sha(p) for p in source.glob('*.keras')},
+                      'run_files': sorted(p.name for p in run.iterdir()),
+                  })
+              for i in range(4):
+                  arm = f'engram-e{i:02d}-s1'
+                  run = P('/data/engram-study-20260918/runs') / arm
+                  latest = json.loads((run / 'latest.json').read_text())
+                  source = run / 'checkpoints' / latest['checkpoint']
+                  state = json.loads((source / 'state.json').read_text())
+                  report['engram'].append({
+                      'arm': arm,
+                      'complete': (run / 'COMPLETE.json').exists(),
+                      'latest': latest,
+                      'state_completed_epochs': state['completed_epochs'],
+                      'best_feasible': state.get('best_feasible'),
+                      'fallback': state.get('fallback'),
+                      'checkpoint_generation': source.name,
+                      'models': {p.name: sha(p) for p in source.glob('*.keras')},
+                      'run_files': sorted(p.name for p in run.iterdir()),
+                  })
+              for root in (P('/data/batch20260917/n8/data'), P('/data/hls4ml_lhc_jet/val/val')):
+                  report['data'][str(root)] = {
+                      'exists': root.exists(),
+                      'files': len(list(root.rglob('*'))) if root.exists() else 0,
+                  }
+              print('INSPECTION_JSON=' + json.dumps(report, sort_keys=True), flush=True)
+              print('PREFLIGHT_ALL_PASS', flush=True)
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+              ephemeral-storage: 1Gi
+          volumeMounts:
+            - name: persistent
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: kai-data

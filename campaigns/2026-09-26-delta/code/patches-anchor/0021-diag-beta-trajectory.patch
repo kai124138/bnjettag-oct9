@@ -1,0 +1,52 @@
+From 2d0aa58830a29728e7883e72132f32aed4cf40d6 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 08:43:58 -0700
+Subject: [PATCH 21/38] diag-beta-trajectory: experiment.diagnostics
+ beta_trajectory logs per-layer beta and |latent|/absmean histogram (Z08)
+
+---
+ code/bnhgq2/ablation.py   | 14 ++++++++++++++
+ code/bnhgq2/delta_keys.py |  3 +++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index e4ce1d5..8f3cc2f 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -359,8 +359,22 @@ class DeltaDiagnostics:
+             logs['diag/flip_fraction'] = float(sum((now[n] != self.prev[n]).sum() for n in self.layers) / total)
+             logs['diag/c2i'] = float(sum((now[n] != self.init[n]).sum() for n in self.layers) / total)
+             self.prev = now
++        if 'beta_trajectory' in self.kinds:
++            # effective scale per layer (mean |q beta|, the per-tensor beta; with channel gains the
++            # mean over channels) and the histogram of |latent - threshold| / absmean
++            for n in self.layers:
++                ly = model.get_layer(n)
++                logs[f'diag/beta/{n}'] = float(np.mean(np.abs(np.asarray(ly.qkernel))))
++                w = np.asarray(ly._kernel.numpy(), np.float64)
++                wc = np.abs(w - w.mean() if ly.binary.get('center', True) else w)
++                ratio = wc / (wc.mean() + qat.EPS_BETA)
++                counts = np.histogram(ratio, bins=self.RATIO_EDGES)[0] / ratio.size
++                for edge, frac in zip(self.RATIO_EDGES[1:], counts):
++                    logs[f'diag/latent_over_absmean/{n}/lt{edge:g}'] = float(frac)
+         return logs
+ 
++    RATIO_EDGES = (0., 0.25, 0.5, 1., 2., 4., np.inf)
++
+ 
+ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None, input_std=None,
+                     latent_ema=None):
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 2b1886b..7e88bed 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -304,3 +304,6 @@ def _diagnostics(value, cfg):
+ 
+ 
+ register('experiment.diagnostics', 'diag-sign-flips', _diagnostics, export_ok=True)
++
++# diag-beta-trajectory: per-layer effective beta and |latent|/absmean histogram (THEORY M3; Z08).
++DIAGNOSTICS.add('beta_trajectory')
+-- 
+2.50.1 (Apple Git-155)
+

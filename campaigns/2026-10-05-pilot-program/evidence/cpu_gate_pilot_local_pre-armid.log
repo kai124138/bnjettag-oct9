@@ -1,0 +1,87 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791163047.328629  731431 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791163048.124404  731431 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+PID_TRACED_ONLY_OK pilot1005-h1-e-350k-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+E0000 00:00:1791163049.157081  731431 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+CONFIG_PREFLIGHT_PASS pilot1005-h1-e-350k-c-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h1-e-350k-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h1-e-350k-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h1-e-350k-c-s2 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h1-e-350k-c-s2 params 31735 kernel_bias_pos 6253 initial_ebops 8951051 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h1-e-350k-c-s2 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h1-e-350k-c-s2 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_HISTORICAL_INPUT_OK pilot1005-h1-e-350k-noc-s1 warmup 1
+CONFIG_PREFLIGHT_PASS pilot1005-h1-e-350k-noc-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h1-e-350k-noc-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h1-e-350k-noc-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_HISTORICAL_INPUT_OK pilot1005-h1-e-350k-noc-s2 warmup 1
+CONFIG_PREFLIGHT_PASS pilot1005-h1-e-350k-noc-s2 params 31735 kernel_bias_pos 6253 initial_ebops 8951051 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h1-e-350k-noc-s2 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h1-e-350k-noc-s2 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-e-250k-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+WARNING:tensorflow:5 out of the last 5 calls to <function make_epoch_step.<locals>.epoch_step at 0x7787f4c567a0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+CONFIG_PREFLIGHT_PASS pilot1005-h2-e-250k-c-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h2-e-250k-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-e-250k-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-e-500k-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+WARNING:tensorflow:6 out of the last 6 calls to <function make_epoch_step.<locals>.epoch_step at 0x7787f46849a0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+CONFIG_PREFLIGHT_PASS pilot1005-h2-e-500k-c-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h2-e-500k-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-e-500k-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-e-750k-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-e-750k-c-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h2-e-750k-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-e-750k-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-e-1m-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-e-1m-c-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h2-e-1m-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-e-1m-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-e-2m-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-e-2m-c-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h2-e-2m-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-e-2m-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-e-5m-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-e-5m-c-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h2-e-5m-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-e-5m-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-a07-350k-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-a07-350k-c-s1 params 61951 kernel_bias_pos 11653 initial_ebops 13805846 reload_max_abs_diff 0.0 zero_floor 343053 floor_retraced 343053 production 0
+I_DECAY_OK pilot1005-h2-a07-350k-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-a07-350k-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-a07-500k-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-a07-500k-c-s1 params 61951 kernel_bias_pos 11653 initial_ebops 13805846 reload_max_abs_diff 0.0 zero_floor 343053 floor_retraced 343053 production 0
+I_DECAY_OK pilot1005-h2-a07-500k-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-a07-500k-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-a07-1m-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-a07-1m-c-s1 params 61951 kernel_bias_pos 11653 initial_ebops 13805846 reload_max_abs_diff 0.0 zero_floor 343053 floor_retraced 343053 production 0
+I_DECAY_OK pilot1005-h2-a07-1m-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-a07-1m-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-a07-2m-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-a07-2m-c-s1 params 61951 kernel_bias_pos 11653 initial_ebops 13805846 reload_max_abs_diff 0.0 zero_floor 343053 floor_retraced 343053 production 0
+I_DECAY_OK pilot1005-h2-a07-2m-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-a07-2m-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h2-a07-5m-c-s1 warmup 1 first_feedback 10 span 9 steps 701
+CONFIG_PREFLIGHT_PASS pilot1005-h2-a07-5m-c-s1 params 61951 kernel_bias_pos 11653 initial_ebops 13805846 reload_max_abs_diff 0.0 zero_floor 343053 floor_retraced 343053 production 0
+I_DECAY_OK pilot1005-h2-a07-5m-c-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h2-a07-5m-c-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h4-e-350k-c-w50-s1 warmup 50 first_feedback 60 span 10 steps 745
+CONFIG_PREFLIGHT_PASS pilot1005-h4-e-350k-c-w50-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h4-e-350k-c-w50-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h4-e-350k-c-w50-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h4-e-350k-c-w50-s2 warmup 50 first_feedback 60 span 10 steps 745
+CONFIG_PREFLIGHT_PASS pilot1005-h4-e-350k-c-w50-s2 params 31735 kernel_bias_pos 6253 initial_ebops 8951051 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h4-e-350k-c-w50-s2 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h4-e-350k-c-w50-s2 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h4-e-350k-c-w150-s1 warmup 150 first_feedback 160 span 10 steps 835
+CONFIG_PREFLIGHT_PASS pilot1005-h4-e-350k-c-w150-s1 params 31735 kernel_bias_pos 6253 initial_ebops 9429139 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h4-e-350k-c-w150-s1 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h4-e-350k-c-w150-s1 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PID_TRACED_ONLY_OK pilot1005-h4-e-350k-c-w150-s2 warmup 150 first_feedback 160 span 10 steps 835
+CONFIG_PREFLIGHT_PASS pilot1005-h4-e-350k-c-w150-s2 params 31735 kernel_bias_pos 6253 initial_ebops 8951051 reload_max_abs_diff 0.0 zero_floor 171526 floor_retraced 171526 production 0
+I_DECAY_OK pilot1005-h4-e-350k-c-w150-s2 config 0.001 quantizers 14 values [0.0010000000474974513]
+TRACE_EVERY_OK pilot1005-h4-e-350k-c-w150-s2 k 10 epochs 7000 traced_epochs 701 snapshot_every 500
+PAIRED_INIT_OK A07 seed 1 arms 5 pilot1005-h2-a07-350k-c-s1 pilot1005-h2-a07-500k-c-s1 pilot1005-h2-a07-1m-c-s1 pilot1005-h2-a07-2m-c-s1 pilot1005-h2-a07-5m-c-s1
+PAIRED_INIT_OK E seed 1 arms 10 pilot1005-h1-e-350k-c-s1 pilot1005-h1-e-350k-noc-s1 pilot1005-h2-e-250k-c-s1 pilot1005-h2-e-500k-c-s1 pilot1005-h2-e-750k-c-s1 pilot1005-h2-e-1m-c-s1 pilot1005-h2-e-2m-c-s1 pilot1005-h2-e-5m-c-s1 pilot1005-h4-e-350k-c-w50-s1 pilot1005-h4-e-350k-c-w150-s1
+PAIRED_INIT_OK E seed 2 arms 4 pilot1005-h1-e-350k-c-s2 pilot1005-h1-e-350k-noc-s2 pilot1005-h4-e-350k-c-w50-s2 pilot1005-h4-e-350k-c-w150-s2
+PREFLIGHT_ALL_PASS 19 production 0 pilot_only 19

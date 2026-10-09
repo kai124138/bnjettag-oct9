@@ -1,0 +1,135 @@
+{
+  "LABEL": "RESOURCE-COMPARISON CONTROL AT MATCHED WEIGHT WIDTH -- NOT AN OPERATING POINT",
+  "date": "2026-09-03",
+  "arm": "fp32-s3-r14n8-wm-w5a8  (FP32-trained checkpoint, PTQ static grids, weights W=5 / f=5, activations A=8)",
+  "purpose": "decompose the QAT-vs-PTQ confound named in design memo CORRECTION C1.3. The A2 control (fp32 PTQ at W=8) needs 24,824 DSP where the W8A8 QAT article needs 1,384, but the two arms are NOT weight-width-matched (realized f = 8 vs f = 5), so that 17.9x conflates grid PROVENANCE with ~3 bits of realized WIDTH. This arm realizes the SAME attention weight grid as the W8A8 article (evidence: grid_match_vs_w8a8.json) with the SAME 8-bit activation operands and the SAME ap_fixed<24,12> weight container, so a synthesis of it isolates the provenance effect at equal width.",
+  "NOT_AN_OPERATING_POINT": "This arm FAILS every AMENDMENT-A1 fidelity bar -- by 19x (per-class eff@1%), 66x (worst per-class AUC) and 75x (macro AUC) on the three ratio-defined bars, with corr_scores 0.8642 and argmax 0.7569 far below their thresholds -- and that is EXPECTED, not a defect. The W = 8 rung already failed decisively (macro dAUC -0.014593, corr 0.94735); a coarser weight lattice at the same activation width is necessarily worse. It must NEVER be quoted as an FP32 operating point, must never enter the accuracy tables, and any resource number taken from it is a CONTROL number whose only legitimate use is the A2-vs-W8A8 decomposition. W* = 16 remains the FP32 realization of record (AMENDMENT A1).",
+  "fidelity_verdict": "FAILS ALL BARS (as designed for a control)",
+  "n": 32768,
+  "gate2_bars_vs_float_export_n32768": {
+    "corr_scores": {
+      "value": 0.8642057174247388,
+      "bar": ">= 0.999",
+      "pass": false
+    },
+    "argmax_agreement": {
+      "value": 0.756866455078125,
+      "bar": ">= 0.98 (A1 item 4)",
+      "pass": false
+    },
+    "abs_delta_macro_auc_upper99": {
+      "value": 0.03750010334374014,
+      "point": -0.035363714130507096,
+      "upper95": 0.036906570963351246,
+      "bar": "<= 0.0005",
+      "pass": false
+    },
+    "abs_delta_per_class_auc_upper99": {
+      "per_class": {
+        "g": 0.09921522730831381,
+        "q": 0.01693641237409039,
+        "W": 0.03958330966621334,
+        "Z": 0.02746976573060551,
+        "t": 0.011328171947448363
+      },
+      "point": {
+        "g": -0.09255201504169819,
+        "q": -0.014600664718862122,
+        "W": -0.03561243623154842,
+        "Z": -0.02482646494456542,
+        "t": -0.00922698971586211
+      },
+      "bar": "<= 0.0015 (A1 item 3)",
+      "worst": "g",
+      "pass": false
+    },
+    "abs_delta_per_class_eff_at_1pct_fpr_upper99": {
+      "per_class": {
+        "g": 0.06692515327852283,
+        "q": 0.07417638778571811,
+        "W": 0.08646520320111514,
+        "Z": 0.18619801133434938,
+        "t": 0.07689766712274784
+      },
+      "eff_ref": {
+        "g": 0.09981028605306062,
+        "q": 0.17728052071757422,
+        "W": 0.21801206636500753,
+        "Z": 0.3265026819923372,
+        "t": 0.3947022993756662
+      },
+      "eff_test": {
+        "g": 0.04951904550170446,
+        "q": 0.12976345451658994,
+        "W": 0.16323579688285572,
+        "Z": 0.17156015325670498,
+        "t": 0.34932998324958126
+      },
+      "point": {
+        "g": -0.05029124055135616,
+        "q": -0.04751706620098428,
+        "W": -0.05477626948215181,
+        "Z": -0.1549425287356322,
+        "t": -0.045372316126084944
+      },
+      "bar": "<= 0.010 absolute (A1 item 3, a deployment CEILING)",
+      "worst": "Z",
+      "pass": false
+    },
+    "plateau_J": {
+      "value": {
+        "ref": {
+          "g": 0.9999999999999586,
+          "q": 0.9999999999999731,
+          "W": 0.9999999999999968,
+          "Z": 0.9999999999999812,
+          "t": 1.0000000000000164
+        },
+        "test": {
+          "g": 1.0000000000000038,
+          "q": 0.9999999999999731,
+          "W": 0.9999999999999968,
+          "Z": 0.9999999999999812,
+          "t": 1.0000000000000164
+        }
+      },
+      "bar": "structural flag if J >= 2 anywhere",
+      "pass": true,
+      "note": "J(c) = n_bkg(c) x fpr_jump, the AMENDMENT-A1 replacement for the VOID no_tie_plateau_straddling_1pct check. J = 1 exactly in both arms and all five classes: the flagged 'straddle' is one background jet, unique_fraction = 1.0, tie_fraction_signal = 0. No plateau exists; the driver's printed 'straddles: q,Z,t' line is the VOID check and must be ignored."
+    }
+  },
+  "any_bar_passes": false,
+  "macro_ovr_auc": {
+    "float_export_ref": 0.8840861612878171,
+    "csim_test": 0.84872244715731
+  },
+  "nested_n4096": {
+    "n": 4096,
+    "corr_scores": 0.865490993682919,
+    "argmax_agreement": 0.756103515625,
+    "delta_macro_auc": -0.03545875091040995
+  },
+  "decomposition_of_the_loss": {
+    "realization_keras_vs_float_export_delta_macro_auc": -0.03549362447948279,
+    "csim_vs_realization_keras": {
+      "corr_scores": 0.9980919043371999,
+      "max_abs_diff_logits": 0.8750000447034836,
+      "argmax_agreement": 0.980712890625,
+      "bit_exact": false
+    },
+    "note": "the loss is the 5-bit weight lattice itself (quantization-only dAUC -0.035494 of the total -0.035364), NOT an hls4ml port defect. The port residual (corr 0.998092) is the same class as the W = 8 rung's (0.997490), which is on the record as acceptable; hls4ml emitted 4 'not a multiple of delta' qinterval warnings, as it does on the other PTQ rungs."
+  },
+  "comparators_for_context": {
+    "fp32-s3-r14n8-w8 (unmatched A2 control)": {
+      "corr_scores": 0.947351,
+      "argmax": 0.874298,
+      "delta_macro_auc": -0.014593
+    },
+    "fp32-s3-r14n8-w16 (W*, the FP32 article)": {
+      "corr_scores": 0.99999,
+      "delta_macro_auc": -1.7e-05
+    }
+  },
+  "ebops_total": 5995950,
+  "stage": "LOCAL convert + C-sim only. Nothing was synthesized; mulder was not contacted."
+}

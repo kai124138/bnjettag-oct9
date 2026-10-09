@@ -1,0 +1,85 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-ebops-abl-preflight-64d7fd90
+  namespace: cms-ml
+  labels:
+    app: kai-ebops-ablation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: kai-ebops-ablation
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 180
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+      - name: preflight
+        image: python:3.12
+        command:
+        - bash
+        - -c
+        args:
+        - 'set -euo pipefail
+
+          export KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true
+
+          export OMP_NUM_THREADS=4 TF_NUM_INTRAOP_THREADS=4 TF_NUM_INTEROP_THREADS=2
+
+          mkdir -p /work/code /data/ebops-n8-20260912-ablation
+
+          echo ''64d7fd909bd71c731f882bc3344e69c055d7abed10087a460c767787882e063c  /cmcode/hgq2.tar.gz''
+          | sha256sum -c -
+
+          tar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1
+
+          export PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=64d7fd909bd71c731f882bc3344e69c055d7abed10087a460c767787882e063c
+
+          export WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-EBOPs-N8
+          WANDB_GROUP=ebops-n8-20260912-ablation
+
+          export CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled
+
+          pip install -q --no-cache-dir tensorflow==2.21.0 keras==3.15.0 hgq2==0.1.9
+          quantizers==1.2.2 scikit-learn==1.9.0 h5py==3.14.0 wandb==0.28.0 hls4ml==1.3.0
+          numpy==2.5.0
+
+          export BNF_CODE=/work/code BNF_CONFIG_GLOB=''ebops-n8-20260912-ablation-*.json''
+          BNF_SKIP_INSTALL=1
+
+          bash /work/code/preflight_final.sh
+
+          python -u /work/code/check_ebops_ablation.py --integration
+
+          '
+        resources:
+          requests:
+            cpu: '4'
+            memory: 8Gi
+            ephemeral-storage: 8Gi
+          limits:
+            cpu: '4'
+            memory: 8Gi
+            ephemeral-storage: 8Gi
+        volumeMounts:
+        - name: code
+          mountPath: /cmcode
+          readOnly: true
+        - name: work
+          mountPath: /work
+        - name: persistent
+          mountPath: /data
+      volumes:
+      - name: code
+        configMap:
+          name: kai-ebops-abl-code-64d7fd909b
+      - name: work
+        emptyDir:
+          sizeLimit: 8Gi
+      - name: persistent
+        persistentVolumeClaim:
+          claimName: kai-data
+  activeDeadlineSeconds: 3600

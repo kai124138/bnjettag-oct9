@@ -1,0 +1,146 @@
+From 25fad6d3e7698ac8f2c68131e79a6b794caa63a8 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:36:45 -0700
+Subject: [PATCH 29/38] act-granularity-element: quant.act_granularity element,
+ one learned width per position and channel on every datalane quantizer (M011)
+
+---
+ code/bnhgq2/ablation.py   |  4 ++--
+ code/bnhgq2/delta_keys.py | 17 +++++++++++++++++
+ code/bnhgq2/qat.py        | 29 ++++++++++++++++++-----------
+ 3 files changed, 37 insertions(+), 13 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index b16273a..9cf54d1 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -144,7 +144,7 @@ def matching_initialization(cfg, sample, seed):
+     equivalent_to_weight_reference = (cfg['arch']['ffn_dim'] == baseline['arch']['ffn_dim']
+                                      and cfg['quant'].get('softmax_out_bits', max(cfg['quant']['act_bits'], 10)) == 10
+                                      and cfg['quant'].get('softmax_out_i', 1) == 1)
+-    if cfg['quant']['act_granularity'] == 'channel':
++    if cfg['quant']['act_granularity'] in ('channel', 'element'):  # Delta: element grids as channel
+         if not equivalent_to_weight_reference:
+             # Preserve the shared FFN64 weight reference above, but calibrate a
+             # tensor-grid model with this variant's actual forward architecture.
+@@ -174,7 +174,7 @@ def matching_initialization(cfg, sample, seed):
+     evidence = {'matched_weight_paths': copied,
+                 'matched_projection_count': matched_kernels,
+                 'equivalent_to_weight_reference': equivalent_to_weight_reference,
+-                'channel_tensor_forward_equivalence_checked': cfg['quant']['act_granularity'] == 'channel',
++                'channel_tensor_forward_equivalence_checked': cfg['quant']['act_granularity'] in ('channel', 'element'),
+                 'kernel_hashes': {v.path: array_hash(v.numpy()) for v in model.weights
+                                   if v.name in ('kernel', 'bias', 'pos_table')}}
+     if init_copied is not None:
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 718471b..19fec15 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -546,3 +546,20 @@ def _act_f0(value, cfg):
+ 
+ 
+ register('quant.act_f0', 'act-init-f0', _act_f0, export_ok=True)
++
++# act-granularity-element (anchor tree only; M011, M065, M096-M098, M102): the existing key
++# quant.act_granularity gets the value "element", one learned width per position and channel on
++# every datalane quantizer (every non-batch axis; Chang value-wise). Under [A20] WRAP, i is
++# data-tracked per element. The Deep Sets body keeps tensor/channel.
++VALUE_SETS['quant.act_granularity'] = ('tensor', 'channel', 'element')
++VALUE_UNWIRED.pop(('quant.act_granularity', 'element'), None)
++
++
++def _granularity(value, cfg):
++    if value == 'element' and lookup(cfg, 'arch.body') == 'deepsets':
++        return 'the Deep Sets body builds tensor or channel grids only'
++    if value == 'element' and lookup(cfg, 'quant.act_calib') != 'free':
++        return "element grids need quant.act_calib 'free'"
++
++
++register('quant.act_granularity', 'act-granularity-element', _granularity, active=lambda value: value == 'element')
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index b4662c4..de3031d 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -661,20 +661,27 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             return lambda x: x  # identity passthrough: parameter-free, DSP-free
+         return PSubLN(flatten_axes=flatten_axes, name=name)
+ 
+-    def act_iq(i0=_PROV_I, axes=(-1,)):
+-        """Free width, fixed-width trainable scale, or a frozen activation grid."""
++    def act_iq(i0=_PROV_I, axes=(-1,), elem_axes=None):
++        """Free width, fixed-width trainable scale, or a frozen activation grid.
++        Delta (act-granularity-element): "element" = one width per position and channel
++        (`elem_axes`, every non-batch axis; Chang value-wise), else as "channel"."""
+         if act_calib == "free":
+             granularity = cfg["quant"].get("act_granularity", "tensor")
+-            if granularity not in ("tensor", "channel"):
++            if granularity not in ("tensor", "channel", "element"):
+                 raise ValueError(f"Unsupported act_granularity: {granularity}")
++            if granularity == "element" and elem_axes is not None:
++                axes = elem_axes
+             return _free_act(ab, i0, act_bw_l1,
+-                             heterogeneous_axis=axes if granularity == "channel" else (),
++                             heterogeneous_axis=axes if granularity in ("channel", "element") else (),
+                              overflow=act_overflow)
+         return _trainable_act(ab, i0) if act_calib == "trainable" else _static_act(ab, i0)
+ 
+     def bias_conf():
+         return _dummy("bias")  # float bias in all variants (matches qkerasModel)
+ 
++    def _elem(x):
++        return tuple(range(-(len(x.shape) - 1), 0))   # every non-batch axis
++
+     def dense_einsum(name, equation, out_shape, x, bias_axes=None):
+         """One projection: A-bit input quant + (binary|int8|float) weights."""
+         if not fp32:
+@@ -684,16 +691,16 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             kq, iq = _dummy("weight"), _dummy("datalane")
+             cls = QEinsumDense
+         elif lmode == "binary_absmean":
+-            kq, iq = _binary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            kq, iq = _binary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,), elem_axes=_elem(x))
+             cls = BitQEinsumDense
+         elif lmode == "none":  # Delta override: float kernel behind the quantized input
+-            kq, iq = _dummy("weight"), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            kq, iq = _dummy("weight"), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,), elem_axes=_elem(x))
+             cls = QEinsumDense
+         elif lmode == "ternary_absmean":  # Delta: LABELLED ternary baseline
+-            kq, iq = _ternary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            kq, iq = _ternary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,), elem_axes=_elem(x))
+             cls = BitQEinsumDense
+         elif lmode == "hgq_learnable":  # Delta: labelled HGQ learnable-width baseline
+-            kq, iq = _hgq_learnable_kq(act_bw_l1), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            kq, iq = _hgq_learnable_kq(act_bw_l1), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,), elem_axes=_elem(x))
+             cls = QEinsumDense
+         else:  # w8a8
+             kq, iq = _static_w8(), act_iq()
+@@ -731,7 +738,7 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                    bq_conf=bias_conf(), name=name, **extra)(x)
+ 
+     def stream_iq():
+-        return _dummy("datalane") if fp32 else act_iq(6, axes=(-2, -1))  # shared over particles and batch
++        return _dummy("datalane") if fp32 else act_iq(6, axes=(-2, -1), elem_axes=(-3, -2, -1))  # shared over particles and batch
+ 
+     pre_act = A.get("pre_block_act")  # Delta: "tanh_lut" before attention and before the FFN
+ 
+@@ -745,7 +752,7 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         if fp32:
+             return QAffinedUnaryFunctionLUT("tanh", iq_conf=_dummy(), oq_conf=_dummy("table"), name=name)(x)
+         taps[name] = x
+-        axes = (-1,) if cfg["quant"].get("act_granularity", "tensor") == "channel" else ()
++        axes = (-1,) if cfg["quant"].get("act_granularity", "tensor") in ("channel", "element") else ()
+         table = QuantizerConfig("kbi", "table", k0=1, b0=7, i0=0, round_mode="RND", overflow_mode="SAT_SYM",
+                                 trainable=True, heterogeneous_axis=axes, bc=Min(4),
+                                 br=MonoL1(act_bw_l1), ir=MonoL1(act_bw_l1))
+@@ -837,7 +844,7 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                 # WRAP datalane, per element over (h, t, s)). Per element under channel
+                 # granularity, per tensor under tensor granularity. Init = the fixed grid
+                 # (i = softmax_out_i, f = softmax_out_bits - softmax_out_i).
+-                sm_axes = (-3, -2, -1) if cfg["quant"].get("act_granularity", "tensor") == "channel" else ()
++                sm_axes = (-3, -2, -1) if cfg["quant"].get("act_granularity", "tensor") in ("channel", "element") else ()
+                 attn_iq = _free_act(sm_out_bits + 1, sm_out_i, act_bw_l1,  # f0 = bits - i
+                                     heterogeneous_axis=sm_axes, overflow="WRAP")
+             else:
+-- 
+2.50.1 (Apple Git-155)
+

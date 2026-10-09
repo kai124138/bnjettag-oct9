@@ -1,0 +1,121 @@
+{
+  "run": "ebops-n8-20260912-ablation-r4-gradual-w1a8-s1",
+  "checkpoint_sha256": "212c0cf2e41727b5b65548517887b2afedb7806fbc7b38da39422c1c991d72e6",
+  "sample_sha256": "39eede24c0bd439e5207fb1dff9414a91a066696cfccbd75f819e409c1bb00ca",
+  "sample": "first 4096 internal-validation jets, already training-standardized",
+  "rf": 1,
+  "clock_ns": 2.5,
+  "hls_part": "xcvu13p-flga2577-2-e",
+  "beta_mode": "exact constants, legacy affine quantizer fractional width 16",
+  "gate1": {
+    "n": 4096,
+    "corr_scores": 0.9999828804871821,
+    "corr_logits": 0.999984291546069,
+    "corr_per_class": [
+      0.9999697801468445,
+      0.9999920315649209,
+      0.9999822177061726,
+      0.9999751253950426,
+      0.9999874240571375
+    ],
+    "max_abs_diff_scores": 0.06803774985597444,
+    "mean_abs_diff_scores": 6.111150029850472e-05,
+    "max_abs_diff_logits": 0.3453817367553711,
+    "argmax_agreement": 0.99951171875,
+    "pass": true,
+    "thresholds": {
+      "score_correlation": 0.997,
+      "argmax_agreement": 0.995
+    }
+  },
+  "kernel_audit": {
+    "input_proj": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "bit_block_0_attn_Wq": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "bit_block_0_attn_Wk": {
+      "sign_match": true,
+      "effective_kernel_max_error": 1.4901161193847656e-08
+    },
+    "bit_block_0_attn_Wv": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "bit_block_0_attn_Wo": {
+      "sign_match": true,
+      "effective_kernel_max_error": 1.4901161193847656e-08
+    },
+    "bit_block_0_ffn_fc1": {
+      "sign_match": true,
+      "effective_kernel_max_error": 1.4901161193847656e-08
+    },
+    "bit_block_0_ffn_fc2": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "bit_block_1_attn_Wq": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "bit_block_1_attn_Wk": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "bit_block_1_attn_Wv": {
+      "sign_match": true,
+      "effective_kernel_max_error": 1.4901161193847656e-08
+    },
+    "bit_block_1_attn_Wo": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "bit_block_1_ffn_fc1": {
+      "sign_match": true,
+      "effective_kernel_max_error": 1.4901161193847656e-08
+    },
+    "bit_block_1_ffn_fc2": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    },
+    "head_fc1": {
+      "sign_match": true,
+      "effective_kernel_max_error": 1.4901161193847656e-08
+    },
+    "head_fc2": {
+      "sign_match": true,
+      "effective_kernel_max_error": 0.0
+    }
+  },
+  "versions": {
+    "keras": "3.15.0",
+    "numpy": "2.4.6",
+    "tensorflow": "2.21.0",
+    "hgq2": "0.1.9",
+    "hls4ml": "1.3.0",
+    "quantizers": "1.2.2"
+  },
+  "native_checkpoint_ebops": 349550,
+  "zero_grid_repairs": [
+    {
+      "node": "bit_block_1_ffn_act",
+      "reason": "ReLU followed by signed {-1,0} quantizer is zero"
+    }
+  ],
+  "gate2": {
+    "n": 4096,
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0,
+    "bit_exact": true,
+    "corr": 1.0
+  },
+  "gate2_pass": true,
+  "hls_archive_sha256": "6c411b11c0d2a6d0845347150ca4f8b8782961e596cc70b0556c1efdd8237503",
+  "toolchain_compatibility": [
+    "split comma-packed ap_vld port pragma into equivalent one-per-port directives",
+    "give top declaration and definition explicit C linkage to avoid Vitis top-symbol resolution failure"
+  ]
+}

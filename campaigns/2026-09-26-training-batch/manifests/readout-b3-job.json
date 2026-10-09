@@ -1,0 +1,123 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-chang0926-readoutb3-42abed",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "chang-n64-20260926",
+      "app": "kai-chang0926-readout"
+    },
+    "annotations": {
+      "bnjettag.io/readout": "epoch-500 snapshots under /data/chang-n64-20260926/pilot-b: certify_ebops.py + analysis/attn_entropy.py",
+      "bnjettag.io/runs": "chang0926-a07-350-n64-s1,chang0926-c-n64-s1,chang0926-f-n64-s1"
+    }
+  },
+  "spec": {
+    "backoffLimit": 0,
+    "activeDeadlineSeconds": 14400,
+    "ttlSecondsAfterFinished": 604800,
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "chang-n64-20260926",
+          "app": "kai-chang0926-readout"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "hcc-nrp-shor-c6017.unl.edu",
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "containers": [
+          {
+            "name": "readout",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=/data/chang-n64-20260926/pilot-b BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nexport BNJ_STAGE=pilot-b\nexport CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled\npip install -q --no-cache-dir -r /work/code/requirements-cpu.txt\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\nBUNDLE6=42abed\nONLY=\"\"; IDX=\"\"; NSNAP=0; MISSING=\"\"\nfor pair in 48:chang0926-a07-350-n64-s1 16:chang0926-c-n64-s1 32:chang0926-f-n64-s1; do\n  i=${pair%%:*}; n=${pair#*:}; d=/data/chang-n64-20260926/pilot-b/runs/$n\n  if test -f \"$d/snapshots/epoch-0500/state.json\"; then ONLY=\"$ONLY${ONLY:+,}$n\"; IDX=\"$IDX $i\"; NSNAP=$((NSNAP + 1))\n  elif test -f \"$d/DIVERGED.json\"; then ONLY=\"$ONLY${ONLY:+,}$n\"; IDX=\"$IDX $i\"\n  else\n    why=NO_TERMINAL_MARKER\n    test -f \"$d/RSS_GATE_FAIL.json\" && why=RSS_GATE_FAIL\n    echo \"READOUT_MISSING $n $why\"; MISSING=\"$MISSING $n\"\n  fi\ndone\ntest \"$NSNAP\" -gt 0 || { echo \"READOUT_NOTHING_PRESENT\"; exit 1; }\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\nOUT=/data/chang-n64-20260926/pilot-b/readout-epoch-0500-$BUNDLE6-b3\nif [ -n \"$MISSING\" ]; then OUT=\"$OUT-partial-$(date -u +%Y%m%dT%H%M%SZ)\"; fi\necho \"READOUT_ARMS only=$ONLY indices=$IDX missing=${MISSING:- none}\"\nmkdir -p \"$OUT\"\nCERT=0; A26=0\npython -u /work/code/campaigns/chang0926/certify_ebops.py --run-root /data/chang-n64-20260926/pilot-b/runs --cache /data/chang-n64-20260926/n64/data --out \"$OUT/certify-snapshot-0500.json\" --snapshot 500 --only \"$ONLY\" || CERT=$?\npython -u /work/code/analysis/attn_entropy.py --indices $IDX --epoch 500 --out \"$OUT/a26-entropy-epoch-0500.json\" || A26=$?\nsha256sum \"$OUT\"/*.json\necho \"READOUT_JOB_DONE certify_exit=$CERT a26_exit=$A26 missing=${MISSING:- none}\"\ntest \"$CERT\" = 0 && test \"$A26\" = 0\n"
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "8",
+                "memory": "24Gi",
+                "ephemeral-storage": "12Gi"
+              },
+              "limits": {
+                "cpu": "8",
+                "memory": "24Gi",
+                "ephemeral-storage": "12Gi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-chang0926-code-42abed4b5d",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "12Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

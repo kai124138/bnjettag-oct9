@@ -1,0 +1,109 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-ptw-n8-0925-preflight-aad98380
+  namespace: cms-ml
+  labels:
+    app: kai-ptw-n8-preflight
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: kai-ptw-n8-preflight
+    spec:
+      restartPolicy: Never
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - nautilus-ext-gpu01.fullerton.edu
+                - ren-gp-argo-01.madren.org
+                - k8s-chase-ci-07.calit2.optiputer.net
+                - k8s-chase-ci-10.calit2.optiputer.net
+                - k8s-haosu-22.sdsc.optiputer.net
+                - ry-gpu-08.sdsc.optiputer.net
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+      containers:
+      - name: preflight
+        image: python:3.12
+        command:
+        - bash
+        - -c
+        args:
+        - "set -euo pipefail\nexport KERAS_BACKEND=tensorflow CUDA_VISIBLE_DEVICES=-1\
+          \ WANDB_MODE=disabled MPLBACKEND=Agg\nmkdir -p /work/code /work/data /work/outputs\n\
+          CODE=/work/code\necho \"aad983805cbaec6f87d810f199cbee2d47ea22c747596429939c57eae3ffd747\
+          \  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz\
+          \ -C \"$CODE\" --strip-components=1\necho \"bad6494c6ee6e881d09850ebc3a92bf54a3d52980808727d72bf087a160425ed\
+          \  $CODE/bnhgq2/train.py\" | sha256sum -c -\necho \"960a67b2d6b59c8763964b67305d8a07ffa9111e7c8b7e76d0e77addb6afcd61\
+          \  $CODE/bnhgq2/pt_weights.py\" | sha256sum -c -\nfor f in \"$CODE/configs/ptw-n8-20260925-base-w1a8.json\"\
+          \ \"$CODE/configs/ptw-n8-20260925-ptw5-w1a8.json\" \"$CODE/configs/ptw-n8-20260925-ptwnc-w1a8.json\"\
+          ; do test -f \"$f\" || { echo \"[fatal] missing $f\"; exit 1; }; done\n\
+          echo \"[gate] archive aad983805cba + train.py + pt_weights.py + 3 arm configs\
+          \ verified\"\nexport PYTHONPATH=\"$CODE\" BNHGQ2_CODE_SHA256=aad983805cbaec6f87d810f199cbee2d47ea22c747596429939c57eae3ffd747\n\
+          \nexport BNF_CODE=/work/code BNF_CONFIG_GLOB='ptw-n8-20260925-*.json' BNF_SKIP_INSTALL=1\n\
+          pip install -q --no-cache-dir \"tensorflow==2.21.0\" \"keras==3.15.0\" \"\
+          hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\"\
+          \ \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\" \"matplotlib==3.11.0\"\
+          \nbash \"$CODE/preflight_final.sh\"\necho \"[data] $(date -u +%FT%TZ) fetch\
+          \ HLS4ML LHC Jet 150p TRAIN split from Zenodo\"\npython -u -c 'import urllib.request;\
+          \ urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\"\
+          , \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz);\
+          \ echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo\
+          \ \"[fatal] train tarball too small ($sz)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz\
+          \ -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find\
+          \ /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] ||\
+          \ { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"\
+          [data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files) $(date -u +%FT%TZ)\"\n\
+          export BNHGQ2_TRAIN_DATA=\"$DATA\" BNHGQ2_OUT_ROOT=/work/outputs BNHGQ2_STORE=/work/outputs/_store\n\
+          \ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train --config \"$CODE/configs/ptw-n8-20260925-base-w1a8.json\"\
+          \ --seed 1 --smoke --out-dir /work/outputs/smoke-base 2>&1 | tee /work/outputs/smoke-base.log\n\
+          python -u \"$CODE/run_stage.py\" train --config \"$CODE/configs/ptw-n8-20260925-ptw5-w1a8.json\"\
+          \ --seed 1 --smoke --out-dir /work/outputs/smoke-ptw5 2>&1 | tee /work/outputs/smoke-ptw5.log\n\
+          python -u \"$CODE/run_stage.py\" train --config \"$CODE/configs/ptw-n8-20260925-ptwnc-w1a8.json\"\
+          \ --seed 1 --smoke --out-dir /work/outputs/smoke-ptwnc 2>&1 | tee /work/outputs/smoke-ptwnc.log\n\
+          python - <<'PYEOF'\nimport json, os\nok = True\nfor arm in ['base', 'ptw5',\
+          \ 'ptwnc']:\n    d = f\"/work/outputs/smoke-{arm}\"\n    meta = json.load(open(os.path.join(d,\
+          \ \"train_meta.json\")))\n    log = open(f\"/work/outputs/smoke-{arm}.log\"\
+          ).read()\n    on = arm != \"base\"\n    has = (\"pt_weights\" in meta, os.path.exists(os.path.join(d,\
+          \ \"pt_weights.json\")), \"pt_weights ON\" in log)\n    pngs = sorted(f\
+          \ for f in os.listdir(d) if f.endswith(\".png\"))\n    good = all(has) if\
+          \ on else not any(has)\n    if on:\n        cap = meta[\"pt_weights\"][\"\
+          cap\"]\n        good = good and len(pngs) == 2 and cap == (5.0 if arm ==\
+          \ \"ptw5\" else None)\n        print(f\"  {arm}: cap={cap} eff_frac={ {k:\
+          \ round(v['eff_frac'], 3) for k, v in meta['pt_weights']['summary'].items()}\
+          \ } pngs={pngs}\")\n    print(f\"  {arm}: n_files={meta['n_files']} n_train={meta['n_train']}\
+          \ epochs_run={meta['epochs_run']} jit={meta['jit_compile']} params={meta['params']}\
+          \ -> {'OK' if good else 'FAIL'}\")\n    ok = ok and good and meta[\"jit_compile\"\
+          ] is False\nprint(\"PTW_SMOKE_PASS\" if ok else \"PTW_SMOKE_FAIL\")\nraise\
+          \ SystemExit(0 if ok else 1)\nPYEOF\n"
+        resources:
+          requests:
+            cpu: '4'
+            memory: 12Gi
+            ephemeral-storage: 32Gi
+          limits:
+            cpu: '4'
+            memory: 12Gi
+            ephemeral-storage: 32Gi
+        volumeMounts:
+        - name: cmcode
+          mountPath: /cmcode
+        - name: work
+          mountPath: /work
+      volumes:
+      - name: cmcode
+        configMap:
+          name: kai-ptw-n8-code-aad983805c
+      - name: work
+        emptyDir:
+          sizeLimit: 28Gi
+  activeDeadlineSeconds: 3600

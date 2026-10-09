@@ -1,0 +1,323 @@
+From 3a193843b04c98a28cdf701b2fec2b5495f57718 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:07 -0700
+Subject: [PATCH 05/14] A3/A4/D8/D9: opt-in pT gate (arch.pt_gate_gev) in
+ cache, Ph loader and ROC-test loader; split from train.validation_split;
+ caches without an order seed; gate and sort statistics in data_info; tests
+
+---
+ bnhgq2/ablation.py    |  3 +++
+ bnhgq2/data.py        | 37 ++++++++++++++++++++++++---
+ bnhgq2/train.py       |  8 +++++-
+ prepare_cache.py      | 47 +++++++++++++++++++++++++++-------
+ run_engram.py         | 19 +++++++++++---
+ tests/test_pt_gate.py | 59 +++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 156 insertions(+), 17 deletions(-)
+ create mode 100644 tests/test_pt_gate.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 934a550..c2a054f 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -52,6 +52,9 @@ def prepare_arrays(cfg, data_dir):
+     x, y, nfiles = load_train_data(data_dir, cfg['arch']['n_part'], features=cfg['arch']['features'])
+     permutation = np.random.default_rng(tr['split_seed']).permutation(len(x))
+     x, y = x[permutation], y[permutation]
++    if cfg['arch'].get('pt_gate_gev') is not None:
++        from .data import apply_pt_gate
++        x = apply_pt_gate(x, cfg['arch']['features'], cfg['arch']['pt_gate_gev'])
+     nv = int(len(x) * tr['validation_split'])
+     xv, yv, xt, yt = x[:nv], y[:nv], x[nv:], y[nv:]
+     mu, sigma = input_std_stats(xt)
+diff --git a/bnhgq2/data.py b/bnhgq2/data.py
+index a69ece9..a64b08e 100644
+--- a/bnhgq2/data.py
++++ b/bnhgq2/data.py
+@@ -32,10 +32,38 @@ def feature_indices(pnames, features):
+     return idx
+ 
+ 
+-def load_eval_set(data_dir: str, n_part: int = 10, features=None):
++def apply_pt_gate(X, features, pt_gate_gev, stats=None):
++    """[A3]/[D7] jsc150 data.py:22-26, `X *= X[..., :1] >= 2`: zero every feature of a
++    constituent whose RAW pT (GeV, the exact `_pt` column, not `_ptrel`) is below the
++    threshold. Runs after the pT sort, top-N truncation and feature subset, before
++    standardization. `pt_gate_gev=None` returns X unchanged (the historical pipeline).
++    `stats` (dict) collects counts for data_info.json; it never changes the output."""
++    if pt_gate_gev is None:
++        return X
++    features = list(features)
++    if 'pt' not in features:
++        raise ValueError('pT gate needs the raw `pt` feature in arch.features')
++    pt = X[..., features.index('pt')]
++    keep = pt >= float(pt_gate_gev)
++    if stats is not None:
++        nonzero = pt != 0
++        stats.update(pt_gate_gev=float(pt_gate_gev), n_slots=int(pt.size),
++                     n_padded_slots=int((~nonzero).sum()),
++                     n_newly_gated_slots=int((nonzero & ~keep).sum()),
++                     n_jets_with_newly_gated=int((nonzero & ~keep).any(axis=-1).sum()),
++                     n_jets_all_gated=int((~keep).all(axis=-1).sum()),
++                     pt_nonzero_min=float(pt[nonzero].min()) if nonzero.any() else None,
++                     pt_max=float(pt.max()), n_negative_pt=int((pt < 0).sum()))
++    return (X * keep[..., None]).astype(X.dtype, copy=False)
++
++
++def load_eval_set(data_dir: str, n_part: int = 10, features=None, pt_gate_gev=None,
++                  gate_stats=None):
+     """features=None keeps all 16 columns (byte-identical pre-pre-conference behaviour);
+     a list of suffixes selects columns AFTER the pT sort and top-N truncation, so
+-    the particle ordering is identical regardless of the feature subset."""
++    the particle ordering is identical regardless of the feature subset.
++    pt_gate_gev (default None = no gate) applies `apply_pt_gate` after the subset, exactly
++    as the training cache does; labels and row order are unchanged by the gate."""
+     files = sorted(glob.glob(os.path.join(data_dir, "*.h5")))
+     if not files:
+         raise FileNotFoundError(f"no .h5 files in {data_dir}")
+@@ -63,7 +91,10 @@ def load_eval_set(data_dir: str, n_part: int = 10, features=None):
+             const = const[:, :, feature_indices(pnames, features)]
+         Xs.append(const.astype("float32"))
+         Ys.append(jets[:, lab_idx].astype("float32"))
+-    return np.concatenate(Xs), np.concatenate(Ys)
++    X = np.concatenate(Xs)
++    if pt_gate_gev is not None:
++        X = apply_pt_gate(X, features, pt_gate_gev, gate_stats)
++    return X, np.concatenate(Ys)
+ 
+ 
+ def calibration_batch(X: np.ndarray, n: int = 8192) -> np.ndarray:
+diff --git a/bnhgq2/train.py b/bnhgq2/train.py
+index 664f97e..3d3f2a5 100644
+--- a/bnhgq2/train.py
++++ b/bnhgq2/train.py
+@@ -13,7 +13,7 @@ import numpy as np
+ # data (top-N by pT — byte-identical logic to data.load_eval_set)       #
+ # --------------------------------------------------------------------------- #
+ def load_train_data(data_dir: str, n_part: int, max_files: int | None = None,
+-                    features=None):
++                    features=None, sort_stats=None):
+     import h5py
+     from .data import CLASS_LABELS, feature_indices
+ 
+@@ -40,6 +40,12 @@ def load_train_data(data_dir: str, n_part: int, max_files: int | None = None,
+         pt_col = next((i for i, n in enumerate(pnames) if n.endswith("_pt")), None)
+         if pt_col is not None:
+             order = np.argsort(-const[:, :, pt_col], axis=1, kind="stable")
++            if sort_stats is not None:   # [A3]: how often the stable -pT sort reorders the top n
++                top = order[:, :n_part]
++                sort_stats['n_jets'] = sort_stats.get('n_jets', 0) + len(top)
++                sort_stats['n_jets_top_n_reordered'] = sort_stats.get('n_jets_top_n_reordered', 0) + \
++                    int((top != np.arange(top.shape[1])[None, :]).any(axis=1).sum())
++                sort_stats['n_raw_constituents'] = int(const.shape[1])
+             const = np.take_along_axis(const, order[:, :, None], axis=1)
+         # feature subset AFTER the pT sort/truncation: ordering is identical
+         # regardless of the subset (pre-conference L1-realistic inputs, e.g.
+diff --git a/prepare_cache.py b/prepare_cache.py
+index 7f33d1f..b43a470 100644
+--- a/prepare_cache.py
++++ b/prepare_cache.py
+@@ -9,9 +9,22 @@ import time
+ 
+ import numpy as np
+ from bnhgq2.train import load_train_data
+-from bnhgq2.data import input_std_stats, apply_input_std
++from bnhgq2.data import input_std_stats, apply_input_std, apply_pt_gate
+ 
+ NAMES = ('x_train', 'y_train', 'x_val', 'y_val')
++N_RAW = 620000   # 62 train files of the HLS4ML LHC jet dataset
++
++
++def split_sizes(validation_split):
++    """[D8] train/validation sizes from the config (historical 0.2 -> 496000/124000)."""
++    n_val = int(N_RAW * float(validation_split))
++    return N_RAW - n_val, n_val
++
++
++def cache_order_seed(config):
++    """Caches built with `cache.order_seed_in_cache: false` do not pin an order seed: the
++    order seed only drives the per-epoch permutation in ablation.run_training ([D9])."""
++    return config['train']['order_seed'] if config.get('cache', {}).get('order_seed_in_cache', True) else None
+ 
+ 
+ def array_hash(array):
+@@ -31,10 +44,12 @@ def verify(cache, n_part, config, require_ready=True):
+     assert info['features'] == config['arch']['features']
+     assert info['split_seed'] == config['train']['split_seed']
+     assert info['validation_split'] == config['train']['validation_split']
+-    assert info['order_seed'] == config['train']['order_seed']
++    assert info['order_seed'] == cache_order_seed(config)
++    assert info.get('pt_gate_gev') == config['arch'].get('pt_gate_gev')
++    n_train, n_val = split_sizes(config['train']['validation_split'])
+     arrays = [np.load(cache / (name + '.npy'), mmap_mode='r') for name in NAMES]
+-    assert arrays[0].shape == (496000, n_part, 3) and arrays[2].shape == (124000, n_part, 3)
+-    assert arrays[1].shape == (496000, 5) and arrays[3].shape == (124000, 5)
++    assert arrays[0].shape == (n_train, n_part, 3) and arrays[2].shape == (n_val, n_part, 3)
++    assert arrays[1].shape == (n_train, 5) and arrays[3].shape == (n_val, 5)
+     for name, array in zip(NAMES, arrays):
+         assert array.dtype == np.float32 and np.isfinite(array).all()
+         assert array_hash(array) == info['array_sha256'][name]
+@@ -65,8 +80,9 @@ def main():
+             ref = by_n[n]
+             assert ref['arch']['features'] == cfg['arch']['features']
+             assert all(ref['train'][k] == cfg['train'][k] for k in ('split_seed', 'validation_split', 'order_seed'))
++            assert ref['arch'].get('pt_gate_gev') == cfg['arch'].get('pt_gate_gev')
+         by_n[n] = cfg
+-    assert set(requested) <= set(by_n) == {8, 64}
++    assert set(requested) <= set(by_n) <= {8, 64}
+     args.root.mkdir(parents=True, exist_ok=True)
+     raw_x = raw_y = None
+     reports = []
+@@ -88,8 +104,10 @@ def main():
+                 assert len(files) == 62, (str(args.raw), len(files))
+                 raw_manifest = [{'name': p.name, 'size': p.stat().st_size} for p in files]
+                 print('[raw_load]', str(args.raw), 'N64 once', flush=True)
+-                raw_x, raw_y, nfiles = load_train_data(str(args.raw), 64, features=cfg['arch']['features'])
+-                assert raw_x.shape == (620000, 64, 3) and raw_y.shape == (620000, 5) and nfiles == 62
++                sort_stats = {}
++                raw_x, raw_y, nfiles = load_train_data(str(args.raw), 64, features=cfg['arch']['features'],
++                                                       sort_stats=sort_stats)
++                assert raw_x.shape == (N_RAW, 64, 3) and raw_y.shape == (N_RAW, 5) and nfiles == 62
+                 print('[raw_loaded]', raw_x.shape, flush=True)
+             permutation = np.random.default_rng(cfg['train']['split_seed']).permutation(len(raw_x))
+             # Preserve loader's feature-major memory layout before its canonical
+@@ -97,15 +115,20 @@ def main():
+             # reduction order and can change standardization cache hashes.
+             x = raw_x[:, :n, :][permutation]
+             y = raw_y[permutation]
++            gate_stats = {}
++            if cfg['arch'].get('pt_gate_gev') is not None:
++                # [A3] gate on raw GeV after sort/truncate/subset, before the split
++                # statistics; per constituent, so it commutes with the permutation.
++                x = apply_pt_gate(x, cfg['arch']['features'], cfg['arch']['pt_gate_gev'], gate_stats)
+             nv = int(len(x) * cfg['train']['validation_split'])
+-            assert nv == 124000
++            assert nv == split_sizes(cfg['train']['validation_split'])[1]
+             mu, sigma = input_std_stats(x[nv:])
+             arrays = (apply_input_std(x[nv:], mu, sigma), y[nv:], apply_input_std(x[:nv], mu, sigma), y[:nv])
+             hashes = {name: array_hash(a) for name, a in zip(NAMES, arrays)}
+             info = {
+                 'n_train': len(arrays[0]), 'n_val': len(arrays[2]), 'n_files': 62,
+                 'n_part': n, 'features': cfg['arch']['features'],
+-                'split_seed': cfg['train']['split_seed'], 'order_seed': cfg['train']['order_seed'],
++                'split_seed': cfg['train']['split_seed'], 'order_seed': cache_order_seed(cfg),
+                 'validation_split': cfg['train']['validation_split'],
+                 'permutation_sha256': array_hash(permutation),
+                 'input_std': {'mu': mu.tolist(), 'sigma': sigma.tolist(), 'computed_from': 'train split only'},
+@@ -113,6 +136,12 @@ def main():
+                 'array_sha256': hashes, 'raw_source': str(args.raw), 'raw_files': raw_manifest,
+                 'code_sha256': os.environ['BNHGQ2_CODE_SHA256'],
+             }
++            if cfg['arch'].get('pt_gate_gev') is not None:
++                # Keys only for gated caches, so historical data_info.json stays identical.
++                info.update(pt_gate_gev=float(cfg['arch']['pt_gate_gev']), pt_gate_stats=gate_stats,
++                            sort_stats=sort_stats, standardization='after the pT gate, train split only',
++                            y_class_counts={'train': np.asarray(arrays[1]).sum(0).astype(int).tolist(),
++                                            'val': np.asarray(arrays[3]).sum(0).astype(int).tolist()})
+             previous = Path('/data/ebops-n8-20260912-ablation/data/data_info.json')
+             if n == 8 and previous.exists():
+                 old = json.loads(previous.read_text())
+diff --git a/run_engram.py b/run_engram.py
+index 98ab043..89514f0 100644
+--- a/run_engram.py
++++ b/run_engram.py
+@@ -180,8 +180,17 @@ def load_cache(path, cfg):
+     if not (path / 'READY.json').is_file():
+         raise ValueError('Expected committed shared data cache (READY.json)')
+     info = json.loads((path / 'data_info.json').read_text())
+-    for key, value in (('n_part', cfg['arch']['n_part']), ('features', cfg['arch']['features']),
+-                       ('split_seed', cfg['train']['split_seed']), ('order_seed', cfg['train']['order_seed'])):
++    checks = [('n_part', cfg['arch']['n_part']), ('features', cfg['arch']['features']),
++              ('split_seed', cfg['train']['split_seed'])]
++    # [D9] A cache built without an order seed (order_seed null) serves every per-run
++    # order seed; historical caches keep the strict order-seed match.
++    if info.get('order_seed', 'missing') is not None:
++        checks.append(('order_seed', cfg['train']['order_seed']))
++    # [A3]/[D8] gated / re-split caches must match the config exactly.
++    if 'pt_gate_gev' in info or cfg['arch'].get('pt_gate_gev') is not None:
++        checks += [('pt_gate_gev', cfg['arch'].get('pt_gate_gev')),
++                   ('validation_split', cfg['train']['validation_split'])]
++    for key, value in checks:
+         if info.get(key) != value:
+             raise ValueError(f'Cache {key} mismatch or missing; expected {value!r}, got {info.get(key)!r}')
+     names = ('x_train', 'y_train', 'x_val', 'y_val')
+@@ -204,8 +213,10 @@ def load_cache(path, cfg):
+             raise ValueError('Wrong input/label dimensions')
+         if not np.isin(y, [0., 1.]).all() or not np.all(y.sum(-1) == 1) or np.any(y.sum(0) == 0):
+             raise ValueError('Expected one-hot labels with every class present')
+-    if (len(xt), len(xv)) != (496000, 124000):
+-        raise ValueError('Production screen requires the shared 496000/124000 split')
++    n_val = int(620000 * float(cfg['train']['validation_split']))
++    if (len(xt), len(xv)) != (620000 - n_val, n_val):
++        raise ValueError(f'Cache split {(len(xt), len(xv))} does not match validation_split '
++                         f"{cfg['train']['validation_split']} ({620000 - n_val}/{n_val})")
+     info = {**info, 'engram_array_sha256': actual}
+     return arrays, info
+ 
+diff --git a/tests/test_pt_gate.py b/tests/test_pt_gate.py
+new file mode 100644
+index 0000000..2708b94
+--- /dev/null
++++ b/tests/test_pt_gate.py
+@@ -0,0 +1,59 @@
++"""[A3] pT gate equals jsc150 `X *= X[..., :1] >= 2` on raw GeV (CPU, synthetic arrays)."""
++import numpy as np
++
++
++def raw(seed=0):
++    rng = np.random.default_rng(seed)
++    x = np.zeros((50, 64, 3), 'float32')
++    n = rng.integers(5, 64, size=50)
++    for j, k in enumerate(n):
++        pt = np.sort(rng.exponential(8.0, size=k))[::-1]
++        x[j, :k, 0] = pt
++        x[j, :k, 1:] = rng.normal(0, 0.4, size=(k, 2))
++    return x
++
++
++def test_gate_matches_chang():
++    from bnhgq2.data import apply_pt_gate
++    x = raw()
++    chang = x.copy(); chang *= chang[..., :1] >= 2
++    ours = apply_pt_gate(x.copy(), ['pt', 'etarel', 'phirel'], 2.0)
++    np.testing.assert_array_equal(ours, chang)
++    assert ours.dtype == np.float32
++
++
++def test_gate_zeroes_all_features_and_keeps_rows():
++    from bnhgq2.data import apply_pt_gate
++    x = raw(1)
++    stats = {}
++    g = apply_pt_gate(x, ['pt', 'etarel', 'phirel'], 2.0, stats)
++    low = (x[..., 0] > 0) & (x[..., 0] < 2)
++    assert np.all(g[low] == 0) and np.array_equal(g[x[..., 0] >= 2], x[x[..., 0] >= 2])
++    assert g.shape == x.shape
++    assert stats['n_newly_gated_slots'] == int(low.sum())
++    assert stats['n_padded_slots'] == int((x[..., 0] == 0).sum())
++
++
++def test_gate_off_is_identity():
++    from bnhgq2.data import apply_pt_gate
++    x = raw(2)
++    assert apply_pt_gate(x, ['pt', 'etarel', 'phirel'], None) is x
++
++
++def test_gate_then_standardize_matches_chang_order():
++    """Gate before standardization: a gated constituent becomes -mu/sigma, not 0."""
++    from bnhgq2.data import apply_pt_gate, input_std_stats, apply_input_std
++    x = raw(3)
++    g = apply_pt_gate(x, ['pt', 'etarel', 'phirel'], 2.0)
++    mu, sigma = input_std_stats(g)
++    s = apply_input_std(g, mu, sigma)
++    low = (x[..., 0] > 0) & (x[..., 0] < 2)
++    np.testing.assert_allclose(s[low], np.broadcast_to(-mu / sigma, s[low].shape), rtol=1e-6)
++
++
++def test_split_sizes():
++    import prepare_cache
++    assert prepare_cache.split_sizes(0.2) == (496000, 124000)
++    assert prepare_cache.split_sizes(0.1) == (558000, 62000)
++    assert prepare_cache.cache_order_seed({'train': {'order_seed': 5}}) == 5
++    assert prepare_cache.cache_order_seed({'train': {'order_seed': 5}, 'cache': {'order_seed_in_cache': False}}) is None
+-- 
+2.50.1 (Apple Git-155)
+

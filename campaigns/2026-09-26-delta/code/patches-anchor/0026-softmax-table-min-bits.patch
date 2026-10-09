@@ -1,0 +1,79 @@
+From 4aa81b1fb161eb2a00bce6dc5764420d57aeabf9 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:35:32 -0700
+Subject: [PATCH 26/38] softmax-table-min-bits: quant.softmax_table_min_bits
+ sets the Min(b) floor of the [A20] learned exp/inv tables (default 4) (M003,
+ M051, M052)
+
+---
+ code/bnhgq2/delta_keys.py | 14 ++++++++++++++
+ code/bnhgq2/qat.py        | 10 +++++++---
+ 2 files changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 962e4bc..38f917e 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -499,3 +499,17 @@ def _pt_gate(value, cfg):
+ 
+ 
+ register('arch.pt_gate_gev', 'pt-gate-threshold', _pt_gate, export_ok=True)
++
++# softmax-table-min-bits (anchor tree only; M003, M051, M052, M054, M060): the lower bound of the
++# trainable exp/inv table widths of the [A20] Chang softmax (qat._chang_table, bc=Min(4) by default).
++UNWIRED.pop('quant.softmax_table_min_bits', None)
++
++
++def _table_min_bits(value, cfg):
++    if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= 12:
++        return 'must be an int in [1, 12] (the table init width is 12 bits)'
++    if lookup(cfg, 'quant.softmax_quant') != 'chang':
++        return 'needs quant.softmax_quant "chang" (the fixed softmax tables are not trainable)'
++
++
++register('quant.softmax_table_min_bits', 'softmax-table-min-bits', _table_min_bits)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 023cbfc..46a1a5c 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -510,7 +510,7 @@ def _free_act(act_bits: int, i0: int, bw_l1: float = 1e-8, heterogeneous_axis=()
+                            ir=regularizer(float(bw_l1)), fr=regularizer(float(bw_l1)))
+ 
+ 
+-def _chang_table(bw_l1: float, b0: int = 12, i0: int = 1):
++def _chang_table(bw_l1: float, b0: int = 12, i0: int = 1, min_bits: int = 4):
+     """[A20] learned softmax table (jsc150 `place='table'` scope, bc=Min(4)).
+     KBI, trainable b and i, b >= 4. QSoftmax (HGQ2 0.1.9) forces SAT, RND_CONV, k0=0 and,
+     with allow_heterogeneous_table=False (the MHA default jsc150 uses), a per-tensor
+@@ -520,7 +520,7 @@ def _chang_table(bw_l1: float, b0: int = 12, i0: int = 1):
+     from hgq.regularizers import MonoL1
+     return QuantizerConfig("kbi", "table", k0=0, b0=int(b0), i0=int(i0),
+                            round_mode="RND_CONV", overflow_mode="SAT", trainable=True,
+-                           heterogeneous_axis=(), bc=Min(4), br=MonoL1(float(bw_l1)),
++                           heterogeneous_axis=(), bc=Min(int(min_bits)), br=MonoL1(float(bw_l1)),
+                            ir=MonoL1(float(bw_l1)))
+ 
+ 
+@@ -762,6 +762,9 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+     if sm_out_bits - sm_out_i < 1:
+         raise ValueError("softmax output needs at least one fractional bit")
+ 
++    # Delta (softmax-table-min-bits): lower bound of the learned exp/inv table widths (Chang Min(4))
++    table_min_bits = int(cfg["quant"].get("softmax_table_min_bits", 4))
++
+     def softmax(name, x, scale):
+         if fp32:
+             return QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
+@@ -772,7 +775,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             return QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
+                             exp_iq_conf=_chang_softmax_iq(act_bw_l1, 1, 6, max(ab, 10) - 7, "SAT"),
+                             inv_iq_conf=_chang_softmax_iq(act_bw_l1, 0, 4, 8, "WRAP"),
+-                            exp_oq_conf=_chang_table(act_bw_l1), inv_oq_conf=_chang_table(act_bw_l1),
++                            exp_oq_conf=_chang_table(act_bw_l1, min_bits=table_min_bits),
++                            inv_oq_conf=_chang_table(act_bw_l1, min_bits=table_min_bits),
+                             allow_heterogeneous_table=False, name=name)(x)
+         # generous static tables (softmax internals are LN/softmax-bounded; the
+         # substitution cost was measured negligible in the rebuild gold experiments)
+-- 
+2.50.1 (Apple Git-155)
+

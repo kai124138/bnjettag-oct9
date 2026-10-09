@@ -1,0 +1,85 @@
+/cmcode/hgq2.tar.gz: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+=== BNJetTag FINAL preflight (PVC-free) Sat Sep 12 07:49:59 UTC 2026 ===
+[deps] pinned install (mirror .venv-hgq2)
+--- data source reachability: Zenodo train tarball (HEAD, no download) ---
+  OK Zenodo train tarball reachable: 2725115104 bytes
+  PASS data-source
+--- build all 5 configs (CPU) + param counts + binary gate ---
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789199400.645359      21 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1789199400.729413      21 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789199403.405058      21 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789199405.777165      21 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+  ebops-n8-20260912-ablation-r0-baseline-w1a8 [ad2ddd0d] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260912-ablation-r1-channel-w1a8 [0f1cbf9b] params=20,715 trainable=19,883 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260912-ablation-r2-ffn32-w1a8 [05208a51] params=14,497 trainable=14,351 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260912-ablation-r3-prob8-w1a8 [0488bcbe] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260912-ablation-r4-gradual-w1a8 [ad1a47c8] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260912-ablation-r5-recovery-w1a8 [aaeb4007] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260912-ablation-r6-distill-w1a8 [1aca2fe5] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  PASS build
+PREFLIGHT_ALL_PASS
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789199415.065639       1 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1789199415.158902       1 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789199417.670643       1 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789199420.073406       1 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[build] r0-baseline params=18657 initial_ebops=1739182
+WARNING:tensorflow:5 out of the last 5 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7335fc6dbf60> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:6 out of the last 6 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7335fc6dbf60> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[build] r1-channel params=20715 initial_ebops=1739182
+[build] r2-ffn32 params=14497 initial_ebops=1477038
+[build] r3-prob8 params=18657 initial_ebops=1673646
+[build] r4-gradual params=18657 initial_ebops=1739182
+[build] r5-recovery params=18657 initial_ebops=1739182
+[build] r6-distill params=18657 initial_ebops=1739182
+[train] ebops-n8-20260912-ablation-r0-baseline-w1a8 params=18657 resume_epoch=0 initial_ebops=1739182
+[epoch 1/2] EBOPs=1739182 target=2000000.0 beta=1e-07 AUC=0.406250 seconds=23.6 checkpoint=epoch-0001
+[train] ebops-n8-20260912-ablation-r0-baseline-w1a8 params=18657 resume_epoch=1 initial_ebops=1739182
+[epoch 2/2] EBOPs=1739182 target=2000000.0 beta=9.93e-08 AUC=0.381250 seconds=20.1 checkpoint=epoch-0002
+[train] ebops-n8-20260912-ablation-r0-baseline-w1a8 params=18657 resume_epoch=0 initial_ebops=1739182
+[epoch 1/2] EBOPs=1739182 target=2000000.0 beta=1e-07 AUC=0.406250 seconds=23.7 checkpoint=epoch-0001
+[epoch 2/2] EBOPs=1739182 target=2000000.0 beta=9.93e-08 AUC=0.381250 seconds=0.7 checkpoint=epoch-0002
+[integration] r0-baseline PASS
+[train] ebops-n8-20260912-ablation-r1-channel-w1a8 params=20715 resume_epoch=0 initial_ebops=1739182
+[epoch 1/2] EBOPs=1739182 target=1.0 beta=1e-07 AUC=0.406250 seconds=22.3 checkpoint=epoch-0001
+[train] ebops-n8-20260912-ablation-r1-channel-w1a8 params=20715 resume_epoch=1 initial_ebops=1739182
+WARNING:tensorflow:5 out of the last 6 calls to <function make_epoch_step.<locals>.epoch_step at 0x7335c6c4e5c0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[epoch 2/2] EBOPs=1739182 target=1.0 beta=2.05e-07 AUC=0.381250 seconds=19.6 checkpoint=epoch-0002
+[integration] r1-channel PASS
+[train] ebops-n8-20260912-ablation-r2-ffn32-w1a8 params=14497 resume_epoch=0 initial_ebops=1477038
+WARNING:tensorflow:6 out of the last 7 calls to <function make_epoch_step.<locals>.epoch_step at 0x7335ac257ec0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+[epoch 1/2] EBOPs=1477038 target=1.0 beta=1e-07 AUC=0.462500 seconds=22.5 checkpoint=epoch-0001
+[train] ebops-n8-20260912-ablation-r2-ffn32-w1a8 params=14497 resume_epoch=1 initial_ebops=1477038
+[epoch 2/2] EBOPs=1477038 target=1.0 beta=2.03e-07 AUC=0.468750 seconds=20.7 checkpoint=epoch-0002
+[integration] r2-ffn32 PASS
+[train] ebops-n8-20260912-ablation-r3-prob8-w1a8 params=18657 resume_epoch=0 initial_ebops=1673646
+[epoch 1/2] EBOPs=1673646 target=1.0 beta=1e-07 AUC=0.387500 seconds=22.0 checkpoint=epoch-0001
+[train] ebops-n8-20260912-ablation-r3-prob8-w1a8 params=18657 resume_epoch=1 initial_ebops=1673646
+[epoch 2/2] EBOPs=1673646 target=1.0 beta=2.05e-07 AUC=0.390625 seconds=21.9 checkpoint=epoch-0002
+[integration] r3-prob8 PASS
+[train] ebops-n8-20260912-ablation-r4-gradual-w1a8 params=18657 resume_epoch=0 initial_ebops=1739182
+[epoch 1/2] EBOPs=1739182 target=1.0 beta=1e-07 AUC=0.406250 seconds=21.8 checkpoint=epoch-0001
+[train] ebops-n8-20260912-ablation-r4-gradual-w1a8 params=18657 resume_epoch=1 initial_ebops=1739182
+[epoch 2/2] EBOPs=1739182 target=1.0 beta=1.34e-07 AUC=0.381250 seconds=20.6 checkpoint=epoch-0002
+[integration] r4-gradual PASS
+[train] ebops-n8-20260912-ablation-r5-recovery-w1a8 params=18657 resume_epoch=0 initial_ebops=1739182
+[recovery] freeze at end of epoch 1; Adam slots and LR preserved
+[epoch 1/2] EBOPs=1739182 target=2000000.0 beta=1e-07 AUC=0.406250 seconds=23.0 checkpoint=epoch-0001
+[train] ebops-n8-20260912-ablation-r5-recovery-w1a8 params=18657 resume_epoch=1 initial_ebops=1739182
+[epoch 2/2] EBOPs=1739182 target=2000000.0 beta=9.93e-08 AUC=0.381250 seconds=15.6 checkpoint=epoch-0002
+[integration] r5-recovery PASS
+[train] ebops-n8-20260912-ablation-r6-distill-w1a8 params=18657 resume_epoch=0 initial_ebops=1739182
+[epoch 1/2] EBOPs=1739182 target=1.0 beta=1e-07 AUC=0.400000 seconds=21.9 checkpoint=epoch-0001
+[train] ebops-n8-20260912-ablation-r6-distill-w1a8 params=18657 resume_epoch=1 initial_ebops=1739182
+[epoch 2/2] EBOPs=1739182 target=1.0 beta=2.05e-07 AUC=0.359375 seconds=19.5 checkpoint=epoch-0002
+[integration] r6-distill PASS
+EBOPS_ABLATION_ALL_PASS

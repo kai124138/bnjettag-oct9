@@ -1,0 +1,132 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-repro-chang-kerasonly-xfmt-n64
+  labels:
+    app: bnjet-repro-chang-test
+    reprochang: "kerasonly-xfmt-n64"
+spec:
+  backoffLimit: 5
+  activeDeadlineSeconds: 165600
+  template:
+    metadata:
+      labels:
+        app: bnjet-repro-chang-test
+        reprochang: "kerasonly-xfmt-n64"
+    spec:
+      restartPolicy: Never
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values: [amd64]
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values: [hcc-chase-shor-c4705.unl.edu]
+      containers:
+      - name: test
+        image: python:3.12
+        command: ["bash", "-c"]
+        args:
+        - |
+          set -eo pipefail
+          # xfmt-n64 KERAS-ONLY evaluation. The full upstream run_test.py path has now
+          # crashed three times on this article (2026-08-06, 08-08 x2) inside
+          # trace_model/RTLModel.write — the fully-unrolled combinational graph of a
+          # 64-constituent LUT transformer. That stage runs unconditionally in
+          # convert_and_test, so --no-sw-test does not avoid it. This job reproduces only
+          # the keras_metric half (trace_minmax calibration + test accuracy), which is the
+          # number the comparison table needs; comb/RTL equivalence for this one article
+          # stays open.
+          export KERAS_BACKEND=jax JAX_PLATFORM_NAME=cpu
+          mkdir -p /work/data /work/ckpt /work/out
+          git clone https://github.com/calad0i/HGQ2-examples /work/HGQ2-examples
+          git -C /work/HGQ2-examples checkout 6cdc6e3
+          pip install -q --no-cache-dir "jax==0.11.0" "keras==3.14.0" \
+            "git+https://github.com/calad0i/HGQ2@88ddffde25e8f855c9534015863fa07b269d0b60" \
+            "quantizers>=1.2" "h5py==3.15.1" "tqdm==4.70.0" "wandb==0.28.0" "numpy<2.6"
+          echo "[ckpt] $(date) fetch Pareto artifact"
+          python3 - <<'EOF'
+          import wandb
+          api = wandb.Api()
+          api.artifact('kayamaguchi-uc-san-diego/bnjettag-bitnet/kai-repro-chang-xfmt-n64-pareto:latest').download(root='/work/ckpt')
+          EOF
+          n_ckpt=$(ls /work/ckpt/*.keras | wc -l); echo "[ckpt] $n_ckpt checkpoints"
+          echo "[data] $(date) Zenodo 3602260"
+          cd /work/data
+          curl -sSL -o train.tar.gz "https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1"
+          sz=$(stat -c %s train.tar.gz); [ "$sz" -gt 2500000000 ] || { echo "[fatal] train tarball too small ($sz)"; exit 1; }
+          curl -sSL -o val.tar.gz "https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_val.tar.gz?download=1"
+          tar -xzf train.tar.gz && rm -f train.tar.gz
+          tar -xzf val.tar.gz && rm -f val.tar.gz
+          python3 /work/HGQ2-examples/jsc150/tools/prepare_data.py -i ./train/ -o 150c-train.h5 -j 4
+          python3 /work/HGQ2-examples/jsc150/tools/prepare_data.py -i ./val/ -o 150c-test.h5 -j 4
+          rm -rf ./train/ ./val/
+          export WANDB_PROJECT=bnjettag-bitnet WANDB_ENTITY=kayamaguchi-uc-san-diego
+          export WANDB_NAME=repro-chang-kerasonly-xfmt-n64 WANDB_RUN_GROUP=repro-chang
+          export WANDB_TAGS=repro-chang,jsc150,test,xfmt-n64,keras-only
+          upload() {
+            python3 - <<'EOF'
+          import wandb
+          run = wandb.init(job_type='repro-chang-test')
+          art = wandb.Artifact('evaluation-repro-chang-xfmt-n64-kerasonly', type='evaluation')
+          art.add_dir('/work/out')
+          run.log_artifact(art).wait()
+          run.finish()
+          EOF
+          }
+          trap upload EXIT
+          echo "[test] $(date) keras-only eval, n=64 f=3"
+          cd /work/HGQ2-examples/jsc150
+          python -u - <<'EOF' 2>&1 | tee /work/out/kerasonly.log
+          import json, glob, os
+          import numpy as np, keras
+          from data import get_data
+          from model import SameDim0
+          from hgq.utils import trace_minmax
+
+          (X_train, _), (X_val, _), (X_test, y_test) = get_data('/work/data', 64, True)
+          out = {}
+          for p in sorted(glob.glob('/work/ckpt/*.keras')):
+              stem = os.path.basename(p)[:-6]
+              m = keras.models.load_model(p, compile=False, custom_objects={'SameDim0': SameDim0})
+              # same calibration order as upstream trace_and_save: train then val, reset on first
+              trace_minmax(m, X_train, batch_size=25600, reset=True)
+              trace_minmax(m, X_val, batch_size=25600, reset=False)
+              pred = np.argmax(m.predict(X_test, batch_size=25600, verbose=0), axis=-1)
+              acc = float(np.mean(pred == y_test))
+              ebops = int(sum(int(l.ebops) for l in m.layers if getattr(l, 'enable_ebops', False)))
+              out[stem] = {'keras_metric': acc, 'ebops': ebops}
+              print(f'{stem} acc={acc:.4f} ebops={ebops}', flush=True)
+          json.dump(out, open('/work/out/kerasonly_metrics.json', 'w'), indent=2)
+          best = max(out.values(), key=lambda d: d['keras_metric'])
+          adm = [d for d in out.values() if d['ebops'] <= 350000]
+          iso = max(adm, key=lambda d: d['keras_metric']) if adm else None
+          print('RESULT best', best, 'iso350k', iso)
+          EOF
+          echo "[done] $(date)"
+        env:
+        - name: WANDB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kai-wandb
+              key: WANDB_API_KEY
+        resources:
+          limits:
+            cpu: "4"
+            memory: 48Gi
+            ephemeral-storage: 40Gi
+          requests:
+            cpu: "4"
+            memory: 48Gi
+            ephemeral-storage: 40Gi
+        volumeMounts:
+        - name: work
+          mountPath: /work
+      volumes:
+      - name: work
+        emptyDir:
+          sizeLimit: 40Gi

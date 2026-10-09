@@ -1,0 +1,150 @@
+From 765a5ed0e5b1a3815975efa22c51c1a198bb8484 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:47:13 -0700
+Subject: [PATCH 12/24] latent-ema-eval: experiment.latent_ema_decay, EMA
+ latents evaluated and saved re-binarized; shadow in each checkpoint leaf
+ (M034)
+
+---
+ code/bnhgq2/ablation.py   | 58 ++++++++++++++++++++++++++++++++++++---
+ code/bnhgq2/delta_keys.py |  8 ++++++
+ 2 files changed, 62 insertions(+), 4 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index b45b059..cb9d5c7 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -213,7 +213,43 @@ def reflection_signs(cfg, epoch, n):
+     return rng.choice(np.array([-1., 1.], 'float32'), size=(n, len(reflection_columns(cfg))))
+ 
+ 
+-def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None, input_std=None):
++class LatentEMA:
++    """Delta (latent-ema-eval): per-step EMA of the binary latent kernels. Evaluation and
++    the saved candidate use the EMA latents (re-binarized by the forward); training continues
++    on the live latents. The shadow is saved inside each checkpoint leaf (latent_ema.npz)."""
++
++    def __init__(self, model, decay, arrays=None):
++        self.decay = float(decay)
++        self.pairs = []
++        for ly in model.layers:
++            if isinstance(ly, (qat.BitQEinsumDense, qat.BitQDense)):
++                key = ly._kernel.path.replace('/', '__')
++                init = arrays[key] if arrays is not None else ly._kernel.numpy()
++                self.pairs.append((key, ly._kernel, tf.Variable(init, trainable=False)))
++        if arrays is not None:
++            assert set(arrays) == {key for key, _, _ in self.pairs}, 'EMA shadow does not match the model'
++        self._live = None
++
++    def update(self):
++        for _, variable, shadow in self.pairs:
++            shadow.assign(self.decay * shadow + (1. - self.decay) * variable)
++
++    def swap_in(self):
++        self._live = [variable.numpy() for _, variable, _ in self.pairs]
++        for _, variable, shadow in self.pairs:
++            variable.assign(shadow)
++
++    def swap_out(self):
++        for (_, variable, _), live in zip(self.pairs, self._live):
++            variable.assign(live)
++        self._live = None
++
++    def arrays(self):
++        return {key: shadow.numpy() for key, _, shadow in self.pairs}
++
++
++def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None, input_std=None,
++                    latent_ema=None):
+     x = tf.convert_to_tensor(xt, dtype=tf.float32)
+     y = tf.convert_to_tensor(yt, dtype=tf.float32)
+     teacher = tf.convert_to_tensor(teacher_logits if teacher_logits is not None else np.zeros_like(yt), dtype=tf.float32)
+@@ -281,6 +317,8 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_
+             optimizer.apply_gradients(pairs)
+             for variable in clip_vars:
+                 variable.assign(tf.clip_by_value(variable, -float(latent_clip), float(latent_clip)))
++            if latent_ema is not None:
++                latent_ema.update()
+             count = tf.cast(tf.shape(idx)[0], tf.float32)
+             acc = tf.reduce_mean(tf.cast(tf.argmax(logits, -1) == tf.argmax(yb, -1), tf.float32))
+             totals += count * tf.stack([loss, ce, kd, acc])
+@@ -293,7 +331,7 @@ def raw_widths(model):
+             for name, q in activation_quantizers(model) if q.trainable and hasattr(q, '_f')}
+ 
+ 
+-def save_checkpoint(out, model, optimizer, state):
++def save_checkpoint(out, model, optimizer, state, arrays=None):
+     out = Path(out)
+     root = out / 'checkpoints'
+     root.mkdir(exist_ok=True)
+@@ -305,6 +343,8 @@ def save_checkpoint(out, model, optimizer, state):
+     model.save(temp / 'model.keras')
+     np.savez(temp / 'optimizer.npz', **{f'v{i}': v.numpy() for i, v in enumerate(optimizer.variables)})
+     atomic_json(temp / 'state.json', state)
++    for filename, content in (arrays or {}).items():  # Delta: extra state in the same leaf
++        np.savez(temp / filename, **content)
+     for name in ('model_best.keras', 'model_min_ebops.keras', 'model_unconstrained.keras'):
+         if (out / name).exists():
+             shutil.copyfile(out / name, temp / name)
+@@ -505,8 +545,13 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             wandb_run.summary.update(training_status_summary(state, selection_metric, stop_after, paused=True))
+             wandb_run.finish()
+         return state
++    latent_ema = None
++    if cfg['experiment'].get('latent_ema_decay'):
++        leaf = out / 'checkpoints' / json.loads((out / 'latest.json').read_text())['checkpoint'] if resumed else None
++        ema_saved = dict(np.load(leaf / 'latent_ema.npz')) if leaf is not None else None
++        latent_ema = LatentEMA(model, cfg['experiment']['latent_ema_decay'], ema_saved)
+     step = make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits, teacher_model=teacher_model,
+-                           input_std=data_info['input_std'])
++                           input_std=data_info['input_std'], latent_ema=latent_ema)
+     epochs = cfg['train']['epochs']
+     for epoch in range(state['completed_epochs'], epochs):
+         start = time.monotonic()
+@@ -522,6 +567,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             raise RuntimeError('Nonfinite training metrics')
+         # Cost tracing updates HGQ range state. Validate the traced state that
+         # is actually saved, so checkpoint metrics and reloaded predictions agree.
++        if latent_ema is not None:
++            latent_ema.swap_in()
+         cost = compute_ebops(model, sample)
+         # Evaluate exactly the serialized artifact. Live compiled-model inference
+         # and fresh-load inference can choose different floating-point kernels.
+@@ -534,6 +581,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         auc, per_auc, val_accuracy = validation_metrics(yv, logits)
+         del validation_model
+         gc.collect()
++        if latent_ema is not None:
++            latent_ema.swap_out()
+         widths = width_snapshot(model)
+         if state['recovery_frozen']:
+             assert raw_widths(model) == state['freeze_widths'], 'Frozen activation grids moved'
+@@ -584,7 +633,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             f.write(json.dumps(record, allow_nan=False) + '\n')
+             f.flush()
+             os.fsync(f.fileno())
+-        saved = save_checkpoint(out, model, optimizer, state)
++        saved = save_checkpoint(out, model, optimizer, state,
++                                arrays={'latent_ema.npz': latent_ema.arrays()} if latent_ema is not None else None)
+         print(f"[epoch {epoch + 1}/{epochs}] EBOPs={cost['total']} target={final_target} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name}", flush=True)
+         if wandb_run:
+             import wandb
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index de11b87..ff123f4 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -214,3 +214,11 @@ def _augment(value, cfg):
+ 
+ 
+ register('data.augment', 'augment-eta-phi-reflect', _augment, export_ok=True)
++
++# latent-ema-eval: EMA of the binary latents, evaluated and saved re-binarized (card R08; M034).
++def _decay(value, cfg):
++    ok = isinstance(value, float) and 0. < value < 1.
++    return None if ok else 'must be a float in (0, 1)'
++
++
++register('experiment.latent_ema_decay', 'latent-ema-eval', _decay, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,24 @@
+# bench_summary.py bench on the CPU-gate pod output with --plan ../manifests/bench_plan.json (stop_after 2: no traced epoch 10/20, so s and R are undefined by construction; the seven products show as rule 3 / [D6] no-data rows, since only the cpu-gate slug exists here); synthetic, not a result
+| product | class | K | s [D1] | R [D1] | s pooled | R pooled | class R | pack R | wall s/ep | mem frac | util all | util st | cores | rss MB | OOM | NaN | Q apply | Q sched | excluded |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| CPU-gate | E | 2 | - | - | - | - | - | - | 13.0 | - | - | - | - | 2180 | False | False | - | - | no |
+| CPU-gate | A07 | 2 | - | - | - | - | - | - | 33.5 | - | - | - | - | 2675 | True | False | - | - | rule 1: OOM |
+| CPU-gate | E | 1 | - | - | - | - | - | - | 20.1 | - | - | - | - | 2572 | False | False | - | - | no |
+| NVIDIA-L40 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | rule 3 / [D6]: no data (not Running 6 h after apply, or not run) |
+| NVIDIA-L40S | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | rule 3 / [D6]: no data (not Running 6 h after apply, or not run) |
+| NVIDIA-GeForce-RTX-4090 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | rule 3 / [D6]: no data (not Running 6 h after apply, or not run) |
+| NVIDIA-GeForce-RTX-3090 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | rule 3 / [D6]: no data (not Running 6 h after apply, or not run) |
+| NVIDIA-RTX-A6000 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | rule 3 / [D6]: no data (not Running 6 h after apply, or not run) |
+| NVIDIA-A40 | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | rule 3 / [D6]: no data (not Running 6 h after apply, or not run) |
+| NVIDIA-A100-SXM4-80GB | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | - | rule 3 / [D6]: no data (not Running 6 h after apply, or not run) |
+# CPU-gate E p1-E-k2: node None fingerprint None verification {'PASS': 2, 'SKIPPED': 0, 'FAIL': 0, 'none': 0} traced_as_expected True n_untraced 2 n_traced 0 samples 5 cache_matches_anchor False crosses_resume False
+# CPU-gate A07 p2-A07-k2: node None fingerprint None verification {'PASS': 1, 'SKIPPED': 0, 'FAIL': 0, 'none': 0} traced_as_expected True n_untraced 1 n_traced 0 samples 6 cache_matches_anchor False crosses_resume False
+# CPU-gate E p3-E-k1: node None fingerprint None verification {'PASS': 1, 'SKIPPED': 0, 'FAIL': 0, 'none': 0} traced_as_expected True n_untraced 1 n_traced 0 samples 4 cache_matches_anchor False crosses_resume False
+# NVIDIA-L40 None none: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples None cache_matches_anchor None crosses_resume None
+# NVIDIA-L40S None none: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples None cache_matches_anchor None crosses_resume None
+# NVIDIA-GeForce-RTX-4090 None none: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples None cache_matches_anchor None crosses_resume None
+# NVIDIA-GeForce-RTX-3090 None none: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples None cache_matches_anchor None crosses_resume None
+# NVIDIA-RTX-A6000 None none: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples None cache_matches_anchor None crosses_resume None
+# NVIDIA-A40 None none: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples None cache_matches_anchor None crosses_resume None
+# NVIDIA-A100-SXM4-80GB None none: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples None cache_matches_anchor None crosses_resume None
+EXIT 0

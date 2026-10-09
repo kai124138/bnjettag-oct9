@@ -1,0 +1,355 @@
+   1  # rules-b5.txt  diagnostic, unreviewed, local computation (not quotable)
+   2  input captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/a26-entropy-epoch-0500.json sha256=9a4ccda718ac0acd42b5f83885af4787e49ec1a001d416a8d5cecdc4d3e7cab9
+   3  input captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/certify-snapshot-0500.json sha256=b772d992a6c8b7d3c57c009ac2a42ec6ebd7a3f5ca2331a6e053529e822d4d29
+   4  input captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/identity.json sha256=2be4666f378b639d0c5460167fe031581c9d85a6cb35a5339ebfc29873d3599b
+   5  input captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/input-manifest.json sha256=d8d2a7c041bd078a50abb8e1ff452e0b9483894986fe6a7f0c188a3ac73c116c
+   6  input captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/result.json sha256=d144c9fc307c615ddf798c123932d058645437b014ae30bf56d7a629a40567d7
+   7  input captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/runtime.json sha256=1dfa8e492f0ea0c969bdf1abef6b5467a0d96cb93d1b2f11fc6dc646091b560a
+   8  input captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/transfer-receipt.json sha256=928a14f38f8cadb38a59089c6e51a3eabfc5f6f2e328097603b9860b509cd205
+   9  ## chang0926-a-n64-s1  file=captures/readout-run-20261001T0625Z/telemetry-raw-01/chang0926-a-n64-s1-activation_widths.jsonl  sha256=08f040163c72aa4e58f9994e09e145c75d88ebc601857128da07ba81620d5f15
+  10  chang0926-a-n64-s1 lines=500 epochs_min=0 epochs_max=499 unique=500 monotonic=True contiguous=True
+  11  chang0926-a-n64-s1 traced_epochs=51 zero_based=[0, 9, 19, 29]...[489, 499]
+  12  chang0926-a-n64-s1 threshold_c_values_in_file=[0.2109624456315518] registered=0.2109624456315518
+  13  chang0926-a-n64-s1 traced (a)_met=12 feasible=0 feasible_degenerate=12 of 51; (a)_met ep0=[389, 399, 409, 419, 429, 439, 449, 459, 469, 479, 489, 499]
+  14  chang0926-a-n64-s1 runner_flags feasible_ep0=[] matches_recompute=True
+  15  chang0926-a-n64-s1 traced epochs failing (c): n=16 first_ep0=[339] last_ep0=[499]
+  16  chang0926-a-n64-s1 best_feasible_in_last_line=None
+  17  chang0926-a-n64-s1 min_traced ep0=469 ebops=315512 over_target=-34488 x_target=0.901463 above_floor=143986 headroom_frac=0.806762 x_floor=1.839441 val_acc=0.202129 val_auc=0.503972 line=470
+  18  chang0926-a-n64-s1 untraced=449 in_training<=target on 103; min_in_training ep0=470 315955
+  19  chang0926-a-n64-s1 last10 traced ep0=[409, 419, 429, 439, 449, 459, 469, 479, 489, 499]
+  20  chang0926-a-n64-s1 last10 ebops min=315512 max=327948 x_target 0.9015-0.9370 over_target=0/10
+  21  chang0926-a-n64-s1 last10 val_acc min=0.201919 max=0.207871; beta min=5.4068e-06 max=8.6371e-06
+  22  chang0926-a-n64-s1 over_target traced=39/51
+  23  chang0926-a-n64-s1 traj ep1=1 traced=1 ebops=11652682 in_training=12695046.0 beta=1.0000e-07 lr=3.000e-03 val_acc=0.546258 val_auc=0.833840 train_acc=0.431430 bits_mean=8.4587
+  24  chang0926-a-n64-s1 traj ep1=10 traced=1 ebops=3489334 in_training=4333716.0 beta=1.4824e-07 lr=2.998e-03 val_acc=0.606855 val_auc=0.867386 train_acc=0.615299 bits_mean=4.1412
+  25  chang0926-a-n64-s1 traj ep1=50 traced=1 ebops=607799 in_training=664894.0 beta=2.7005e-07 lr=2.927e-03 val_acc=0.551048 val_auc=0.843836 train_acc=0.534907 bits_mean=0.9934
+  26  chang0926-a-n64-s1 traj ep1=100 traced=1 ebops=506495 in_training=537659.0 beta=7.3274e-07 lr=2.708e-03 val_acc=0.439613 val_auc=0.752165 train_acc=0.475853 bits_mean=0.5998
+  27  chang0926-a-n64-s1 traj ep1=150 traced=1 ebops=444640 in_training=462338.0 beta=1.5449e-06 lr=2.366e-03 val_acc=0.399306 val_auc=0.730050 train_acc=0.370937 bits_mean=0.0595
+  28  chang0926-a-n64-s1 traj ep1=200 traced=1 ebops=465639 in_training=473288.0 beta=2.7250e-06 lr=1.936e-03 val_acc=0.338887 val_auc=0.657280 train_acc=0.308656 bits_mean=0.0650
+  29  chang0926-a-n64-s1 traj ep1=250 traced=1 ebops=403875 in_training=413828.0 beta=3.9582e-06 lr=1.462e-03 val_acc=0.256516 val_auc=0.596102 train_acc=0.283559 bits_mean=0.0567
+  30  chang0926-a-n64-s1 traj ep1=300 traced=1 ebops=415122 in_training=418619.0 beta=6.2923e-06 lr=9.917e-04 val_acc=0.237565 val_auc=0.536403 train_acc=0.238281 bits_mean=0.0607
+  31  chang0926-a-n64-s1 traj ep1=350 traced=1 ebops=373776 in_training=374381.0 beta=8.5263e-06 lr=5.731e-04 val_acc=0.217516 val_auc=0.522274 train_acc=0.217360 bits_mean=0.0543
+  32  chang0926-a-n64-s1 traj ep1=400 traced=1 ebops=330554 in_training=335759.0 beta=8.4966e-06 lr=2.491e-04 val_acc=0.210065 val_auc=0.519860 train_acc=0.213181 bits_mean=0.0450
+  33  chang0926-a-n64-s1 traj ep1=450 traced=1 ebops=319027 in_training=319458.0 beta=7.0205e-06 lr=5.251e-05 val_acc=0.203210 val_auc=0.503911 train_acc=0.203966 bits_mean=0.0431
+  34  chang0926-a-n64-s1 traj ep1=500 traced=1 ebops=315700 in_training=316128.0 beta=5.4068e-06 lr=1.000e-06 val_acc=0.201919 val_auc=0.499199 train_acc=0.202878 bits_mean=0.0451
+  35  chang0926-a-n64-s1 peak val_acc ep0=4 0.652210 in_training=8115798.0 traced=None
+  36  chang0926-a-n64-s1 max beta ep0=362 1.1614e-05
+  37  chang0926-a-n64-s1 attn first traced ep0 with Q and K all 0-bit=39 stays_zero_after=False
+  38  chang0926-a-n64-s1 attn ep0=0 Q0bit=0/24 K0bit=0/24 V0bit=0/24 softmax_ebops=1148931 attn_other_ebops=9838582
+  39  chang0926-a-n64-s1 attn ep0=9 Q0bit=0/24 K0bit=0/24 V0bit=2/24 softmax_ebops=376181 attn_other_ebops=2695317
+  40  chang0926-a-n64-s1 attn ep0=49 Q0bit=24/24 K0bit=24/24 V0bit=22/24 softmax_ebops=171527 attn_other_ebops=15488
+  41  chang0926-a-n64-s1 attn ep0=99 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=12288
+  42  chang0926-a-n64-s1 attn ep0=199 Q0bit=11/24 K0bit=20/24 V0bit=21/24 softmax_ebops=171526 attn_other_ebops=13330
+  43  chang0926-a-n64-s1 attn ep0=299 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+  44  chang0926-a-n64-s1 attn ep0=399 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+  45  chang0926-a-n64-s1 attn ep0=499 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+  46  chang0926-a-n64-s1 per_layer last traced ep0=499 {"input_proj": 13824, "bit_block_0_attn_Wq": 0, "bit_block_0_attn_Wk": 0, "bit_block_0_attn_scores": 0, "bit_block_0_attn_softmax": 171526, "bit_block_0_attn_Wv": 0, "bit_block_0_attn_ctx": 0, "bit_block_0_attn_Wo": 0, "bit_block_0_ffn_fc1": 81920, "bit_block_0_ffn_fc2": 43008, "head_fc1": 5232, "head_fc2": 190}
+  47  chang0926-a-n64-s1 K1 window=one-based 100-500 n=41 median_r=1.015389 ci=[1.008298,1.020782] offset=4777.7 threshold=17847.4 share=0.0268 clause=below
+  48  chang0926-a-n64-s1 K1 window=one-based 100-500 r*=1.059878 n_above_r*=3/41 ci_contains_r*=False
+  49  chang0926-a-n64-s1 K1 window=zero-based 110-500 n=40 median_r=1.015339 ci=[1.005773,1.020782] offset=4762.4 threshold=17847.4 share=0.0267 clause=below
+  50  chang0926-a-n64-s1 K1 window=zero-based 110-500 r*=1.059878 n_above_r*=2/40 ci_contains_r*=False
+  51  chang0926-a-n64-s1 ratio field equals in_training/traced on traced epochs: mismatches=[]
+  52  ## chang0926-a-n64-s2  file=captures/readout-run-20261001T0625Z/telemetry-raw-01/chang0926-a-n64-s2-activation_widths.jsonl  sha256=79235f3f39083bd4bd8480a003b43f5242cd92c0edf614e856927f401fe66d47
+  53  chang0926-a-n64-s2 lines=500 epochs_min=0 epochs_max=499 unique=500 monotonic=True contiguous=True
+  54  chang0926-a-n64-s2 traced_epochs=51 zero_based=[0, 9, 19, 29]...[489, 499]
+  55  chang0926-a-n64-s2 threshold_c_values_in_file=[0.2109624456315518] registered=0.2109624456315518
+  56  chang0926-a-n64-s2 traced (a)_met=21 feasible=15 feasible_degenerate=6 of 51; (a)_met ep0=[299, 309, 319, 329, 339, 349, 359, 369, 379, 389, 399, 409, 419, 429, 439, 449, 459, 469, 479, 489, 499]
+  57  chang0926-a-n64-s2 runner_flags feasible_ep0=[299, 309, 329, 339, 359, 409, 419, 429, 439, 449, 459, 469, 479, 489, 499] matches_recompute=True
+  58  chang0926-a-n64-s2 traced epochs failing (c): n=9 first_ep0=[239] last_ep0=[399]
+  59  chang0926-a-n64-s2 selected_primary ep0=299 ebops=339168 above_floor=167642 headroom_frac=0.939308 val_acc=0.320871 val_auc=0.644662 line=300
+  60  chang0926-a-n64-s2 selected_auc_sensitivity ep0=499 ebops=336841 val_acc=0.312129 val_auc=0.645057 line=500
+  61  chang0926-a-n64-s2   feasible ep0=299 ebops=339168 val_acc=0.320871 val_auc=0.644662 line=300
+  62  chang0926-a-n64-s2   feasible ep0=309 ebops=347369 val_acc=0.275645 val_auc=0.631453 line=310
+  63  chang0926-a-n64-s2   feasible ep0=329 ebops=278519 val_acc=0.258468 val_auc=0.577958 line=330
+  64  chang0926-a-n64-s2   feasible ep0=339 ebops=284688 val_acc=0.212452 val_auc=0.508343 line=340
+  65  chang0926-a-n64-s2   feasible ep0=359 ebops=286379 val_acc=0.275839 val_auc=0.544546 line=360
+  66  chang0926-a-n64-s2   feasible ep0=409 ebops=284164 val_acc=0.216790 val_auc=0.519914 line=410
+  67  chang0926-a-n64-s2   feasible ep0=419 ebops=280475 val_acc=0.313468 val_auc=0.617644 line=420
+  68  chang0926-a-n64-s2   feasible ep0=429 ebops=332527 val_acc=0.312839 val_auc=0.639103 line=430
+  69  chang0926-a-n64-s2   feasible ep0=439 ebops=338217 val_acc=0.287016 val_auc=0.634196 line=440
+  70  chang0926-a-n64-s2   feasible ep0=449 ebops=338248 val_acc=0.284226 val_auc=0.635030 line=450
+  71  chang0926-a-n64-s2   feasible ep0=459 ebops=336657 val_acc=0.299177 val_auc=0.642020 line=460
+  72  chang0926-a-n64-s2   feasible ep0=469 ebops=336561 val_acc=0.297484 val_auc=0.642966 line=470
+  73  chang0926-a-n64-s2   feasible ep0=479 ebops=336831 val_acc=0.295935 val_auc=0.643084 line=480
+  74  chang0926-a-n64-s2   feasible ep0=489 ebops=336796 val_acc=0.314113 val_auc=0.606731 line=490
+  75  chang0926-a-n64-s2   feasible ep0=499 ebops=336841 val_acc=0.312129 val_auc=0.645057 line=500
+  76  chang0926-a-n64-s2 best_feasible_in_last_line={'epoch': 299, 'val_macro_auc': 0.6446617254529058, 'val_categorical_accuracy': 0.32087096774193546, 'ebops': 339168, 'ebops_above_floor': 167642}
+  77  chang0926-a-n64-s2 min_traced ep0=399 ebops=278431 over_target=-71569 x_target=0.795517 above_floor=106905 headroom_frac=0.598995 x_floor=1.623258 val_acc=0.202710 val_auc=0.500331 line=400
+  78  chang0926-a-n64-s2 untraced=449 in_training<=target on 165; min_in_training ep0=332 276543
+  79  chang0926-a-n64-s2 last10 traced ep0=[409, 419, 429, 439, 449, 459, 469, 479, 489, 499]
+  80  chang0926-a-n64-s2 last10 ebops min=280475 max=338248 x_target 0.8014-0.9664 over_target=0/10
+  81  chang0926-a-n64-s2 last10 val_acc min=0.216790 max=0.314113; beta min=1.3687e-06 max=1.6150e-06
+  82  chang0926-a-n64-s2 over_target traced=30/51
+  83  chang0926-a-n64-s2 traj ep1=1 traced=1 ebops=11602989 in_training=12201383.0 beta=1.0000e-07 lr=3.000e-03 val_acc=0.565629 val_auc=0.840483 train_acc=0.452769 bits_mean=8.9283
+  84  chang0926-a-n64-s2 traj ep1=10 traced=1 ebops=3701960 in_training=4231640.0 beta=1.2255e-07 lr=2.998e-03 val_acc=0.607823 val_auc=0.873316 train_acc=0.618794 bits_mean=4.0220
+  85  chang0926-a-n64-s2 traj ep1=50 traced=1 ebops=609352 in_training=660678.0 beta=2.0748e-07 lr=2.927e-03 val_acc=0.577710 val_auc=0.844919 train_acc=0.532776 bits_mean=1.3740
+  86  chang0926-a-n64-s2 traj ep1=100 traced=1 ebops=478790 in_training=531069.0 beta=6.1205e-07 lr=2.708e-03 val_acc=0.459339 val_auc=0.803317 train_acc=0.471063 bits_mean=1.0052
+  87  chang0926-a-n64-s2 traj ep1=150 traced=1 ebops=449500 in_training=479647.0 beta=1.3322e-06 lr=2.366e-03 val_acc=0.485210 val_auc=0.776549 train_acc=0.436299 bits_mean=0.0679
+  88  chang0926-a-n64-s2 traj ep1=200 traced=1 ebops=486433 in_training=462237.0 beta=2.2691e-06 lr=1.936e-03 val_acc=0.359871 val_auc=0.700416 train_acc=0.331699 bits_mean=0.0781
+  89  chang0926-a-n64-s2 traj ep1=250 traced=1 ebops=408589 in_training=408827.0 beta=3.5008e-06 lr=1.462e-03 val_acc=0.242484 val_auc=0.565873 train_acc=0.203271 bits_mean=0.0577
+  90  chang0926-a-n64-s2 traj ep1=300 traced=1 ebops=339168 in_training=350605.0 beta=3.6769e-06 lr=9.917e-04 val_acc=0.320871 val_auc=0.644662 train_acc=0.298857 bits_mean=0.0458
+  91  chang0926-a-n64-s2 traj ep1=350 traced=1 ebops=306516 in_training=306729.0 beta=2.6820e-06 lr=5.731e-04 val_acc=0.202597 val_auc=0.500000 train_acc=0.202575 bits_mean=0.0392
+  92  chang0926-a-n64-s2 traj ep1=400 traced=1 ebops=278431 in_training=283237.0 beta=1.8706e-06 lr=2.491e-04 val_acc=0.202710 val_auc=0.500331 train_acc=0.205959 bits_mean=0.0183
+  93  chang0926-a-n64-s2 traj ep1=450 traced=1 ebops=338248 in_training=338478.0 beta=1.5007e-06 lr=5.251e-05 val_acc=0.284226 val_auc=0.635030 train_acc=0.280039 bits_mean=0.0479
+  94  chang0926-a-n64-s2 traj ep1=500 traced=1 ebops=336841 in_training=336951.0 beta=1.3687e-06 lr=1.000e-06 val_acc=0.312129 val_auc=0.645057 train_acc=0.299953 bits_mean=0.0478
+  95  chang0926-a-n64-s2 peak val_acc ep0=3 0.644177 in_training=9135383.0 traced=None
+  96  chang0926-a-n64-s2 max beta ep0=287 3.9985e-06
+  97  chang0926-a-n64-s2 attn first traced ep0 with Q and K all 0-bit=39 stays_zero_after=False
+  98  chang0926-a-n64-s2 attn ep0=0 Q0bit=0/24 K0bit=0/24 V0bit=0/24 softmax_ebops=1148931 attn_other_ebops=9855608
+  99  chang0926-a-n64-s2 attn ep0=9 Q0bit=0/24 K0bit=0/24 V0bit=0/24 softmax_ebops=376220 attn_other_ebops=2873409
+ 100  chang0926-a-n64-s2 attn ep0=49 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171529 attn_other_ebops=7680
+ 101  chang0926-a-n64-s2 attn ep0=99 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+ 102  chang0926-a-n64-s2 attn ep0=199 Q0bit=5/24 K0bit=18/24 V0bit=13/24 softmax_ebops=171526 attn_other_ebops=50684
+ 103  chang0926-a-n64-s2 attn ep0=299 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+ 104  chang0926-a-n64-s2 attn ep0=399 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+ 105  chang0926-a-n64-s2 attn ep0=499 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+ 106  chang0926-a-n64-s2 per_layer last traced ep0=499 {"input_proj": 7680, "bit_block_0_attn_Wq": 0, "bit_block_0_attn_Wk": 0, "bit_block_0_attn_scores": 0, "bit_block_0_attn_softmax": 171526, "bit_block_0_attn_Wv": 0, "bit_block_0_attn_ctx": 0, "bit_block_0_attn_Wo": 0, "bit_block_0_ffn_fc1": 102400, "bit_block_0_ffn_fc2": 50688, "head_fc1": 4392, "head_fc2": 155}
+ 107  chang0926-a-n64-s2 K1 window=one-based 100-500 n=41 median_r=1.008782 ci=[1.005515,1.026943] offset=2743.5 threshold=17847.4 share=0.0154 clause=below
+ 108  chang0926-a-n64-s2 K1 window=one-based 100-500 r*=1.059878 n_above_r*=6/41 ci_contains_r*=False
+ 109  chang0926-a-n64-s2 K1 window=zero-based 110-500 n=40 median_r=1.008501 ci=[1.005305,1.026943] offset=2656.4 threshold=17847.4 share=0.0149 clause=below
+ 110  chang0926-a-n64-s2 K1 window=zero-based 110-500 r*=1.059878 n_above_r*=5/40 ci_contains_r*=False
+ 111  chang0926-a-n64-s2 ratio field equals in_training/traced on traced epochs: mismatches=[]
+ 112  ## chang0926-d-n64-s1  file=captures/readout-run-20261001T0625Z/telemetry-raw-01/chang0926-d-n64-s1-activation_widths.jsonl  sha256=d58f558ecdd0942902e16cd6d997d1e963491d14877aea31c1b847ebe0ee9f6e
+ 113  chang0926-d-n64-s1 lines=500 epochs_min=0 epochs_max=499 unique=500 monotonic=True contiguous=True
+ 114  chang0926-d-n64-s1 traced_epochs=51 zero_based=[0, 9, 19, 29]...[489, 499]
+ 115  chang0926-d-n64-s1 threshold_c_values_in_file=[0.2109624456315518] registered=0.2109624456315518
+ 116  chang0926-d-n64-s1 traced (a)_met=18 feasible=18 feasible_degenerate=0 of 51; (a)_met ep0=[259, 269, 279, 289, 299, 309, 319, 329, 339, 349, 359, 369, 379, 389, 399, 409, 419, 429]
+ 117  chang0926-d-n64-s1 runner_flags feasible_ep0=[259, 269, 279, 289, 299, 309, 319, 329, 339, 349, 359, 369, 379, 389, 399, 409, 419, 429] matches_recompute=True
+ 118  chang0926-d-n64-s1 traced epochs failing (c): n=0 first_ep0=[] last_ep0=[]
+ 119  chang0926-d-n64-s1 selected_primary ep0=259 ebops=323222 above_floor=151696 headroom_frac=0.849961 val_acc=0.405371 val_auc=0.730096 line=260
+ 120  chang0926-d-n64-s1 selected_auc_sensitivity ep0=269 ebops=303516 val_acc=0.401129 val_auc=0.734780 line=270
+ 121  chang0926-d-n64-s1   feasible ep0=259 ebops=323222 val_acc=0.405371 val_auc=0.730096 line=260
+ 122  chang0926-d-n64-s1   feasible ep0=269 ebops=303516 val_acc=0.401129 val_auc=0.734780 line=270
+ 123  chang0926-d-n64-s1   feasible ep0=279 ebops=293377 val_acc=0.315661 val_auc=0.680599 line=280
+ 124  chang0926-d-n64-s1   feasible ep0=289 ebops=286713 val_acc=0.395306 val_auc=0.720283 line=290
+ 125  chang0926-d-n64-s1   feasible ep0=299 ebops=282586 val_acc=0.402468 val_auc=0.732378 line=300
+ 126  chang0926-d-n64-s1   feasible ep0=309 ebops=277454 val_acc=0.328097 val_auc=0.709857 line=310
+ 127  chang0926-d-n64-s1   feasible ep0=319 ebops=295961 val_acc=0.312161 val_auc=0.694702 line=320
+ 128  chang0926-d-n64-s1   feasible ep0=329 ebops=295909 val_acc=0.320048 val_auc=0.693936 line=330
+ 129  chang0926-d-n64-s1   feasible ep0=339 ebops=278545 val_acc=0.310984 val_auc=0.667251 line=340
+ 130  chang0926-d-n64-s1   feasible ep0=349 ebops=285870 val_acc=0.300435 val_auc=0.630857 line=350
+ 131  chang0926-d-n64-s1   feasible ep0=359 ebops=279519 val_acc=0.373952 val_auc=0.709830 line=360
+ 132  chang0926-d-n64-s1   feasible ep0=369 ebops=283222 val_acc=0.340419 val_auc=0.690492 line=370
+ 133  chang0926-d-n64-s1   feasible ep0=379 ebops=299195 val_acc=0.309290 val_auc=0.647791 line=380
+ 134  chang0926-d-n64-s1   feasible ep0=389 ebops=302685 val_acc=0.278081 val_auc=0.672744 line=390
+ 135  chang0926-d-n64-s1   feasible ep0=399 ebops=305594 val_acc=0.296161 val_auc=0.677552 line=400
+ 136  chang0926-d-n64-s1   feasible ep0=409 ebops=308914 val_acc=0.283081 val_auc=0.678306 line=410
+ 137  chang0926-d-n64-s1   feasible ep0=419 ebops=311143 val_acc=0.319355 val_auc=0.665879 line=420
+ 138  chang0926-d-n64-s1   feasible ep0=429 ebops=304349 val_acc=0.316355 val_auc=0.674421 line=430
+ 139  chang0926-d-n64-s1 best_feasible_in_last_line={'epoch': 259, 'val_macro_auc': 0.7300962915385014, 'val_categorical_accuracy': 0.4053709677419355, 'ebops': 323222, 'ebops_above_floor': 151696}
+ 140  chang0926-d-n64-s1 min_traced ep0=309 ebops=277454 over_target=-72546 x_target=0.792726 above_floor=105928 headroom_frac=0.593521 x_floor=1.617562 val_acc=0.328097 val_auc=0.709857 line=310
+ 141  chang0926-d-n64-s1 untraced=449 in_training<=target on 164; min_in_training ep0=303 270908
+ 142  chang0926-d-n64-s1 last10 traced ep0=[409, 419, 429, 439, 449, 459, 469, 479, 489, 499]
+ 143  chang0926-d-n64-s1 last10 ebops min=304349 max=616465 x_target 0.8696-1.7613 over_target=7/10
+ 144  chang0926-d-n64-s1 last10 val_acc min=0.260500 max=0.335468; beta min=7.1504e-07 max=5.9200e-06
+ 145  chang0926-d-n64-s1 over_target traced=33/51
+ 146  chang0926-d-n64-s1 traj ep1=1 traced=1 ebops=11948350 in_training=12617004.0 beta=1.0000e-07 lr=3.000e-03 val_acc=0.538419 val_auc=0.827890 train_acc=0.435516 bits_mean=8.4639
+ 147  chang0926-d-n64-s1 traj ep1=10 traced=1 ebops=3324374 in_training=3814803.0 beta=1.2720e-07 lr=2.998e-03 val_acc=0.627081 val_auc=0.882549 train_acc=0.629487 bits_mean=4.1734
+ 148  chang0926-d-n64-s1 traj ep1=50 traced=1 ebops=618383 in_training=650646.0 beta=2.2688e-07 lr=2.927e-03 val_acc=0.526419 val_auc=0.829204 train_acc=0.541348 bits_mean=0.1512
+ 149  chang0926-d-n64-s1 traj ep1=100 traced=1 ebops=461179 in_training=497117.0 beta=6.1722e-07 lr=2.708e-03 val_acc=0.532613 val_auc=0.815553 train_acc=0.506276 bits_mean=0.0857
+ 150  chang0926-d-n64-s1 traj ep1=150 traced=1 ebops=427157 in_training=459614.0 beta=1.3285e-06 lr=2.366e-03 val_acc=0.481935 val_auc=0.797670 train_acc=0.480927 bits_mean=0.0528
+ 151  chang0926-d-n64-s1 traj ep1=200 traced=1 ebops=403406 in_training=410645.0 beta=1.9287e-06 lr=1.936e-03 val_acc=0.388161 val_auc=0.763326 train_acc=0.475403 bits_mean=0.0518
+ 152  chang0926-d-n64-s1 traj ep1=250 traced=1 ebops=394589 in_training=405760.0 beta=2.8500e-06 lr=1.462e-03 val_acc=0.352629 val_auc=0.708386 train_acc=0.358561 bits_mean=0.0614
+ 153  chang0926-d-n64-s1 traj ep1=300 traced=1 ebops=282586 in_training=289390.0 beta=1.5485e-06 lr=9.917e-04 val_acc=0.402468 val_auc=0.732378 train_acc=0.377082 bits_mean=0.0374
+ 154  chang0926-d-n64-s1 traj ep1=350 traced=1 ebops=285870 in_training=287694.0 beta=1.0068e-06 lr=5.731e-04 val_acc=0.300435 val_auc=0.630857 train_acc=0.282538 bits_mean=0.0433
+ 155  chang0926-d-n64-s1 traj ep1=400 traced=1 ebops=305594 in_training=314867.0 beta=7.9723e-07 lr=2.491e-04 val_acc=0.296161 val_auc=0.677552 train_acc=0.296862 bits_mean=0.0458
+ 156  chang0926-d-n64-s1 traj ep1=450 traced=1 ebops=599501 in_training=609281.0 beta=1.8216e-06 lr=5.251e-05 val_acc=0.306823 val_auc=0.650216 train_acc=0.287611 bits_mean=0.0780
+ 157  chang0926-d-n64-s1 traj ep1=500 traced=1 ebops=563100 in_training=566222.0 beta=5.9200e-06 lr=1.000e-06 val_acc=0.315823 val_auc=0.666276 train_acc=0.292735 bits_mean=0.0751
+ 158  chang0926-d-n64-s1 peak val_acc ep0=4 0.641984 in_training=7948725.0 traced=None
+ 159  chang0926-d-n64-s1 max beta ep0=499 5.9200e-06
+ 160  chang0926-d-n64-s1 attn first traced ep0 with Q and K all 0-bit=29 stays_zero_after=False
+ 161  chang0926-d-n64-s1 attn ep0=0 Q0bit=0/24 K0bit=0/24 V0bit=0/24 softmax_ebops=1148931 attn_other_ebops=10171635
+ 162  chang0926-d-n64-s1 attn ep0=9 Q0bit=0/24 K0bit=0/24 V0bit=2/24 softmax_ebops=384452 attn_other_ebops=2468332
+ 163  chang0926-d-n64-s1 attn ep0=49 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=3072
+ 164  chang0926-d-n64-s1 attn ep0=99 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=1536
+ 165  chang0926-d-n64-s1 attn ep0=199 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=1536
+ 166  chang0926-d-n64-s1 attn ep0=299 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+ 167  chang0926-d-n64-s1 attn ep0=399 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=171526 attn_other_ebops=0
+ 168  chang0926-d-n64-s1 attn ep0=499 Q0bit=5/24 K0bit=7/24 V0bit=4/24 softmax_ebops=171526 attn_other_ebops=241664
+ 169  chang0926-d-n64-s1 per_layer last traced ep0=499 {"input_proj": 4608, "bit_block_0_attn_Wq": 36864, "bit_block_0_attn_Wk": 36864, "bit_block_0_attn_scores": 131072, "bit_block_0_attn_softmax": 171526, "bit_block_0_attn_Wv": 36864, "bit_block_0_attn_ctx": 0, "bit_block_0_attn_Wo": 0, "bit_block_0_ffn_fc1": 108544, "bit_block_0_ffn_fc2": 32256, "head_fc1": 4272, "head_fc2": 230}
+ 170  chang0926-d-n64-s1 K1 window=one-based 100-500 n=41 median_r=1.033027 ci=[1.027673,1.041860] offset=10087.2 threshold=17847.4 share=0.0565 clause=below
+ 171  chang0926-d-n64-s1 K1 window=one-based 100-500 r*=1.059878 n_above_r*=8/41 ci_contains_r*=False
+ 172  chang0926-d-n64-s1 K1 window=zero-based 110-500 n=40 median_r=1.032521 ci=[1.024078,1.041860] offset=9937.2 threshold=17847.4 share=0.0557 clause=below
+ 173  chang0926-d-n64-s1 K1 window=zero-based 110-500 r*=1.059878 n_above_r*=7/40 ci_contains_r*=False
+ 174  chang0926-d-n64-s1 ratio field equals in_training/traced on traced epochs: mismatches=[]
+ 175  ## chang0926-cprime-n64-s1  file=captures/readout-run-20261001T0625Z/telemetry-raw-01/chang0926-cprime-n64-s1-activation_widths.jsonl  sha256=d04e3c68ba706925dd68fc2ba5f5fab4cc6c68babfc260d77fd06623e063e319
+ 176  chang0926-cprime-n64-s1 lines=500 epochs_min=0 epochs_max=499 unique=500 monotonic=True contiguous=True
+ 177  chang0926-cprime-n64-s1 traced_epochs=51 zero_based=[0, 9, 19, 29]...[489, 499]
+ 178  chang0926-cprime-n64-s1 threshold_c_values_in_file=[0.2109624456315518] registered=0.2109624456315518
+ 179  chang0926-cprime-n64-s1 traced (a)_met=0 feasible=0 feasible_degenerate=0 of 51; (a)_met ep0=[]
+ 180  chang0926-cprime-n64-s1 runner_flags feasible_ep0=[] matches_recompute=True
+ 181  chang0926-cprime-n64-s1 traced epochs failing (c): n=0 first_ep0=[] last_ep0=[]
+ 182  chang0926-cprime-n64-s1 best_feasible_in_last_line=None
+ 183  chang0926-cprime-n64-s1 min_traced ep0=499 ebops=5136496 over_target=136496 x_target=1.027299 above_floor=556098 headroom_frac=1.325299 x_floor=1.121408 val_acc=0.368161 val_auc=0.814757 line=500
+ 184  chang0926-cprime-n64-s1 untraced=449 in_training<=target on 6; min_in_training ep0=488 4894773
+ 185  chang0926-cprime-n64-s1 last10 traced ep0=[409, 419, 429, 439, 449, 459, 469, 479, 489, 499]
+ 186  chang0926-cprime-n64-s1 last10 ebops min=5136496 max=5234768 x_target 1.0273-1.0470 over_target=10/10
+ 187  chang0926-cprime-n64-s1 last10 val_acc min=0.220661 max=0.404048; beta min=5.8302e-07 max=6.9287e-07
+ 188  chang0926-cprime-n64-s1 over_target traced=51/51
+ 189  chang0926-cprime-n64-s1 traj ep1=1 traced=1 ebops=17853582 in_training=17857678.0 beta=1.0000e-07 lr=3.000e-03 val_acc=0.540984 val_auc=0.833778 train_acc=0.452122 bits_mean=6.5352
+ 190  chang0926-cprime-n64-s1 traj ep1=10 traced=1 ebops=7598317 in_training=7651597.0 beta=5.8483e-08 lr=2.998e-03 val_acc=0.630758 val_auc=0.886582 train_acc=0.652149 bits_mean=3.8507
+ 191  chang0926-cprime-n64-s1 traj ep1=50 traced=1 ebops=6551364 in_training=6604612.0 beta=8.6851e-08 lr=2.927e-03 val_acc=0.610290 val_auc=0.880277 train_acc=0.643713 bits_mean=2.7887
+ 192  chang0926-cprime-n64-s1 traj ep1=100 traced=1 ebops=5910763 in_training=5900491.0 beta=1.4687e-07 lr=2.708e-03 val_acc=0.622855 val_auc=0.878271 train_acc=0.621247 bits_mean=2.2225
+ 193  chang0926-cprime-n64-s1 traj ep1=150 traced=1 ebops=5885549 in_training=5824072.0 beta=2.1177e-07 lr=2.366e-03 val_acc=0.603597 val_auc=0.862559 train_acc=0.610086 bits_mean=1.9915
+ 194  chang0926-cprime-n64-s1 traj ep1=200 traced=1 ebops=5656339 in_training=5539608.0 beta=2.8557e-07 lr=1.936e-03 val_acc=0.600339 val_auc=0.863985 train_acc=0.619224 bits_mean=1.8986
+ 195  chang0926-cprime-n64-s1 traj ep1=250 traced=1 ebops=5523421 in_training=5572578.0 beta=3.6496e-07 lr=1.462e-03 val_acc=0.589371 val_auc=0.856296 train_acc=0.610652 bits_mean=1.8648
+ 196  chang0926-cprime-n64-s1 traj ep1=300 traced=1 ebops=5411081 in_training=5322990.0 beta=4.3823e-07 lr=9.917e-04 val_acc=0.567032 val_auc=0.850080 train_acc=0.617138 bits_mean=1.8197
+ 197  chang0926-cprime-n64-s1 traj ep1=350 traced=1 ebops=5304270 in_training=5341166.0 beta=5.2871e-07 lr=5.731e-04 val_acc=0.417339 val_auc=0.826065 train_acc=0.619491 bits_mean=1.7662
+ 198  chang0926-cprime-n64-s1 traj ep1=400 traced=1 ebops=5261301 in_training=5265365.0 beta=5.5401e-07 lr=2.491e-04 val_acc=0.482387 val_auc=0.825117 train_acc=0.609059 bits_mean=1.7493
+ 199  chang0926-cprime-n64-s1 traj ep1=450 traced=1 ebops=5161018 in_training=5163034.0 beta=6.1651e-07 lr=5.251e-05 val_acc=0.363113 val_auc=0.800191 train_acc=0.612088 bits_mean=1.7408
+ 200  chang0926-cprime-n64-s1 traj ep1=500 traced=1 ebops=5136496 in_training=5130352.0 beta=6.9287e-07 lr=1.000e-06 val_acc=0.368161 val_auc=0.814757 train_acc=0.617968 bits_mean=1.7211
+ 201  chang0926-cprime-n64-s1 peak val_acc ep0=47 0.674532 in_training=6426552.0 traced=None
+ 202  chang0926-cprime-n64-s1 max beta ep0=472 7.1662e-07
+ 203  chang0926-cprime-n64-s1 attn first traced ep0 with Q and K all 0-bit=None stays_zero_after=False
+ 204  chang0926-cprime-n64-s1 attn ep0=0 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=14247936
+ 205  chang0926-cprime-n64-s1 attn ep0=9 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=4372480
+ 206  chang0926-cprime-n64-s1 attn ep0=49 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=3467264
+ 207  chang0926-cprime-n64-s1 attn ep0=99 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=2846720
+ 208  chang0926-cprime-n64-s1 attn ep0=199 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=2621440
+ 209  chang0926-cprime-n64-s1 attn ep0=299 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=2406400
+ 210  chang0926-cprime-n64-s1 attn ep0=399 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=2263040
+ 211  chang0926-cprime-n64-s1 attn ep0=499 Q0bit=0/32 K0bit=0/32 V0bit=0/32 softmax_ebops=2738062 attn_other_ebops=2148352
+ 212  chang0926-cprime-n64-s1 per_layer last traced ep0=499 {"input_proj": 36864, "bit_block_0_attn_Wq": 75776, "bit_block_0_attn_Wk": 96256, "bit_block_0_attn_scores": 167936, "bit_block_0_attn_softmax": 2738062, "bit_block_0_attn_Wv": 100352, "bit_block_0_attn_ctx": 1638400, "bit_block_0_attn_Wo": 69632, "bit_block_0_ffn_fc1": 100352, "bit_block_0_ffn_fc2": 108544, "head_fc1": 3872, "head_fc2": 450}
+ 213  chang0926-cprime-n64-s1 K1 window=one-based 100-500 n=41 median_r=0.999223 ci=[0.993286,1.000000] offset=-3497.7 threshold=41960.2 share=-0.0083 clause=below
+ 214  chang0926-cprime-n64-s1 K1 window=one-based 100-500 r*=1.009408 n_above_r*=5/41 ci_contains_r*=False
+ 215  chang0926-cprime-n64-s1 K1 window=zero-based 110-500 n=40 median_r=0.999414 ci=[0.992791,1.000391] offset=-2639.0 threshold=41960.2 share=-0.0063 clause=below
+ 216  chang0926-cprime-n64-s1 K1 window=zero-based 110-500 r*=1.009408 n_above_r*=5/40 ci_contains_r*=False
+ 217  chang0926-cprime-n64-s1 ratio field equals in_training/traced on traced epochs: mismatches=[]
+ 218  chang0926-cprime-n64-s1 Cprime (i) traced over 5M = 51/51 = 1.0000
+ 219  chang0926-cprime-n64-s1 Cprime (ii) fallback min traced / 5M = 5136496 / 5000000 = 1.027299 (fallback, no feasible checkpoint)
+ 220  chang0926-cprime-n64-s1 Cprime (iii) beta at 1e-10 on last 10 traced = 0/10; beta range 5.8302e-07-6.9287e-07
+ 221  chang0926-cprime-n64-s1 Cprime last10 over 5M = 10/10
+ 222  chang0926-cprime-n64-s1 Cprime min/floor = 5136496 / 4580398 = 1.121408
+ 223  ## chang0926-e1-n64-s1  file=captures/readout-run-20261001T0625Z/telemetry-raw-01/chang0926-e1-n64-s1-activation_widths.jsonl  sha256=2dd77ef1d57a730dc0894a47c2f4ea0ec4c9785fb1c4fd71173fa5df94200366
+ 224  chang0926-e1-n64-s1 lines=500 epochs_min=0 epochs_max=499 unique=500 monotonic=True contiguous=True
+ 225  chang0926-e1-n64-s1 traced_epochs=51 zero_based=[0, 9, 19, 29]...[489, 499]
+ 226  chang0926-e1-n64-s1 threshold_c_values_in_file=[0.2109624456315518] registered=0.2109624456315518
+ 227  chang0926-e1-n64-s1 traced (a)_met=0 feasible=0 feasible_degenerate=0 of 51; (a)_met ep0=[]
+ 228  chang0926-e1-n64-s1 runner_flags feasible_ep0=[] matches_recompute=True
+ 229  chang0926-e1-n64-s1 traced epochs failing (c): n=3 first_ep0=[289] last_ep0=[319]
+ 230  chang0926-e1-n64-s1 best_feasible_in_last_line=None
+ 231  chang0926-e1-n64-s1 min_traced ep0=259 ebops=356745 over_target=6745 x_target=1.019271 above_floor=270982 headroom_frac=1.025526 x_floor=4.159661 val_acc=0.278016 val_auc=0.674949 line=260
+ 232  chang0926-e1-n64-s1 untraced=449 in_training<=target on 0; min_in_training ep0=271 359256
+ 233  chang0926-e1-n64-s1 last10 traced ep0=[409, 419, 429, 439, 449, 459, 469, 479, 489, 499]
+ 234  chang0926-e1-n64-s1 last10 ebops min=375382 max=431208 x_target 1.0725-1.2320 over_target=10/10
+ 235  chang0926-e1-n64-s1 last10 val_acc min=0.263290 max=0.344210; beta min=2.4409e-06 max=3.7707e-06
+ 236  chang0926-e1-n64-s1 over_target traced=51/51
+ 237  chang0926-e1-n64-s1 traj ep1=1 traced=1 ebops=10438573 in_training=11717531.0 beta=1.0000e-07 lr=3.000e-03 val_acc=0.587177 val_auc=0.847379 train_acc=0.440045 bits_mean=7.9431
+ 238  chang0926-e1-n64-s1 traj ep1=10 traced=1 ebops=3345907 in_training=3823840.0 beta=1.4612e-07 lr=2.998e-03 val_acc=0.645839 val_auc=0.887993 train_acc=0.644127 bits_mean=3.6517
+ 239  chang0926-e1-n64-s1 traj ep1=50 traced=1 ebops=519416 in_training=573929.0 beta=1.9248e-07 lr=2.927e-03 val_acc=0.570855 val_auc=0.854097 train_acc=0.541317 bits_mean=1.2640
+ 240  chang0926-e1-n64-s1 traj ep1=100 traced=1 ebops=425316 in_training=470688.0 beta=4.0855e-07 lr=2.708e-03 val_acc=0.448742 val_auc=0.777628 train_acc=0.466959 bits_mean=1.2462
+ 241  chang0926-e1-n64-s1 traj ep1=150 traced=1 ebops=374541 in_training=406153.0 beta=5.9011e-07 lr=2.366e-03 val_acc=0.367758 val_auc=0.730213 train_acc=0.422923 bits_mean=0.6039
+ 242  chang0926-e1-n64-s1 traj ep1=200 traced=1 ebops=391735 in_training=425717.0 beta=9.3824e-07 lr=1.936e-03 val_acc=0.427726 val_auc=0.731518 train_acc=0.375145 bits_mean=0.5922
+ 243  chang0926-e1-n64-s1 traj ep1=250 traced=1 ebops=378105 in_training=389777.0 beta=1.1953e-06 lr=1.462e-03 val_acc=0.340758 val_auc=0.678041 train_acc=0.327516 bits_mean=0.5870
+ 244  chang0926-e1-n64-s1 traj ep1=300 traced=1 ebops=378805 in_training=384064.0 beta=1.4126e-06 lr=9.917e-04 val_acc=0.254097 val_auc=0.550634 train_acc=0.276337 bits_mean=0.5847
+ 245  chang0926-e1-n64-s1 traj ep1=350 traced=1 ebops=365283 in_training=365913.0 beta=1.5815e-06 lr=5.731e-04 val_acc=0.287548 val_auc=0.605190 train_acc=0.285217 bits_mean=0.5824
+ 246  chang0926-e1-n64-s1 traj ep1=400 traced=1 ebops=395365 in_training=395459.0 beta=2.1533e-06 lr=2.491e-04 val_acc=0.315484 val_auc=0.646271 train_acc=0.272113 bits_mean=0.5947
+ 247  chang0926-e1-n64-s1 traj ep1=450 traced=1 ebops=408256 in_training=411883.0 beta=3.2765e-06 lr=5.251e-05 val_acc=0.293855 val_auc=0.614521 train_acc=0.281448 bits_mean=0.5927
+ 248  chang0926-e1-n64-s1 traj ep1=500 traced=1 ebops=375397 in_training=375819.0 beta=3.7707e-06 lr=1.000e-06 val_acc=0.305290 val_auc=0.624967 train_acc=0.298056 bits_mean=0.5870
+ 249  chang0926-e1-n64-s1 peak val_acc ep0=10 0.648968 in_training=3456464.0 traced=None
+ 250  chang0926-e1-n64-s1 max beta ep0=499 3.7707e-06
+ 251  chang0926-e1-n64-s1 attn first traced ep0 with Q and K all 0-bit=39 stays_zero_after=False
+ 252  chang0926-e1-n64-s1 attn ep0=0 Q0bit=0/24 K0bit=0/24 V0bit=0/24 softmax_ebops=574465 attn_other_ebops=9248768
+ 253  chang0926-e1-n64-s1 attn ep0=9 Q0bit=0/24 K0bit=0/24 V0bit=0/24 softmax_ebops=196420 attn_other_ebops=2735510
+ 254  chang0926-e1-n64-s1 attn ep0=49 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=85764 attn_other_ebops=0
+ 255  chang0926-e1-n64-s1 attn ep0=99 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=85763 attn_other_ebops=0
+ 256  chang0926-e1-n64-s1 attn ep0=199 Q0bit=20/24 K0bit=21/24 V0bit=24/24 softmax_ebops=85763 attn_other_ebops=3072
+ 257  chang0926-e1-n64-s1 attn ep0=299 Q0bit=24/24 K0bit=24/24 V0bit=24/24 softmax_ebops=85763 attn_other_ebops=0
+ 258  chang0926-e1-n64-s1 attn ep0=399 Q0bit=16/24 K0bit=16/24 V0bit=24/24 softmax_ebops=85763 attn_other_ebops=11776
+ 259  chang0926-e1-n64-s1 attn ep0=499 Q0bit=15/24 K0bit=19/24 V0bit=24/24 softmax_ebops=85763 attn_other_ebops=4608
+ 260  chang0926-e1-n64-s1 per_layer last traced ep0=499 {"input_proj": 18432, "bit_block_0_attn_Wq": 1536, "bit_block_0_attn_Wk": 1536, "bit_block_0_attn_scores": 0, "bit_block_0_attn_softmax": 85763, "bit_block_0_attn_Wv": 1536, "bit_block_0_attn_ctx": 0, "bit_block_0_attn_Wo": 0, "bit_block_0_ffn_fc1": 165888, "bit_block_0_ffn_fc2": 95232, "head_fc1": 5304, "head_fc2": 170}
+ 261  chang0926-e1-n64-s1 K1 window=one-based 100-500 n=41 median_r=1.022364 ci=[1.008401,1.038608] offset=6898.1 threshold=26423.7 share=0.0261 clause=below
+ 262  chang0926-e1-n64-s1 K1 window=one-based 100-500 r*=1.091137 n_above_r*=3/41 ci_contains_r*=False
+ 263  chang0926-e1-n64-s1 K1 window=zero-based 110-500 n=40 median_r=1.020340 ci=[1.006769,1.038608] offset=6285.8 threshold=26423.7 share=0.0238 clause=below
+ 264  chang0926-e1-n64-s1 K1 window=zero-based 110-500 r*=1.091137 n_above_r*=2/40 ci_contains_r*=False
+ 265  chang0926-e1-n64-s1 ratio field equals in_training/traced on traced epochs: mismatches=[]
+ 266  ## K1 pairwise clause (median r, one-based window; |diff| > 0.02 fires)
+ 267  pair a-s1 a-s2 |dmedian|=0.006607 over_0.02=False gap_between_ci=0.000000
+ 268  pair a-s1 d-s1 |dmedian|=0.017638 over_0.02=False gap_between_ci=0.006891
+ 269  pair a-s1 cprime-s1 |dmedian|=0.016166 over_0.02=False gap_between_ci=0.008298
+ 270  pair a-s1 e1-s1 |dmedian|=0.006975 over_0.02=False gap_between_ci=0.000000
+ 271  pair a-s1 A07-350-s1 |dmedian|=0.009941 over_0.02=False
+ 272  pair a-s1 C-s1 |dmedian|=0.065403 over_0.02=True
+ 273  pair a-s1 F-s1 |dmedian|=0.013427 over_0.02=False
+ 274  pair a-s2 d-s1 |dmedian|=0.024245 over_0.02=True gap_between_ci=0.000730
+ 275  pair a-s2 cprime-s1 |dmedian|=0.009559 over_0.02=False gap_between_ci=0.005515
+ 276  pair a-s2 e1-s1 |dmedian|=0.013582 over_0.02=False gap_between_ci=0.000000
+ 277  pair a-s2 A07-350-s1 |dmedian|=0.003334 over_0.02=False
+ 278  pair a-s2 C-s1 |dmedian|=0.072010 over_0.02=True
+ 279  pair a-s2 F-s1 |dmedian|=0.020034 over_0.02=True
+ 280  pair d-s1 cprime-s1 |dmedian|=0.033804 over_0.02=True gap_between_ci=0.027673
+ 281  pair d-s1 e1-s1 |dmedian|=0.010663 over_0.02=False gap_between_ci=0.000000
+ 282  pair d-s1 A07-350-s1 |dmedian|=0.027579 over_0.02=True
+ 283  pair d-s1 C-s1 |dmedian|=0.047765 over_0.02=True
+ 284  pair d-s1 F-s1 |dmedian|=0.004211 over_0.02=False
+ 285  pair cprime-s1 e1-s1 |dmedian|=0.023141 over_0.02=True gap_between_ci=0.008401
+ 286  pair cprime-s1 A07-350-s1 |dmedian|=0.006225 over_0.02=False
+ 287  pair cprime-s1 C-s1 |dmedian|=0.081569 over_0.02=True
+ 288  pair cprime-s1 F-s1 |dmedian|=0.029593 over_0.02=True
+ 289  pair e1-s1 A07-350-s1 |dmedian|=0.016916 over_0.02=False
+ 290  pair e1-s1 C-s1 |dmedian|=0.058428 over_0.02=True
+ 291  pair e1-s1 F-s1 |dmedian|=0.006452 over_0.02=False
+ 292  pair A07-350-s1 C-s1 |dmedian|=0.075344 over_0.02=True
+ 293  pair A07-350-s1 F-s1 |dmedian|=0.023368 over_0.02=True
+ 294  pair C-s1 F-s1 |dmedian|=0.051976 over_0.02=True
+ 295  ## Regime-B half of matched table (one-based traced epochs 10..120)
+ 296  regB chang0926-a-n64-s1 ep1=10 traced=3489334 in_training=4333716 r=1.241989 beta=1.4824e-07 feasible=0
+ 297  regB chang0926-a-n64-s1 ep1=20 traced=2107236 in_training=2008390 r=0.953092 beta=1.6753e-07 feasible=0
+ 298  regB chang0926-a-n64-s1 ep1=30 traced=1045540 in_training=1048330 r=1.002668 beta=1.8652e-07 feasible=0
+ 299  regB chang0926-a-n64-s1 ep1=40 traced=739258 in_training=740801 r=1.002087 beta=2.1174e-07 feasible=0
+ 300  regB chang0926-a-n64-s1 ep1=50 traced=607799 in_training=664894 r=1.093937 beta=2.7005e-07 feasible=0
+ 301  regB chang0926-a-n64-s1 ep1=60 traced=556617 in_training=606341 r=1.089333 beta=3.2693e-07 feasible=0
+ 302  regB chang0926-a-n64-s1 ep1=70 traced=522286 in_training=567863 r=1.087264 beta=3.8881e-07 feasible=0
+ 303  regB chang0926-a-n64-s1 ep1=80 traced=504145 in_training=544362 r=1.079773 beta=4.6871e-07 feasible=0
+ 304  regB chang0926-a-n64-s1 ep1=90 traced=514914 in_training=562964 r=1.093317 beta=6.0766e-07 feasible=0
+ 305  regB chang0926-a-n64-s1 ep1=100 traced=506495 in_training=537659 r=1.061529 beta=7.3274e-07 feasible=0
+ 306  regB chang0926-a-n64-s1 ep1=110 traced=541791 in_training=557314 r=1.028651 beta=9.3649e-07 feasible=0
+ 307  regB chang0926-a-n64-s1 ep1=120 traced=481140 in_training=523458 r=1.087954 beta=1.1201e-06 feasible=0
+ 308  regB chang0926-a-n64-s2 ep1=10 traced=3701960 in_training=4231640 r=1.143081 beta=1.2255e-07 feasible=0
+ 309  regB chang0926-a-n64-s2 ep1=20 traced=1710413 in_training=1662103 r=0.971755 beta=1.3522e-07 feasible=0
+ 310  regB chang0926-a-n64-s2 ep1=30 traced=917146 in_training=850766 r=0.927623 beta=1.2389e-07 feasible=0
+ 311  regB chang0926-a-n64-s2 ep1=40 traced=708758 in_training=729778 r=1.029658 beta=1.5919e-07 feasible=0
+ 312  regB chang0926-a-n64-s2 ep1=50 traced=609352 in_training=660678 r=1.084230 beta=2.0748e-07 feasible=0
+ 313  regB chang0926-a-n64-s2 ep1=60 traced=576609 in_training=622410 r=1.079432 beta=2.6735e-07 feasible=0
+ 314  regB chang0926-a-n64-s2 ep1=70 traced=545752 in_training=592574 r=1.085794 beta=3.3356e-07 feasible=0
+ 315  regB chang0926-a-n64-s2 ep1=80 traced=523964 in_training=571446 r=1.090621 beta=4.1024e-07 feasible=0
+ 316  regB chang0926-a-n64-s2 ep1=90 traced=537037 in_training=602512 r=1.121919 beta=5.2097e-07 feasible=0
+ 317  regB chang0926-a-n64-s2 ep1=100 traced=478790 in_training=531069 r=1.109190 beta=6.1205e-07 feasible=0
+ 318  regB chang0926-a-n64-s2 ep1=110 traced=463888 in_training=513607 r=1.107179 beta=7.1298e-07 feasible=0
+ 319  regB chang0926-a-n64-s2 ep1=120 traced=499600 in_training=513304 r=1.027430 beta=8.7833e-07 feasible=0
+ 320  regB chang0926-d-n64-s1 ep1=10 traced=3324374 in_training=3814803 r=1.147525 beta=1.2720e-07 feasible=0
+ 321  regB chang0926-d-n64-s1 ep1=20 traced=1878470 in_training=1877895 r=0.999694 beta=1.6239e-07 feasible=0
+ 322  regB chang0926-d-n64-s1 ep1=30 traced=1032965 in_training=941742 r=0.911688 beta=1.5409e-07 feasible=0
+ 323  regB chang0926-d-n64-s1 ep1=40 traced=775156 in_training=769411 r=0.992589 beta=1.8591e-07 feasible=0
+ 324  regB chang0926-d-n64-s1 ep1=50 traced=618383 in_training=650646 r=1.052173 beta=2.2688e-07 feasible=0
+ 325  regB chang0926-d-n64-s1 ep1=60 traced=579184 in_training=633176 r=1.093221 beta=2.9457e-07 feasible=0
+ 326  regB chang0926-d-n64-s1 ep1=70 traced=552095 in_training=605407 r=1.096563 beta=3.6742e-07 feasible=0
+ 327  regB chang0926-d-n64-s1 ep1=80 traced=528490 in_training=580240 r=1.097920 beta=4.6041e-07 feasible=0
+ 328  regB chang0926-d-n64-s1 ep1=90 traced=481119 in_training=539672 r=1.121702 beta=5.4034e-07 feasible=0
+ 329  regB chang0926-d-n64-s1 ep1=100 traced=461179 in_training=497117 r=1.077926 beta=6.1722e-07 feasible=0
+ 330  regB chang0926-d-n64-s1 ep1=110 traced=454337 in_training=484178 r=1.065680 beta=7.1345e-07 feasible=0
+ 331  regB chang0926-d-n64-s1 ep1=120 traced=555690 in_training=578452 r=1.040962 beta=1.0550e-06 feasible=0
+ 332  regB chang0926-e1-n64-s1 ep1=10 traced=3345907 in_training=3823840 r=1.142841 beta=1.4612e-07 feasible=0
+ 333  regB chang0926-e1-n64-s1 ep1=20 traced=1927248 in_training=1777166 r=0.922126 beta=1.6503e-07 feasible=0
+ 334  regB chang0926-e1-n64-s1 ep1=30 traced=1042714 in_training=943053 r=0.904422 beta=1.6987e-07 feasible=0
+ 335  regB chang0926-e1-n64-s1 ep1=40 traced=620152 in_training=619692 r=0.999258 beta=1.5939e-07 feasible=0
+ 336  regB chang0926-e1-n64-s1 ep1=50 traced=519416 in_training=573929 r=1.104951 beta=1.9248e-07 feasible=0
+ 337  regB chang0926-e1-n64-s1 ep1=60 traced=490268 in_training=559856 r=1.141939 beta=2.3950e-07 feasible=0
+ 338  regB chang0926-e1-n64-s1 ep1=70 traced=478660 in_training=535236 r=1.118197 beta=2.7803e-07 feasible=0
+ 339  regB chang0926-e1-n64-s1 ep1=80 traced=467403 in_training=514181 r=1.100081 beta=3.2560e-07 feasible=0
+ 340  regB chang0926-e1-n64-s1 ep1=90 traced=440074 in_training=493063 r=1.120409 beta=3.7853e-07 feasible=0
+ 341  regB chang0926-e1-n64-s1 ep1=100 traced=425316 in_training=470688 r=1.106678 beta=4.0855e-07 feasible=0
+ 342  regB chang0926-e1-n64-s1 ep1=110 traced=406873 in_training=436866 r=1.073716 beta=4.4354e-07 feasible=0
+ 343  regB chang0926-e1-n64-s1 ep1=120 traced=390812 in_training=428157 r=1.095557 beta=4.9261e-07 feasible=0
+ 344  regB chang0926-cprime-n64-s1 ep1=10 traced=7598317 in_training=7651597 r=1.007012 beta=5.8483e-08 feasible=0
+ 345  regB chang0926-cprime-n64-s1 ep1=20 traced=6686552 in_training=6727512 r=1.006126 beta=6.2939e-08 feasible=0
+ 346  regB chang0926-cprime-n64-s1 ep1=30 traced=6659420 in_training=6624604 r=0.994772 beta=6.9510e-08 feasible=0
+ 347  regB chang0926-cprime-n64-s1 ep1=40 traced=6509238 in_training=6472374 r=0.994337 beta=7.8585e-08 feasible=0
+ 348  regB chang0926-cprime-n64-s1 ep1=50 traced=6551364 in_training=6604612 r=1.008128 beta=8.6851e-08 feasible=0
+ 349  regB chang0926-cprime-n64-s1 ep1=60 traced=6251971 in_training=6268355 r=1.002621 beta=9.9127e-08 feasible=0
+ 350  regB chang0926-cprime-n64-s1 ep1=70 traced=6171813 in_training=6100133 r=0.988386 beta=1.0703e-07 feasible=0
+ 351  regB chang0926-cprime-n64-s1 ep1=80 traced=6185897 in_training=6271945 r=1.013910 beta=1.2237e-07 feasible=0
+ 352  regB chang0926-cprime-n64-s1 ep1=90 traced=6087280 in_training=6238832 r=1.024897 beta=1.3205e-07 feasible=0
+ 353  regB chang0926-cprime-n64-s1 ep1=100 traced=5910763 in_training=5900491 r=0.998262 beta=1.4687e-07 feasible=0
+ 354  regB chang0926-cprime-n64-s1 ep1=110 traced=6236111 in_training=6262735 r=1.004269 beta=1.5247e-07 feasible=0
+ 355  regB chang0926-cprime-n64-s1 ep1=120 traced=5965683 in_training=5922675 r=0.992791 beta=1.6819e-07 feasible=0

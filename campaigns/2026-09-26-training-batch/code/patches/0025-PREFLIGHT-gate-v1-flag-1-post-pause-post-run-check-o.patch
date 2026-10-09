@@ -1,0 +1,242 @@
+From c684cd77223eff96d3a7aae929c0d5a6a2218c58 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 13:16:47 -0700
+Subject: [PATCH 25/26] PREFLIGHT gate v1 flag 1: post-pause/post-run check of
+ the selected checkpoint by the config's reload-check method (stored under
+ [D20], else retrace on the configured trace rows); run_study.verify_selected;
+ run_engram same; CPU test
+
+---
+ bnhgq2/ablation.py             | 26 ++++++++++
+ run_engram.py                  |  3 +-
+ run_study.py                   | 64 ++++++++++++++----------
+ tests/test_post_pause_check.py | 89 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 156 insertions(+), 26 deletions(-)
+ create mode 100644 tests/test_post_pause_check.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 259de3d..1e1ea17 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -488,6 +488,32 @@ def stored_state_ebops(model, loaded):
+     return {'total': int(total)}
+ 
+ 
++def saved_ebops(loaded):
++    """The EBOPs a saved file carries: its layers' stored `ebops`, written by the last trace
++    before the save and summed as `stored_state_ebops` and certify_ebops.py sum them.
++    Reads the file's state; runs nothing, so every WRAP range stays as saved."""
++    return int(sum(int(layer.ebops) for layer in loaded.layers if getattr(layer, 'enable_ebops', False)))
++
++
++def selected_checkpoint_ebops(cfg, loaded, xt):
++    """Post-pause / post-run check of a reloaded selected checkpoint (run_study.train,
++    run_engram train), by the same method as the per-epoch reload check (PREFLIGHT gate v1,
++    2026-09-27; before this, both sites retraced on xt[:256] whatever the config said).
++
++    `train.ebops_reload_check: "stored"` ([D20]): the file's stored EBOPs (`saved_ebops`), no
++    trace, so `predict` then runs on the ranges as saved. The full-split reset retrace of the
++    same file is certify_ebops.py's job, outside the training pod.
++    Otherwise ("retrace" or absent): a reset retrace on `ebops_trace_sample(cfg, xt)` at
++    `ebops_trace_batch(cfg)`, the rows the logged EBOPs came from. With neither [D20] key set
++    that is xt[:256] at batch 2048, the screen runner's call unchanged."""
++    if cfg['train'].get('ebops_reload_check', 'retrace') == 'stored':
++        per_layer = {layer.name: int(layer.ebops) for layer in loaded.layers
++                     if getattr(layer, 'enable_ebops', False)}
++        return {'total': saved_ebops(loaded), 'per_layer': per_layer, 'method': 'stored'}
++    cost = compute_ebops(loaded, np.asarray(ebops_trace_sample(cfg, xt)), batch_size=ebops_trace_batch(cfg))
++    return {**cost, 'method': 'retrace'}
++
++
+ def i_decay_speeds(model):
+     """[D20] per datalane quantizer, HGQ2's `i_decay_speed`: in training, a WRAP quantizer's
+     integer bits follow i <- max(i - i_decay_speed, i_batch) every step (0.1.9
+diff --git a/run_engram.py b/run_engram.py
+index 89514f0..836c618 100644
+--- a/run_engram.py
++++ b/run_engram.py
+@@ -278,7 +278,8 @@ def train(args):
+             name = 'model_best.keras' if state['best_feasible'] else 'model_min_ebops.keras'
+             selected = state['best_feasible'] or state['lowest']
+             model = keras.models.load_model(args.out / name, compile=False)
+-            trace = ablation.compute_ebops(model, np.asarray(arrays[0][:256]))
++            # same method as the per-epoch reload check (PREFLIGHT gate v1, 2026-09-27)
++            trace = ablation.selected_checkpoint_ebops(cfg, model, arrays[0])
+             if trace['total'] != selected['ebops']:
+                 raise RuntimeError('Selected checkpoint cost did not reproduce after reload')
+             logits = np.asarray(model.predict(arrays[2], batch_size=cfg['train']['val_batch'], verbose=0))
+diff --git a/run_study.py b/run_study.py
+index 76dba0f..70a5cec 100644
+--- a/run_study.py
++++ b/run_study.py
+@@ -145,33 +145,47 @@ def train(index, stop_after):
+             raise
+         if (out / 'COMPLETE.json').exists():
+             (out / 'COMPLETE.json').replace(out / 'TRAINING_COMPLETE.json')
+-        selected = state['best_feasible'] or state['lowest']
+-        filename = 'model_best.keras' if state['best_feasible'] else 'model_min_ebops.keras'
+-        model = keras.models.load_model(out / filename, compile=False)
+-        trace = ablation.compute_ebops(model, np.asarray(arrays[0][:256]))
+-        assert trace['total'] == selected['ebops'], 'Reloaded checkpoint cost mismatch'
+-        logits = np.asarray(model.predict(arrays[2], batch_size=cfg['train']['val_batch'], verbose=0))
+-        auc, per_auc, accuracy = ablation.validation_metrics(arrays[3], logits)
+-        np.testing.assert_allclose([auc, accuracy],
+-            [selected['val_macro_auc'], selected['val_categorical_accuracy']], atol=1e-7, rtol=0)
+-        np.savez_compressed(out / 'validation_predictions.npz', labels=np.asarray(arrays[3]), logits=logits)
+-        status = ('verified_screen' if state['completed_epochs'] == 50 else
+-                  'verified_complete' if state['completed_epochs'] == cfg['train']['epochs'] else 'verified_canary')
+-        report = {**row, 'status': status,
+-                  'completed_epochs': state['completed_epochs'], 'selected': selected,
+-                  'checkpoint': filename, 'checkpoint_sha256': run_engram.file_hash(out / filename),
+-                  'budget_met': state['best_feasible'] is not None,
+-                  'validation_accuracy': accuracy, 'validation_macro_auc': auc,
+-                  'validation_per_class_auc': per_auc, 'wall_seconds_this_invocation': time.monotonic() - start,
+-                  'test_set_used': False, 'hardware_validated': False,
+-                  'validation_labels_sha256': info['array_sha256']['y_val'],
+-                  'source_sha256': source['sha256'], **engram.accounting(model, trace)}
+-        run_engram.write_json(out / 'screen_result.json', report)
+-        if state['completed_epochs'] == cfg['train']['epochs']:
+-            run_engram.write_json(out / 'VERIFIED_COMPLETE.json', report)
+-        print('CHECKPOINT_VERIFICATION_PASS', json.dumps(report), flush=True)
++        verify_selected(cfg, row, out, state, arrays, info, source, start)
+ 
+ 
++def verify_selected(cfg, row, out, state, arrays, info, source, start):
++    """Reload the selected checkpoint at a pause or at the end, check its EBOPs by the
++    config's reload-check method (`ablation.selected_checkpoint_ebops`: stored under [D20]
++    `ebops_reload_check: "stored"`, else a retrace on the configured trace rows), replay
++    validation, and write screen_result.json. Device-independent; `train` holds the GPU and
++    TF32 asserts. PREFLIGHT gate v1 (2026-09-27): this used to retrace on arrays[0][:256],
++    which fails by construction against a full-split [D20] value."""
++    ablation, engram = run_engram.runtime()
++    import keras
++    selected = state['best_feasible'] or state['lowest']
++    filename = 'model_best.keras' if state['best_feasible'] else 'model_min_ebops.keras'
++    model = keras.models.load_model(out / filename, compile=False)
++    trace = ablation.selected_checkpoint_ebops(cfg, model, arrays[0])
++    assert trace['total'] == selected['ebops'], ('Reloaded checkpoint cost mismatch', trace['method'],
++                                                 trace['total'], selected['ebops'])
++    logits = np.asarray(model.predict(arrays[2], batch_size=cfg['train']['val_batch'], verbose=0))
++    auc, per_auc, accuracy = ablation.validation_metrics(arrays[3], logits)
++    np.testing.assert_allclose([auc, accuracy],
++        [selected['val_macro_auc'], selected['val_categorical_accuracy']], atol=1e-7, rtol=0)
++    np.savez_compressed(out / 'validation_predictions.npz', labels=np.asarray(arrays[3]), logits=logits)
++    status = ('verified_screen' if state['completed_epochs'] == 50 else
++              'verified_complete' if state['completed_epochs'] == cfg['train']['epochs'] else 'verified_canary')
++    report = {**row, 'status': status,
++              'completed_epochs': state['completed_epochs'], 'selected': selected,
++              'checkpoint': filename, 'checkpoint_sha256': run_engram.file_hash(out / filename),
++              'budget_met': state['best_feasible'] is not None,
++              'validation_accuracy': accuracy, 'validation_macro_auc': auc,
++              'validation_per_class_auc': per_auc, 'wall_seconds_this_invocation': time.monotonic() - start,
++              'test_set_used': False, 'hardware_validated': False,
++              'validation_labels_sha256': info['array_sha256']['y_val'],
++              'reload_ebops_check': trace['method'],
++              'source_sha256': source['sha256'], **engram.accounting(model, trace)}
++    run_engram.write_json(out / 'screen_result.json', report)
++    if state['completed_epochs'] == cfg['train']['epochs']:
++        run_engram.write_json(out / 'VERIFIED_COMPLETE.json', report)
++    print('CHECKPOINT_VERIFICATION_PASS', json.dumps(report), flush=True)
++    return report
++
+ if __name__ == '__main__':
+     parser = argparse.ArgumentParser()
+     parser.add_argument('stage', choices=['preflight', 'train'])
+diff --git a/tests/test_post_pause_check.py b/tests/test_post_pause_check.py
+new file mode 100644
+index 0000000..cb0014b
+--- /dev/null
++++ b/tests/test_post_pause_check.py
+@@ -0,0 +1,89 @@
++"""PREFLIGHT gate v1 (2026-09-27): the post-pause check of run_study.train on a keyed [D20]
++WRAP config. Trains a tiny model 2 epochs with stop_after=2 (full-split trace, stored reload
++check, [D25] i_decay_speed), then runs run_study.verify_selected, the block train() runs after
++the pause (GPU/TF32 asserts stay in train()). It must print CHECKPOINT_VERIFICATION_PASS.
++The pre-fix check (retrace on arrays[0][:256]) is shown to fail on the same checkpoint.
++CPU, synthetic, seconds; nothing here is a result."""
++import json
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_d20_trace import arrays
++from test_resume_cadence import tiny_cfg
++
++
++def d20_cfg(reload_check='stored'):
++    cfg = tiny_cfg()
++    cfg['quant']['i_decay_speed'] = 0.001
++    cfg['train'].update(epochs=5, ebops_trace_sample='train_full')
++    if reload_check is not None:
++        cfg['train']['ebops_reload_check'] = reload_check
++    return cfg
++
++
++def paused(tmp_path, cfg, n_train=2000):
++    from bnhgq2 import ablation
++    (xt, yt, xv, yv), info = arrays(n_train=n_train)
++    info = {**info, 'array_sha256': {'y_val': ablation.array_hash(yv)}}
++    state = ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path, stop_after=2)
++    assert state['completed_epochs'] == 2 and not (tmp_path / 'COMPLETE.json').exists()
++    return (xt, yt, xv, yv), info, state
++
++
++def verify(tmp_path, cfg, data, info, state):
++    import time
++    import run_study
++    row = {'name': cfg['name'], 'file': 'unit.json'}
++    return run_study.verify_selected(cfg, row, tmp_path, state, data, info, {'sha256': 'unit'},
++                                     time.monotonic())
++
++
++@pytest.mark.parametrize('reload_check', ['stored', 'retrace'])
++def test_post_pause_check_passes_under_d20(tmp_path, capsys, reload_check):
++    import keras
++    from bnhgq2 import ablation
++    cfg = d20_cfg(reload_check)
++    data, info, state = paused(tmp_path, cfg)
++    report = verify(tmp_path, cfg, data, info, state)
++    out = capsys.readouterr().out
++    assert 'CHECKPOINT_VERIFICATION_PASS' in out
++    assert report['reload_ebops_check'] == reload_check and report['status'] == 'verified_canary'
++    selected = state['best_feasible'] or state['lowest']
++    assert report['selection_cost'] == selected['ebops']
++    assert json.loads((tmp_path / 'screen_result.json').read_text())['reload_ebops_check'] == reload_check
++    # the pre-fix check: a reset retrace on the first 256 rows, against the full-split value
++    loaded = keras.models.load_model(tmp_path / report['checkpoint'], compile=False)
++    legacy = ablation.compute_ebops(loaded, np.asarray(data[0][:256]))['total']
++    print('POST_PAUSE_TEST', reload_check, 'selected', selected['ebops'], 'legacy_256_row_retrace', legacy)
++    assert legacy != selected['ebops'], 'synthetic data no longer reproduces the gate v1 defect'
++
++
++def test_post_pause_check_catches_a_wrong_log(tmp_path):
++    cfg = d20_cfg('stored')
++    data, info, state = paused(tmp_path, cfg)
++    key = 'best_feasible' if state['best_feasible'] else 'lowest'
++    state[key] = {**state[key], 'ebops': state[key]['ebops'] + 1}
++    with pytest.raises(AssertionError):
++        verify(tmp_path, cfg, data, info, state)
++
++
++def test_screen_path_unchanged():
++    """No [D20] key: the helper is the screen runner's call, compute_ebops(xt[:256]) at 2048."""
++    import keras
++    from bnhgq2 import ablation
++    from bnhgq2.compat import apply_keras_compat
++    apply_keras_compat()
++    cfg = tiny_cfg()
++    assert 'ebops_trace_sample' not in cfg['train'] and 'ebops_reload_check' not in cfg['train']
++    (xt, _, _, _), _ = arrays(n_train=2000)
++    keras.backend.clear_session()
++    model, _ = ablation.matching_initialization(cfg, xt[:256], 1)
++    got = ablation.selected_checkpoint_ebops(cfg, model, xt)
++    assert got['method'] == 'retrace'
++    assert got['total'] == ablation.compute_ebops(model, np.asarray(xt[:256]))['total']
++    # a full-split key moves the rows the retrace uses
++    cfg['train']['ebops_trace_sample'] = 'train_full'
++    assert ablation.selected_checkpoint_ebops(cfg, model, xt)['total'] == ablation.compute_ebops(model, xt)['total']
+-- 
+2.50.1 (Apple Git-155)
+

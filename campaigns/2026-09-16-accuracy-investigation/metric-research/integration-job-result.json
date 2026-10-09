@@ -1,0 +1,148 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "annotations": {
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-17T06:04:56Z",
+        "generation": 1,
+        "labels": {
+            "app": "kai-accuracy-selection-smoke-0917"
+        },
+        "name": "kai-accuracy-selection-smoke-0917",
+        "namespace": "cms-ml",
+        "resourceVersion": "14835742370",
+        "uid": "74d229a9-67fb-43f5-9f04-3c90e4b0013c"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 900,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+            "matchLabels": {
+                "batch.kubernetes.io/controller-uid": "74d229a9-67fb-43f5-9f04-3c90e4b0013c"
+            }
+        },
+        "suspend": false,
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "kai-accuracy-selection-smoke-0917",
+                    "batch.kubernetes.io/controller-uid": "74d229a9-67fb-43f5-9f04-3c90e4b0013c",
+                    "batch.kubernetes.io/job-name": "kai-accuracy-selection-smoke-0917",
+                    "controller-uid": "74d229a9-67fb-43f5-9f04-3c90e4b0013c",
+                    "job-name": "kai-accuracy-selection-smoke-0917"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nexport KERAS_BACKEND=tensorflow WANDB_MODE=disabled CUDA_VISIBLE_DEVICES=-1\nexport TF_CPP_MIN_LOG_LEVEL=2 OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '64d7fd909bd71c731f882bc3344e69c055d7abed10087a460c767787882e063c  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\ncp /eval/ablation.py /work/code/bnhgq2/ablation.py\nexport PYTHONPATH=/work/code\npip install -q --no-cache-dir tensorflow==2.21.0 keras==3.15.0 hgq2==0.1.9 quantizers==1.2.2 h5py==3.14.0 hls4ml==1.3.0 numpy==2.5.0 scikit-learn==1.9.0\npython -u /eval/integration_smoke.py\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "smoke",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "ephemeral-storage": "8Gi",
+                                "memory": "8Gi"
+                            },
+                            "requests": {
+                                "cpu": "2",
+                                "ephemeral-storage": "8Gi",
+                                "memory": "8Gi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "training-code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/eval",
+                                "name": "smoke-code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-ebops-abl-code-64d7fd909b"
+                        },
+                        "name": "training-code"
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-accuracy-selection-smoke-code-0917"
+                        },
+                        "name": "smoke-code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "8Gi"
+                        },
+                        "name": "work"
+                    }
+                ]
+            }
+        },
+        "ttlSecondsAfterFinished": 3600
+    },
+    "status": {
+        "completionTime": "2026-09-17T06:08:20Z",
+        "conditions": [
+            {
+                "lastProbeTime": "2026-09-17T06:08:20Z",
+                "lastTransitionTime": "2026-09-17T06:08:20Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "SuccessCriteriaMet"
+            },
+            {
+                "lastProbeTime": "2026-09-17T06:08:20Z",
+                "lastTransitionTime": "2026-09-17T06:08:20Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "Complete"
+            }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-17T06:04:56Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+    }
+}

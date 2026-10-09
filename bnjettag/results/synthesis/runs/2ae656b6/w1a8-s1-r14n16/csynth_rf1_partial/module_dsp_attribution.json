@@ -1,0 +1,224 @@
+{
+  "what": "Per-module-TYPE resource attribution recovered from the OOM-killed n16 fx8 RF=1 csynth",
+  "run": "r14n16-w1a8s1-fx8-rf1",
+  "config": "r14-l1x3-n16-w1a8",
+  "config_hash": "2ae656b6",
+  "variant": "w1a8",
+  "seed": 1,
+  "beta_mode": "fx8",
+  "rf": 1,
+  "strategy": "Latency",
+  "part": "xcvu13p-flga2577-2-e",
+  "clock_ns": 2.5,
+  "tool": "Vitis HLS 2023.2",
+  "status": "INCOMPLETE \u2014 csynth_design killed (SIGKILL/OOM, rc=137) at 112.5 GB on a 125 GB host during 'Generating RTL for module myproject', after 17h45m. No top-level rollup exists.",
+  "source_dir": "csynth_rf1_partial/myproject_prj/solution1/syn/report (558 files)",
+  "n_module_types": 278,
+  "CAVEAT": "These are per-module-TYPE reports, NOT model totals. Vitis instantiates most module types many times (see 'RTGEN 206-100 ... N instance(s)' in vitis_hls.log), and the top-level rollup that applies those multiplicities was never produced. Therefore the LUT/FF/BRAM sums below are NOT n16 resource numbers and must never be quoted as such. Only the DSP=0 result is multiplicity-independent (0 x any multiplicity = 0) and therefore quotable.",
+  "QUOTABLE_CLAIM": "At n16, RF=1, fx8 beta: every binary matmul (13/13 einsum_dense layer types), every inner dense_latency kernel (210 types), and all 4 act-by-act attention einsums (2 scores + 2 ctx) synthesise to 0 DSP. Every DSP in the design sits in the 15 normalize affines or softmax_stable. Same attribution as the completed n8 run, at the matched RF=1 operating point.",
+  "by_family": {
+    "normalize": {
+      "n_module_types": 15,
+      "DSP": 7205,
+      "LUT": 411478,
+      "FF": 626643,
+      "BRAM_18K": 0
+    },
+    "softmax_stable": {
+      "n_module_types": 2,
+      "DSP": 32,
+      "LUT": 11970,
+      "FF": 10952,
+      "BRAM_18K": 10
+    },
+    "add": {
+      "n_module_types": 4,
+      "DSP": 0,
+      "LUT": 64512,
+      "FF": 0,
+      "BRAM_18K": 0
+    },
+    "dense_latency": {
+      "n_module_types": 210,
+      "DSP": 0,
+      "LUT": 3277336,
+      "FF": 1229530,
+      "BRAM_18K": 0
+    },
+    "einsum": {
+      "n_module_types": 4,
+      "DSP": 0,
+      "LUT": 2640896,
+      "FF": 807936,
+      "BRAM_18K": 0
+    },
+    "einsum_dense": {
+      "n_module_types": 13,
+      "DSP": 0,
+      "LUT": 3262612,
+      "FF": 1279899,
+      "BRAM_18K": 0
+    },
+    "global_pooling1d_cl": {
+      "n_module_types": 1,
+      "DSP": 0,
+      "LUT": 27072,
+      "FF": 26912,
+      "BRAM_18K": 0
+    },
+    "thresholded_relu": {
+      "n_module_types": 3,
+      "DSP": 0,
+      "LUT": 295296,
+      "FF": 22880,
+      "BRAM_18K": 0
+    },
+    "transpose": {
+      "n_module_types": 26,
+      "DSP": 0,
+      "LUT": 0,
+      "FF": 0,
+      "BRAM_18K": 0
+    }
+  },
+  "dsp_bearing_modules": [
+    {
+      "module": "normalize_ap_fixed_13_8_4_0_0_ap_fixed_22_6_5_3_0_config33_s",
+      "family": "normalize",
+      "DSP": 1024,
+      "LUT": 30720,
+      "FF": 89088,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_8_4_0_0_ap_fixed_22_6_5_3_0_config67_s",
+      "family": "normalize",
+      "DSP": 1024,
+      "LUT": 30608,
+      "FF": 88992,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_7_4_0_0_ap_fixed_21_5_5_3_0_config62_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 14848,
+      "FF": 44032,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_7_4_0_0_ap_fixed_8_3_4_0_0_config11_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 52224,
+      "FF": 46592,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_7_4_0_0_ap_fixed_8_3_4_0_0_config13_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 52224,
+      "FF": 46592,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_7_4_0_0_ap_fixed_8_6_4_0_0_config21_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 29696,
+      "FF": 45568,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_8_4_0_0_ap_fixed_8_3_4_0_0_config45_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 56320,
+      "FF": 46080,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_8_4_0_0_ap_fixed_8_3_4_0_0_config47_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 56320,
+      "FF": 46080,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_8_4_0_0_ap_fixed_8_6_4_0_0_config55_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 29184,
+      "FF": 45568,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_14_7_4_0_0_ap_fixed_21_6_5_3_0_config5_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 512,
+      "FF": 30208,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_14_9_4_0_0_ap_fixed_23_7_5_3_0_config38_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 15872,
+      "FF": 47104,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_14_9_4_0_0_ap_fixed_23_7_5_3_0_config72_s",
+      "family": "normalize",
+      "DSP": 512,
+      "LUT": 15760,
+      "FF": 47520,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "normalize_ap_fixed_13_7_4_0_0_ap_fixed_21_5_5_3_0_config78_s",
+      "family": "normalize",
+      "DSP": 32,
+      "LUT": 928,
+      "FF": 2784,
+      "BRAM_18K": 0
+    },
+    {
+      "module": "softmax_stable_ap_fixed_ap_ufixed_10_1_4_0_0_softmax_config19_s",
+      "family": "softmax_stable",
+      "DSP": 16,
+      "LUT": 5985,
+      "FF": 5476,
+      "BRAM_18K": 5
+    },
+    {
+      "module": "softmax_stable_ap_fixed_ap_ufixed_10_1_4_0_0_softmax_config53_s",
+      "family": "softmax_stable",
+      "DSP": 16,
+      "LUT": 5985,
+      "FF": 5476,
+      "BRAM_18K": 5
+    },
+    {
+      "module": "normalize_ap_fixed_13_7_4_0_0_ap_fixed_22_6_5_3_0_config83_s",
+      "family": "normalize",
+      "DSP": 5,
+      "LUT": 150,
+      "FF": 435,
+      "BRAM_18K": 0
+    }
+  ],
+  "zero_dsp_families": [
+    "add",
+    "dense_latency",
+    "einsum",
+    "einsum_dense",
+    "global_pooling1d_cl",
+    "thresholded_relu",
+    "transpose"
+  ],
+  "design_size_HW_transforms_instructions": 2682831
+}

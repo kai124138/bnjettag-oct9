@@ -1,0 +1,82 @@
+{
+ "written": "2026-09-02T17:42:05",
+ "config": "r14-l1x3-n8-fp32",
+ "config_hash": "40103802",
+ "variant": "fp32",
+ "seed": 1,
+ "tag": "r14n8",
+ "checkpoint": "bnjettag/roc-results/r14/n8/_ckpt_dl/fp32-s1/model_best.keras",
+ "checkpoint_sha256": "9c3c4cf1ebf47c564218b726e71c90f17e95764cca5be63b09311526f6e80ebf",
+ "checkpoint_bytes": 616362,
+ "train_meta": {
+  "variant": "fp32",
+  "seed": 1,
+  "config": "r14-l1x3-n8-fp32",
+  "config_hash": "40103802",
+  "params": 18531,
+  "trainable_params": 18469,
+  "best_epoch": 100,
+  "best_val_macro_auc": 0.8877182137090726,
+  "act_bits": 32,
+  "weight": "none",
+  "lr": 2e-05,
+  "clip_mode": "value",
+  "epochs_run": 101,
+  "smoke": false,
+  "n_train": 496000,
+  "n_val": 124000,
+  "n_files": 62,
+  "features": [
+   "pt",
+   "etarel",
+   "phirel"
+  ],
+  "train_seconds": 839.4,
+  "act_calib_i": {},
+  "act_calib": "trainable",
+  "act_recalib_epochs": [],
+  "act_grid_before": {},
+  "act_grid_after": {},
+  "front": [],
+  "front_selected": null,
+  "started": "2026-08-01T08:31:45",
+  "finished": "2026-08-01T08:45:44"
+ },
+ "checkpoint_path_note": "the design memo's \u00a79 names roc-results/r14/n8/_ckpt_dl/fp32-s3/model_best.keras; the verified artifact is at bnjettag/models/cache/r14-l1x3-n8-fp32-s3/ (corrected 2026-09-02)",
+ "mechanism": "FP32 QAT graph (dummy quantizers, no datapath) rebuilt WITHOUT the AddPositional layer (build_qat_model with_pos_enc=False), all variables copied per layer, the trained (T,D) pos table folded into input_proj's bias_axes='td' bias",
+ "pos_fold": {
+  "max_abs_pos": 0.4496157765388489,
+  "layers_ported": 21
+ },
+ "n_variables_qat": 87,
+ "n_variables_export": 86,
+ "input_std": "bnjettag/roc-results/r14/n8/_ckpt_dl/fp32-s1/input_std.json",
+ "gate1": {
+  "n": 4096,
+  "corr_scores": 0.9999999999996247,
+  "corr_logits": 0.9999999999998781,
+  "corr_per_class": [
+   0.9999999999996135,
+   0.9999999999997052,
+   0.9999999999994081,
+   0.9999999999994376,
+   0.9999999999999066
+  ],
+  "max_abs_diff_scores": 7.303062682706418e-06,
+  "mean_abs_diff_scores": 9.758382010192022e-08,
+  "max_abs_diff_logits": 2.372264862060547e-05,
+  "argmax_agreement": 1.0,
+  "weight_port_max_abs_diff": 0.0
+ },
+ "gate1_pass": true,
+ "gate1_threshold": 0.997,
+ "gate1_abort_bar": 0.9999,
+ "gate1_scope": "STRUCTURAL PORT ONLY. The realization (width-W static grids) is a SEPARATE, LABELLED step and its error is charged to GATE 2, not here.",
+ "gate_data": {
+  "n_big": 32768,
+  "n_small": 4096,
+  "nested": true,
+  "calib_n": 8192,
+  "overlap_note": "the gate jets are drawn from the same data/val store as the calibration jets -- recorded as a caveat, not corrected, because it matches the W8A8 comparator's practice"
+ }
+}

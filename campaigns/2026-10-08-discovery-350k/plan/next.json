@@ -1,0 +1,12 @@
+{
+  "plan_id": "d350-wave1-interpret-20261009-c1",
+  "decision": "PROCEED",
+  "reasoning": "Measured (validation, n = 62,000, seed 1, status unverified; LEDGER.jsonl lines 10 and 13): baseline kai-d350-baseline-e-350k-s1-a2#0 = INVALID[scientific]: no feasible checkpoint in epochs < 1000 (class scientific per eval/INVALID_REASONS.json; no second score attempt allowed). Reference kai-d350-reference-e-5m-s1-a4#0 = 0.6497741935483871, valid, certified, CPU replay difference 0.0, selected at epoch 30 (one-based) at 3,260,614 EBOPs. Rules applied: PROPOSAL §5 'Baseline INVALID': with a valid reference this shows the problem; candidates are compared with the baseline by qualification. Validity check (§5): fails only if the baseline is within 0.05 of the reference or reaches 0.50; the baseline has no score and no feasible checkpoint, so neither holds and the check passes. Reference INVALID rule does not apply. §7: accuracy at 350k is not regained under continued training with the existing schedule, so C1 and C2 are the first candidates; C2 still needs its §6.1 methods reading, so C1 is implemented now (search stage, one candidate outstanding, within the two-outstanding limit of §8). Interpretation, recorded but not changing the rule: the reference's own best feasible accuracy falls to 0.49-0.53 per 200-epoch window after epoch 200, and at epochs 500 and 1,000 it is above its 5M target (not feasible) at 0.40 and 0.36, so the loss is not specific to 350k (notes/wave1-interpretation.md). The C1 specification uses power-of-two per-channel scales so that the added inference operation costs zero EBOPs at its actual precision; a real-valued scale would need an estimated 180,000 EBOPs (arithmetic from config shapes), more than the 178,474 EBOPs of headroom above the 0-bit floor.",
+  "actions": [
+    {
+      "type": "implement",
+      "node": "C1",
+      "spec": "plan/specs/C1.md"
+    }
+  ]
+}

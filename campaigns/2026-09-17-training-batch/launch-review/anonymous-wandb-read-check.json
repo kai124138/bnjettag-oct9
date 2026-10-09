@@ -1,0 +1,17 @@
+{
+  "checked_at_utc": "2026-09-17T15:04:15.764250+00:00",
+  "endpoint": "https://api.wandb.ai/graphql",
+  "authorization_header_sent": false,
+  "credentials_loaded": false,
+  "read_only_query": "query($entity:String!, $project:String!) { project(name:$project, entityName:$entity) { name runs(first:1) { edges { node { name state summaryMetrics } } } } }",
+  "public_example": "wandb/jobs",
+  "http_status": 200,
+  "run_id": "lxrn5y3z",
+  "run_state": "finished",
+  "summary_retrieved": true,
+  "summary_key_count": 2,
+  "target_project_probe": {
+    "kayamaguchi-uc-san-diego/BNJetTag-Batch20260917": "project:null before first GPU launch; absent/private cannot be distinguished anonymously"
+  },
+  "implementation_note": "Official W&B SDK uses this GraphQL API, but direct schema access should be regression-tested; documented wandb.Api defaults to requiring authentication."
+}

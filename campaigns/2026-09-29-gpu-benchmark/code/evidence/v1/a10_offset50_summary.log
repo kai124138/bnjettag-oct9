@@ -1,0 +1,18 @@
+# STUDY falsifier (i) machinery on the same saved logs: --offset 50 reads epochs 52-71 (traced 60 and 70). Later attempts replace re-run epochs; crosses_resume flags a window that mixes attempts (not the case here: the K=3 arms resumed at 25). C' has no epochs 52-71 in the saved log, so the K=5 pack total covers 4 of 5 arms (pack_arms_with_window_data). Telemetry, not the falsifier's verdict, which is read at decision time
+| product | class | K | s [D1] | R [D1] | s pooled | R pooled | class R | pack R | wall s/ep | mem frac | util all | util st | cores | rss MB | OOM | NaN | Q apply | Q sched | excluded |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| NVIDIA-A10 | E | 5 | 141.8 | - | 140.0 | - | 76.1 | - | - | - | - | - | - | 2422 | False | False | - | - | - |
+| NVIDIA-A10 | C' (A07, old quantizers) | 5 | - | - | - | - | - | - | - | - | - | - | - | - | False | False | - | - | - |
+| NVIDIA-A10 | E1 (one head) | 5 | 98.9 | - | 98.9 | - | 36.4 | - | - | - | - | - | - | 2417 | False | False | - | - | - |
+| NVIDIA-A10 | ALL (mixed pack) | 5 | - | - | - | - | - | 113.3 | - | - | - | - | - | 2422 | False | False | - | - | - |
+| NVIDIA-A10 | A07 | 3 | 133.2 | - | 133.2 | - | 54.0 | - | - | - | - | - | - | 2374 | False | False | - | - | - |
+| NVIDIA-A10 | E+PE (F) | 3 | 83.5 | - | 83.5 | - | 43.1 | - | - | - | - | - | - | 2254 | False | False | - | - | - |
+| NVIDIA-A10 | ALL (mixed pack) | 3 | - | - | - | - | - | 97.4 | - | - | - | - | - | 2374 | False | False | - | - | - |
+# NVIDIA-A10 E K5 (mixed pack) epochs 52-71: node None fingerprint None verification {'PASS': 0, 'SKIPPED': 0, 'FAIL': 0, 'none': 3} traced_as_expected True n_untraced 54 n_traced 6 samples 0 cache_matches_anchor None crosses_resume False mix [E x3, C' (A07, old quantizers) x1, E1 (one head) x1]
+# NVIDIA-A10 C' (A07, old quantizers) K5 (mixed pack) epochs 52-71: node None fingerprint None verification {'PASS': 0, 'SKIPPED': 0, 'FAIL': 0, 'none': 1} traced_as_expected True n_untraced 0 n_traced 0 samples 0 cache_matches_anchor None crosses_resume False mix [E x3, C' (A07, old quantizers) x1, E1 (one head) x1]
+# NVIDIA-A10 E1 (one head) K5 (mixed pack) epochs 52-71: node None fingerprint None verification {'PASS': 0, 'SKIPPED': 0, 'FAIL': 0, 'none': 1} traced_as_expected True n_untraced 18 n_traced 2 samples 0 cache_matches_anchor None crosses_resume False mix [E x3, C' (A07, old quantizers) x1, E1 (one head) x1]
+# NVIDIA-A10 ALL (mixed pack) K5 (mixed pack) epochs 52-71: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples 0 cache_matches_anchor None crosses_resume False mix [E x3, C' (A07, old quantizers) x1, E1 (one head) x1]
+# NVIDIA-A10 A07 K3 (mixed pack) epochs 52-71: node None fingerprint None verification {'PASS': 0, 'SKIPPED': 0, 'FAIL': 0, 'none': 2} traced_as_expected True n_untraced 36 n_traced 4 samples 0 cache_matches_anchor None crosses_resume False mix [A07 x2, E+PE (F) x1]
+# NVIDIA-A10 E+PE (F) K3 (mixed pack) epochs 52-71: node None fingerprint None verification {'PASS': 0, 'SKIPPED': 0, 'FAIL': 0, 'none': 1} traced_as_expected True n_untraced 18 n_traced 2 samples 0 cache_matches_anchor None crosses_resume False mix [A07 x2, E+PE (F) x1]
+# NVIDIA-A10 ALL (mixed pack) K3 (mixed pack) epochs 52-71: node None fingerprint None verification None traced_as_expected None n_untraced None n_traced None samples 0 cache_matches_anchor None crosses_resume False mix [A07 x2, E+PE (F) x1]
+EXIT 0

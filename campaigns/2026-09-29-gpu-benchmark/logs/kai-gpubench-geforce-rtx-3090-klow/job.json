@@ -1,0 +1,286 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "annotations": {
+            "bnjettag.io/active-deadline": "pod 12000 s from pod start = 1800 s header + per phase (K x 21 x A10 s/run-epoch E 28 / A07 44 x 2.5 + 15 s x K + 900 s), rounded up to 600 s; Job 33600 s from creation (Pending counts) = the 21600 s [D6] window + the pod bound, a backstop",
+            "bnjettag.io/bench-driver": "kai-gpubench-driver-5ede0778f7 sha256 5ede0778f716cb9299ca82c64547fb993c93d775572d33463a0fef4cbf676c45",
+            "bnjettag.io/bundle-sha256": "42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0 (kai-chang0926-code-42abed4b5d, manifest 041f981a), unchanged",
+            "bnjettag.io/cpu-pin-anti-affinity": "required pod anti-affinity on bnjettag.io/gpu-bench-pinned per node: two pinned benchmark pods on one node would pin the same first CPUs of a shared pool",
+            "bnjettag.io/expected-runtime": "compute 0.91 h at the A10 aggregate cost (E 28 / A07 44 s per run-epoch), 1.63 h at the A10 per-process 140 s per epoch; 2.13 h at the larger bound with the 1800 s header allowance; arithmetic, not a measurement. STUDY Amendment 1 (B5): a phase under 40 % mean GPU utilization is a finding, not an exclusion",
+            "bnjettag.io/gpu-fingerprint": "kai-chang0926-fp-e9511d1aeb sha256 e9511d1aeb39c7c8: chang0926-a-n64-s1 initial_ebops == 11559681 before any arm, else exit 9 (Delta REGRESSION_TICKET); a mismatch on a new product is a finding",
+            "bnjettag.io/gpu-product": "NVIDIA-GeForce-RTX-3090 via nvidia.com/gpu (24576 MiB, node label nvidia.com/gpu.memory)",
+            "bnjettag.io/job-shape": "klow: the K_low Job of NVIDIA-GeForce-RTX-3090 (pod 8 CPU / 32Gi); sibling Job kai-gpubench-geforce-rtx-3090-krule; STUDY Amendment 1 (A2, B6)",
+            "bnjettag.io/k-caps": "E: K_rule 5, K_run 5, K_low 4 (no cap binds); A07: K_rule 2, K_run 2, K_low 1 (no cap binds)",
+            "bnjettag.io/k-rule": "K_rule = floor(0.9 x 24576 / per-process MiB), per-process E 4350 / A07 8446 (A10, TF_FORCE_GPU_ALLOW_GROWTH, nvidia-smi --query-compute-apps: E 4,350 MiB (K=5 pod, c5805), A07 8,446 MiB (K=3 pods, gpu-16 and gpu-17); campaigns/2026-09-26-training-batch/RUN.md \"Takeover check, 2026-09-29T02:47-03:10Z\"); K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run \u003c= it (STUDY.md [D2])",
+            "bnjettag.io/narrow-pool": "one product on purpose: the controlled timing comparison the setup doc (Pool policy) allows; decisions.md 2026-09-29; ends when the benchmark Jobs are deleted",
+            "bnjettag.io/node-survey": "node_survey_20260929T073945Z.json (read 2026-09-29T07:39:45Z): 30 schedulable of 49 nodes; 29 can hold this pod by allocatable",
+            "bnjettag.io/not-practical-after": "6 h after kubectl apply of this Job with no Running pod: delete this Job only (its sibling is judged on its own shape) and keep the PodScheduled message (STUDY [D6], rule 3, Amendment 1 B6); cluster-ops",
+            "bnjettag.io/per-arm-resources": "2 CPU and 8Gi per arm: the pod requests them for its largest K (4), and every phase's K arms are pinned to exactly 2 x K CPUs, the first 2K of the pod's allowed set (bench_driver --cpus; thread env as pilot-b). STUDY rule 5: a phase whose steady cgroup cores / K exceed 2.1 is above budget and kept out of T",
+            "bnjettag.io/phases": "p3-E-k4 p4-A07-k1; stop_after 21 (traced epochs 1, 10, 20)",
+            "bnjettag.io/retries": "backoffLimit 0 and no podFailurePolicy: never re-run automatically (a preempted pod fails the Job)",
+            "bnjettag.io/run-root": "/data/chang-n64-20260926/gpu-bench/geforce-rtx-3090-klow/\u003cphase\u003e/runs/\u003cname\u003e; samples.csv every 60 s",
+            "bnjettag.io/telemetry-only": "GPU-product throughput benchmark, campaigns/2026-09-29-gpu-benchmark; nothing it writes is a result",
+            "bnjettag.io/wandb": "disabled: no secret mounted, WANDB_MODE=disabled, bench_driver calls ablation.run_training(remote=False)",
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-29T09:30:27Z",
+        "generation": 1,
+        "labels": {
+            "app": "kai-gpubench-geforce-rtx-3090-klow",
+            "bnjettag.io/arms-per-pod": "4",
+            "bnjettag.io/gpu-bench-pinned": "true",
+            "bnjettag.io/gpu-product-slug": "geforce-rtx-3090",
+            "bnjettag.io/job-shape": "klow",
+            "campaign": "gpu-bench-20260929",
+            "user": "kai"
+        },
+        "name": "kai-gpubench-geforce-rtx-3090-klow",
+        "namespace": "cms-ml",
+        "resourceVersion": "14971415126",
+        "uid": "269bce40-eb41-4e65-b2ae-202d6f4f36df"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 33600,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+            "matchLabels": {
+                "batch.kubernetes.io/controller-uid": "269bce40-eb41-4e65-b2ae-202d6f4f36df"
+            }
+        },
+        "suspend": false,
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "kai-gpubench-geforce-rtx-3090-klow",
+                    "batch.kubernetes.io/controller-uid": "269bce40-eb41-4e65-b2ae-202d6f4f36df",
+                    "batch.kubernetes.io/job-name": "kai-gpubench-geforce-rtx-3090-klow",
+                    "bnjettag.io/arms-per-pod": "4",
+                    "bnjettag.io/gpu-bench-pinned": "true",
+                    "bnjettag.io/gpu-product-slug": "geforce-rtx-3090",
+                    "bnjettag.io/job-shape": "klow",
+                    "campaign": "gpu-bench-20260929",
+                    "controller-uid": "269bce40-eb41-4e65-b2ae-202d6f4f36df",
+                    "job-name": "kai-gpubench-geforce-rtx-3090-klow",
+                    "user": "kai"
+                }
+            },
+            "spec": {
+                "activeDeadlineSeconds": 12000,
+                "affinity": {
+                    "nodeAffinity": {
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-3090"
+                                            ]
+                                        },
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "NotIn",
+                                            "values": [
+                                                "hcc-nrp-shor-c6017.unl.edu",
+                                                "k8s-chase-ci-07.calit2.optiputer.net",
+                                                "nautilus-ext-gpu01.fullerton.edu",
+                                                "ren-gp-argo-01.madren.org"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "podAntiAffinity": {
+                        "requiredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "labelSelector": {
+                                    "matchLabels": {
+                                        "bnjettag.io/gpu-bench-pinned": "true"
+                                    }
+                                },
+                                "topologyKey": "kubernetes.io/hostname"
+                            }
+                        ]
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nBR=/data/chang-n64-20260926/gpu-bench/geforce-rtx-3090-klow\necho \"BENCH_POD ${POD_NAME:-na} product NVIDIA-GeForce-RTX-3090 slug geforce-rtx-3090-klow shape klow $(date -u +%Y-%m-%dT%H:%M:%SZ)\"\necho \"HOSTNAME_NODE ${NODE_NAME:-na}\"\nif [ -e \"$BR/samples.csv\" ] || compgen -G \"$BR/p[0-9]*\" \u003e /dev/null; then echo \"BENCH_ROOT_NOT_EMPTY $BR: move it aside (never delete), then re-apply\"; exit 11; fi\nmkdir -p \"$BR\"\nexec \u003e \u003e(tee -a \"$BR/pod-${POD_NAME:-pod}.log\") 2\u003e\u00261\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=\"$BR\" BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nunset BNJ_STAGE WANDB_PROJECT WANDB_ENTITY WANDB_API_KEY WANDB_TAGS\nexport WANDB_MODE=disabled\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nexport BNJ_RSS_GATE_LIMIT_MB=8192 BNJ_RSS_GATE_WINDOW=5:105\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\necho CACHE_READY\necho \"GPU_INFO $(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader || echo na)\"\necho \"CPU_MODEL $(grep -m1 '^model name' /proc/cpuinfo | cut -d: -f2- | sed 's/^ *//')\"\necho \"CPU_COUNTS node_logical $(grep -c '^processor' /proc/cpuinfo) allowed $(nproc) cpus_allowed_list $(grep Cpus_allowed_list /proc/self/status | cut -f2) cgroup_cpu_max $(cat /sys/fs/cgroup/cpu.max 2\u003e/dev/null || echo na)\"\n(lscpu 2\u003e/dev/null || true) | grep -E '^(Model name|Socket|Core|Thread|CPU\\(s\\)|On-line|CPU max MHz|CPU MHz|NUMA node\\(s\\))' | sed 's/^/LSCPU /' || true\necho \"HOST_MEM $(grep MemTotal /proc/meminfo | tr -s ' ') cgroup_memory_max $(cat /sys/fs/cgroup/memory.max 2\u003e/dev/null || echo na)\"\ndf -h /data\necho \"PIP_FREEZE_SHA256 $(python -m pip freeze --all | sha256sum | cut -d' ' -f1)\"\necho 'e9511d1aeb39c7c8e48cc7dbc148ac623f3b2d9844d108da38f1ecfa2bdff1f1  /cmfp/fingerprint_check.py' | sha256sum -c -\nFP=0\npython -u /cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --data-root /data/chang-n64-20260926 --campaign-dir /work/code/campaigns/chang0926 --env-report || FP=$?\nif [ \"$FP\" != 0 ]; then echo \"FINGERPRINT_GATE_FAIL exit=$FP node=${NODE_NAME:-na}; no arm started\"; exit \"$FP\"; fi\necho '5ede0778f716cb9299ca82c64547fb993c93d775572d33463a0fef4cbf676c45  /cmbench/bench_driver.py' | sha256sum -c -\nexec python -u /cmbench/bench_driver.py pod --bench-root \"$BR\" --plan-json \"$BENCH_PLAN\"\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "env": [
+                            {
+                                "name": "NODE_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "spec.nodeName"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "POD_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.name"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "WANDB_MODE",
+                                "value": "disabled"
+                            },
+                            {
+                                "name": "BENCH_PLAN",
+                                "value": "{\"product\":\"NVIDIA-GeForce-RTX-3090\",\"slug\":\"geforce-rtx-3090-klow\",\"product_slug\":\"geforce-rtx-3090\",\"shape\":\"klow\",\"card_mib\":24576,\"stop_after\":21,\"pod_cpu_request\":8,\"phases\":[{\"phase\":\"p3-E-k4\",\"class\":\"E\",\"k\":4,\"names\":[\"chang0926-a-n64-s1\",\"chang0926-a-n64-s2\",\"chang0926-a-n64-s3\",\"chang0926-a-n64-s4\"]},{\"phase\":\"p4-A07-k1\",\"class\":\"A07\",\"k\":1,\"names\":[\"chang0926-c-n64-s1\"]}]}"
+                            },
+                            {
+                                "name": "BENCH_SAMPLE_SECONDS",
+                                "value": "60"
+                            },
+                            {
+                                "name": "BENCH_STALL_SECONDS",
+                                "value": "3600"
+                            },
+                            {
+                                "name": "BENCH_STAGGER_SECONDS",
+                                "value": "15"
+                            }
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "bench",
+                        "resources": {
+                            "limits": {
+                                "cpu": "8",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "32Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "8",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "32Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "persistent"
+                            },
+                            {
+                                "mountPath": "/cmfp",
+                                "name": "fingerprint",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/cmbench",
+                                "name": "bench",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 180,
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-chang0926-code-42abed4b5d"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "24Gi"
+                        },
+                        "name": "work"
+                    },
+                    {
+                        "name": "persistent",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-chang0926-fp-e9511d1aeb"
+                        },
+                        "name": "fingerprint"
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-gpubench-driver-5ede0778f7"
+                        },
+                        "name": "bench"
+                    }
+                ]
+            }
+        },
+        "ttlSecondsAfterFinished": 604800
+    },
+    "status": {
+        "completionTime": "2026-09-29T12:40:31Z",
+        "conditions": [
+            {
+                "lastProbeTime": "2026-09-29T12:40:31Z",
+                "lastTransitionTime": "2026-09-29T12:40:31Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "SuccessCriteriaMet"
+            },
+            {
+                "lastProbeTime": "2026-09-29T12:40:31Z",
+                "lastTransitionTime": "2026-09-29T12:40:31Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "Complete"
+            }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-29T09:30:33Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+    }
+}

@@ -1,0 +1,351 @@
+{
+ "written": "2026-09-02T16:56:49",
+ "width": 20,
+ "derived_config": {
+  "weight": "int8_absmax",
+  "act_bits": 20,
+  "act_policy": "static_per_tensor_mse_calibrated",
+  "calib_n": 8192,
+  "act_calib": "frozen"
+ },
+ "n_variables_export_fp32": 86,
+ "n_variables_realization": 212,
+ "port": {
+  "mechanism": "by-name kernel/bias assign (NOT whole-layer set_weights)",
+  "n_kernels": 15,
+  "n_biases": 9,
+  "max_abs_assign_residual": 0.0
+ },
+ "weight_grids": {
+  "input_proj": {
+   "kernel_absmax": 0.48572349548339844,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.6938657760620117e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_0_attn_Wq": {
+   "kernel_absmax": 0.3867899775505066,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_0_attn_Wk": {
+   "kernel_absmax": 0.3817116618156433,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_0_attn_Wv": {
+   "kernel_absmax": 0.396310955286026,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_0_attn_Wo": {
+   "kernel_absmax": 0.36211097240448,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_0_ffn_fc1": {
+   "kernel_absmax": 0.39705604314804077,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_0_ffn_fc2": {
+   "kernel_absmax": 0.36197659373283386,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_1_attn_Wq": {
+   "kernel_absmax": 0.36292344331741333,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_1_attn_Wk": {
+   "kernel_absmax": 0.3782641589641571,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_1_attn_Wv": {
+   "kernel_absmax": 0.41076910495758057,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_1_attn_Wo": {
+   "kernel_absmax": 0.3921304941177368,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_1_ffn_fc1": {
+   "kernel_absmax": 0.4172121584415436,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "bit_block_1_ffn_fc2": {
+   "kernel_absmax": 0.44738662242889404,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "head_fc1": {
+   "kernel_absmax": 0.4207179844379425,
+   "i": -1,
+   "f": 20,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,0>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 4.76837158203125e-07,
+   "half_lsb_bound": 4.76838158203125e-07,
+   "grid_assign_ok": true
+  },
+  "head_fc2": {
+   "kernel_absmax": 0.6891653537750244,
+   "i": 0,
+   "f": 19,
+   "total_bits": 20,
+   "ap_fixed": "ap_fixed<20,1>",
+   "reported_bits": 20.0,
+   "qkernel_lattice_max_abs_err": 0.0,
+   "qkernel_vs_float_max_abs_err": 9.5367431640625e-07,
+   "half_lsb_bound": 9.5367531640625e-07,
+   "grid_assign_ok": true
+  }
+ },
+ "weight_grid_rule": "intW_absmax: narrowest signed KIF i with 2^i - 2^-(W-1-i) >= max|kernel|, f = W-1-i (the _static_w8 rule generalised)",
+ "act_calibration": {
+  "policy": "static_per_tensor_mse_calibrated",
+  "act_bits": 20,
+  "n_calib_jets": 8192,
+  "n_sites": 19,
+  "site_i": {
+   "input_proj": 4,
+   "bit_block_0_attn_Wq": 3,
+   "bit_block_0_attn_Wk": 3,
+   "bit_block_0_attn_Wv": 3,
+   "bit_block_0_attn_scores__in0": 3,
+   "bit_block_0_attn_scores__in1": 3,
+   "bit_block_0_attn_Wo": 3,
+   "bit_block_0_ffn_fc1": 4,
+   "bit_block_0_ffn_fc2": 4,
+   "bit_block_1_attn_Wq": 5,
+   "bit_block_1_attn_Wk": 5,
+   "bit_block_1_attn_Wv": 5,
+   "bit_block_1_attn_scores__in0": 4,
+   "bit_block_1_attn_scores__in1": 4,
+   "bit_block_1_attn_Wo": 5,
+   "bit_block_1_ffn_fc1": 5,
+   "bit_block_1_ffn_fc2": 5,
+   "head_fc1": 6,
+   "head_fc2": 5
+  }
+ },
+ "act_grids": {
+  "input_proj": {
+   "i": 4.0,
+   "f": 15.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_attn_Wq": {
+   "i": 3.0,
+   "f": 16.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_attn_Wk": {
+   "i": 3.0,
+   "f": 16.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_attn_scores__in0": {
+   "i": 3.0,
+   "f": 16.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_attn_scores__in1": {
+   "i": 3.0,
+   "f": 16.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_attn_Wv": {
+   "i": 3.0,
+   "f": 16.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_attn_ctx__in0": {
+   "i": 1.0,
+   "f": 19.0,
+   "total_bits": 21.0
+  },
+  "bit_block_0_attn_ctx__in1": {
+   "i": 6.0,
+   "f": 13.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_attn_Wo": {
+   "i": 3.0,
+   "f": 16.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_ffn_fc1": {
+   "i": 4.0,
+   "f": 15.0,
+   "total_bits": 20.0
+  },
+  "bit_block_0_ffn_fc2": {
+   "i": 4.0,
+   "f": 15.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_attn_Wq": {
+   "i": 5.0,
+   "f": 14.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_attn_Wk": {
+   "i": 5.0,
+   "f": 14.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_attn_scores__in0": {
+   "i": 4.0,
+   "f": 15.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_attn_scores__in1": {
+   "i": 4.0,
+   "f": 15.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_attn_Wv": {
+   "i": 5.0,
+   "f": 14.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_attn_ctx__in0": {
+   "i": 1.0,
+   "f": 19.0,
+   "total_bits": 21.0
+  },
+  "bit_block_1_attn_ctx__in1": {
+   "i": 6.0,
+   "f": 13.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_attn_Wo": {
+   "i": 5.0,
+   "f": 14.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_ffn_fc1": {
+   "i": 5.0,
+   "f": 14.0,
+   "total_bits": 20.0
+  },
+  "bit_block_1_ffn_fc2": {
+   "i": 5.0,
+   "f": 14.0,
+   "total_bits": 20.0
+  },
+  "head_fc1": {
+   "i": 6.0,
+   "f": 13.0,
+   "total_bits": 20.0
+  },
+  "head_fc2": {
+   "i": 5.0,
+   "f": 14.0,
+   "total_bits": 20.0
+  }
+ },
+ "model_default_frac_required": 20,
+ "model_precision_rule": "fixed<32,12> -- integer width held at the w8a8 value 12, fractional width widened to contain the widest weight grid (EinsumDense weights have no per-layer typedef in hls4ml 1.3.0 and land on the Model fallback)",
+ "model_precision": "fixed<32,12>",
+ "model_precision_choice": "widened-fallback rule (default)",
+ "model_precision_used": "fixed<32,12>"
+}

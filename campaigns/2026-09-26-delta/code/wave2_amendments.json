@@ -1,0 +1,72 @@
+{
+  "status": "frozen",
+  "_about": "Wave-2 lists from the FROZEN STUDY, read by generate_delta.py (screen tier): campaigns/2026-09-27-delta-screen/STUDY.md, status frozen, commit 24c3c90 (Kai's round-6 rule, PASS with disclosed limitations). Arms l. 298-310 (P-350 = arm A's replica config at seeds 1-n_350, P-5M = arm C's at seeds 1-n_5M, both H 500; only name, experiment.arm, delta_study.*, engram_study.question and train.epochs differ from the replica); Drift replicas l. 358-364 (rep-A and rep-C seeds 1-8; rep-A07-350 seeds 1-n_350 from delta.json); Seeds l. 576-577 (ranking mode, n = 4 in both families). Rows carry the flag study_frozen_list.",
+  "study": "campaigns/2026-09-27-delta-screen/STUDY.md",
+  "study_commit": "24c3c90",
+  "placebos": [
+    {
+      "id": "P-350",
+      "wave": "W2",
+      "arm": "A",
+      "target": 350000,
+      "horizon_epochs": 500,
+      "seeds": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "no_op": "P-350: arm A config, run identity only (delta_study.placebo; provenance, not read by training)",
+      "source": "STUDY.md (frozen 24c3c90) l. 298-300: P-350 = arm A's config plus a no-op key (run identity only) at seeds 1-n_350, H 500"
+    },
+    {
+      "id": "P-5M",
+      "wave": "W2",
+      "arm": "C",
+      "target": 5000000,
+      "horizon_epochs": 500,
+      "seeds": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "no_op": "P-5M: arm C config, run identity only (delta_study.placebo; provenance, not read by training)",
+      "source": "STUDY.md (frozen 24c3c90) l. 298-300: P-5M = arm C's config likewise at seeds 1-n_5M, H 500"
+    }
+  ],
+  "replica_seeds": {
+    "W2": {
+      "A": {
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "source": "STUDY.md (frozen 24c3c90) l. 358-364: rep-A seeds 1-8 from t = 0, every seed configured to 1,000 epochs (delta.json horizon), seeds above n_350 stopped at the epoch-500 gate",
+        "extension_seed_horizon": 500,
+        "extension_source": "STUDY.md (frozen 24c3c90) l. 358-359: seeds above n stop at 500 (n = 4, l. 576-577); written as train.epochs = 500 in those seeds' configs"
+      },
+      "C": {
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "source": "STUDY.md (frozen 24c3c90) l. 358-364: rep-C seeds 1-8, every seed configured to 2,000 epochs (delta.json horizon), seeds above n_5M stopped at the epoch-500 gate",
+        "extension_seed_horizon": 500,
+        "extension_source": "STUDY.md (frozen 24c3c90) l. 358-359: seeds above n stop at 500 (n = 4, l. 576-577); written as train.epochs = 500 in those seeds' configs"
+      }
+    }
+  }
+}

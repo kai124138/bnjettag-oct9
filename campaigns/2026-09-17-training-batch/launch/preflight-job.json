@@ -1,0 +1,89 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-batch0917-preflight-ddd3761d",
+    "namespace": "cms-ml",
+    "labels": {
+      "app": "kai-batch0917-preflight"
+    }
+  },
+  "spec": {
+    "backoffLimit": 0,
+    "activeDeadlineSeconds": 1800,
+    "ttlSecondsAfterFinished": 86400,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "kai-batch0917-preflight"
+        }
+      },
+      "spec": {
+        "restartPolicy": "Never",
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "containers": [
+          {
+            "name": "preflight",
+            "image": "python:3.12",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled\nexport TF_CPP_MIN_LOG_LEVEL=2 OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nexport BNHGQ2_CODE_SHA256=ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d\nmkdir -p /work/code\nprintf '%s  %s\\n' 'ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d' '/cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\npip install -q --no-cache-dir -r /work/code/requirements-cpu.txt\npython -u /work/code/launch/prepare_batch_cache.py --configs /work/code/configs/batch20260917 --root /data/batch20260917 --raw /data/hls4ml_lhc_jet/train/train\npython -u /work/code/check_training_batch_preflight.py --configs /work/code/configs/batch20260917 --output /data/batch20260917/preflight-result.json\n"
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "2",
+                "memory": "8Gi",
+                "ephemeral-storage": "8Gi"
+              },
+              "limits": {
+                "cpu": "2",
+                "memory": "8Gi",
+                "ephemeral-storage": "8Gi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "code",
+                "mountPath": "/cmcode",
+                "readOnly": true
+              },
+              {
+                "name": "work",
+                "mountPath": "/work"
+              },
+              {
+                "name": "data",
+                "mountPath": "/data"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-batch0917-code-ddd3761d2a"
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "8Gi"
+            }
+          },
+          {
+            "name": "data",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

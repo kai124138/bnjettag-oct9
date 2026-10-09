@@ -1,0 +1,58 @@
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-3b6cc77c9d7018e4b8e01704/job.json
+! cannot read nodes, resource-name check disabled: kubectl get nodes -o json failed:
+kubectl shim: cluster access disabled for offline lint
+
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-3b6cc77c9d7018e4b8e01704/job.json :: kai-d350-sc-reference-e-5m-s1-a1-s1 ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+rc=0
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-75fce91d6fa8303fecd5f2de/job.json
+! cannot read nodes, resource-name check disabled: kubectl get nodes -o json failed:
+kubectl shim: cluster access disabled for offline lint
+
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-75fce91d6fa8303fecd5f2de/job.json :: kai-d350-sc-baseline-e-350k-s1-a1-s1 ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+rc=0
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-93b6a83ac87fdde400be0eb4/job.json
+! cannot read nodes, resource-name check disabled: kubectl get nodes -o json failed:
+kubectl shim: cluster access disabled for offline lint
+
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-93b6a83ac87fdde400be0eb4/job.json :: kai-d350-reference-e-5m-s1-a1 ==
+  ERROR  NO product in the required list is reachable: the pod requests nvidia.com/gpu but every listed product needs a different resource name. This job can never schedule.
+  WARN   required-list product(s) match no node in the cluster (typo, or the hardware is gone): NVIDIA-GeForce-RTX-3090
+  WARN   backoffLimitPerIndex=1: one blip kills an index. Suggest 3.
+  note   no activeDeadlineSeconds (NRP has no universal 6 h cap — fine if deliberate)
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+rc=2
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-dbfb5756bfb1252567b6ff4e/job.json
+! cannot read nodes, resource-name check disabled: kubectl get nodes -o json failed:
+kubectl shim: cluster access disabled for offline lint
+
+== campaigns/2026-10-08-discovery-350k/handoffs/rh-dbfb5756bfb1252567b6ff4e/job.json :: kai-d350-baseline-e-350k-s1-a1 ==
+  ERROR  NO product in the required list is reachable: the pod requests nvidia.com/gpu but every listed product needs a different resource name. This job can never schedule.
+  WARN   required-list product(s) match no node in the cluster (typo, or the hardware is gone): NVIDIA-GeForce-RTX-3090
+  WARN   backoffLimitPerIndex=1: one blip kills an index. Suggest 3.
+  note   no activeDeadlineSeconds (NRP has no universal 6 h cap — fine if deliberate)
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+rc=2
+== control: pilot r3 job (rc=1 with cluster access in campaigns/2026-10-05-pilot-program/evidence/r3/lint-r3.log)
+! cannot read nodes, resource-name check disabled: kubectl get nodes -o json failed:
+kubectl shim: cluster access disabled for offline lint
+
+== campaigns/2026-10-05-pilot-program/handoffs/rh-0f2fd13cf9427b9236c476ab/job.json :: kai-p1005r1-h1-e-350k-c-s2-98dd28-r3 ==
+  ERROR  NO product in the required list is reachable: the pod requests nvidia.com/gpu but every listed product needs a different resource name. This job can never schedule.
+  WARN   required-list product(s) match no node in the cluster (typo, or the hardware is gone): NVIDIA-GeForce-RTX-3090
+  WARN   backoffLimitPerIndex=1: one blip kills an index. Suggest 3.
+  note   no activeDeadlineSeconds (NRP has no universal 6 h cap — fine if deliberate)
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+rc=2

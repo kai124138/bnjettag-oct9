@@ -1,0 +1,2835 @@
+{
+  "apiVersion": "v1",
+  "items": [
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"b25\"},\"name\":\"kai-ebops-n8-0910-b25-s1\",\"namespace\":\"cms-ml\"},\"spec\":{\"activeDeadlineSeconds\":21600,\"backoffLimit\":0,\"template\":{\"metadata\":{\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"b25\"}},\"spec\":{\"affinity\":{\"nodeAffinity\":{\"preferredDuringSchedulingIgnoredDuringExecution\":[{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]},\"weight\":100},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\"]}]},\"weight\":60},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\"]}]},\"weight\":20},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-H200-NVL\",\"NVIDIA-H100-80GB-HBM3\",\"NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition\"]}]},\"weight\":10}],\"requiredDuringSchedulingIgnoredDuringExecution\":{\"nodeSelectorTerms\":[{\"matchExpressions\":[{\"key\":\"kubernetes.io/hostname\",\"operator\":\"NotIn\",\"values\":[\"k8s-chase-ci-07.calit2.optiputer.net\",\"k8s-chase-ci-10.calit2.optiputer.net\",\"k8s-haosu-22.sdsc.optiputer.net\",\"ry-gpu-08.sdsc.optiputer.net\",\"suncave-1\",\"suncave-2\",\"suncave-3\",\"suncave-4\",\"suncave-5\",\"suncave-6\",\"suncave-7\",\"suncave-8\",\"suncave-9\",\"suncave-10\",\"suncave-11\",\"suncave-12\",\"suncave-13\",\"suncave-14\",\"suncave-15\",\"suncave-16\",\"suncave-17\",\"suncave-18\",\"suncave-19\",\"suncave-20\"]},{\"key\":\"kubernetes.io/arch\",\"operator\":\"In\",\"values\":[\"amd64\"]},{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\",\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\",\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]}]}}},\"containers\":[{\"args\":[\"set -eo pipefail\\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\\nmkdir -p /work/code /work/data /work/outputs\\nCODE=/work/code\\nOUT=/work/outputs/ebops-n8-20260910-b25-w1a8-s1\\nmkdir -p \\\"$OUT\\\"\\necho \\\"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\\\"\\ntar -xzf /cmcode/hgq2.tar.gz -C \\\"$CODE\\\" --strip-components=1\\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \\\"[code] configmap tar md5:\\\", $1}'\\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\\n[ -f \\\"$CODE/configs/ebops-n8-20260910-b25-w1a8.json\\\" ] || {\\n  echo \\\"[fatal] unpacked code lacks configs/ebops-n8-20260910-b25-w1a8.json -\\u003e ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\\\"\\n  echo \\\"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\\\"\\n  exit 1\\n}\\ngrep -q \\\"def feature_indices\\\" \\\"$CODE/bnhgq2/data.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\ngrep -q \\\"wandb_util\\\" \\\"$CODE/bnhgq2/train.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/train.py predates the W\\u0026B artifact layout -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\necho \\\"[gate] configs/ebops-n8-20260910-b25-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\\\"\\nexport PYTHONPATH=\\\"$CODE:${PYTHONPATH:-}\\\"\\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\\necho \\\"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\\\" | sha256sum -c -\\ntest -f \\\"$CODE/bnhgq2/ebops_target.py\\\"\\necho \\\"[setup] $(date) pinned deps (mirror .venv-hgq2)\\\"\\npip install -q --no-cache-dir \\\"tensorflow[and-cuda]==2.21.0\\\" \\\"keras==3.15.0\\\" \\\"hgq2==0.1.9\\\" \\\"quantizers==1.2.2\\\" \\\"scikit-learn==1.9.0\\\" \\\"h5py==3.14.0\\\" \\\"wandb==0.28.0\\\" \\\"hls4ml==1.3.0\\\" \\\"numpy==2.5.0\\\"\\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\\nNVLIBS=$(python -c \\\"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\\\")\\nexport LD_LIBRARY_PATH=\\\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\\\"\\necho \\\"[gpu] $(date) nvidia-smi + TF backend assertion\\\"\\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \\\"[fatal] no nvidia-smi / GPU\\\"; exit 1; }\\npython -c \\\"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\\\"\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_MODE=online\\npython -c \\\"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\\\"\\necho \\\"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\\\"\\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\\\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\\\", \\\"/work/data/train.tar.gz\\\")'\\nsz=$(stat -c %s /work/data/train.tar.gz); echo \\\"[data] tarball bytes: $sz\\\"\\n[ \\\"$sz\\\" -gt 2500000000 ] || { echo \\\"[fatal] train tarball too small ($sz \\u003c 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\\\"; exit 1; }\\ntar -xzf /work/data/train.tar.gz -C /work/data \\u0026\\u0026 rm -f /work/data/train.tar.gz\\nDATA=$(dirname \\\"$(find /work/data -name 'jetImage_*.h5' -print -quit)\\\")\\n[ -n \\\"$DATA\\\" ] || { echo \\\"[fatal] no jetImage_*.h5 after extract\\\"; exit 1; }\\necho \\\"[data] DATA=$DATA ($(ls \\\"$DATA\\\" | wc -l) files)\\\"\\nexport BNHGQ2_TRAIN_DATA=\\\"$DATA\\\"\\nexport BNHGQ2_OUT_ROOT=/work/outputs\\nexport BNHGQ2_STORE=/work/outputs/_store\\n# ---- W\\u0026B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\\n# project so r14 numbers can never be conflated with the 16-feature tables.\\n# Grouped per constituent count for the sweep comparison. ----\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_RUN_NAME=ebops-n8-20260910-b25-w1a8-s1\\nexport WANDB_GROUP=ebops-n8-20260910\\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b25\\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\\necho \\\"[train] $(date) ebops-n8-20260910-b25-w1a8-s1  config=ebops-n8-20260910-b25-w1a8.json seed=1\\\"\\ncd \\\"$CODE\\\"\\npython -u \\\"$CODE/run_stage.py\\\" train \\\\\\n  --config \\\"$CODE/configs/ebops-n8-20260910-b25-w1a8.json\\\" --seed 1 --out-dir \\\"$OUT\\\" \\\\\\n  2\\u003e\\u00261 | tee \\\"$OUT/train.log\\\"\\necho \\\"[done] $(date) ebops-n8-20260910-b25-w1a8-s1\\\"\\n\"],\"command\":[\"bash\",\"-c\"],\"env\":[{\"name\":\"WANDB_API_KEY\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"WANDB_API_KEY\",\"name\":\"kai-wandb\"}}}],\"image\":\"python:3.12\",\"name\":\"train\",\"resources\":{\"limits\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"},\"requests\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"}},\"volumeMounts\":[{\"mountPath\":\"/cmcode\",\"name\":\"cmcode\"},{\"mountPath\":\"/work\",\"name\":\"work\"}]}],\"restartPolicy\":\"Never\",\"volumes\":[{\"configMap\":{\"name\":\"kai-ebops-n8-code-9ab88f4911\"},\"name\":\"cmcode\"},{\"emptyDir\":{\"sizeLimit\":\"16Gi\"},\"name\":\"work\"}]}}}}\n",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:43Z",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "b25"
+        },
+        "name": "kai-ebops-n8-0910-b25-s1",
+        "namespace": "cms-ml",
+        "resourceVersion": "14766050665",
+        "uid": "cc337b60-5ddd-46c9-8c45-5489ea924607"
+      },
+      "spec": {
+        "activeDeadlineSeconds": 21600,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+          "matchLabels": {
+            "batch.kubernetes.io/controller-uid": "cc337b60-5ddd-46c9-8c45-5489ea924607"
+          }
+        },
+        "suspend": false,
+        "template": {
+          "metadata": {
+            "creationTimestamp": null,
+            "labels": {
+              "app": "kai-ebops-n8",
+              "arm": "b25",
+              "batch.kubernetes.io/controller-uid": "cc337b60-5ddd-46c9-8c45-5489ea924607",
+              "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-b25-s1",
+              "controller-uid": "cc337b60-5ddd-46c9-8c45-5489ea924607",
+              "job-name": "kai-ebops-n8-0910-b25-s1"
+            }
+          },
+          "spec": {
+            "affinity": {
+              "nodeAffinity": {
+                "preferredDuringSchedulingIgnoredDuringExecution": [
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 100
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 20
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-H200-NVL",
+                            "NVIDIA-H100-80GB-HBM3",
+                            "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 10
+                  }
+                ],
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                  "nodeSelectorTerms": [
+                    {
+                      "matchExpressions": [
+                        {
+                          "key": "kubernetes.io/hostname",
+                          "operator": "NotIn",
+                          "values": [
+                            "k8s-chase-ci-07.calit2.optiputer.net",
+                            "k8s-chase-ci-10.calit2.optiputer.net",
+                            "k8s-haosu-22.sdsc.optiputer.net",
+                            "ry-gpu-08.sdsc.optiputer.net",
+                            "suncave-1",
+                            "suncave-2",
+                            "suncave-3",
+                            "suncave-4",
+                            "suncave-5",
+                            "suncave-6",
+                            "suncave-7",
+                            "suncave-8",
+                            "suncave-9",
+                            "suncave-10",
+                            "suncave-11",
+                            "suncave-12",
+                            "suncave-13",
+                            "suncave-14",
+                            "suncave-15",
+                            "suncave-16",
+                            "suncave-17",
+                            "suncave-18",
+                            "suncave-19",
+                            "suncave-20"
+                          ]
+                        },
+                        {
+                          "key": "kubernetes.io/arch",
+                          "operator": "In",
+                          "values": [
+                            "amd64"
+                          ]
+                        },
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB",
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000",
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "containers": [
+              {
+                "args": [
+                  "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-b25-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-b25-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-b25-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-b25-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-b25-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b25\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-b25-w1a8-s1  config=ebops-n8-20260910-b25-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-b25-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-b25-w1a8-s1\"\n"
+                ],
+                "command": [
+                  "bash",
+                  "-c"
+                ],
+                "env": [
+                  {
+                    "name": "WANDB_API_KEY",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "WANDB_API_KEY",
+                        "name": "kai-wandb"
+                      }
+                    }
+                  }
+                ],
+                "image": "python:3.12",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "train",
+                "resources": {
+                  "limits": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "requests": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                  {
+                    "mountPath": "/cmcode",
+                    "name": "cmcode"
+                  },
+                  {
+                    "mountPath": "/work",
+                    "name": "work"
+                  }
+                ]
+              }
+            ],
+            "dnsPolicy": "ClusterFirst",
+            "restartPolicy": "Never",
+            "schedulerName": "default-scheduler",
+            "securityContext": {},
+            "terminationGracePeriodSeconds": 30,
+            "volumes": [
+              {
+                "configMap": {
+                  "defaultMode": 420,
+                  "name": "kai-ebops-n8-code-9ab88f4911"
+                },
+                "name": "cmcode"
+              },
+              {
+                "emptyDir": {
+                  "sizeLimit": "16Gi"
+                },
+                "name": "work"
+              }
+            ]
+          }
+        },
+        "ttlSecondsAfterFinished": 86400
+      },
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-11T00:54:43Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"b50\"},\"name\":\"kai-ebops-n8-0910-b50-s1\",\"namespace\":\"cms-ml\"},\"spec\":{\"activeDeadlineSeconds\":21600,\"backoffLimit\":0,\"template\":{\"metadata\":{\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"b50\"}},\"spec\":{\"affinity\":{\"nodeAffinity\":{\"preferredDuringSchedulingIgnoredDuringExecution\":[{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]},\"weight\":100},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\"]}]},\"weight\":60},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\"]}]},\"weight\":20},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-H200-NVL\",\"NVIDIA-H100-80GB-HBM3\",\"NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition\"]}]},\"weight\":10}],\"requiredDuringSchedulingIgnoredDuringExecution\":{\"nodeSelectorTerms\":[{\"matchExpressions\":[{\"key\":\"kubernetes.io/hostname\",\"operator\":\"NotIn\",\"values\":[\"k8s-chase-ci-07.calit2.optiputer.net\",\"k8s-chase-ci-10.calit2.optiputer.net\",\"k8s-haosu-22.sdsc.optiputer.net\",\"ry-gpu-08.sdsc.optiputer.net\",\"suncave-1\",\"suncave-2\",\"suncave-3\",\"suncave-4\",\"suncave-5\",\"suncave-6\",\"suncave-7\",\"suncave-8\",\"suncave-9\",\"suncave-10\",\"suncave-11\",\"suncave-12\",\"suncave-13\",\"suncave-14\",\"suncave-15\",\"suncave-16\",\"suncave-17\",\"suncave-18\",\"suncave-19\",\"suncave-20\"]},{\"key\":\"kubernetes.io/arch\",\"operator\":\"In\",\"values\":[\"amd64\"]},{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\",\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\",\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]}]}}},\"containers\":[{\"args\":[\"set -eo pipefail\\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\\nmkdir -p /work/code /work/data /work/outputs\\nCODE=/work/code\\nOUT=/work/outputs/ebops-n8-20260910-b50-w1a8-s1\\nmkdir -p \\\"$OUT\\\"\\necho \\\"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\\\"\\ntar -xzf /cmcode/hgq2.tar.gz -C \\\"$CODE\\\" --strip-components=1\\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \\\"[code] configmap tar md5:\\\", $1}'\\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\\n[ -f \\\"$CODE/configs/ebops-n8-20260910-b50-w1a8.json\\\" ] || {\\n  echo \\\"[fatal] unpacked code lacks configs/ebops-n8-20260910-b50-w1a8.json -\\u003e ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\\\"\\n  echo \\\"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\\\"\\n  exit 1\\n}\\ngrep -q \\\"def feature_indices\\\" \\\"$CODE/bnhgq2/data.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\ngrep -q \\\"wandb_util\\\" \\\"$CODE/bnhgq2/train.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/train.py predates the W\\u0026B artifact layout -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\necho \\\"[gate] configs/ebops-n8-20260910-b50-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\\\"\\nexport PYTHONPATH=\\\"$CODE:${PYTHONPATH:-}\\\"\\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\\necho \\\"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\\\" | sha256sum -c -\\ntest -f \\\"$CODE/bnhgq2/ebops_target.py\\\"\\necho \\\"[setup] $(date) pinned deps (mirror .venv-hgq2)\\\"\\npip install -q --no-cache-dir \\\"tensorflow[and-cuda]==2.21.0\\\" \\\"keras==3.15.0\\\" \\\"hgq2==0.1.9\\\" \\\"quantizers==1.2.2\\\" \\\"scikit-learn==1.9.0\\\" \\\"h5py==3.14.0\\\" \\\"wandb==0.28.0\\\" \\\"hls4ml==1.3.0\\\" \\\"numpy==2.5.0\\\"\\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\\nNVLIBS=$(python -c \\\"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\\\")\\nexport LD_LIBRARY_PATH=\\\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\\\"\\necho \\\"[gpu] $(date) nvidia-smi + TF backend assertion\\\"\\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \\\"[fatal] no nvidia-smi / GPU\\\"; exit 1; }\\npython -c \\\"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\\\"\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_MODE=online\\npython -c \\\"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\\\"\\necho \\\"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\\\"\\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\\\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\\\", \\\"/work/data/train.tar.gz\\\")'\\nsz=$(stat -c %s /work/data/train.tar.gz); echo \\\"[data] tarball bytes: $sz\\\"\\n[ \\\"$sz\\\" -gt 2500000000 ] || { echo \\\"[fatal] train tarball too small ($sz \\u003c 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\\\"; exit 1; }\\ntar -xzf /work/data/train.tar.gz -C /work/data \\u0026\\u0026 rm -f /work/data/train.tar.gz\\nDATA=$(dirname \\\"$(find /work/data -name 'jetImage_*.h5' -print -quit)\\\")\\n[ -n \\\"$DATA\\\" ] || { echo \\\"[fatal] no jetImage_*.h5 after extract\\\"; exit 1; }\\necho \\\"[data] DATA=$DATA ($(ls \\\"$DATA\\\" | wc -l) files)\\\"\\nexport BNHGQ2_TRAIN_DATA=\\\"$DATA\\\"\\nexport BNHGQ2_OUT_ROOT=/work/outputs\\nexport BNHGQ2_STORE=/work/outputs/_store\\n# ---- W\\u0026B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\\n# project so r14 numbers can never be conflated with the 16-feature tables.\\n# Grouped per constituent count for the sweep comparison. ----\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_RUN_NAME=ebops-n8-20260910-b50-w1a8-s1\\nexport WANDB_GROUP=ebops-n8-20260910\\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b50\\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\\necho \\\"[train] $(date) ebops-n8-20260910-b50-w1a8-s1  config=ebops-n8-20260910-b50-w1a8.json seed=1\\\"\\ncd \\\"$CODE\\\"\\npython -u \\\"$CODE/run_stage.py\\\" train \\\\\\n  --config \\\"$CODE/configs/ebops-n8-20260910-b50-w1a8.json\\\" --seed 1 --out-dir \\\"$OUT\\\" \\\\\\n  2\\u003e\\u00261 | tee \\\"$OUT/train.log\\\"\\necho \\\"[done] $(date) ebops-n8-20260910-b50-w1a8-s1\\\"\\n\"],\"command\":[\"bash\",\"-c\"],\"env\":[{\"name\":\"WANDB_API_KEY\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"WANDB_API_KEY\",\"name\":\"kai-wandb\"}}}],\"image\":\"python:3.12\",\"name\":\"train\",\"resources\":{\"limits\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"},\"requests\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"}},\"volumeMounts\":[{\"mountPath\":\"/cmcode\",\"name\":\"cmcode\"},{\"mountPath\":\"/work\",\"name\":\"work\"}]}],\"restartPolicy\":\"Never\",\"volumes\":[{\"configMap\":{\"name\":\"kai-ebops-n8-code-9ab88f4911\"},\"name\":\"cmcode\"},{\"emptyDir\":{\"sizeLimit\":\"16Gi\"},\"name\":\"work\"}]}}}}\n",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:43Z",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "b50"
+        },
+        "name": "kai-ebops-n8-0910-b50-s1",
+        "namespace": "cms-ml",
+        "resourceVersion": "14766050625",
+        "uid": "b2506179-ad05-41af-9483-76dc4ee3469a"
+      },
+      "spec": {
+        "activeDeadlineSeconds": 21600,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+          "matchLabels": {
+            "batch.kubernetes.io/controller-uid": "b2506179-ad05-41af-9483-76dc4ee3469a"
+          }
+        },
+        "suspend": false,
+        "template": {
+          "metadata": {
+            "creationTimestamp": null,
+            "labels": {
+              "app": "kai-ebops-n8",
+              "arm": "b50",
+              "batch.kubernetes.io/controller-uid": "b2506179-ad05-41af-9483-76dc4ee3469a",
+              "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-b50-s1",
+              "controller-uid": "b2506179-ad05-41af-9483-76dc4ee3469a",
+              "job-name": "kai-ebops-n8-0910-b50-s1"
+            }
+          },
+          "spec": {
+            "affinity": {
+              "nodeAffinity": {
+                "preferredDuringSchedulingIgnoredDuringExecution": [
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 100
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 20
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-H200-NVL",
+                            "NVIDIA-H100-80GB-HBM3",
+                            "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 10
+                  }
+                ],
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                  "nodeSelectorTerms": [
+                    {
+                      "matchExpressions": [
+                        {
+                          "key": "kubernetes.io/hostname",
+                          "operator": "NotIn",
+                          "values": [
+                            "k8s-chase-ci-07.calit2.optiputer.net",
+                            "k8s-chase-ci-10.calit2.optiputer.net",
+                            "k8s-haosu-22.sdsc.optiputer.net",
+                            "ry-gpu-08.sdsc.optiputer.net",
+                            "suncave-1",
+                            "suncave-2",
+                            "suncave-3",
+                            "suncave-4",
+                            "suncave-5",
+                            "suncave-6",
+                            "suncave-7",
+                            "suncave-8",
+                            "suncave-9",
+                            "suncave-10",
+                            "suncave-11",
+                            "suncave-12",
+                            "suncave-13",
+                            "suncave-14",
+                            "suncave-15",
+                            "suncave-16",
+                            "suncave-17",
+                            "suncave-18",
+                            "suncave-19",
+                            "suncave-20"
+                          ]
+                        },
+                        {
+                          "key": "kubernetes.io/arch",
+                          "operator": "In",
+                          "values": [
+                            "amd64"
+                          ]
+                        },
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB",
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000",
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "containers": [
+              {
+                "args": [
+                  "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-b50-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-b50-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-b50-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-b50-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-b50-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b50\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-b50-w1a8-s1  config=ebops-n8-20260910-b50-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-b50-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-b50-w1a8-s1\"\n"
+                ],
+                "command": [
+                  "bash",
+                  "-c"
+                ],
+                "env": [
+                  {
+                    "name": "WANDB_API_KEY",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "WANDB_API_KEY",
+                        "name": "kai-wandb"
+                      }
+                    }
+                  }
+                ],
+                "image": "python:3.12",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "train",
+                "resources": {
+                  "limits": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "requests": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                  {
+                    "mountPath": "/cmcode",
+                    "name": "cmcode"
+                  },
+                  {
+                    "mountPath": "/work",
+                    "name": "work"
+                  }
+                ]
+              }
+            ],
+            "dnsPolicy": "ClusterFirst",
+            "restartPolicy": "Never",
+            "schedulerName": "default-scheduler",
+            "securityContext": {},
+            "terminationGracePeriodSeconds": 30,
+            "volumes": [
+              {
+                "configMap": {
+                  "defaultMode": 420,
+                  "name": "kai-ebops-n8-code-9ab88f4911"
+                },
+                "name": "cmcode"
+              },
+              {
+                "emptyDir": {
+                  "sizeLimit": "16Gi"
+                },
+                "name": "work"
+              }
+            ]
+          }
+        },
+        "ttlSecondsAfterFinished": 86400
+      },
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-11T00:54:43Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"b75\"},\"name\":\"kai-ebops-n8-0910-b75-s1\",\"namespace\":\"cms-ml\"},\"spec\":{\"activeDeadlineSeconds\":21600,\"backoffLimit\":0,\"template\":{\"metadata\":{\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"b75\"}},\"spec\":{\"affinity\":{\"nodeAffinity\":{\"preferredDuringSchedulingIgnoredDuringExecution\":[{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]},\"weight\":100},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\"]}]},\"weight\":60},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\"]}]},\"weight\":20},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-H200-NVL\",\"NVIDIA-H100-80GB-HBM3\",\"NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition\"]}]},\"weight\":10}],\"requiredDuringSchedulingIgnoredDuringExecution\":{\"nodeSelectorTerms\":[{\"matchExpressions\":[{\"key\":\"kubernetes.io/hostname\",\"operator\":\"NotIn\",\"values\":[\"k8s-chase-ci-07.calit2.optiputer.net\",\"k8s-chase-ci-10.calit2.optiputer.net\",\"k8s-haosu-22.sdsc.optiputer.net\",\"ry-gpu-08.sdsc.optiputer.net\",\"suncave-1\",\"suncave-2\",\"suncave-3\",\"suncave-4\",\"suncave-5\",\"suncave-6\",\"suncave-7\",\"suncave-8\",\"suncave-9\",\"suncave-10\",\"suncave-11\",\"suncave-12\",\"suncave-13\",\"suncave-14\",\"suncave-15\",\"suncave-16\",\"suncave-17\",\"suncave-18\",\"suncave-19\",\"suncave-20\"]},{\"key\":\"kubernetes.io/arch\",\"operator\":\"In\",\"values\":[\"amd64\"]},{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\",\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\",\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]}]}}},\"containers\":[{\"args\":[\"set -eo pipefail\\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\\nmkdir -p /work/code /work/data /work/outputs\\nCODE=/work/code\\nOUT=/work/outputs/ebops-n8-20260910-b75-w1a8-s1\\nmkdir -p \\\"$OUT\\\"\\necho \\\"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\\\"\\ntar -xzf /cmcode/hgq2.tar.gz -C \\\"$CODE\\\" --strip-components=1\\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \\\"[code] configmap tar md5:\\\", $1}'\\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\\n[ -f \\\"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\\\" ] || {\\n  echo \\\"[fatal] unpacked code lacks configs/ebops-n8-20260910-b75-w1a8.json -\\u003e ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\\\"\\n  echo \\\"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\\\"\\n  exit 1\\n}\\ngrep -q \\\"def feature_indices\\\" \\\"$CODE/bnhgq2/data.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\ngrep -q \\\"wandb_util\\\" \\\"$CODE/bnhgq2/train.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/train.py predates the W\\u0026B artifact layout -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\necho \\\"[gate] configs/ebops-n8-20260910-b75-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\\\"\\nexport PYTHONPATH=\\\"$CODE:${PYTHONPATH:-}\\\"\\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\\necho \\\"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\\\" | sha256sum -c -\\ntest -f \\\"$CODE/bnhgq2/ebops_target.py\\\"\\necho \\\"[setup] $(date) pinned deps (mirror .venv-hgq2)\\\"\\npip install -q --no-cache-dir \\\"tensorflow[and-cuda]==2.21.0\\\" \\\"keras==3.15.0\\\" \\\"hgq2==0.1.9\\\" \\\"quantizers==1.2.2\\\" \\\"scikit-learn==1.9.0\\\" \\\"h5py==3.14.0\\\" \\\"wandb==0.28.0\\\" \\\"hls4ml==1.3.0\\\" \\\"numpy==2.5.0\\\"\\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\\nNVLIBS=$(python -c \\\"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\\\")\\nexport LD_LIBRARY_PATH=\\\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\\\"\\necho \\\"[gpu] $(date) nvidia-smi + TF backend assertion\\\"\\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \\\"[fatal] no nvidia-smi / GPU\\\"; exit 1; }\\npython -c \\\"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\\\"\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_MODE=online\\npython -c \\\"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\\\"\\necho \\\"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\\\"\\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\\\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\\\", \\\"/work/data/train.tar.gz\\\")'\\nsz=$(stat -c %s /work/data/train.tar.gz); echo \\\"[data] tarball bytes: $sz\\\"\\n[ \\\"$sz\\\" -gt 2500000000 ] || { echo \\\"[fatal] train tarball too small ($sz \\u003c 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\\\"; exit 1; }\\ntar -xzf /work/data/train.tar.gz -C /work/data \\u0026\\u0026 rm -f /work/data/train.tar.gz\\nDATA=$(dirname \\\"$(find /work/data -name 'jetImage_*.h5' -print -quit)\\\")\\n[ -n \\\"$DATA\\\" ] || { echo \\\"[fatal] no jetImage_*.h5 after extract\\\"; exit 1; }\\necho \\\"[data] DATA=$DATA ($(ls \\\"$DATA\\\" | wc -l) files)\\\"\\nexport BNHGQ2_TRAIN_DATA=\\\"$DATA\\\"\\nexport BNHGQ2_OUT_ROOT=/work/outputs\\nexport BNHGQ2_STORE=/work/outputs/_store\\n# ---- W\\u0026B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\\n# project so r14 numbers can never be conflated with the 16-feature tables.\\n# Grouped per constituent count for the sweep comparison. ----\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_RUN_NAME=ebops-n8-20260910-b75-w1a8-s1\\nexport WANDB_GROUP=ebops-n8-20260910\\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b75\\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\\necho \\\"[train] $(date) ebops-n8-20260910-b75-w1a8-s1  config=ebops-n8-20260910-b75-w1a8.json seed=1\\\"\\ncd \\\"$CODE\\\"\\npython -u \\\"$CODE/run_stage.py\\\" train \\\\\\n  --config \\\"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\\\" --seed 1 --out-dir \\\"$OUT\\\" \\\\\\n  2\\u003e\\u00261 | tee \\\"$OUT/train.log\\\"\\necho \\\"[done] $(date) ebops-n8-20260910-b75-w1a8-s1\\\"\\n\"],\"command\":[\"bash\",\"-c\"],\"env\":[{\"name\":\"WANDB_API_KEY\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"WANDB_API_KEY\",\"name\":\"kai-wandb\"}}}],\"image\":\"python:3.12\",\"name\":\"train\",\"resources\":{\"limits\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"},\"requests\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"}},\"volumeMounts\":[{\"mountPath\":\"/cmcode\",\"name\":\"cmcode\"},{\"mountPath\":\"/work\",\"name\":\"work\"}]}],\"restartPolicy\":\"Never\",\"volumes\":[{\"configMap\":{\"name\":\"kai-ebops-n8-code-9ab88f4911\"},\"name\":\"cmcode\"},{\"emptyDir\":{\"sizeLimit\":\"16Gi\"},\"name\":\"work\"}]}}}}\n",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:42Z",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "b75"
+        },
+        "name": "kai-ebops-n8-0910-b75-s1",
+        "namespace": "cms-ml",
+        "resourceVersion": "14766050731",
+        "uid": "8216fe4e-53eb-43e0-8b0f-be37a34d722a"
+      },
+      "spec": {
+        "activeDeadlineSeconds": 21600,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+          "matchLabels": {
+            "batch.kubernetes.io/controller-uid": "8216fe4e-53eb-43e0-8b0f-be37a34d722a"
+          }
+        },
+        "suspend": false,
+        "template": {
+          "metadata": {
+            "creationTimestamp": null,
+            "labels": {
+              "app": "kai-ebops-n8",
+              "arm": "b75",
+              "batch.kubernetes.io/controller-uid": "8216fe4e-53eb-43e0-8b0f-be37a34d722a",
+              "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-b75-s1",
+              "controller-uid": "8216fe4e-53eb-43e0-8b0f-be37a34d722a",
+              "job-name": "kai-ebops-n8-0910-b75-s1"
+            }
+          },
+          "spec": {
+            "affinity": {
+              "nodeAffinity": {
+                "preferredDuringSchedulingIgnoredDuringExecution": [
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 100
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 20
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-H200-NVL",
+                            "NVIDIA-H100-80GB-HBM3",
+                            "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 10
+                  }
+                ],
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                  "nodeSelectorTerms": [
+                    {
+                      "matchExpressions": [
+                        {
+                          "key": "kubernetes.io/hostname",
+                          "operator": "NotIn",
+                          "values": [
+                            "k8s-chase-ci-07.calit2.optiputer.net",
+                            "k8s-chase-ci-10.calit2.optiputer.net",
+                            "k8s-haosu-22.sdsc.optiputer.net",
+                            "ry-gpu-08.sdsc.optiputer.net",
+                            "suncave-1",
+                            "suncave-2",
+                            "suncave-3",
+                            "suncave-4",
+                            "suncave-5",
+                            "suncave-6",
+                            "suncave-7",
+                            "suncave-8",
+                            "suncave-9",
+                            "suncave-10",
+                            "suncave-11",
+                            "suncave-12",
+                            "suncave-13",
+                            "suncave-14",
+                            "suncave-15",
+                            "suncave-16",
+                            "suncave-17",
+                            "suncave-18",
+                            "suncave-19",
+                            "suncave-20"
+                          ]
+                        },
+                        {
+                          "key": "kubernetes.io/arch",
+                          "operator": "In",
+                          "values": [
+                            "amd64"
+                          ]
+                        },
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB",
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000",
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "containers": [
+              {
+                "args": [
+                  "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-b75-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-b75-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-b75-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-b75-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b75\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-b75-w1a8-s1  config=ebops-n8-20260910-b75-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-b75-w1a8-s1\"\n"
+                ],
+                "command": [
+                  "bash",
+                  "-c"
+                ],
+                "env": [
+                  {
+                    "name": "WANDB_API_KEY",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "WANDB_API_KEY",
+                        "name": "kai-wandb"
+                      }
+                    }
+                  }
+                ],
+                "image": "python:3.12",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "train",
+                "resources": {
+                  "limits": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "requests": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                  {
+                    "mountPath": "/cmcode",
+                    "name": "cmcode"
+                  },
+                  {
+                    "mountPath": "/work",
+                    "name": "work"
+                  }
+                ]
+              }
+            ],
+            "dnsPolicy": "ClusterFirst",
+            "restartPolicy": "Never",
+            "schedulerName": "default-scheduler",
+            "securityContext": {},
+            "terminationGracePeriodSeconds": 30,
+            "volumes": [
+              {
+                "configMap": {
+                  "defaultMode": 420,
+                  "name": "kai-ebops-n8-code-9ab88f4911"
+                },
+                "name": "cmcode"
+              },
+              {
+                "emptyDir": {
+                  "sizeLimit": "16Gi"
+                },
+                "name": "work"
+              }
+            ]
+          }
+        },
+        "ttlSecondsAfterFinished": 86400
+      },
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-11T00:54:42Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "apiVersion": "batch/v1",
+      "kind": "Job",
+      "metadata": {
+        "annotations": {
+          "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"control\"},\"name\":\"kai-ebops-n8-0910-control-s1\",\"namespace\":\"cms-ml\"},\"spec\":{\"activeDeadlineSeconds\":21600,\"backoffLimit\":0,\"template\":{\"metadata\":{\"labels\":{\"app\":\"kai-ebops-n8\",\"arm\":\"control\"}},\"spec\":{\"affinity\":{\"nodeAffinity\":{\"preferredDuringSchedulingIgnoredDuringExecution\":[{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]},\"weight\":100},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\"]}]},\"weight\":60},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\"]}]},\"weight\":20},{\"preference\":{\"matchExpressions\":[{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-H200-NVL\",\"NVIDIA-H100-80GB-HBM3\",\"NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition\"]}]},\"weight\":10}],\"requiredDuringSchedulingIgnoredDuringExecution\":{\"nodeSelectorTerms\":[{\"matchExpressions\":[{\"key\":\"kubernetes.io/hostname\",\"operator\":\"NotIn\",\"values\":[\"k8s-chase-ci-07.calit2.optiputer.net\",\"k8s-chase-ci-10.calit2.optiputer.net\",\"k8s-haosu-22.sdsc.optiputer.net\",\"ry-gpu-08.sdsc.optiputer.net\",\"suncave-1\",\"suncave-2\",\"suncave-3\",\"suncave-4\",\"suncave-5\",\"suncave-6\",\"suncave-7\",\"suncave-8\",\"suncave-9\",\"suncave-10\",\"suncave-11\",\"suncave-12\",\"suncave-13\",\"suncave-14\",\"suncave-15\",\"suncave-16\",\"suncave-17\",\"suncave-18\",\"suncave-19\",\"suncave-20\"]},{\"key\":\"kubernetes.io/arch\",\"operator\":\"In\",\"values\":[\"amd64\"]},{\"key\":\"nvidia.com/gpu.product\",\"operator\":\"In\",\"values\":[\"NVIDIA-A100-SXM4-80GB\",\"NVIDIA-A100-80GB-PCIe\",\"NVIDIA-A100-PCIE-40GB\",\"NVIDIA-GeForce-RTX-4090\",\"NVIDIA-L40S\",\"NVIDIA-L40\",\"NVIDIA-RTX-A6000\",\"NVIDIA-A10\",\"NVIDIA-L4\",\"NVIDIA-GeForce-RTX-2080-Ti\",\"Tesla-V100-SXM2-32GB\",\"Tesla-V100-PCIE-32GB\",\"NVIDIA-A40\",\"NVIDIA-RTX-A5000\",\"NVIDIA-GeForce-RTX-3090\"]}]}]}}},\"containers\":[{\"args\":[\"set -eo pipefail\\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\\nmkdir -p /work/code /work/data /work/outputs\\nCODE=/work/code\\nOUT=/work/outputs/ebops-n8-20260910-control-w1a8-s1\\nmkdir -p \\\"$OUT\\\"\\necho \\\"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\\\"\\ntar -xzf /cmcode/hgq2.tar.gz -C \\\"$CODE\\\" --strip-components=1\\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \\\"[code] configmap tar md5:\\\", $1}'\\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\\n[ -f \\\"$CODE/configs/ebops-n8-20260910-control-w1a8.json\\\" ] || {\\n  echo \\\"[fatal] unpacked code lacks configs/ebops-n8-20260910-control-w1a8.json -\\u003e ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\\\"\\n  echo \\\"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\\\"\\n  exit 1\\n}\\ngrep -q \\\"def feature_indices\\\" \\\"$CODE/bnhgq2/data.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\ngrep -q \\\"wandb_util\\\" \\\"$CODE/bnhgq2/train.py\\\" || {\\n  echo \\\"[fatal] bnhgq2/train.py predates the W\\u0026B artifact layout -\\u003e STALE ConfigMap.\\\"\\n  exit 1\\n}\\necho \\\"[gate] configs/ebops-n8-20260910-control-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\\\"\\nexport PYTHONPATH=\\\"$CODE:${PYTHONPATH:-}\\\"\\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\\necho \\\"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\\\" | sha256sum -c -\\ntest -f \\\"$CODE/bnhgq2/ebops_target.py\\\"\\necho \\\"[setup] $(date) pinned deps (mirror .venv-hgq2)\\\"\\npip install -q --no-cache-dir \\\"tensorflow[and-cuda]==2.21.0\\\" \\\"keras==3.15.0\\\" \\\"hgq2==0.1.9\\\" \\\"quantizers==1.2.2\\\" \\\"scikit-learn==1.9.0\\\" \\\"h5py==3.14.0\\\" \\\"wandb==0.28.0\\\" \\\"hls4ml==1.3.0\\\" \\\"numpy==2.5.0\\\"\\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\\nNVLIBS=$(python -c \\\"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\\\")\\nexport LD_LIBRARY_PATH=\\\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\\\"\\necho \\\"[gpu] $(date) nvidia-smi + TF backend assertion\\\"\\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \\\"[fatal] no nvidia-smi / GPU\\\"; exit 1; }\\npython -c \\\"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\\\"\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_MODE=online\\npython -c \\\"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\\\"\\necho \\\"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\\\"\\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\\\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\\\", \\\"/work/data/train.tar.gz\\\")'\\nsz=$(stat -c %s /work/data/train.tar.gz); echo \\\"[data] tarball bytes: $sz\\\"\\n[ \\\"$sz\\\" -gt 2500000000 ] || { echo \\\"[fatal] train tarball too small ($sz \\u003c 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\\\"; exit 1; }\\ntar -xzf /work/data/train.tar.gz -C /work/data \\u0026\\u0026 rm -f /work/data/train.tar.gz\\nDATA=$(dirname \\\"$(find /work/data -name 'jetImage_*.h5' -print -quit)\\\")\\n[ -n \\\"$DATA\\\" ] || { echo \\\"[fatal] no jetImage_*.h5 after extract\\\"; exit 1; }\\necho \\\"[data] DATA=$DATA ($(ls \\\"$DATA\\\" | wc -l) files)\\\"\\nexport BNHGQ2_TRAIN_DATA=\\\"$DATA\\\"\\nexport BNHGQ2_OUT_ROOT=/work/outputs\\nexport BNHGQ2_STORE=/work/outputs/_store\\n# ---- W\\u0026B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\\n# project so r14 numbers can never be conflated with the 16-feature tables.\\n# Grouped per constituent count for the sweep comparison. ----\\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\\nexport WANDB_RUN_NAME=ebops-n8-20260910-control-w1a8-s1\\nexport WANDB_GROUP=ebops-n8-20260910\\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,control\\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\\necho \\\"[train] $(date) ebops-n8-20260910-control-w1a8-s1  config=ebops-n8-20260910-control-w1a8.json seed=1\\\"\\ncd \\\"$CODE\\\"\\npython -u \\\"$CODE/run_stage.py\\\" train \\\\\\n  --config \\\"$CODE/configs/ebops-n8-20260910-control-w1a8.json\\\" --seed 1 --out-dir \\\"$OUT\\\" \\\\\\n  2\\u003e\\u00261 | tee \\\"$OUT/train.log\\\"\\necho \\\"[done] $(date) ebops-n8-20260910-control-w1a8-s1\\\"\\n\"],\"command\":[\"bash\",\"-c\"],\"env\":[{\"name\":\"WANDB_API_KEY\",\"valueFrom\":{\"secretKeyRef\":{\"key\":\"WANDB_API_KEY\",\"name\":\"kai-wandb\"}}}],\"image\":\"python:3.12\",\"name\":\"train\",\"resources\":{\"limits\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"},\"requests\":{\"cpu\":\"2\",\"ephemeral-storage\":\"16Gi\",\"memory\":\"8Gi\",\"nvidia.com/gpu\":\"1\"}},\"volumeMounts\":[{\"mountPath\":\"/cmcode\",\"name\":\"cmcode\"},{\"mountPath\":\"/work\",\"name\":\"work\"}]}],\"restartPolicy\":\"Never\",\"volumes\":[{\"configMap\":{\"name\":\"kai-ebops-n8-code-9ab88f4911\"},\"name\":\"cmcode\"},{\"emptyDir\":{\"sizeLimit\":\"16Gi\"},\"name\":\"work\"}]}}}}\n",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:42Z",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "control"
+        },
+        "name": "kai-ebops-n8-0910-control-s1",
+        "namespace": "cms-ml",
+        "resourceVersion": "14766050581",
+        "uid": "b549cdd6-09fa-4dca-a01a-008fa80a9115"
+      },
+      "spec": {
+        "activeDeadlineSeconds": 21600,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+          "matchLabels": {
+            "batch.kubernetes.io/controller-uid": "b549cdd6-09fa-4dca-a01a-008fa80a9115"
+          }
+        },
+        "suspend": false,
+        "template": {
+          "metadata": {
+            "creationTimestamp": null,
+            "labels": {
+              "app": "kai-ebops-n8",
+              "arm": "control",
+              "batch.kubernetes.io/controller-uid": "b549cdd6-09fa-4dca-a01a-008fa80a9115",
+              "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-control-s1",
+              "controller-uid": "b549cdd6-09fa-4dca-a01a-008fa80a9115",
+              "job-name": "kai-ebops-n8-0910-control-s1"
+            }
+          },
+          "spec": {
+            "affinity": {
+              "nodeAffinity": {
+                "preferredDuringSchedulingIgnoredDuringExecution": [
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 100
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 60
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 20
+                  },
+                  {
+                    "preference": {
+                      "matchExpressions": [
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-H200-NVL",
+                            "NVIDIA-H100-80GB-HBM3",
+                            "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                          ]
+                        }
+                      ]
+                    },
+                    "weight": 10
+                  }
+                ],
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                  "nodeSelectorTerms": [
+                    {
+                      "matchExpressions": [
+                        {
+                          "key": "kubernetes.io/hostname",
+                          "operator": "NotIn",
+                          "values": [
+                            "k8s-chase-ci-07.calit2.optiputer.net",
+                            "k8s-chase-ci-10.calit2.optiputer.net",
+                            "k8s-haosu-22.sdsc.optiputer.net",
+                            "ry-gpu-08.sdsc.optiputer.net",
+                            "suncave-1",
+                            "suncave-2",
+                            "suncave-3",
+                            "suncave-4",
+                            "suncave-5",
+                            "suncave-6",
+                            "suncave-7",
+                            "suncave-8",
+                            "suncave-9",
+                            "suncave-10",
+                            "suncave-11",
+                            "suncave-12",
+                            "suncave-13",
+                            "suncave-14",
+                            "suncave-15",
+                            "suncave-16",
+                            "suncave-17",
+                            "suncave-18",
+                            "suncave-19",
+                            "suncave-20"
+                          ]
+                        },
+                        {
+                          "key": "kubernetes.io/arch",
+                          "operator": "In",
+                          "values": [
+                            "amd64"
+                          ]
+                        },
+                        {
+                          "key": "nvidia.com/gpu.product",
+                          "operator": "In",
+                          "values": [
+                            "NVIDIA-A100-SXM4-80GB",
+                            "NVIDIA-A100-80GB-PCIe",
+                            "NVIDIA-A100-PCIE-40GB",
+                            "NVIDIA-GeForce-RTX-4090",
+                            "NVIDIA-L40S",
+                            "NVIDIA-L40",
+                            "NVIDIA-RTX-A6000",
+                            "NVIDIA-A10",
+                            "NVIDIA-L4",
+                            "NVIDIA-GeForce-RTX-2080-Ti",
+                            "Tesla-V100-SXM2-32GB",
+                            "Tesla-V100-PCIE-32GB",
+                            "NVIDIA-A40",
+                            "NVIDIA-RTX-A5000",
+                            "NVIDIA-GeForce-RTX-3090"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "containers": [
+              {
+                "args": [
+                  "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-control-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-control-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-control-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-control-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-control-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,control\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-control-w1a8-s1  config=ebops-n8-20260910-control-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-control-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-control-w1a8-s1\"\n"
+                ],
+                "command": [
+                  "bash",
+                  "-c"
+                ],
+                "env": [
+                  {
+                    "name": "WANDB_API_KEY",
+                    "valueFrom": {
+                      "secretKeyRef": {
+                        "key": "WANDB_API_KEY",
+                        "name": "kai-wandb"
+                      }
+                    }
+                  }
+                ],
+                "image": "python:3.12",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "train",
+                "resources": {
+                  "limits": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  },
+                  "requests": {
+                    "cpu": "2",
+                    "ephemeral-storage": "16Gi",
+                    "memory": "8Gi",
+                    "nvidia.com/gpu": "1"
+                  }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                  {
+                    "mountPath": "/cmcode",
+                    "name": "cmcode"
+                  },
+                  {
+                    "mountPath": "/work",
+                    "name": "work"
+                  }
+                ]
+              }
+            ],
+            "dnsPolicy": "ClusterFirst",
+            "restartPolicy": "Never",
+            "schedulerName": "default-scheduler",
+            "securityContext": {},
+            "terminationGracePeriodSeconds": 30,
+            "volumes": [
+              {
+                "configMap": {
+                  "defaultMode": 420,
+                  "name": "kai-ebops-n8-code-9ab88f4911"
+                },
+                "name": "cmcode"
+              },
+              {
+                "emptyDir": {
+                  "sizeLimit": "16Gi"
+                },
+                "name": "work"
+              }
+            ]
+          }
+        },
+        "ttlSecondsAfterFinished": 86400
+      },
+      "status": {
+        "active": 1,
+        "ready": 1,
+        "startTime": "2026-09-11T00:54:42Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "cni.projectcalico.org/containerID": "1a1b5ff12abbac27903371269bf8cf3271dd571850210b523bda170a2178e621",
+          "cni.projectcalico.org/podIP": "10.244.168.128/32",
+          "cni.projectcalico.org/podIPs": "10.244.168.128/32,fdf0:17b3:c3ec:1f79:10:0:1:a4ae/128",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:43Z",
+        "finalizers": [
+          "batch.kubernetes.io/job-tracking"
+        ],
+        "generateName": "kai-ebops-n8-0910-b25-s1-",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "b25",
+          "batch.kubernetes.io/controller-uid": "cc337b60-5ddd-46c9-8c45-5489ea924607",
+          "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-b25-s1",
+          "controller-uid": "cc337b60-5ddd-46c9-8c45-5489ea924607",
+          "job-name": "kai-ebops-n8-0910-b25-s1"
+        },
+        "name": "kai-ebops-n8-0910-b25-s1-w8jwn",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+          {
+            "apiVersion": "batch/v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Job",
+            "name": "kai-ebops-n8-0910-b25-s1",
+            "uid": "cc337b60-5ddd-46c9-8c45-5489ea924607"
+          }
+        ],
+        "resourceVersion": "14766050527",
+        "uid": "098bae3c-6e06-45d3-85c3-7ef619331879"
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "preferredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 100
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 60
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 20
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-H200-NVL",
+                        "NVIDIA-H100-80GB-HBM3",
+                        "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 10
+              }
+            ],
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "k8s-chase-ci-10.calit2.optiputer.net",
+                        "k8s-haosu-22.sdsc.optiputer.net",
+                        "ry-gpu-08.sdsc.optiputer.net",
+                        "suncave-1",
+                        "suncave-2",
+                        "suncave-3",
+                        "suncave-4",
+                        "suncave-5",
+                        "suncave-6",
+                        "suncave-7",
+                        "suncave-8",
+                        "suncave-9",
+                        "suncave-10",
+                        "suncave-11",
+                        "suncave-12",
+                        "suncave-13",
+                        "suncave-14",
+                        "suncave-15",
+                        "suncave-16",
+                        "suncave-17",
+                        "suncave-18",
+                        "suncave-19",
+                        "suncave-20"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/arch",
+                      "operator": "In",
+                      "values": [
+                        "amd64"
+                      ]
+                    },
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB",
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000",
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "containers": [
+          {
+            "args": [
+              "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-b25-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-b25-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-b25-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-b25-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-b25-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b25\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-b25-w1a8-s1  config=ebops-n8-20260910-b25-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-b25-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-b25-w1a8-s1\"\n"
+            ],
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "WANDB_API_KEY",
+                    "name": "kai-wandb"
+                  }
+                }
+              }
+            ],
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "train",
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-nfggw",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "hcc-nrp-shor-c5909.unl.edu",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "PreferNoSchedule",
+            "key": "nvidia.com/gpu",
+            "operator": "Exists"
+          }
+        ],
+        "volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-ebops-n8-code-9ab88f4911"
+            },
+            "name": "cmcode"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "16Gi"
+            },
+            "name": "work"
+          },
+          {
+            "name": "kube-api-access-nfggw",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:47Z",
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:47Z",
+            "status": "True",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:47Z",
+            "status": "True",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "allocatedResources": {
+              "cpu": "2",
+              "ephemeral-storage": "16Gi",
+              "memory": "8Gi",
+              "nvidia.com/gpu": "1"
+            },
+            "containerID": "containerd://357be929e2d6bf584a8910c698b78f4082728d7095964cbea2efe291aca4437e",
+            "image": "docker.io/library/python:3.12",
+            "imageID": "docker.io/library/python@sha256:29cdc34ede8cd9716d1f40a8200447355ae210c05a539c1b0262ccc5fcaf183c",
+            "lastState": {},
+            "name": "train",
+            "ready": true,
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "restartCount": 0,
+            "started": true,
+            "state": {
+              "running": {
+                "startedAt": "2026-09-11T00:54:47Z"
+              }
+            },
+            "user": {
+              "linux": {
+                "gid": 0,
+                "supplementalGroups": [
+                  0
+                ],
+                "uid": 0
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-nfggw",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "129.93.153.137",
+        "hostIPs": [
+          {
+            "ip": "129.93.153.137"
+          }
+        ],
+        "phase": "Running",
+        "podIP": "10.244.168.128",
+        "podIPs": [
+          {
+            "ip": "10.244.168.128"
+          },
+          {
+            "ip": "fdf0:17b3:c3ec:1f79:10:0:1:a4ae"
+          }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2026-09-11T00:54:43Z"
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "cni.projectcalico.org/containerID": "05eaa87c8eabcfb038481c95ffea8df44daf9d3c0eaa6dfd6ee8e8fbc29266dd",
+          "cni.projectcalico.org/podIP": "10.244.63.157/32",
+          "cni.projectcalico.org/podIPs": "10.244.63.157/32,fdf0:17b3:c3ec:1f79:10:0:f:4916/128",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:43Z",
+        "finalizers": [
+          "batch.kubernetes.io/job-tracking"
+        ],
+        "generateName": "kai-ebops-n8-0910-b50-s1-",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "b50",
+          "batch.kubernetes.io/controller-uid": "b2506179-ad05-41af-9483-76dc4ee3469a",
+          "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-b50-s1",
+          "controller-uid": "b2506179-ad05-41af-9483-76dc4ee3469a",
+          "job-name": "kai-ebops-n8-0910-b50-s1"
+        },
+        "name": "kai-ebops-n8-0910-b50-s1-fccj4",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+          {
+            "apiVersion": "batch/v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Job",
+            "name": "kai-ebops-n8-0910-b50-s1",
+            "uid": "b2506179-ad05-41af-9483-76dc4ee3469a"
+          }
+        ],
+        "resourceVersion": "14766050453",
+        "uid": "d03c3520-77a2-4bfd-b699-2233e5f42478"
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "preferredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 100
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 60
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 20
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-H200-NVL",
+                        "NVIDIA-H100-80GB-HBM3",
+                        "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 10
+              }
+            ],
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "k8s-chase-ci-10.calit2.optiputer.net",
+                        "k8s-haosu-22.sdsc.optiputer.net",
+                        "ry-gpu-08.sdsc.optiputer.net",
+                        "suncave-1",
+                        "suncave-2",
+                        "suncave-3",
+                        "suncave-4",
+                        "suncave-5",
+                        "suncave-6",
+                        "suncave-7",
+                        "suncave-8",
+                        "suncave-9",
+                        "suncave-10",
+                        "suncave-11",
+                        "suncave-12",
+                        "suncave-13",
+                        "suncave-14",
+                        "suncave-15",
+                        "suncave-16",
+                        "suncave-17",
+                        "suncave-18",
+                        "suncave-19",
+                        "suncave-20"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/arch",
+                      "operator": "In",
+                      "values": [
+                        "amd64"
+                      ]
+                    },
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB",
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000",
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "containers": [
+          {
+            "args": [
+              "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-b50-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-b50-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-b50-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-b50-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-b50-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b50\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-b50-w1a8-s1  config=ebops-n8-20260910-b50-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-b50-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-b50-w1a8-s1\"\n"
+            ],
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "WANDB_API_KEY",
+                    "name": "kai-wandb"
+                  }
+                }
+              }
+            ],
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "train",
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-nx88w",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "hcc-nrp-shor-c6017.unl.edu",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "PreferNoSchedule",
+            "key": "nvidia.com/gpu",
+            "operator": "Exists"
+          }
+        ],
+        "volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-ebops-n8-code-9ab88f4911"
+            },
+            "name": "cmcode"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "16Gi"
+            },
+            "name": "work"
+          },
+          {
+            "name": "kube-api-access-nx88w",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:47Z",
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:47Z",
+            "status": "True",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:47Z",
+            "status": "True",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "allocatedResources": {
+              "cpu": "2",
+              "ephemeral-storage": "16Gi",
+              "memory": "8Gi",
+              "nvidia.com/gpu": "1"
+            },
+            "containerID": "containerd://99caf4e8f86fb6490c5ec44f162edce384d7fda57cbc24708fb8347dd73133e4",
+            "image": "docker.io/library/python:3.12",
+            "imageID": "docker.io/library/python@sha256:180806b5499ba41dc14891070f4e58cec5e361fc1d33f8c7a2d29ab433d22b4e",
+            "lastState": {},
+            "name": "train",
+            "ready": true,
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "restartCount": 0,
+            "started": true,
+            "state": {
+              "running": {
+                "startedAt": "2026-09-11T00:54:47Z"
+              }
+            },
+            "user": {
+              "linux": {
+                "gid": 0,
+                "supplementalGroups": [
+                  0
+                ],
+                "uid": 0
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-nx88w",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "129.93.153.132",
+        "hostIPs": [
+          {
+            "ip": "129.93.153.132"
+          }
+        ],
+        "phase": "Running",
+        "podIP": "10.244.63.157",
+        "podIPs": [
+          {
+            "ip": "10.244.63.157"
+          },
+          {
+            "ip": "fdf0:17b3:c3ec:1f79:10:0:f:4916"
+          }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2026-09-11T00:54:43Z"
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "cni.projectcalico.org/containerID": "c2439e1efdb3551899fa4b904180414f16743cdf3e65d356d4210d584e11637f",
+          "cni.projectcalico.org/podIP": "10.244.139.111/32",
+          "cni.projectcalico.org/podIPs": "10.244.139.111/32",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:43Z",
+        "finalizers": [
+          "batch.kubernetes.io/job-tracking"
+        ],
+        "generateName": "kai-ebops-n8-0910-b75-s1-",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "b75",
+          "batch.kubernetes.io/controller-uid": "8216fe4e-53eb-43e0-8b0f-be37a34d722a",
+          "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-b75-s1",
+          "controller-uid": "8216fe4e-53eb-43e0-8b0f-be37a34d722a",
+          "job-name": "kai-ebops-n8-0910-b75-s1"
+        },
+        "name": "kai-ebops-n8-0910-b75-s1-2xzlk",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+          {
+            "apiVersion": "batch/v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Job",
+            "name": "kai-ebops-n8-0910-b75-s1",
+            "uid": "8216fe4e-53eb-43e0-8b0f-be37a34d722a"
+          }
+        ],
+        "resourceVersion": "14766050576",
+        "uid": "408c1eaa-8278-44a9-81d6-a0aa63c239cc"
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "preferredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 100
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 60
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 20
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-H200-NVL",
+                        "NVIDIA-H100-80GB-HBM3",
+                        "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 10
+              }
+            ],
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "k8s-chase-ci-10.calit2.optiputer.net",
+                        "k8s-haosu-22.sdsc.optiputer.net",
+                        "ry-gpu-08.sdsc.optiputer.net",
+                        "suncave-1",
+                        "suncave-2",
+                        "suncave-3",
+                        "suncave-4",
+                        "suncave-5",
+                        "suncave-6",
+                        "suncave-7",
+                        "suncave-8",
+                        "suncave-9",
+                        "suncave-10",
+                        "suncave-11",
+                        "suncave-12",
+                        "suncave-13",
+                        "suncave-14",
+                        "suncave-15",
+                        "suncave-16",
+                        "suncave-17",
+                        "suncave-18",
+                        "suncave-19",
+                        "suncave-20"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/arch",
+                      "operator": "In",
+                      "values": [
+                        "amd64"
+                      ]
+                    },
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB",
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000",
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "containers": [
+          {
+            "args": [
+              "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-b75-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-b75-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-b75-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-b75-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,b75\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-b75-w1a8-s1  config=ebops-n8-20260910-b75-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-b75-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-b75-w1a8-s1\"\n"
+            ],
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "WANDB_API_KEY",
+                    "name": "kai-wandb"
+                  }
+                }
+              }
+            ],
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "train",
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-5v55b",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "hpc-nrp-g1.nmsu.edu",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "PreferNoSchedule",
+            "key": "nvidia.com/gpu",
+            "operator": "Exists"
+          }
+        ],
+        "volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-ebops-n8-code-9ab88f4911"
+            },
+            "name": "cmcode"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "16Gi"
+            },
+            "name": "work"
+          },
+          {
+            "name": "kube-api-access-5v55b",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:48Z",
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:48Z",
+            "status": "True",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:48Z",
+            "status": "True",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "allocatedResources": {
+              "cpu": "2",
+              "ephemeral-storage": "16Gi",
+              "memory": "8Gi",
+              "nvidia.com/gpu": "1"
+            },
+            "containerID": "containerd://32cbeb523afcad1b19adb3f07254a2522a7062110d3b3f8f9a573b4156b8e304",
+            "image": "docker.io/library/python:3.12",
+            "imageID": "docker.io/library/python@sha256:cd7c412d000912f29075a1b8803e43cb2f38bb67f104019df526df5ceaf30569",
+            "lastState": {},
+            "name": "train",
+            "ready": true,
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "restartCount": 0,
+            "started": true,
+            "state": {
+              "running": {
+                "startedAt": "2026-09-11T00:54:47Z"
+              }
+            },
+            "user": {
+              "linux": {
+                "gid": 0,
+                "supplementalGroups": [
+                  0
+                ],
+                "uid": 0
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-5v55b",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "128.123.211.50",
+        "hostIPs": [
+          {
+            "ip": "128.123.211.50"
+          }
+        ],
+        "phase": "Running",
+        "podIP": "10.244.139.111",
+        "podIPs": [
+          {
+            "ip": "10.244.139.111"
+          }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2026-09-11T00:54:43Z"
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+        "annotations": {
+          "cni.projectcalico.org/containerID": "b81ad740dca47061a110ad86e5efbb8e81a0d7fc62820e12cd7b429bf88a7fc4",
+          "cni.projectcalico.org/podIP": "10.244.112.51/32",
+          "cni.projectcalico.org/podIPs": "10.244.112.51/32",
+          "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-11T00:54:42Z",
+        "finalizers": [
+          "batch.kubernetes.io/job-tracking"
+        ],
+        "generateName": "kai-ebops-n8-0910-control-s1-",
+        "generation": 1,
+        "labels": {
+          "app": "kai-ebops-n8",
+          "arm": "control",
+          "batch.kubernetes.io/controller-uid": "b549cdd6-09fa-4dca-a01a-008fa80a9115",
+          "batch.kubernetes.io/job-name": "kai-ebops-n8-0910-control-s1",
+          "controller-uid": "b549cdd6-09fa-4dca-a01a-008fa80a9115",
+          "job-name": "kai-ebops-n8-0910-control-s1"
+        },
+        "name": "kai-ebops-n8-0910-control-s1-rsnlk",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+          {
+            "apiVersion": "batch/v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Job",
+            "name": "kai-ebops-n8-0910-control-s1",
+            "uid": "b549cdd6-09fa-4dca-a01a-008fa80a9115"
+          }
+        ],
+        "resourceVersion": "14766050406",
+        "uid": "128785fc-4ac0-479f-afdc-7de67f7236e4"
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "preferredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 100
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 60
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 20
+              },
+              {
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-H200-NVL",
+                        "NVIDIA-H100-80GB-HBM3",
+                        "NVIDIA-RTX-PRO-6000-Blackwell-Max-Q-Workstation-Edition"
+                      ]
+                    }
+                  ]
+                },
+                "weight": 10
+              }
+            ],
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "k8s-chase-ci-10.calit2.optiputer.net",
+                        "k8s-haosu-22.sdsc.optiputer.net",
+                        "ry-gpu-08.sdsc.optiputer.net",
+                        "suncave-1",
+                        "suncave-2",
+                        "suncave-3",
+                        "suncave-4",
+                        "suncave-5",
+                        "suncave-6",
+                        "suncave-7",
+                        "suncave-8",
+                        "suncave-9",
+                        "suncave-10",
+                        "suncave-11",
+                        "suncave-12",
+                        "suncave-13",
+                        "suncave-14",
+                        "suncave-15",
+                        "suncave-16",
+                        "suncave-17",
+                        "suncave-18",
+                        "suncave-19",
+                        "suncave-20"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/arch",
+                      "operator": "In",
+                      "values": [
+                        "amd64"
+                      ]
+                    },
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-A100-SXM4-80GB",
+                        "NVIDIA-A100-80GB-PCIe",
+                        "NVIDIA-A100-PCIE-40GB",
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-RTX-A6000",
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-GeForce-RTX-2080-Ti",
+                        "Tesla-V100-SXM2-32GB",
+                        "Tesla-V100-PCIE-32GB",
+                        "NVIDIA-A40",
+                        "NVIDIA-RTX-A5000",
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "containers": [
+          {
+            "args": [
+              "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nmkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\nOUT=/work/outputs/ebops-n8-20260910-control-w1a8-s1\nmkdir -p \"$OUT\"\necho \"[code] $(date) unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)\"\ntar -xzf /cmcode/hgq2.tar.gz -C \"$CODE\" --strip-components=1\nmd5sum /cmcode/hgq2.tar.gz | awk '{print \"[code] configmap tar md5:\", $1}'\n# ---- STALE-CONFIGMAP GATE: round 14 REQUIRES the L1-realistic feature-subset\n# plumbing. A pre-r14 bnhgq2 would run this config on ALL 16 features \u2014 the\n# exact confound this round removes \u2014 or crash late. Fail fast instead. ----\n[ -f \"$CODE/configs/ebops-n8-20260910-control-w1a8.json\" ] || {\n  echo \"[fatal] unpacked code lacks configs/ebops-n8-20260910-control-w1a8.json -> ConfigMap kai-ebops-n8-code-9ab88f4911 is STALE.\"\n  echo \"[fatal] rebuild it (make_code_configmap_r14.sh) and re-apply.\"\n  exit 1\n}\ngrep -q \"def feature_indices\" \"$CODE/bnhgq2/data.py\" || {\n  echo \"[fatal] bnhgq2/data.py has no feature_indices (L1 feature subset) -> STALE ConfigMap.\"\n  exit 1\n}\ngrep -q \"wandb_util\" \"$CODE/bnhgq2/train.py\" || {\n  echo \"[fatal] bnhgq2/train.py predates the W&B artifact layout -> STALE ConfigMap.\"\n  exit 1\n}\necho \"[gate] configs/ebops-n8-20260910-control-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)\"\nexport PYTHONPATH=\"$CODE:${PYTHONPATH:-}\"\nexport BNHGQ2_CODE_SHA256=9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1\necho \"9ab88f491101b86881660a83395742c3b7805ba114bdde1e93afa868d76865f1  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntest -f \"$CODE/bnhgq2/ebops_target.py\"\necho \"[setup] $(date) pinned deps (mirror .venv-hgq2)\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\" \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\" \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\n# TF 2.21 pip wheel's RPATH discovery of the nvidia-*-cu12 wheel libs is broken;\n# explicit LD_LIBRARY_PATH over the wheel lib dirs fixes it (verified 2026-07-07).\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\necho \"[gpu] $(date) nvidia-smi + TF backend assertion\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo \"[fatal] no nvidia-smi / GPU\"; exit 1; }\npython -c \"import os; os.environ.setdefault('KERAS_BACKEND','tensorflow'); import tensorflow as tf; g=tf.config.list_physical_devices('GPU'); assert g, 'NO GPU visible to TensorFlow'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_MODE=online\npython -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication OK')\"\necho \"[data] $(date) fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\", \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz); echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo \"[fatal] train tarball too small ($sz < 2.5GB; real size 2,725,115,104 B measured 2026-07-07)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] || { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"[data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files)\"\nexport BNHGQ2_TRAIN_DATA=\"$DATA\"\nexport BNHGQ2_OUT_ROOT=/work/outputs\nexport BNHGQ2_STORE=/work/outputs/_store\n# ---- W&B (layout 2026-08-01): NEW project BNJetTag-EBOPs-N8 \u2014 new inputs, new\n# project so r14 numbers can never be conflated with the 16-feature tables.\n# Grouped per constituent count for the sweep comparison. ----\nexport WANDB_PROJECT=BNJetTag-EBOPs-N8\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego\nexport WANDB_RUN_NAME=ebops-n8-20260910-control-w1a8-s1\nexport WANDB_GROUP=ebops-n8-20260910\nexport WANDB_TAGS=ebops-pilot,l1x3,n8,w1,free-width,control\n# ---- ROUND 14 (pilot): L1-realistic inputs (pt, etarel, phirel) x N sweep.\n# Recipe = r8-small verbatim; the ONLY change vs r7/r8 is the input set. ----\necho \"[train] $(date) ebops-n8-20260910-control-w1a8-s1  config=ebops-n8-20260910-control-w1a8.json seed=1\"\ncd \"$CODE\"\npython -u \"$CODE/run_stage.py\" train \\\n  --config \"$CODE/configs/ebops-n8-20260910-control-w1a8.json\" --seed 1 --out-dir \"$OUT\" \\\n  2>&1 | tee \"$OUT/train.log\"\necho \"[done] $(date) ebops-n8-20260910-control-w1a8-s1\"\n"
+            ],
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "WANDB_API_KEY",
+                    "name": "kai-wandb"
+                  }
+                }
+              }
+            ],
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "train",
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-km754",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "cph-dgx-node2.humboldt.edu",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/not-ready",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "NoExecute",
+            "key": "node.kubernetes.io/unreachable",
+            "operator": "Exists",
+            "tolerationSeconds": 300
+          },
+          {
+            "effect": "PreferNoSchedule",
+            "key": "nvidia.com/gpu",
+            "operator": "Exists"
+          }
+        ],
+        "volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-ebops-n8-code-9ab88f4911"
+            },
+            "name": "cmcode"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "16Gi"
+            },
+            "name": "work"
+          },
+          {
+            "name": "kube-api-access-km754",
+            "projected": {
+              "defaultMode": 420,
+              "sources": [
+                {
+                  "serviceAccountToken": {
+                    "expirationSeconds": 3607,
+                    "path": "token"
+                  }
+                },
+                {
+                  "configMap": {
+                    "items": [
+                      {
+                        "key": "ca.crt",
+                        "path": "ca.crt"
+                      }
+                    ],
+                    "name": "kube-root-ca.crt"
+                  }
+                },
+                {
+                  "downwardAPI": {
+                    "items": [
+                      {
+                        "fieldRef": {
+                          "apiVersion": "v1",
+                          "fieldPath": "metadata.namespace"
+                        },
+                        "path": "namespace"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "status": {
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:46Z",
+            "status": "True",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:46Z",
+            "status": "True",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:46Z",
+            "status": "True",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-09-11T00:54:43Z",
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containerStatuses": [
+          {
+            "allocatedResources": {
+              "cpu": "2",
+              "ephemeral-storage": "16Gi",
+              "memory": "8Gi",
+              "nvidia.com/gpu": "1"
+            },
+            "containerID": "containerd://24a507ed447b158f3bb4ba298e420e9b1d8b83b06ea36c596e2969449414727f",
+            "image": "docker.io/library/python:3.12",
+            "imageID": "docker.io/library/python@sha256:bd55e06128e2743d526738dd5cf5db924e49ead66d4fe2ad15f2aac8ad86aae9",
+            "lastState": {},
+            "name": "train",
+            "ready": true,
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "8Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "restartCount": 0,
+            "started": true,
+            "state": {
+              "running": {
+                "startedAt": "2026-09-11T00:54:46Z"
+              }
+            },
+            "user": {
+              "linux": {
+                "gid": 0,
+                "supplementalGroups": [
+                  0
+                ],
+                "uid": 0
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "cmcode"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                "name": "kube-api-access-km754",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              }
+            ]
+          }
+        ],
+        "hostIP": "137.150.137.12",
+        "hostIPs": [
+          {
+            "ip": "137.150.137.12"
+          }
+        ],
+        "phase": "Running",
+        "podIP": "10.244.112.51",
+        "podIPs": [
+          {
+            "ip": "10.244.112.51"
+          }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2026-09-11T00:54:43Z"
+      }
+    }
+  ],
+  "kind": "List",
+  "metadata": {
+    "resourceVersion": ""
+  }
+}

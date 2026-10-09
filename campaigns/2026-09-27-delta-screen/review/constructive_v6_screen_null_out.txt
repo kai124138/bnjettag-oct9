@@ -1,0 +1,461 @@
+1. arbiter-v1 placebo wording, P(no cell mean g > placebo mean g | global null):
+   m = 12: 0.076  (1/(m+1) = 0.077)
+   m = 40: 0.023  (1/(m+1) = 0.024)
+2. Dunnett-type max-t, one-sided, alpha 0.1, pooled paired sd (cells + placebo):
+   m = 12, n = 4: critical t 2.410; P(no | null) 0.896; placebo |t| > crit 0.0336
+   m = 12, n = 6: critical t 2.337; P(no | null) 0.896; placebo |t| > crit 0.0308
+   m = 12, n = 8: critical t 2.304; P(no | null) 0.899; placebo |t| > crit 0.0307
+   m = 40, n = 4: critical t 2.793; P(no | null) 0.904; placebo |t| > crit 0.0126
+   m = 40, n = 6: critical t 2.680; P(no | null) 0.898; placebo |t| > crit 0.0139
+   m = 40, n = 8: critical t 2.651; P(no | null) 0.901; placebo |t| > crit 0.0132
+   m = 12, n = 4, 1 true +1 pt, sigma 0.6: P(no) 0.489; P(a true cell above crit) 0.505
+   m = 12, n = 4, 1 true +1 pt, sigma 1.5: P(no) 0.846; P(a true cell above crit) 0.099
+   m = 12, n = 4, 1 true +1 pt, sigma 3.14: P(no) 0.880; P(a true cell above crit) 0.045
+   m = 40, n = 4, 1 true +1 pt, sigma 0.6: P(no) 0.617; P(a true cell above crit) 0.370
+   m = 40, n = 4, 1 true +1 pt, sigma 1.5: P(no) 0.879; P(a true cell above crit) 0.051
+   m = 40, n = 4, 1 true +1 pt, sigma 3.14: P(no) 0.900; P(a true cell above crit) 0.020
+   m = 40, n = 4, 3 true +1 pt, sigma 0.6: P(no) 0.401; P(a true cell above crit) 0.598
+   m = 40, n = 4, 3 true +1 pt, sigma 1.5: P(no) 0.839; P(a true cell above crit) 0.122
+   m = 40, n = 4, 3 true +1 pt, sigma 3.14: P(no) 0.887; P(a true cell above crit) 0.048
+3. recovery by mean-g rank, rho = 0, n = 4:
+   5M: m 40, 3 true +1 pt, top 12, chance 0.022: 0.4:1.00, 0.5:1.00, 0.6:0.99, 0.7:0.95, 0.8:0.90, 0.9:0.82, 1.0:0.75, 1.1:0.67, 1.2:0.60, 1.3:0.53, 1.4:0.48, 1.5:0.43, 1.6:0.39, 1.7:0.35, 1.8:0.32, 1.9:0.29, 2.0:0.26, 2.1:0.25, 2.2:0.23, 2.3:0.21, 2.4:0.20, 2.5:0.19, 2.6:0.17, 2.7:0.16, 2.8:0.16, 2.9:0.15, 3.0:0.14
+   5M largest sigma with recovery >= 0.5 (v1 design grid; the v1 sd_rep ceiling is withdrawn in v5): 1.3 pt
+   350k: m 12, 1 true +1 pt, top 3, chance 0.250: 0.4:1.00, 0.5:1.00, 0.6:0.99, 0.7:0.97, 0.8:0.95, 0.9:0.92, 1.0:0.88, 1.1:0.84, 1.2:0.81, 1.3:0.77, 1.4:0.74, 1.5:0.72, 1.6:0.69, 1.7:0.66, 1.8:0.64, 1.9:0.61, 2.0:0.61, 2.1:0.59, 2.2:0.56, 2.3:0.55, 2.4:0.54, 2.5:0.53, 2.6:0.51, 2.7:0.50, 2.8:0.49, 2.9:0.48, 3.0:0.47
+   350k largest sigma with recovery >= 0.5 (v1 design grid; the v1 sd_rep ceiling is withdrawn in v5): 2.7 pt
+4. family test, P(false 'some cell above' | every cell null), one-sided alpha 0.10 per family:
+   m = 12, n = 3: critical t R0 2.524, R1 2.518, R2 own-sd 6.948; gate ratio 95th pct 2.069; bit-identical branch own-sd 6.938
+      equal spread                R0 0.101  R1 0.101  R2 0.101  R3 0.102 (gate fails 0.05)
+      one cell 3x                 R0 0.152  R1 0.153  R2 0.104  R3 0.151 (gate fails 0.36)
+      25 % of cells 2x            R0 0.135  R1 0.137  R2 0.104  R3 0.138 (gate fails 0.23)
+      25 % of cells 3x            R0 0.195  R1 0.193  R2 0.110  R3 0.169 (gate fails 0.50)
+      two-mode q 0.1              R0 0.327  R1 0.324  R2 0.067  R3 0.176 (gate fails 0.33)
+      two-mode q 0.33             R0 0.185  R1 0.183  R2 0.122  R3 0.183 (gate fails 0.00)
+      two-mode q 0.5              R0 0.102  R1 0.102  R2 0.111  R3 0.102 (gate fails 0.00)
+      offset 0.5 SE               R0 0.221  R1 0.102  R2 0.101  R3 0.104 (gate fails 0.05)
+      offset 0.707 SE             R0 0.288  R1 0.101  R2 0.099  R3 0.102 (gate fails 0.05)
+      near-deterministic placebo  R0 0.101  R1 0.104  R2 0.100  R3 0.104 (gate fails 0.05)
+      bit-identical branch (d = g), own sd, no offset      : 0.099
+      bit-identical branch (d = g), own sd, offset 0.707 SE: 0.236
+   m = 12, n = 4: critical t R0 2.420, R1 2.429, R2 own-sd 4.406; gate ratio 95th pct 1.874; bit-identical branch own-sd 4.426
+      equal spread                R0 0.101  R1 0.100  R2 0.102  R3 0.102 (gate fails 0.05)
+      one cell 3x                 R0 0.150  R1 0.151  R2 0.105  R3 0.143 (gate fails 0.48)
+      25 % of cells 2x            R0 0.142  R1 0.139  R2 0.107  R3 0.141 (gate fails 0.31)
+      25 % of cells 3x            R0 0.198  R1 0.199  R2 0.111  R3 0.156 (gate fails 0.66)
+      two-mode q 0.1              R0 0.359  R1 0.352  R2 0.053  R3 0.198 (gate fails 0.31)
+      two-mode q 0.33             R0 0.172  R1 0.170  R2 0.038  R3 0.170 (gate fails 0.00)
+      two-mode q 0.5              R0 0.082  R1 0.083  R2 0.042  R3 0.083 (gate fails 0.00)
+      offset 0.5 SE               R0 0.233  R1 0.101  R2 0.103  R3 0.104 (gate fails 0.05)
+      offset 0.707 SE             R0 0.299  R1 0.099  R2 0.104  R3 0.101 (gate fails 0.05)
+      near-deterministic placebo  R0 0.097  R1 0.094  R2 0.098  R3 0.097 (gate fails 0.05)
+      bit-identical branch (d = g), own sd, no offset      : 0.103
+      bit-identical branch (d = g), own sd, offset 0.707 SE: 0.261
+   m = 40, n = 3: critical t R0 2.871, R1 2.880, R2 own-sd 12.984; gate ratio 95th pct 2.364; bit-identical branch own-sd 12.744
+      equal spread                R0 0.101  R1 0.099  R2 0.098  R3 0.099 (gate fails 0.05)
+      one cell 3x                 R0 0.158  R1 0.153  R2 0.095  R3 0.139 (gate fails 0.35)
+      25 % of cells 2x            R0 0.185  R1 0.183  R2 0.097  R3 0.150 (gate fails 0.40)
+      25 % of cells 3x            R0 0.314  R1 0.305  R2 0.099  R3 0.148 (gate fails 0.76)
+      two-mode q 0.1              R0 0.499  R1 0.499  R2 0.080  R3 0.416 (gate fails 0.16)
+      two-mode q 0.33             R0 0.231  R1 0.237  R2 0.237  R3 0.237 (gate fails 0.00)
+      two-mode q 0.5              R0 0.122  R1 0.124  R2 0.136  R3 0.124 (gate fails 0.00)
+      offset 0.5 SE               R0 0.229  R1 0.101  R2 0.097  R3 0.101 (gate fails 0.05)
+      offset 0.707 SE             R0 0.297  R1 0.101  R2 0.097  R3 0.101 (gate fails 0.05)
+      near-deterministic placebo  R0 0.102  R1 0.102  R2 0.100  R3 0.102 (gate fails 0.05)
+      bit-identical branch (d = g), own sd, no offset      : 0.097
+      bit-identical branch (d = g), own sd, offset 0.707 SE: 0.241
+   m = 40, n = 4: critical t R0 2.787, R1 2.790, R2 own-sd 6.751; gate ratio 95th pct 2.101; bit-identical branch own-sd 6.791
+      equal spread                R0 0.101  R1 0.101  R2 0.099  R3 0.101 (gate fails 0.05)
+      one cell 3x                 R0 0.157  R1 0.162  R2 0.102  R3 0.141 (gate fails 0.46)
+      25 % of cells 2x            R0 0.198  R1 0.193  R2 0.105  R3 0.152 (gate fails 0.50)
+      25 % of cells 3x            R0 0.325  R1 0.321  R2 0.108  R3 0.134 (gate fails 0.88)
+      two-mode q 0.1              R0 0.549  R1 0.550  R2 0.050  R3 0.412 (gate fails 0.17)
+      two-mode q 0.33             R0 0.199  R1 0.200  R2 0.089  R3 0.200 (gate fails 0.00)
+      two-mode q 0.5              R0 0.060  R1 0.059  R2 0.062  R3 0.059 (gate fails 0.00)
+      offset 0.5 SE               R0 0.235  R1 0.096  R2 0.100  R3 0.098 (gate fails 0.05)
+      offset 0.707 SE             R0 0.306  R1 0.100  R2 0.099  R3 0.099 (gate fails 0.05)
+      near-deterministic placebo  R0 0.097  R1 0.095  R2 0.098  R3 0.096 (gate fails 0.05)
+      bit-identical branch (d = g), own sd, no offset      : 0.096
+      bit-identical branch (d = g), own sd, offset 0.707 SE: 0.258
+5. power, one true +1 pt cell (others null), P(that cell named):
+   m = 12, n = 4, sigma 0.6: R1 0.507  R2 0.204  R3 0.494
+   m = 12, n = 4, sigma 1.5: R1 0.104  R2 0.046  R3 0.101
+   m = 12, n = 4, sigma 3.14: R1 0.040  R2 0.022  R3 0.039
+   m = 40, n = 4, sigma 0.6: R1 0.378  R2 0.074  R3 0.360
+   m = 40, n = 4, sigma 1.5: R1 0.055  R2 0.015  R3 0.052
+   m = 40, n = 4, sigma 3.14: R1 0.019  R2 0.007  R3 0.018
+6. ranking interval mean g +- t(0.975, m(n-1)) s_pool / sqrt(n), shared replica, placebo excluded:
+   m = 12, n = 4: nominal 95 % (t 2.028) covers 0.934; multiplier for 95 % coverage 2.179
+   m = 40, n = 4: nominal 95 % (t 1.980) covers 0.932; multiplier for 95 % coverage 2.146
+7. G3' power, P(lower 95 % bound > -0.3 pt | g = 0), own sd df 3 (sigma = per-run seed sd, rho = 0):
+   sigma 0.10 pt: two-sided bound 0.799; one-sided bound 0.933
+   sigma 0.13 pt: two-sided bound 0.597; one-sided bound 0.794
+   sigma 0.20 pt: two-sided bound 0.315; one-sided bound 0.496
+   sigma 0.30 pt: two-sided bound 0.171; one-sided bound 0.296
+   sigma 0.60 pt: two-sided bound 0.074; one-sided bound 0.137
+   sigma 1.50 pt: two-sided bound 0.041; one-sided bound 0.080
+   sigma 3.14 pt: two-sided bound 0.031; one-sided bound 0.062
+8. rank-move flag, expected number of null cells flagged per family (run-level corr of primary and companion r):
+   m = 12, r = 0.5: T 2: 5.6, T 3: 3.9, T 4: 2.7, T 5: 1.7, T 6: 1.0
+   m = 12, r = 0.7: T 2: 4.2, T 3: 2.7, T 4: 1.6, T 5: 0.9, T 6: 0.4
+   m = 12, r = 0.9: T 2: 2.0, T 3: 0.9, T 4: 0.4, T 5: 0.1, T 6: 0.0
+   m = 12, r = 0.95: T 2: 1.1, T 3: 0.4, T 4: 0.1, T 5: 0.0, T 6: 0.0
+   m = 40, r = 0.5: T 5: 24.4, T 8: 18.2, T 10: 14.7, T 12: 11.7, T 15: 8.0
+   m = 40, r = 0.7: T 5: 20.4, T 8: 13.6, T 10: 10.2, T 12: 7.4, T 15: 4.4
+   m = 40, r = 0.9: T 5: 11.7, T 8: 5.4, T 10: 3.1, T 12: 1.6, T 15: 0.5
+   m = 40, r = 0.95: T 5: 6.9, T 8: 2.2, T 10: 1.0, T 12: 0.4, T 15: 0.1
+9. family-pooled cell-replica correlation rho-hat under rho = 0 (centred per seed-set), 95 % null interval:
+   m = 12, n = 4: 2.5 / 97.5 % -0.32 / +0.33
+   m = 40, n = 4: 2.5 / 97.5 % -0.18 / +0.18
+11. unpaired companion, cell (n = 4) against the 8 replica seeds, own-sd Welch t, one-sided alpha 0.10:
+   m = 12: critical t 2.923
+   m = 40: critical t 3.622
+12. placebo check, two-sided paired t of placebo - replica on its own sd (df 3), alpha 0.05:
+   false flag under the null 0.050
+   sigma 0.6: offset detected with P 0.5: 1.25 pt, P 0.8: 1.85 pt
+   sigma 1.5: offset detected with P 0.5: 3.05 pt, P 0.8: 4.55 pt
+   sigma 3.14: offset detected with P 0.5: 6.55 pt, P 0.8: 9.55 pt
+13. own-sd (R2) critical values at the family-test m after the long-horizon cells leave it (m 11 at 350k, <= 37 at 5M):
+   m = 11, n = 4: 4.284
+   m = 37, n = 4: 6.585
+   m = 11, n = 3: 6.733
+   m = 37, n = 3: 12.290
+15. ranked list and family test at m = 11 (350k) / 37 (5M); R2 = own sd against the placebo:
+   m = 11, n = 4: critical t (section 13) 4.284; P(false 'yes') per row:
+      equal spread                0.103
+      one cell 3x                 0.102
+      25 % of cells 2x            0.102
+      25 % of cells 3x            0.106
+      two-mode q 0.1              0.052
+      two-mode q 0.33             0.036
+      two-mode q 0.5              0.042
+      offset 0.5 SE               0.102
+      offset 0.707 SE             0.100
+      near-deterministic placebo  0.099
+   m = 11, n = 3: critical t (section 13) 6.733; P(false 'yes') per row:
+      equal spread                0.101
+      one cell 3x                 0.100
+      25 % of cells 2x            0.102
+      25 % of cells 3x            0.105
+      two-mode q 0.1              0.063
+      two-mode q 0.33             0.115
+      two-mode q 0.5              0.108
+      offset 0.5 SE               0.099
+      offset 0.707 SE             0.100
+      near-deterministic placebo  0.098
+   m = 11, n = 4, power (one true +1 pt cell named): sigma 0.6: 0.214; sigma 1.0: 0.087; sigma 1.5: 0.051; sigma 3.14: 0.026
+   m = 11, n = 4, ranking interval: nominal t 2.035 covers 0.936; multiplier for 95 % coverage (equal spread) 2.168
+   m = 11, rank-move null flags, r = 0.5: T 2: 4.7, T 3: 3.2, T 4: 2.0, T 5: 1.2, T 6: 0.6
+   m = 11, rank-move null flags, r = 0.7: T 2: 3.5, T 3: 2.1, T 4: 1.2, T 5: 0.6, T 6: 0.2
+   m = 11, rank-move null flags, r = 0.9: T 2: 1.6, T 3: 0.7, T 4: 0.3, T 5: 0.1, T 6: 0.0
+   m = 11, rank-move null flags, r = 0.95: T 2: 0.8, T 3: 0.3, T 4: 0.1, T 5: 0.0, T 6: 0.0
+   m = 11, rho-hat null 2.5 / 97.5 %: -0.34 / +0.34
+   m = 11, unpaired companion critical t: 2.880
+   m = 11, arbiter-v1 placebo wording P(no | null): 0.084 (1/(m+1) = 0.083)
+   m = 37, n = 4: critical t (section 13) 6.585; P(false 'yes') per row:
+      equal spread                0.101
+      one cell 3x                 0.099
+      25 % of cells 2x            0.102
+      25 % of cells 3x            0.108
+      two-mode q 0.1              0.051
+      two-mode q 0.33             0.082
+      two-mode q 0.5              0.063
+      offset 0.5 SE               0.099
+      offset 0.707 SE             0.099
+      near-deterministic placebo  0.097
+   m = 37, n = 3: critical t (section 13) 12.290; P(false 'yes') per row:
+      equal spread                0.102
+      one cell 3x                 0.100
+      25 % of cells 2x            0.100
+      25 % of cells 3x            0.104
+      two-mode q 0.1              0.081
+      two-mode q 0.33             0.232
+      two-mode q 0.5              0.141
+      offset 0.5 SE               0.100
+      offset 0.707 SE             0.104
+      near-deterministic placebo  0.097
+   m = 37, n = 4, power (one true +1 pt cell named): sigma 0.6: 0.077; sigma 1.0: 0.030; sigma 1.5: 0.016; sigma 3.14: 0.007
+   m = 37, n = 4, ranking interval: nominal t 1.982 covers 0.933; multiplier for 95 % coverage (equal spread) 2.136
+   m = 37, rank-move null flags, r = 0.5: T 5: 21.7, T 8: 15.7, T 10: 12.4, T 12: 9.6, T 15: 6.3
+   m = 37, rank-move null flags, r = 0.7: T 5: 17.9, T 8: 11.4, T 10: 8.2, T 12: 5.7, T 15: 3.2
+   m = 37, rank-move null flags, r = 0.9: T 5: 9.8, T 8: 4.2, T 10: 2.2, T 12: 1.1, T 15: 0.3
+   m = 37, rank-move null flags, r = 0.95: T 5: 5.5, T 8: 1.6, T 10: 0.6, T 12: 0.2, T 15: 0.0
+   m = 37, rho-hat null 2.5 / 97.5 %: -0.18 / +0.18
+   m = 37, unpaired companion critical t: 3.590
+   m = 37, arbiter-v1 placebo wording P(no | null): 0.026 (1/(m+1) = 0.026)
+   recovery 5M: m 37, 3 true +1 pt, top 12, chance 0.0283: 0.4:1.00, 0.5:1.00, 0.6:0.99, 0.7:0.96, 0.8:0.92, 0.9:0.84, 1.0:0.77, 1.1:0.71, 1.2:0.63, 1.3:0.57, 1.4:0.52, 1.5:0.47, 1.6:0.42, 1.7:0.39, 1.8:0.36, 1.9:0.32, 2.0:0.29, 2.1:0.28, 2.2:0.26, 2.3:0.24, 2.4:0.23, 2.5:0.22, 2.6:0.20, 2.7:0.19, 2.8:0.18, 2.9:0.17, 3.0:0.17
+   5M largest grid sigma with recovery >= 0.5: 1.4 pt
+   recovery 350k: m 11, 1 true +1 pt, top 3, chance 0.2727: 0.4:1.00, 0.5:1.00, 0.6:0.99, 0.7:0.98, 0.8:0.96, 0.9:0.93, 1.0:0.89, 1.1:0.86, 1.2:0.83, 1.3:0.79, 1.4:0.75, 1.5:0.73, 1.6:0.71, 1.7:0.69, 1.8:0.65, 1.9:0.64, 2.0:0.63, 2.1:0.61, 2.2:0.60, 2.3:0.58, 2.4:0.56, 2.5:0.54, 2.6:0.55, 2.7:0.53, 2.8:0.52, 2.9:0.52, 3.0:0.50
+   350k largest grid sigma with recovery >= 0.5: 3.0 pt
+16. top-k extension (seeds 5-8 for the top k after n = 4), rho = 0, true cells +1 pt:
+   5M m 37, top 12, extend top 16, sigma 0.6: n = 4 0.99 | extension 1.00 | n = 6 1.00
+   5M m 37, top 12, extend top 16, sigma 1.0: n = 4 0.77 | extension 0.87 | n = 6 0.90
+   5M m 37, top 12, extend top 16, sigma 1.3: n = 4 0.57 | extension 0.69 | n = 6 0.72
+   5M m 37, top 12, extend top 16, sigma 1.5: n = 4 0.46 | extension 0.59 | n = 6 0.62
+   350k m 11, top 3, extend top 6, sigma 0.6: n = 4 0.99 | extension 1.00 | n = 6 1.00
+   350k m 11, top 3, extend top 6, sigma 1.0: n = 4 0.89 | extension 0.96 | n = 6 0.95
+   350k m 11, top 3, extend top 6, sigma 1.3: n = 4 0.79 | extension 0.90 | n = 6 0.87
+   350k m 11, top 3, extend top 6, sigma 1.5: n = 4 0.74 | extension 0.85 | n = 6 0.82
+17. floor-family G2 null false-rescue, P(k_e >= 3 and k_e - k_base >= 2), exact binomial:
+   p_e = p_base = p, n = 4: p 0.25: 0.038 (x 7 entries: 0.27); p 0.5: 0.121 (x 7 entries: 0.85); p 0.75: 0.104 (x 7 entries: 0.73)
+   p_e = p_base = p, n = 3: p 0.25: 0.013 (x 7 entries: 0.09); p 0.5: 0.063 (x 7 entries: 0.44); p 0.75: 0.066 (x 7 entries: 0.46)
+   n = 4, observed k_base = 0 (rescue needs k_e >= 3): p_e 0.5: 0.312; p_e 0.75: 0.738; p_e 0.9: 0.948
+   n = 4, observed k_base = 1 (rescue needs k_e >= 3): p_e 0.5: 0.312; p_e 0.75: 0.738; p_e 0.9: 0.948
+   n = 4, observed k_base = 2 (rescue needs k_e >= 4): p_e 0.5: 0.062; p_e 0.75: 0.316; p_e 0.9: 0.656
+18. two-mode seeds: s_int, ranking recovery, top-k extension and the label threshold T:
+   5M: m 37, 3 true +1 pt, top 12, extension top 16; jump 5.4 pt, within-mode sd 0.3 pt, n = 4
+   seed-shared mode (context; not used by the threshold rule):
+      q 0.02: per-run sd 0.81 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.05: per-run sd 1.21 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.10: per-run sd 1.65 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.33: per-run sd 2.56 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.50: per-run sd 2.72 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+   per-run mode, q grid:
+      q 0.0011: per-run sd 0.35 pt; median s_int 0.30 pt; recovery 0.99; extension 0.99
+      q 0.0024: per-run sd 0.40 pt; median s_int 0.31 pt; recovery 0.97; extension 0.97
+      q 0.0039: per-run sd 0.45 pt; median s_int 0.32 pt; recovery 0.95; extension 0.95
+      q 0.0055: per-run sd 0.50 pt; median s_int 0.51 pt; recovery 0.94; extension 0.94
+      q 0.0073: per-run sd 0.55 pt; median s_int 0.53 pt; recovery 0.91; extension 0.91
+      q 0.0094: per-run sd 0.60 pt; median s_int 0.55 pt; recovery 0.89; extension 0.89
+      q 0.0115: per-run sd 0.65 pt; median s_int 0.63 pt; recovery 0.87; extension 0.87
+      q 0.0139: per-run sd 0.70 pt; median s_int 0.69 pt; recovery 0.85; extension 0.84
+      q 0.0165: per-run sd 0.75 pt; median s_int 0.71 pt; recovery 0.81; extension 0.81
+      q 0.0192: per-run sd 0.80 pt; median s_int 0.79 pt; recovery 0.79; extension 0.79
+      q 0.0200: per-run sd 0.81 pt; median s_int 0.80 pt; recovery 0.79; extension 0.78
+      q 0.0222: per-run sd 0.85 pt; median s_int 0.83 pt; recovery 0.77; extension 0.76
+      q 0.0253: per-run sd 0.90 pt; median s_int 0.88 pt; recovery 0.74; extension 0.73
+      q 0.0287: per-run sd 0.95 pt; median s_int 0.94 pt; recovery 0.70; extension 0.69
+      q 0.0323: per-run sd 1.00 pt; median s_int 0.98 pt; recovery 0.67; extension 0.66
+      q 0.0360: per-run sd 1.05 pt; median s_int 1.04 pt; recovery 0.65; extension 0.64
+      q 0.0400: per-run sd 1.10 pt; median s_int 1.09 pt; recovery 0.62; extension 0.60
+      q 0.0442: per-run sd 1.15 pt; median s_int 1.14 pt; recovery 0.58; extension 0.57
+      q 0.0487: per-run sd 1.20 pt; median s_int 1.19 pt; recovery 0.55; extension 0.53
+      q 0.0500: per-run sd 1.21 pt; median s_int 1.20 pt; recovery 0.55; extension 0.53
+      q 0.0533: per-run sd 1.25 pt; median s_int 1.24 pt; recovery 0.52; extension 0.50
+      q 0.0583: per-run sd 1.30 pt; median s_int 1.29 pt; recovery 0.49; extension 0.47
+      q 0.0634: per-run sd 1.35 pt; median s_int 1.34 pt; recovery 0.46; extension 0.44
+      q 0.0689: per-run sd 1.40 pt; median s_int 1.39 pt; recovery 0.43; extension 0.41
+      q 0.0746: per-run sd 1.45 pt; median s_int 1.44 pt; recovery 0.40; extension 0.39
+      q 0.0806: per-run sd 1.50 pt; median s_int 1.49 pt; recovery 0.37; extension 0.36
+      q 0.0868: per-run sd 1.55 pt; median s_int 1.55 pt; recovery 0.34; extension 0.32
+      q 0.0934: per-run sd 1.60 pt; median s_int 1.60 pt; recovery 0.31; extension 0.30
+      q 0.1000: per-run sd 1.65 pt; median s_int 1.64 pt; recovery 0.28; extension 0.28
+      q 0.1003: per-run sd 1.65 pt; median s_int 1.64 pt; recovery 0.29; extension 0.28
+      q 0.1076: per-run sd 1.70 pt; median s_int 1.70 pt; recovery 0.26; extension 0.25
+      q 0.1152: per-run sd 1.75 pt; median s_int 1.75 pt; recovery 0.23; extension 0.23
+      q 0.1232: per-run sd 1.80 pt; median s_int 1.79 pt; recovery 0.21; extension 0.21
+      q 0.1316: per-run sd 1.85 pt; median s_int 1.85 pt; recovery 0.19; extension 0.20
+      q 0.1404: per-run sd 1.90 pt; median s_int 1.90 pt; recovery 0.17; extension 0.19
+      q 0.1497: per-run sd 1.95 pt; median s_int 1.95 pt; recovery 0.15; extension 0.19
+      q 0.1595: per-run sd 2.00 pt; median s_int 2.00 pt; recovery 0.14; extension 0.19
+      q 0.1699: per-run sd 2.05 pt; median s_int 2.05 pt; recovery 0.13; extension 0.20
+      q 0.1809: per-run sd 2.10 pt; median s_int 2.10 pt; recovery 0.12; extension 0.22
+      q 0.1925: per-run sd 2.15 pt; median s_int 2.15 pt; recovery 0.11; extension 0.23
+      q 0.2049: per-run sd 2.20 pt; median s_int 2.20 pt; recovery 0.11; extension 0.25
+      q 0.2181: per-run sd 2.25 pt; median s_int 2.25 pt; recovery 0.12; extension 0.27
+      q 0.2323: per-run sd 2.30 pt; median s_int 2.30 pt; recovery 0.14; extension 0.29
+      q 0.2476: per-run sd 2.35 pt; median s_int 2.35 pt; recovery 0.16; extension 0.28
+      q 0.2643: per-run sd 2.40 pt; median s_int 2.40 pt; recovery 0.19; extension 0.28
+      q 0.2827: per-run sd 2.45 pt; median s_int 2.45 pt; recovery 0.20; extension 0.25
+      q 0.3031: per-run sd 2.50 pt; median s_int 2.50 pt; recovery 0.21; extension 0.23
+      q 0.3265: per-run sd 2.55 pt; median s_int 2.55 pt; recovery 0.19; extension 0.20
+      q 0.3300: per-run sd 2.56 pt; median s_int 2.56 pt; recovery 0.19; extension 0.19
+      q 0.3542: per-run sd 2.60 pt; median s_int 2.60 pt; recovery 0.17; extension 0.17
+      q 0.3893: per-run sd 2.65 pt; median s_int 2.65 pt; recovery 0.13; extension 0.16
+      q 0.4444: per-run sd 2.70 pt; median s_int 2.70 pt; recovery 0.10; extension 0.21
+      q 0.5000: per-run sd 2.72 pt; median s_int 2.72 pt; recovery 0.14; extension 0.23
+   largest step between consecutive median s_int: 0.186 pt overall; 0.055 pt where the medians are >= 1.0 pt (rule: <= 0.1 pt)
+      T 1.4 fails: Gaussian recovery 0.52; worst conditional q 0.1316 (set 201 of 20000) recovery 0.43
+      T 1.5 fails: Gaussian recovery 0.47; worst conditional q 0.1316 (set 661 of 20000) recovery 0.38
+      T 1.6 fails: Gaussian recovery 0.42; worst conditional q 0.1404 (set 1100 of 20000) recovery 0.33
+      T 1.7 fails: Gaussian recovery 0.39; worst conditional q 0.1809 (set 226 of 20000) recovery 0.25
+      T 1.8 fails: Gaussian recovery 0.36; worst conditional q 0.1925 (set 374 of 20000) recovery 0.21
+      T 1.9 fails: Gaussian recovery 0.32; worst conditional q 0.2181 (set 317 of 20000) recovery 0.17
+      T 2.0 fails: Gaussian recovery 0.29; worst conditional q 0.2181 (set 1154 of 20000) recovery 0.13
+      T 2.1 fails: Gaussian recovery 0.28; worst conditional q 0.2643 (set 450 of 20000) recovery 0.08
+      T 2.2 fails: Gaussian recovery 0.26; worst conditional q 0.2643 (set 1691 of 20000) recovery 0.07
+      T 2.3 fails: Gaussian recovery 0.24; worst conditional q 0.3300 (set 453 of 20000) recovery 0.06
+      T 2.4 fails: Gaussian recovery 0.23; worst conditional q 0.2181 (set 16956 of 20000) recovery 0.09
+      T 2.5 fails: Gaussian recovery 0.22; worst conditional q 0.5000 (set 454 of 20000) recovery 0.08
+      T 2.6 fails: Gaussian recovery 0.20; worst conditional q 0.5000 (set 2609 of 20000) recovery 0.10
+      T 2.7 fails: Gaussian recovery 0.19; worst conditional q 0.4444 (set 9783 of 20000) recovery 0.09
+      T 2.8 fails: Gaussian recovery 0.18; worst conditional q 0.4444 (set 16810 of 20000) recovery 0.09
+      T 2.9 fails: Gaussian recovery 0.17; worst conditional q 0.4444 (set 19715 of 20000) recovery 0.10
+      T 3.0 fails: Gaussian recovery 0.17; worst conditional q 0.4444 (set 19997 of 20000) recovery 0.10
+   5M T at this seed: 1.3 pt (floor rule), 1.3 pt (v4 rule, any non-empty set)
+   350k: m 11, 1 true +1 pt, top 3, extension top 6; jump 5.4 pt, within-mode sd 0.3 pt, n = 4
+   seed-shared mode (context; not used by the threshold rule):
+      q 0.02: per-run sd 0.81 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.05: per-run sd 1.21 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.10: per-run sd 1.65 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.33: per-run sd 2.56 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.50: per-run sd 2.72 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+   per-run mode, q grid:
+      q 0.0011: per-run sd 0.35 pt; median s_int 0.30 pt; recovery 1.00; extension 1.00
+      q 0.0024: per-run sd 0.40 pt; median s_int 0.30 pt; recovery 0.99; extension 0.99
+      q 0.0039: per-run sd 0.45 pt; median s_int 0.31 pt; recovery 0.98; extension 0.98
+      q 0.0055: per-run sd 0.50 pt; median s_int 0.31 pt; recovery 0.98; extension 0.98
+      q 0.0073: per-run sd 0.55 pt; median s_int 0.32 pt; recovery 0.97; extension 0.97
+      q 0.0094: per-run sd 0.60 pt; median s_int 0.32 pt; recovery 0.96; extension 0.96
+      q 0.0115: per-run sd 0.65 pt; median s_int 0.33 pt; recovery 0.95; extension 0.95
+      q 0.0139: per-run sd 0.70 pt; median s_int 0.35 pt; recovery 0.95; extension 0.95
+      q 0.0165: per-run sd 0.75 pt; median s_int 0.77 pt; recovery 0.94; extension 0.94
+      q 0.0192: per-run sd 0.80 pt; median s_int 0.82 pt; recovery 0.92; extension 0.92
+      q 0.0200: per-run sd 0.81 pt; median s_int 0.83 pt; recovery 0.92; extension 0.92
+      q 0.0222: per-run sd 0.85 pt; median s_int 0.85 pt; recovery 0.91; extension 0.91
+      q 0.0253: per-run sd 0.90 pt; median s_int 0.86 pt; recovery 0.90; extension 0.90
+      q 0.0287: per-run sd 0.95 pt; median s_int 0.88 pt; recovery 0.89; extension 0.89
+      q 0.0323: per-run sd 1.00 pt; median s_int 0.90 pt; recovery 0.88; extension 0.87
+      q 0.0360: per-run sd 1.05 pt; median s_int 0.94 pt; recovery 0.86; extension 0.86
+      q 0.0400: per-run sd 1.10 pt; median s_int 1.09 pt; recovery 0.85; extension 0.85
+      q 0.0442: per-run sd 1.15 pt; median s_int 1.15 pt; recovery 0.84; extension 0.84
+      q 0.0487: per-run sd 1.20 pt; median s_int 1.18 pt; recovery 0.82; extension 0.82
+      q 0.0500: per-run sd 1.21 pt; median s_int 1.19 pt; recovery 0.81; extension 0.81
+      q 0.0533: per-run sd 1.25 pt; median s_int 1.21 pt; recovery 0.80; extension 0.80
+      q 0.0583: per-run sd 1.30 pt; median s_int 1.24 pt; recovery 0.79; extension 0.79
+      q 0.0634: per-run sd 1.35 pt; median s_int 1.30 pt; recovery 0.78; extension 0.78
+      q 0.0689: per-run sd 1.40 pt; median s_int 1.39 pt; recovery 0.76; extension 0.76
+      q 0.0746: per-run sd 1.45 pt; median s_int 1.44 pt; recovery 0.73; extension 0.74
+      q 0.0806: per-run sd 1.50 pt; median s_int 1.48 pt; recovery 0.72; extension 0.73
+      q 0.0868: per-run sd 1.55 pt; median s_int 1.52 pt; recovery 0.70; extension 0.72
+      q 0.0934: per-run sd 1.60 pt; median s_int 1.58 pt; recovery 0.68; extension 0.71
+      q 0.1000: per-run sd 1.65 pt; median s_int 1.64 pt; recovery 0.66; extension 0.69
+      q 0.1003: per-run sd 1.65 pt; median s_int 1.64 pt; recovery 0.66; extension 0.70
+      q 0.1076: per-run sd 1.70 pt; median s_int 1.69 pt; recovery 0.65; extension 0.69
+      q 0.1152: per-run sd 1.75 pt; median s_int 1.73 pt; recovery 0.62; extension 0.68
+      q 0.1232: per-run sd 1.80 pt; median s_int 1.78 pt; recovery 0.60; extension 0.67
+      q 0.1316: per-run sd 1.85 pt; median s_int 1.84 pt; recovery 0.58; extension 0.67
+      q 0.1404: per-run sd 1.90 pt; median s_int 1.89 pt; recovery 0.56; extension 0.67
+      q 0.1497: per-run sd 1.95 pt; median s_int 1.94 pt; recovery 0.55; extension 0.66
+      q 0.1595: per-run sd 2.00 pt; median s_int 1.99 pt; recovery 0.53; extension 0.67
+      q 0.1699: per-run sd 2.05 pt; median s_int 2.04 pt; recovery 0.52; extension 0.66
+      q 0.1809: per-run sd 2.10 pt; median s_int 2.10 pt; recovery 0.50; extension 0.66
+      q 0.1925: per-run sd 2.15 pt; median s_int 2.15 pt; recovery 0.50; extension 0.66
+      q 0.2049: per-run sd 2.20 pt; median s_int 2.20 pt; recovery 0.48; extension 0.66
+      q 0.2181: per-run sd 2.25 pt; median s_int 2.25 pt; recovery 0.48; extension 0.65
+      q 0.2323: per-run sd 2.30 pt; median s_int 2.29 pt; recovery 0.47; extension 0.64
+      q 0.2476: per-run sd 2.35 pt; median s_int 2.35 pt; recovery 0.48; extension 0.64
+      q 0.2643: per-run sd 2.40 pt; median s_int 2.40 pt; recovery 0.49; extension 0.62
+      q 0.2827: per-run sd 2.45 pt; median s_int 2.45 pt; recovery 0.48; extension 0.62
+      q 0.3031: per-run sd 2.50 pt; median s_int 2.50 pt; recovery 0.48; extension 0.60
+      q 0.3265: per-run sd 2.55 pt; median s_int 2.56 pt; recovery 0.49; extension 0.59
+      q 0.3300: per-run sd 2.56 pt; median s_int 2.56 pt; recovery 0.49; extension 0.60
+      q 0.3542: per-run sd 2.60 pt; median s_int 2.61 pt; recovery 0.48; extension 0.59
+      q 0.3893: per-run sd 2.65 pt; median s_int 2.66 pt; recovery 0.48; extension 0.60
+      q 0.4444: per-run sd 2.70 pt; median s_int 2.71 pt; recovery 0.45; extension 0.59
+      q 0.5000: per-run sd 2.72 pt; median s_int 2.72 pt; recovery 0.45; extension 0.59
+   largest step between consecutive median s_int: 0.421 pt overall; 0.093 pt where the medians are >= 1.0 pt (rule: <= 0.1 pt)
+      T 2.0 fails: Gaussian recovery 0.63; worst conditional q 0.3300 (set 415 of 20000) recovery 0.48
+      T 2.1 fails: Gaussian recovery 0.61; worst conditional q 0.3893 (set 294 of 20000) recovery 0.43
+      T 2.2 fails: Gaussian recovery 0.60; worst conditional q 0.5000 (set 338 of 20000) recovery 0.38
+      T 2.3 fails: Gaussian recovery 0.58; worst conditional q 0.5000 (set 747 of 20000) recovery 0.38
+      T 2.4 fails: Gaussian recovery 0.56; worst conditional q 0.5000 (set 1646 of 20000) recovery 0.38
+      T 2.5 fails: Gaussian recovery 0.54; worst conditional q 0.5000 (set 3176 of 20000) recovery 0.41
+      T 2.6 fails: Gaussian recovery 0.55; worst conditional q 0.5000 (set 5632 of 20000) recovery 0.41
+      T 2.7 fails: Gaussian recovery 0.53; worst conditional q 0.5000 (set 9126 of 20000) recovery 0.42
+      T 2.8 fails: Gaussian recovery 0.52; worst conditional q 0.5000 (set 12927 of 20000) recovery 0.42
+      T 2.9 fails: Gaussian recovery 0.52; worst conditional q 0.5000 (set 16414 of 20000) recovery 0.43
+      T 3.0 fails: Gaussian recovery 0.50; worst conditional q 0.5000 (set 18795 of 20000) recovery 0.44
+   350k T at this seed: 1.9 pt (floor rule), 1.5 pt (v4 rule, any non-empty set)
+   label threshold T per seed (seeds 20260927 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9), floor rule P(s_int <= T | q) >= 0.01:
+      5M floor rule: 1.3 / 1.2 / 1.3 / 1.3 / 1.2 / 1.2 / 1.3 / 1.3 / 1.3 / 1.3 (range 1.2-1.3); v4 rule: 1.3 / 1.0 / 1.1 / 1.1 / 0.9 / 1.2 / 1.2 / 1.1 / 1.1 / 1.2 (range 0.9-1.3)
+      350k floor rule: 1.9 / 1.9 / 1.9 / 1.8 / 1.9 / 1.9 / 1.9 / 1.9 / 1.9 / 1.9 (range 1.8-1.9); v4 rule: 1.5 / 1.3 / 1.2 / 1.1 / 1.4 / 1.2 / 1.3 / 1.4 / 1.4 / 1.4 (range 1.1-1.5)
+   5M label threshold T = 1.2 pt, the minimum over the ten seeds (Gaussian recovery at T 0.63, design seed)
+      q 0.02: P(s_int <= T) 0.98; recovery | s_int <= T 0.79 (median g 0.99; set 19633); | 1.0 <= s_int <= T: n = 4 0.62, extension 0.62 (set 2714); | s_int > T: n = 4 0.51, extension 0.51 (set 367)
+      q 0.05: P(s_int <= T) 0.49; recovery | s_int <= T 0.65 (median g 0.97; set 9875); | 1.0 <= s_int <= T: n = 4 0.60, extension 0.58 (set 6634); | s_int > T: n = 4 0.46, extension 0.44 (set 10125)
+      q 0.10: P(s_int <= T) 0.01; recovery | s_int <= T 0.58 (median g 0.96; set 295); | 1.0 <= s_int <= T: n = 4 0.58, extension 0.56 (set 269); | s_int > T: n = 4 0.28, extension 0.27 (set 19705)
+      q 0.33: P(s_int <= T) 0.00; recovery | s_int <= T nan (median g nan; set 0); | 1.0 <= s_int <= T: n = 4 nan, extension nan (set 0); | s_int > T: n = 4 0.19, extension 0.19 (set 20000)
+      q 0.50: P(s_int <= T) 0.00; recovery | s_int <= T nan (median g nan; set 0); | 1.0 <= s_int <= T: n = 4 nan, extension nan (set 0); | s_int > T: n = 4 0.14, extension 0.23 (set 20000)
+   check, 5M recovery | s_int <= 1.2 at q 0.02 / 0.05 / 0.1: 0.79 / 0.65 / 0.58
+   350k label threshold T = 1.8 pt, the minimum over the ten seeds (Gaussian recovery at T 0.65, design seed)
+      q 0.02: P(s_int <= T) 1.00; recovery | s_int <= T 0.92 (median g 1.00; set 19981); | 1.0 <= s_int <= T: n = 4 0.79, extension 0.80 (set 4309); | s_int > T: n = 4 0.53, extension 0.63 (set 19)
+      q 0.05: P(s_int <= T) 0.96; recovery | s_int <= T 0.82 (median g 0.99; set 19259); | 1.0 <= s_int <= T: n = 4 0.76, extension 0.76 (set 12119); | s_int > T: n = 4 0.55, extension 0.67 (set 741)
+      q 0.10: P(s_int <= T) 0.69; recovery | s_int <= T 0.72 (median g 0.96; set 13806); | 1.0 <= s_int <= T: n = 4 0.71, extension 0.69 (set 12588); | s_int > T: n = 4 0.52, extension 0.67 (set 6194)
+      q 0.33: P(s_int <= T) 0.00; recovery | s_int <= T 0.61 (median g 0.82; set 74); | 1.0 <= s_int <= T: n = 4 0.61, extension 0.62 (set 74); | s_int > T: n = 4 0.49, extension 0.60 (set 19926)
+      q 0.50: P(s_int <= T) 0.00; recovery | s_int <= T 0.00 (median g 0.50; set 2); | 1.0 <= s_int <= T: n = 4 0.00, extension 0.50 (set 2); | s_int > T: n = 4 0.45, extension 0.59 (set 19998)
+   check, 350k unconditional recovery at q 0.33 / 0.5: 0.49 / 0.45
+18b. recovery by mean g and by median g (median of the n = 4 paired g_s), jump 5.4 pt, within-mode sd 0.3 pt:
+   5M: m 37, 3 true +1 pt, top 12; mean g / median g
+      Gaussian: sigma 0.6: 0.99 / 0.96; sigma 1.0: 0.77 / 0.66; sigma 1.3: 0.57 / 0.46
+      per-run q 0.02: 0.79 / 0.99; | s_int <= T (1.2 pt) 0.79 / 0.99 (set 19659)
+      per-run q 0.05: 0.54 / 0.96; | s_int <= T (1.2 pt) 0.65 / 0.97 (set 9674)
+      per-run q 0.1: 0.28 / 0.85; | s_int <= T (1.2 pt) 0.62 / 0.92 (set 298)
+      per-run q 0.2: 0.11 / 0.56; | s_int <= T (1.2 pt) nan / nan (set 0)
+      per-run q 0.33: 0.19 / 0.26; | s_int <= T (1.2 pt) nan / nan (set 0)
+      per-run q 0.5: 0.14 / 0.26; | s_int <= T (1.2 pt) nan / nan (set 0)
+      seed-shared: q 0.1: 1.00 / 1.00; q 0.33: 1.00 / 1.00; q 0.5: 1.00 / 1.00
+   350k: m 11, 1 true +1 pt, top 3; mean g / median g
+      Gaussian: sigma 0.6: 0.99 / 0.98; sigma 1.0: 0.89 / 0.84; sigma 1.3: 0.79 / 0.73
+      per-run q 0.02: 0.92 / 1.00; | s_int <= T (1.8 pt) 0.92 / 1.00 (set 19979)
+      per-run q 0.05: 0.81 / 0.99; | s_int <= T (1.8 pt) 0.82 / 0.99 (set 19252)
+      per-run q 0.1: 0.66 / 0.95; | s_int <= T (1.8 pt) 0.73 / 0.96 (set 13777)
+      per-run q 0.2: 0.49 / 0.81; | s_int <= T (1.8 pt) 0.66 / 0.90 (set 2403)
+      per-run q 0.33: 0.49 / 0.61; | s_int <= T (1.8 pt) 0.64 / 0.87 (set 69)
+      per-run q 0.5: 0.45 / 0.53; | s_int <= T (1.8 pt) 0.33 / 0.33 (set 3)
+      seed-shared: q 0.1: 1.00 / 1.00; q 0.33: 1.00 / 1.00; q 0.5: 1.00 / 1.00
+18c. mode readout on the 8 replica values (two-mode if the largest gap > 3x the pooled within-group sd, >= 2 each side):
+   false flag, Gaussian seeds (any sigma): 0.071; power, per-run two-mode: q 0.02: 0.067; q 0.05: 0.102; q 0.1: 0.214; q 0.2: 0.510; q 0.33: 0.801; q 0.5: 0.930
+15a. family test, effect of one named cell detected with probability 0.5 / 0.8 (own-sd t on d = cell - placebo, n = 4, section-13 critical value):
+   m = 11 (critical 4.284): sigma 0.6: 1.65 / 2.40 pt; sigma 1.5: 4.10 / 5.95 pt; sigma 3.14: 8.55 / 12.40 pt
+   m = 37 (critical 6.585): sigma 0.6: 2.50 / 3.55 pt; sigma 1.5: 6.25 / 8.85 pt; sigma 3.14: 13.05 / above the 16-pt grid edge
+18d. Gaussian recovery at sigma = T (the T rule's condition (i)) by mean g and by median g (printed last):
+   5M (T 1.2 pt): mean g 0.63; median g 0.53
+   350k (T 1.8 pt): mean g 0.66; median g 0.61
+19. median g as the ranking statistic (v5 rules unchanged; scores from the draws of sections 8, 15, 16, 18):
+   19a. 5M Gaussian recovery by median g, section-15 grid (design seed): 0.4:1.00, 0.5:0.99, 0.6:0.96, 0.7:0.91, 0.8:0.83, 0.9:0.75, 1.0:0.66, 1.1:0.59, 1.2:0.52, 1.3:0.46, 1.4:0.42, 1.5:0.38, 1.6:0.33, 1.7:0.31, 1.8:0.29, 1.9:0.25, 2.0:0.24, 2.1:0.22, 2.2:0.21, 2.3:0.19, 2.4:0.19, 2.5:0.17, 2.6:0.16, 2.7:0.15, 2.8:0.14, 2.9:0.14, 3.0:0.14
+      5M T by median g per seed (20260927 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9): 1.2 / 1.2 / 1.2 / 1.2 / 1.2 / 1.2 / 1.2 / 1.2 / 1.2 / 1.2 (range 1.2-1.2); T = 1.2 pt (mean-g T 1.2 pt)
+      design seed: median-g Gaussian recovery at T 0.52 (mean g 0.63); failing T in 0.4-3.0:
+         T 1.3: Gaussian 0.46
+         T 1.4: Gaussian 0.42
+         T 1.5: Gaussian 0.38
+         T 1.6: Gaussian 0.33
+         T 1.7: Gaussian 0.31
+   19b. 5M at T = 1.2 pt, per-run mode, median g (n = 4 / [DK16] extension by median g):
+      q 0.02: P(s_int <= T) 0.98; unconditional 0.99 / 0.99; | s_int <= T 0.99 (set 19633); | 1.0 <= s_int <= T 0.98 / 0.98 (set 2714); | s_int > T 0.97 / 0.97 (set 367)
+      q 0.05: P(s_int <= T) 0.49; unconditional 0.96 / 0.96; | s_int <= T 0.97 (set 9875); | 1.0 <= s_int <= T 0.97 / 0.97 (set 6634); | s_int > T 0.95 / 0.95 (set 10125)
+      q 0.10: P(s_int <= T) 0.01; unconditional 0.85 / 0.85; | s_int <= T 0.96 (set 295); | 1.0 <= s_int <= T 0.96 / 0.95 (set 269); | s_int > T 0.85 / 0.85 (set 19705)
+      q 0.33: P(s_int <= T) 0.00; unconditional 0.26 / 0.34; | s_int <= T nan (set 0); | 1.0 <= s_int <= T nan / nan (set 0); | s_int > T 0.26 / 0.34 (set 20000)
+      q 0.50: P(s_int <= T) 0.00; unconditional 0.26 / 0.29; | s_int <= T nan (set 0); | 1.0 <= s_int <= T nan / nan (set 0); | s_int > T 0.26 / 0.29 (set 20000)
+      seed-shared, median g n = 4 / extension: q 0.02: 1.00 / 1.00; q 0.05: 1.00 / 1.00; q 0.1: 1.00 / 1.00; q 0.33: 1.00 / 1.00; q 0.5: 1.00 / 1.00
+   19a. 350k Gaussian recovery by median g, section-15 grid (design seed): 0.4:1.00, 0.5:0.99, 0.6:0.98, 0.7:0.96, 0.8:0.91, 0.9:0.88, 1.0:0.84, 1.1:0.80, 1.2:0.77, 1.3:0.74, 1.4:0.70, 1.5:0.67, 1.6:0.65, 1.7:0.63, 1.8:0.60, 1.9:0.59, 2.0:0.57, 2.1:0.56, 2.2:0.55, 2.3:0.53, 2.4:0.52, 2.5:0.51, 2.6:0.51, 2.7:0.50, 2.8:0.48, 2.9:0.48, 3.0:0.47
+      350k T by median g per seed (20260927 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9): 2.1 / 2.1 / 2.7 / 2.1 / 2.3 / 2.1 / 2.1 / 2.6 / 2.6 / 2.1 (range 2.1-2.7); T = 2.1 pt (mean-g T 1.8 pt)
+      design seed: median-g Gaussian recovery at T 0.56 (mean g 0.61); failing T in 0.4-3.0:
+         T 2.2: Gaussian 0.55; worst conditional q 0.5000 (set 338 of 20000) recovery 0.45
+         T 2.3: Gaussian 0.53; worst conditional q 0.5000 (set 747 of 20000) recovery 0.46
+         T 2.4: Gaussian 0.52; worst conditional q 0.5000 (set 1646 of 20000) recovery 0.46
+         T 2.5: Gaussian 0.51; worst conditional q 0.5000 (set 3176 of 20000) recovery 0.48
+         T 2.6: Gaussian 0.51; worst conditional q 0.5000 (set 5632 of 20000) recovery 0.49
+         T 2.7: Gaussian 0.50; worst conditional q 0.5000 (set 9126 of 20000) recovery 0.50
+   19b. 350k at T = 2.1 pt, per-run mode, median g (n = 4 / [DK16] extension by median g):
+      q 0.02: P(s_int <= T) 1.00; unconditional 1.00 / 1.00; | s_int <= T 1.00 (set 20000); | 1.0 <= s_int <= T 0.99 / 0.99 (set 4328); | s_int > T nan / nan (set 0)
+      q 0.05: P(s_int <= T) 1.00; unconditional 0.99 / 0.99; | s_int <= T 0.99 (set 19938); | 1.0 <= s_int <= T 0.98 / 0.98 (set 12798); | s_int > T 0.92 / 0.92 (set 62)
+      q 0.10: P(s_int <= T) 0.92; unconditional 0.95 / 0.95; | s_int <= T 0.95 (set 18472); | 1.0 <= s_int <= T 0.95 / 0.95 (set 17254); | s_int > T 0.89 / 0.89 (set 1528)
+      q 0.33: P(s_int <= T) 0.04; unconditional 0.61 / 0.71; | s_int <= T 0.72 (set 876); | 1.0 <= s_int <= T 0.72 / 0.71 (set 876); | s_int > T 0.61 / 0.71 (set 19124)
+      q 0.50: P(s_int <= T) 0.01; unconditional 0.54 / 0.67; | s_int <= T 0.48 (set 113); | 1.0 <= s_int <= T 0.48 / 0.60 (set 113); | s_int > T 0.54 / 0.67 (set 19887)
+      seed-shared, median g n = 4 / extension: q 0.02: 1.00 / 1.00; q 0.05: 1.00 / 1.00; q 0.1: 1.00 / 1.00; q 0.33: 1.00 / 1.00; q 0.5: 1.00 / 1.00
+   19c. section 16 by median g (Gaussian, rho = 0): n = 4 | extension (4-seed median selects, 8-seed median orders) | n = 6
+      5M sigma 0.6: 0.98 | 0.99 | 0.99
+      5M sigma 1.0: 0.71 | 0.81 | 0.83
+      5M sigma 1.3: 0.50 | 0.61 | 0.62
+      5M sigma 1.5: 0.41 | 0.51 | 0.52
+      350k sigma 0.6: 0.99 | 1.00 | 1.00
+      350k sigma 1.0: 0.86 | 0.94 | 0.92
+      350k sigma 1.3: 0.75 | 0.85 | 0.83
+      350k sigma 1.5: 0.70 | 0.80 | 0.76
+   19d. rank-move null flags, primary and companion both ranked by median g (sections 8 and 15 draws):
+      m = 12, r = 0.5: T 2: 6.1, T 3: 4.5, T 4: 3.1, T 5: 2.1, T 6: 1.3
+      m = 12, r = 0.7: T 2: 5.1, T 3: 3.4, T 4: 2.2, T 5: 1.3, T 6: 0.7
+      m = 12, r = 0.9: T 2: 3.0, T 3: 1.6, T 4: 0.8, T 5: 0.3, T 6: 0.1
+      m = 12, r = 0.95: T 2: 1.9, T 3: 0.8, T 4: 0.3, T 5: 0.1, T 6: 0.0
+      m = 40, r = 0.5: T 5: 25.9, T 8: 19.9, T 10: 16.5, T 12: 13.5, T 15: 9.7
+      m = 40, r = 0.7: T 5: 22.9, T 8: 16.4, T 10: 12.8, T 12: 9.9, T 15: 6.5
+      m = 40, r = 0.9: T 5: 15.6, T 8: 8.8, T 10: 5.7, T 12: 3.6, T 15: 1.7
+      m = 40, r = 0.95: T 5: 10.9, T 8: 4.9, T 10: 2.7, T 12: 1.4, T 15: 0.5
+      m = 11, r = 0.5: T 2: 5.2, T 3: 3.7, T 4: 2.4, T 5: 1.6, T 6: 0.9
+      m = 11, r = 0.7: T 2: 4.3, T 3: 2.8, T 4: 1.7, T 5: 0.9, T 6: 0.5
+      m = 11, r = 0.9: T 2: 2.4, T 3: 1.2, T 4: 0.6, T 5: 0.2, T 6: 0.1
+      m = 11, r = 0.95: T 2: 1.5, T 3: 0.6, T 4: 0.2, T 5: 0.1, T 6: 0.0
+      m = 37, r = 0.5: T 5: 23.1, T 8: 17.3, T 10: 14.0, T 12: 11.2, T 15: 7.7
+      m = 37, r = 0.7: T 5: 20.1, T 8: 13.9, T 10: 10.7, T 12: 8.0, T 15: 5.0
+      m = 37, r = 0.9: T 5: 13.3, T 8: 7.1, T 10: 4.5, T 12: 2.7, T 15: 1.2
+      m = 37, r = 0.95: T 5: 9.0, T 8: 3.7, T 10: 1.9, T 12: 0.9, T 15: 0.3
+      rule (smallest grid T with null count <= 1.0 at the band's lower edge), m = 11: r >= 0.5: T 6 (0.9); r >= 0.7: T 5 (0.9); r >= 0.9: T 4 (0.6); r >= 0.95: T 3 (0.6)
+      rule (smallest grid T with null count <= 1.0 at the band's lower edge), m = 37: r >= 0.5: no grid T; r >= 0.7: no grid T; r >= 0.9: no grid T; r >= 0.95: T 12 (0.9)

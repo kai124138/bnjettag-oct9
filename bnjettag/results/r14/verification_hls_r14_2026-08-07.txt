@@ -1,0 +1,81 @@
+R14 VERIFICATION GATE — results-analyst, 2026-08-07
+Docs under audit: bnjettag/results/r14/hls_r14.md (D1); RESEARCH.md §5''' draft paragraph (D2)
+All values recomputed independently (xml.etree parse of csynth.xml; own row parser on
+myproject_csynth.rpt; json reads). No file in the repo was edited.
+
+== XML (my parse) ==
+fx8   csynth_rf1/csynth.xml   : part xcvu13p-flga2577-2-e, tgt 2.50, unc 0.68, est 1.825,
+      lat best/avg/worst 164, RT 0.410us, II 1, depth 165, Int min/max 1/1
+      LUT 3178720 FF 1704976 DSP 4133 BRAM18K 512 URAM 0
+      avail LUT 1728000 FF 3456000 DSP 12288 BRAM 5376 URAM 1280
+      pct: LUT 183.9537->184.0  FF 49.3338->49.3  DSP 33.6344->33.6  BRAM 9.5238->9.5
+      164*1.825=299.30->299ns ; 164*2.5=410ns
+      SummaryOfViolations IssueType = "-"
+fabric csynth_rf1_fabric/csynth.xml : est 2.287, lat 146, RT 0.365us, II 1, depth 147
+      LUT 4376222 FF 1444585 DSP 0 BRAM 512 URAM 0
+      pct: LUT 253.2536->253.3 FF 41.7993->41.8 DSP 0 BRAM 9.5
+      146*2.287=333.90->334ns ; 146*2.5=365ns
+      SummaryOfViolations IssueType = "Timing Violation"   <-- BLOCKING FINDING
+trade: LUT +1,197,502 (+1.20M); FF -260,391 (-0.26M); cycles -18   all as claimed
+
+TIMING VIOLATIONS (175 SummaryOfViolations blocks per XML):
+  fx8    : 0 blocks with IssueType != "-"
+  fabric : 18 blocks -> top-level profile + myproject module (2), plus the 14 normalize
+           module defs (config5,11,13,21,28,33,45,47,55,62,67,72,78,83) and 2 softmax
+           module defs (config19,53). These are EXACTLY the modules that carried DSP in
+           fx8 (14 of 15 normalize; the 15th, config38, had 0 DSP and does not violate).
+           Source locs: nnet_batchnorm.h:48 / nnet_activation.h:243 / myproject.cpp:243.
+  Interpretation (mine, not the tool's): effective budget = 2.50 - 0.68 = 1.82 ns;
+  fabric est 2.287 exceeds it by 0.467 ns. D1's "(target 2.5 met, both)" is FAIL.
+
+== rpt instance tables (scope matters) ==
+Both rpts contain exactly ONE module report ('myproject'). Top Instance table = 106 rows.
+fx8   Instance table: DSP sum 4133 (== report's own Total row == XML total). 78 rows DSP>0.
+      einsum_dense n=13 DSP 0 ; einsum act x act n=4 DSP 0 ; dense_latency n=2 DSP 0
+      normalize n=15 DSP 3621 (256x10 + 512x2 + 32 + 5 + 0) ; softmax n=64 DSP 8 each = 512
+fabric Instance table: DSP sum 0, zero rows DSP>0.
+"25,808 instances" = Instance 106 + Expression 25,702 rows in the FABRIC rpt (all DSP=0).
+      fx8 equivalent is 25,809 (106 + 25,703). NOT 25,808 instance rows. Wording, not math.
+
+== gates ==
+n8  export_verify.json  gate1.corr_scores 0.9988158043665978 (claim .998816, d=1.96e-7)
+    argmax 0.97998046875 (claim .9800) ; gate1_pass true ; gate1_threshold 0.997
+    ladder csd2 .9838517530092012 / csd3 .9969155434006008 / exact .9992646418598787
+n16 export_verify.json  gate1.corr_scores 0.9973841842773415 (claim .997384, d=1.84e-7)
+    argmax 0.976318359375 (claim .9763) ; pass true ; thr 0.997 ; margin +3.84e-4
+    ladder csd2 .9903291439124331 / csd3 .9954928577299421 / exact .9991166854669965
+both gate1 n=4096. csim_verify.json both: csim.corr 1.0, max_abs_diff 0.0, bit_exact true,
+gate2_pass true, n=128.
+
+== EBOPs ==
+leaf ebops.json      n8 total 3,025,884 (beta fx8)  n16 total 7,351,926 (beta fx8)
+leaf pre-v5 backup   n8 total 4,515,900 (beta csd2) n16 total 14,138,070 (beta csd2)
+per_layer sums equal totals in all four. convention field = "HGQ2_native_trace_minmax".
+results/r14/ebops_r14.json (QAT side): n8 w1a8 s3 = 1,739,182 ; n16 w1a8 s1 = 4,819,784.
+Gap fully explained: 15 *_affine layers = 1,280,302 + input_proj 12,544 vs 6,144 (delta 6,400).
+3,025,884 - 1,280,302 - 6,400 = 1,739,182 exactly.
+BUT both files label convention "trace_minmax" -> D1's "export-side trace_minmax vs QAT-
+convention" wording does not match the files' own labels; the real cause is the affines.
+
+== normed regression (scratchpad-only provenance) ==
+regress_normed.log tail: "gate1 corr_scores new=0.974917488 stored=0.974917488 |d|=0.00e+00",
+"argmax new=0.897705 stored=0.897705 |d|=0.00e+00", "params new=6,946,535",
+"NORMED REGRESSION PASS". Stored record = runs/9676418a/w1a8-s1/export_verify.json
+(config final-w1a8, corr 0.974917488080701, train_meta params 6,380,717) -> DIFFERENT model
+(FINAL large, 8 blocks), not r14. Log lives only in session scratchpad.
+
+== provenance ==
+hls4ml_config.yml: RF 1, Strategy Latency, IOType io_parallel, ClockPeriod 2.5,
+  ClockUncertainty 27%, Part xcvu13p-flga2577-2-e, BitExact true, InputShapes [8,3]
+convert_lineage.json: export_version "v5-beta-restore", beta_encoding fx8, rf 1,
+  strategy Latency, wandb_run "r14-l1x3-n8-w1a8-s3"
+checkpoint bnjettag/roc-results/r14/n8/_ckpt_dl/w1a8-s3/model_best.keras EXISTS
+renamed XML copies md5-identical to csynth.xml (both dirs)
+17.7 h: experiment-log.md line 8 = 1,064 min = 17.733 h -> 17.7 OK
+820 DSP: hls_resource_table_final.md row probe_attn_core_rf64_rf64 = 820 DSP / 2,638,163 LUT
+  / 194 cyc / RF=64 -- FINAL 'large' campaign, RF=64 folded, II=64. Same core at RF=1 is
+  52,000 DSP. "r8-era" label conflicts with the artifact's own filing.
+csynth_rf1_fabric/ contains NO tcl/project -> `config_op mul -impl fabric` not verifiable
+  from the leaf (narrative only, experiment-log 2026-08-04).
+
+OVERALL: arithmetic PASS. Blocking wording/labeling fixes listed in the final report.

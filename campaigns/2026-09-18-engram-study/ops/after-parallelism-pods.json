@@ -1,0 +1,1066 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "batch.kubernetes.io/job-completion-index": "0",
+                    "batch.kubernetes.io/job-index-failure-count": "1",
+                    "cni.projectcalico.org/containerID": "af7f83786043e5e4f00ac374a93d9763e8306961c59f5ea86b7976b8756a1071",
+                    "cni.projectcalico.org/podIP": "10.244.158.113/32",
+                    "cni.projectcalico.org/podIPs": "10.244.158.113/32",
+                    "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+                },
+                "creationTimestamp": "2026-09-18T18:15:55Z",
+                "finalizers": [
+                    "batch.kubernetes.io/job-tracking"
+                ],
+                "generateName": "kai-engram-screen-e100-a10364ed-0-",
+                "generation": 1,
+                "labels": {
+                    "app": "kai-engram-screen",
+                    "batch.kubernetes.io/controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "batch.kubernetes.io/job-completion-index": "0",
+                    "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+                    "campaign": "engram-study-20260918",
+                    "controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "job-name": "kai-engram-screen-e100-a10364ed"
+                },
+                "name": "kai-engram-screen-e100-a10364ed-0-bt22w",
+                "namespace": "cms-ml",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "kai-engram-screen-e100-a10364ed",
+                        "uid": "960e05b8-90fd-420e-b529-b62b6e6820a3"
+                    }
+                ],
+                "resourceVersion": "14851564661",
+                "uid": "f7f8b8f8-7226-417c-9e59-1c338da51471"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "preference": {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "weight": 100
+                            }
+                        ],
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090",
+                                                "NVIDIA-L4",
+                                                "NVIDIA-RTX-A5000",
+                                                "NVIDIA-RTX-A4000",
+                                                "NVIDIA-GeForce-RTX-2080-Ti",
+                                                "Tesla-V100-SXM2-32GB",
+                                                "Tesla-V100-SXM2-16GB",
+                                                "Tesla-V100-PCIE-16GB",
+                                                "NVIDIA-TITAN-RTX",
+                                                "Quadro-RTX-6000",
+                                                "NVIDIA-RTX-5000-Ada-Generation",
+                                                "NVIDIA-RTX-4000-Ada-Generation"
+                                            ]
+                                        },
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "NotIn",
+                                            "values": [
+                                                "k8s-chase-ci-07.calit2.optiputer.net",
+                                                "nautilus-ext-gpu01.fullerton.edu",
+                                                "ren-gp-argo-01.madren.org"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho 'a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792\n\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-Engram-Experimental\nexport WANDB_GROUP=engram-screen WANDB_MODE=online WANDB_TAGS=engram,pilot,l1x3,n16,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data\nexport WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\npython /work/code/ops/private_project.py\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\nARM=$(python -c \"import os; i=int(os.environ['JOB_COMPLETION_INDEX']); assert 0\u003c=i\u003c4; print(f'engram-e{i:02d}-s1')\")\ntimeout --signal=TERM --kill-after=180s 82800s python -u /work/code/run_engram.py train --config /work/code/configs/engram/$ARM.json --data-cache /data/batch20260917/n16/data --out /data/engram-study-20260918/runs/$ARM --stop-after 100 --track\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "env": [
+                            {
+                                "name": "WANDB_API_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "WANDB_API_KEY",
+                                        "name": "kai-wandb"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "JOB_COMPLETION_INDEX",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['batch.kubernetes.io/job-completion-index']"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "train",
+                        "resources": {
+                            "limits": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "persistent"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "hostname": "kai-engram-screen-e100-a10364ed-0",
+                "nodeName": "rci-tide-gpu-02.sdsu.edu",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 180,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "PreferNoSchedule",
+                        "key": "nvidia.com/gpu",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-engram-code-a10364eda9"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "24Gi"
+                        },
+                        "name": "work"
+                    },
+                    {
+                        "name": "persistent",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data"
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:29:43Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:29:30Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:29:43Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:29:43Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:29:30Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "4",
+                            "ephemeral-storage": "24Gi",
+                            "memory": "12Gi",
+                            "nvidia.com/gpu": "1"
+                        },
+                        "containerID": "containerd://13df023fada73558344ebc4b2ad27b859ea3ba33d3be9062ef808bc0021cbf77",
+                        "image": "docker.io/library/python:3.12",
+                        "imageID": "docker.io/library/python@sha256:7ad6d21a25a94b2c00e685e82c2fd298de814353d9ee0e3f7f2cd4fca063df60",
+                        "lastState": {},
+                        "name": "train",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2026-09-18T18:29:43Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 0,
+                                "supplementalGroups": [
+                                    0
+                                ],
+                                "uid": 0
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "persistent"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "146.244.204.25",
+                "hostIPs": [
+                    {
+                        "ip": "146.244.204.25"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.244.158.113",
+                "podIPs": [
+                    {
+                        "ip": "10.244.158.113"
+                    }
+                ],
+                "qosClass": "Guaranteed",
+                "startTime": "2026-09-18T18:29:30Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "batch.kubernetes.io/job-completion-index": "1",
+                    "batch.kubernetes.io/job-index-failure-count": "0",
+                    "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+                },
+                "creationTimestamp": "2026-09-18T18:35:20Z",
+                "finalizers": [
+                    "batch.kubernetes.io/job-tracking"
+                ],
+                "generateName": "kai-engram-screen-e100-a10364ed-1-",
+                "generation": 1,
+                "labels": {
+                    "app": "kai-engram-screen",
+                    "batch.kubernetes.io/controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "batch.kubernetes.io/job-completion-index": "1",
+                    "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+                    "campaign": "engram-study-20260918",
+                    "controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "job-name": "kai-engram-screen-e100-a10364ed"
+                },
+                "name": "kai-engram-screen-e100-a10364ed-1-pzjjg",
+                "namespace": "cms-ml",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "kai-engram-screen-e100-a10364ed",
+                        "uid": "960e05b8-90fd-420e-b529-b62b6e6820a3"
+                    }
+                ],
+                "resourceVersion": "14851607267",
+                "uid": "1b4e05b6-145b-4a08-9f65-dadf4a1a90a4"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "preference": {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "weight": 100
+                            }
+                        ],
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090",
+                                                "NVIDIA-L4",
+                                                "NVIDIA-RTX-A5000",
+                                                "NVIDIA-RTX-A4000",
+                                                "NVIDIA-GeForce-RTX-2080-Ti",
+                                                "Tesla-V100-SXM2-32GB",
+                                                "Tesla-V100-SXM2-16GB",
+                                                "Tesla-V100-PCIE-16GB",
+                                                "NVIDIA-TITAN-RTX",
+                                                "Quadro-RTX-6000",
+                                                "NVIDIA-RTX-5000-Ada-Generation",
+                                                "NVIDIA-RTX-4000-Ada-Generation"
+                                            ]
+                                        },
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "NotIn",
+                                            "values": [
+                                                "k8s-chase-ci-07.calit2.optiputer.net",
+                                                "nautilus-ext-gpu01.fullerton.edu",
+                                                "ren-gp-argo-01.madren.org"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho 'a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792\n\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-Engram-Experimental\nexport WANDB_GROUP=engram-screen WANDB_MODE=online WANDB_TAGS=engram,pilot,l1x3,n16,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data\nexport WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\npython /work/code/ops/private_project.py\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\nARM=$(python -c \"import os; i=int(os.environ['JOB_COMPLETION_INDEX']); assert 0\u003c=i\u003c4; print(f'engram-e{i:02d}-s1')\")\ntimeout --signal=TERM --kill-after=180s 82800s python -u /work/code/run_engram.py train --config /work/code/configs/engram/$ARM.json --data-cache /data/batch20260917/n16/data --out /data/engram-study-20260918/runs/$ARM --stop-after 100 --track\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "env": [
+                            {
+                                "name": "WANDB_API_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "WANDB_API_KEY",
+                                        "name": "kai-wandb"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "JOB_COMPLETION_INDEX",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['batch.kubernetes.io/job-completion-index']"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "train",
+                        "resources": {
+                            "limits": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "persistent"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "hostname": "kai-engram-screen-e100-a10364ed-1",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 180,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "PreferNoSchedule",
+                        "key": "nvidia.com/gpu",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-engram-code-a10364eda9"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "24Gi"
+                        },
+                        "name": "work"
+                    },
+                    {
+                        "name": "persistent",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data"
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:35:20Z",
+                        "message": "0/532 nodes are available: 1 node(s) had untolerated taint {nautilus.io/issue: 1574}, 1 node(s) had untolerated taint {nautilus.io/issue: 1593-1685}, 1 node(s) had untolerated taint {nautilus.io/issue: 1641}, 1 node(s) had untolerated taint {nautilus.io/issue: 1716}, 1 node(s) had untolerated taint {nautilus.io/issue: 1726}, 1 node(s) had untolerated taint {nautilus.io/issue: slow-network}, 1 node(s) had untolerated taint {nautilus.io/issue: testing}, 1 node(s) had untolerated taint {nautilus.io/reservation: csun-ehuang}, 1 node(s) had untolerated taint {nautilus.io/reservation: internet2}, 1 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm-test}, 1 node(s) had untolerated taint {nautilus.io/reservation: sage}, 1 node(s) had untolerated taint {nautilus.io/reservation: sdccd}, 1 node(s) had untolerated taint {nautilus.io/reservation: suncave}, 1 node(s) had untolerated taint {nautilus.io/reservation: unl-coe-ai-makerspace}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire-pyregence}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire}, 1 node(s) had untolerated taint {nautilus.io/system: gateway}, 1 node(s) had untolerated taint {nautilus.io/system: gitlab}, 1 node(s) had untolerated taint {nautilus.io/upgrading: true}, 1 node(s) had untolerated taint {virtual-node.interlink/workload: swan}, 15 node(s) had untolerated taint {nautilus.io/reservation: csu-tide}, 191 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint {nautilus.io/hardware: arm64}, 2 node(s) had untolerated taint {nautilus.io/issue: 1708}, 2 node(s) had untolerated taint {nautilus.io/issue: 1722}, 2 node(s) had untolerated taint {nautilus.io/reservation: mizzou}, 2 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm}, 2 node(s) had untolerated taint {virtual-kubelet.io/provider: admiralty}, 28 node(s) had untolerated taint {nautilus.io/reservation: osdf}, 3 node(s) had untolerated taint {nautilus.io/reservation: csusb}, 3 node(s) had untolerated taint {nautilus.io/reservation: erl-ucsd}, 3 node(s) had untolerated taint {nautilus.io/reservation: fresno}, 3 node(s) had untolerated taint {nautilus.io/storage-no-run: true}, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 39 Insufficient cpu, 4 node(s) had untolerated taint {remediation.medik8s.io/self-node-remediation: }, 5 node(s) had untolerated taint {nautilus.io/hardware: large-gpu}, 5 node(s) had untolerated taint {nautilus.io/reservation: csuf}, 5 node(s) had untolerated taint {nautilus.io/system: perfsonar}, 54 node(s) had untolerated taint {nautilus.io/system: storage}, 59 node(s) were unschedulable, 6 node(s) had untolerated taint {nautilus.io/reservation: bluefield2}, 6 node(s) had untolerated taint {nautilus.io/reservation: sdsuinstruction}, 7 node(s) had untolerated taint {nautilus.io/reservation: cogrob}, 7 node(s) had untolerated taint {nautilus.io/reservation: sense}, 7 node(s) had untolerated taint {nautilus.io/testing: true}, 83 Insufficient nvidia.com/gpu, 9 Insufficient memory. preemption: 0/532 nodes are available: 1 Insufficient nvidia.com/gpu, 446 Preemption is not helpful for scheduling, 85 No preemption victims found for incoming pod.",
+                        "reason": "Unschedulable",
+                        "status": "False",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "phase": "Pending",
+                "qosClass": "Guaranteed"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "batch.kubernetes.io/job-completion-index": "2",
+                    "batch.kubernetes.io/job-index-failure-count": "0",
+                    "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+                },
+                "creationTimestamp": "2026-09-18T18:35:20Z",
+                "finalizers": [
+                    "batch.kubernetes.io/job-tracking"
+                ],
+                "generateName": "kai-engram-screen-e100-a10364ed-2-",
+                "generation": 1,
+                "labels": {
+                    "app": "kai-engram-screen",
+                    "batch.kubernetes.io/controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "batch.kubernetes.io/job-completion-index": "2",
+                    "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+                    "campaign": "engram-study-20260918",
+                    "controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "job-name": "kai-engram-screen-e100-a10364ed"
+                },
+                "name": "kai-engram-screen-e100-a10364ed-2-s79c4",
+                "namespace": "cms-ml",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "kai-engram-screen-e100-a10364ed",
+                        "uid": "960e05b8-90fd-420e-b529-b62b6e6820a3"
+                    }
+                ],
+                "resourceVersion": "14851607290",
+                "uid": "c5e70f66-6009-4d39-ad34-a4ddb2a7bfb3"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "preference": {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "weight": 100
+                            }
+                        ],
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090",
+                                                "NVIDIA-L4",
+                                                "NVIDIA-RTX-A5000",
+                                                "NVIDIA-RTX-A4000",
+                                                "NVIDIA-GeForce-RTX-2080-Ti",
+                                                "Tesla-V100-SXM2-32GB",
+                                                "Tesla-V100-SXM2-16GB",
+                                                "Tesla-V100-PCIE-16GB",
+                                                "NVIDIA-TITAN-RTX",
+                                                "Quadro-RTX-6000",
+                                                "NVIDIA-RTX-5000-Ada-Generation",
+                                                "NVIDIA-RTX-4000-Ada-Generation"
+                                            ]
+                                        },
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "NotIn",
+                                            "values": [
+                                                "k8s-chase-ci-07.calit2.optiputer.net",
+                                                "nautilus-ext-gpu01.fullerton.edu",
+                                                "ren-gp-argo-01.madren.org"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho 'a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792\n\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-Engram-Experimental\nexport WANDB_GROUP=engram-screen WANDB_MODE=online WANDB_TAGS=engram,pilot,l1x3,n16,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data\nexport WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\npython /work/code/ops/private_project.py\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\nARM=$(python -c \"import os; i=int(os.environ['JOB_COMPLETION_INDEX']); assert 0\u003c=i\u003c4; print(f'engram-e{i:02d}-s1')\")\ntimeout --signal=TERM --kill-after=180s 82800s python -u /work/code/run_engram.py train --config /work/code/configs/engram/$ARM.json --data-cache /data/batch20260917/n16/data --out /data/engram-study-20260918/runs/$ARM --stop-after 100 --track\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "env": [
+                            {
+                                "name": "WANDB_API_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "WANDB_API_KEY",
+                                        "name": "kai-wandb"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "JOB_COMPLETION_INDEX",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['batch.kubernetes.io/job-completion-index']"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "train",
+                        "resources": {
+                            "limits": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "persistent"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "hostname": "kai-engram-screen-e100-a10364ed-2",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 180,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "PreferNoSchedule",
+                        "key": "nvidia.com/gpu",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-engram-code-a10364eda9"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "24Gi"
+                        },
+                        "name": "work"
+                    },
+                    {
+                        "name": "persistent",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data"
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:35:20Z",
+                        "message": "0/532 nodes are available: 1 node(s) had untolerated taint {nautilus.io/issue: 1574}, 1 node(s) had untolerated taint {nautilus.io/issue: 1593-1685}, 1 node(s) had untolerated taint {nautilus.io/issue: 1641}, 1 node(s) had untolerated taint {nautilus.io/issue: 1716}, 1 node(s) had untolerated taint {nautilus.io/issue: 1726}, 1 node(s) had untolerated taint {nautilus.io/issue: slow-network}, 1 node(s) had untolerated taint {nautilus.io/issue: testing}, 1 node(s) had untolerated taint {nautilus.io/reservation: csun-ehuang}, 1 node(s) had untolerated taint {nautilus.io/reservation: internet2}, 1 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm-test}, 1 node(s) had untolerated taint {nautilus.io/reservation: sage}, 1 node(s) had untolerated taint {nautilus.io/reservation: sdccd}, 1 node(s) had untolerated taint {nautilus.io/reservation: suncave}, 1 node(s) had untolerated taint {nautilus.io/reservation: unl-coe-ai-makerspace}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire-pyregence}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire}, 1 node(s) had untolerated taint {nautilus.io/system: gateway}, 1 node(s) had untolerated taint {nautilus.io/system: gitlab}, 1 node(s) had untolerated taint {nautilus.io/upgrading: true}, 1 node(s) had untolerated taint {virtual-node.interlink/workload: swan}, 15 node(s) had untolerated taint {nautilus.io/reservation: csu-tide}, 191 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint {nautilus.io/hardware: arm64}, 2 node(s) had untolerated taint {nautilus.io/issue: 1708}, 2 node(s) had untolerated taint {nautilus.io/issue: 1722}, 2 node(s) had untolerated taint {nautilus.io/reservation: mizzou}, 2 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm}, 2 node(s) had untolerated taint {virtual-kubelet.io/provider: admiralty}, 28 node(s) had untolerated taint {nautilus.io/reservation: osdf}, 3 node(s) had untolerated taint {nautilus.io/reservation: csusb}, 3 node(s) had untolerated taint {nautilus.io/reservation: erl-ucsd}, 3 node(s) had untolerated taint {nautilus.io/reservation: fresno}, 3 node(s) had untolerated taint {nautilus.io/storage-no-run: true}, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 39 Insufficient cpu, 4 node(s) had untolerated taint {remediation.medik8s.io/self-node-remediation: }, 5 node(s) had untolerated taint {nautilus.io/hardware: large-gpu}, 5 node(s) had untolerated taint {nautilus.io/reservation: csuf}, 5 node(s) had untolerated taint {nautilus.io/system: perfsonar}, 54 node(s) had untolerated taint {nautilus.io/system: storage}, 59 node(s) were unschedulable, 6 node(s) had untolerated taint {nautilus.io/reservation: bluefield2}, 6 node(s) had untolerated taint {nautilus.io/reservation: sdsuinstruction}, 7 node(s) had untolerated taint {nautilus.io/reservation: cogrob}, 7 node(s) had untolerated taint {nautilus.io/reservation: sense}, 7 node(s) had untolerated taint {nautilus.io/testing: true}, 83 Insufficient nvidia.com/gpu, 9 Insufficient memory. preemption: 0/532 nodes are available: 1 Insufficient nvidia.com/gpu, 446 Preemption is not helpful for scheduling, 85 No preemption victims found for incoming pod.",
+                        "reason": "Unschedulable",
+                        "status": "False",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "phase": "Pending",
+                "qosClass": "Guaranteed"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "batch.kubernetes.io/job-completion-index": "3",
+                    "batch.kubernetes.io/job-index-failure-count": "0",
+                    "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+                },
+                "creationTimestamp": "2026-09-18T18:35:20Z",
+                "finalizers": [
+                    "batch.kubernetes.io/job-tracking"
+                ],
+                "generateName": "kai-engram-screen-e100-a10364ed-3-",
+                "generation": 1,
+                "labels": {
+                    "app": "kai-engram-screen",
+                    "batch.kubernetes.io/controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "batch.kubernetes.io/job-completion-index": "3",
+                    "batch.kubernetes.io/job-name": "kai-engram-screen-e100-a10364ed",
+                    "campaign": "engram-study-20260918",
+                    "controller-uid": "960e05b8-90fd-420e-b529-b62b6e6820a3",
+                    "job-name": "kai-engram-screen-e100-a10364ed"
+                },
+                "name": "kai-engram-screen-e100-a10364ed-3-rzgjv",
+                "namespace": "cms-ml",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "batch/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Job",
+                        "name": "kai-engram-screen-e100-a10364ed",
+                        "uid": "960e05b8-90fd-420e-b529-b62b6e6820a3"
+                    }
+                ],
+                "resourceVersion": "14851607292",
+                "uid": "39c5d2b1-9659-4698-9329-217f84db8d3e"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "preference": {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "weight": 100
+                            }
+                        ],
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "nvidia.com/gpu.product",
+                                            "operator": "In",
+                                            "values": [
+                                                "NVIDIA-GeForce-RTX-4090",
+                                                "NVIDIA-L40S",
+                                                "NVIDIA-L40",
+                                                "NVIDIA-A10",
+                                                "NVIDIA-GeForce-RTX-3090",
+                                                "NVIDIA-L4",
+                                                "NVIDIA-RTX-A5000",
+                                                "NVIDIA-RTX-A4000",
+                                                "NVIDIA-GeForce-RTX-2080-Ti",
+                                                "Tesla-V100-SXM2-32GB",
+                                                "Tesla-V100-SXM2-16GB",
+                                                "Tesla-V100-PCIE-16GB",
+                                                "NVIDIA-TITAN-RTX",
+                                                "Quadro-RTX-6000",
+                                                "NVIDIA-RTX-5000-Ada-Generation",
+                                                "NVIDIA-RTX-4000-Ada-Generation"
+                                            ]
+                                        },
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "NotIn",
+                                            "values": [
+                                                "k8s-chase-ci-07.calit2.optiputer.net",
+                                                "nautilus-ext-gpu01.fullerton.edu",
+                                                "ren-gp-argo-01.madren.org"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho 'a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792\n\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-Engram-Experimental\nexport WANDB_GROUP=engram-screen WANDB_MODE=online WANDB_TAGS=engram,pilot,l1x3,n16,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data\nexport WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\npython /work/code/ops/private_project.py\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\nARM=$(python -c \"import os; i=int(os.environ['JOB_COMPLETION_INDEX']); assert 0\u003c=i\u003c4; print(f'engram-e{i:02d}-s1')\")\ntimeout --signal=TERM --kill-after=180s 82800s python -u /work/code/run_engram.py train --config /work/code/configs/engram/$ARM.json --data-cache /data/batch20260917/n16/data --out /data/engram-study-20260918/runs/$ARM --stop-after 100 --track\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "env": [
+                            {
+                                "name": "WANDB_API_KEY",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "WANDB_API_KEY",
+                                        "name": "kai-wandb"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "JOB_COMPLETION_INDEX",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.labels['batch.kubernetes.io/job-completion-index']"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "train",
+                        "resources": {
+                            "limits": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            },
+                            "requests": {
+                                "cpu": "4",
+                                "ephemeral-storage": "24Gi",
+                                "memory": "12Gi",
+                                "nvidia.com/gpu": "1"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "persistent"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "hostname": "kai-engram-screen-e100-a10364ed-3",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 180,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "PreferNoSchedule",
+                        "key": "nvidia.com/gpu",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-engram-code-a10364eda9"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "24Gi"
+                        },
+                        "name": "work"
+                    },
+                    {
+                        "name": "persistent",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data"
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-09-18T18:35:20Z",
+                        "message": "0/532 nodes are available: 1 node(s) had untolerated taint {nautilus.io/issue: 1574}, 1 node(s) had untolerated taint {nautilus.io/issue: 1593-1685}, 1 node(s) had untolerated taint {nautilus.io/issue: 1641}, 1 node(s) had untolerated taint {nautilus.io/issue: 1716}, 1 node(s) had untolerated taint {nautilus.io/issue: 1726}, 1 node(s) had untolerated taint {nautilus.io/issue: slow-network}, 1 node(s) had untolerated taint {nautilus.io/issue: testing}, 1 node(s) had untolerated taint {nautilus.io/reservation: csun-ehuang}, 1 node(s) had untolerated taint {nautilus.io/reservation: internet2}, 1 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm-test}, 1 node(s) had untolerated taint {nautilus.io/reservation: sage}, 1 node(s) had untolerated taint {nautilus.io/reservation: sdccd}, 1 node(s) had untolerated taint {nautilus.io/reservation: suncave}, 1 node(s) had untolerated taint {nautilus.io/reservation: unl-coe-ai-makerspace}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire-pyregence}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire}, 1 node(s) had untolerated taint {nautilus.io/system: gateway}, 1 node(s) had untolerated taint {nautilus.io/system: gitlab}, 1 node(s) had untolerated taint {nautilus.io/upgrading: true}, 1 node(s) had untolerated taint {virtual-node.interlink/workload: swan}, 15 node(s) had untolerated taint {nautilus.io/reservation: csu-tide}, 191 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint {nautilus.io/hardware: arm64}, 2 node(s) had untolerated taint {nautilus.io/issue: 1708}, 2 node(s) had untolerated taint {nautilus.io/issue: 1722}, 2 node(s) had untolerated taint {nautilus.io/reservation: mizzou}, 2 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm}, 2 node(s) had untolerated taint {virtual-kubelet.io/provider: admiralty}, 28 node(s) had untolerated taint {nautilus.io/reservation: osdf}, 3 node(s) had untolerated taint {nautilus.io/reservation: csusb}, 3 node(s) had untolerated taint {nautilus.io/reservation: erl-ucsd}, 3 node(s) had untolerated taint {nautilus.io/reservation: fresno}, 3 node(s) had untolerated taint {nautilus.io/storage-no-run: true}, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 39 Insufficient cpu, 4 node(s) had untolerated taint {remediation.medik8s.io/self-node-remediation: }, 5 node(s) had untolerated taint {nautilus.io/hardware: large-gpu}, 5 node(s) had untolerated taint {nautilus.io/reservation: csuf}, 5 node(s) had untolerated taint {nautilus.io/system: perfsonar}, 54 node(s) had untolerated taint {nautilus.io/system: storage}, 59 node(s) were unschedulable, 6 node(s) had untolerated taint {nautilus.io/reservation: bluefield2}, 6 node(s) had untolerated taint {nautilus.io/reservation: sdsuinstruction}, 7 node(s) had untolerated taint {nautilus.io/reservation: cogrob}, 7 node(s) had untolerated taint {nautilus.io/reservation: sense}, 7 node(s) had untolerated taint {nautilus.io/testing: true}, 83 Insufficient nvidia.com/gpu, 9 Insufficient memory. preemption: 0/532 nodes are available: 1 Insufficient nvidia.com/gpu, 446 Preemption is not helpful for scheduling, 85 No preemption victims found for incoming pod.",
+                        "reason": "Unschedulable",
+                        "status": "False",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "phase": "Pending",
+                "qosClass": "Guaranteed"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

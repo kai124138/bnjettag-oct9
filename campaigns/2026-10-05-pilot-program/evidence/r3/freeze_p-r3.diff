@@ -1,0 +1,116 @@
+--- evidence/r3/freeze_p.pre-r3.py	2026-10-07 07:34:56.515734179 +0900
++++ freeze_p.py	2026-10-08 02:50:29.262991001 +0900
+@@ -85,6 +85,12 @@
+ # because the killed arms keep a stale RSS_GATE_FAIL.json from the 98dd28 attempt. --job-suffix: appended to
+ # the GPU Job names only (BNJ_STAGE, run dirs and W&B run ids are unchanged, so the arms resume their own runs).
+ R2 = {'rss_gate': True, 'job_suffix': ''}
++# R1 relaunch r3 (Kai 2026-10-08, review/REGRESSION_TICKET_r2-resume.md option A; opt-in, defaults reproduce the 98dd28
++# and r2 freezes byte for byte). --exclude-node: extra kubernetes.io/hostname NotIn values on the GPU Jobs only (the
++# CPU gate and readout keep H.PILOT_B_BAD_NODES). --expected-start key=epoch: the brief purpose states the epoch the
++# arm is expected to start from (0 = fresh, its partial run dir moved aside before submission; N = latest.json
++# epoch-N observed on the PVC) and the GPU Job carries it as the bnjettag.io/expected-start-epoch annotation.
++R3 = {'exclude_nodes': [], 'expected_start': {}}
+ # F5 (STUDY_arbiter_v1; constructive A2/A3): readout_diag.json, descriptive only, never a rule input and never
+ # read by readout_pilot.py or PROGRAM.json. Standard library; runs after readout.json is written; its exit
+ # status does not enter the Job's exit status.
+@@ -540,10 +546,10 @@
+     return {'requests': dict(kw), 'limits': dict(kw)}
+ 
+ 
+-def affinity(extra=()):
++def affinity(extra=(), more_bad=()):
+     return {'nodeAffinity': {'requiredDuringSchedulingIgnoredDuringExecution': {'nodeSelectorTerms': [{
+         'matchExpressions': list(extra) + [{'key': 'kubernetes.io/hostname', 'operator': 'NotIn',
+-                                            'values': H.PILOT_B_BAD_NODES}]}]}}}
++                                            'values': list(H.PILOT_B_BAD_NODES) + list(more_bad)}]}]}}}
+ 
+ 
+ def cpu_job(name, app, cm, script, annotations, deadline):
+@@ -562,6 +568,14 @@
+                          'volumes': volumes(cm, '12Gi')}}}}
+ 
+ 
++def start_text(epoch):
++    """r3: the purpose clause for --expected-start (0 = fresh start, N = resume from checkpoint epoch-N)."""
++    if epoch == 0:
++        return ('starts from initialization at epoch 0 (no committed checkpoint exists; the partial run dir from the '
++                'earlier attempt is moved aside, never deleted, before submission)')
++    return f'resumes from committed checkpoint epoch-{epoch:04d} (latest.json observed on the PVC before preparation)'
++
++
+ def tag_of(name):
+     return name[len('pilot1005-'):]
+ 
+@@ -590,7 +604,9 @@
+                     'unset in the build half; cluster-ops sets it at the launch half (STUDY §11)'),
+                 'bnjettag.io/per-arm-memory': f'{PER_ARM_MEMORY_GI}Gi host RAM, {PER_ARM_CPU} CPU, one arm',
+                 'bnjettag.io/rss-gate': (f'projection <= {RSS_GATE_LIMIT_MB} MiB, fit over process epochs {RSS_GATE_WINDOW}'
+-                                         if R2['rss_gate'] else 'off: BNJ_RSS_GATE_* unset (r2 relaunch, Kai 2026-10-07)')}},
++                                         if R2['rss_gate'] else 'off: BNJ_RSS_GATE_* unset (r2 relaunch, Kai 2026-10-07)'),
++                **({'bnjettag.io/expected-start-epoch': str(R3['expected_start'][tag_of(row['name'])])}
++                   if tag_of(row['name']) in R3['expected_start'] else {})}},
+             'spec': {'completionMode': 'Indexed', 'completions': 1, 'parallelism': 1,
+                      'backoffLimitPerIndex': BACKOFF_PER_INDEX_BOUNDED if OPTS['bounded'] else 2,
+                      'podReplacementPolicy': 'Failed', 'ttlSecondsAfterFinished': 604800,
+@@ -603,7 +619,7 @@
+                             if OPTS['bounded'] else [])},
+                      'template': {'metadata': {'labels': labels}, 'spec': {
+                          **({'activeDeadlineSeconds': POD_DEADLINE_S} if OPTS['bounded'] else {}),
+-                         'affinity': affinity([gpu]), 'automountServiceAccountToken': False,
++                         'affinity': affinity([gpu], R3['exclude_nodes']), 'automountServiceAccountToken': False,
+                          'nodeSelector': {'kubernetes.io/arch': 'amd64'},
+                          'restartPolicy': 'Never', 'terminationGracePeriodSeconds': 180,
+                          'containers': [{'name': 'train', 'image': IMAGE, 'imagePullPolicy': 'IfNotPresent',
+@@ -662,10 +678,24 @@
+     ap.add_argument('--job-suffix', default='', help='r2: suffix for the GPU Job names, e.g. -r2 (stage and run ids unchanged)')
+     ap.add_argument('--prepared-out', help='write the prepared record to this new file (relative to the campaign) '
+                                            'instead of PREPARED.json; never merges, never overwrites')
++    ap.add_argument('--exclude-node', action='append', default=[], metavar='HOST',
++                    help='r3: add HOST to the kubernetes.io/hostname NotIn list of the GPU Jobs (repeatable)')
++    ap.add_argument('--expected-start', default='', metavar='TAG=EPOCH,...',
++                    help='r3: per arm (tag without r1-), the epoch it is expected to start from: 0 fresh, N resume')
+     args = ap.parse_args()
+     assert not args.job_suffix or (args.job_suffix.startswith('-') and args.job_suffix[1:].isalnum()
+                                    and args.job_suffix == args.job_suffix.lower()), args.job_suffix
+     R2.update(rss_gate=not args.no_rss_gate, job_suffix=args.job_suffix)
++    for host in args.exclude_node:
++        assert host and host not in H.PILOT_B_BAD_NODES and host not in R3['exclude_nodes'], host
++        R3['exclude_nodes'].append(host)
++    for item in filter(None, args.expected_start.split(',')):
++        tag, epoch = item.split('=')
++        assert tag not in R3['expected_start'] and epoch.isdigit() and int(epoch) % 25 == 0 and int(epoch) < STOP_AFTER, item
++        R3['expected_start'][tag] = int(epoch)
++    assert not R3['expected_start'] or args.job_suffix, '--expected-start is a relaunch option (needs --job-suffix)'
++    if R3['exclude_nodes']:
++        OPTS['exclude_nodes'] = list(R3['exclude_nodes'])
+     if args.no_rss_gate:
+         OPTS['rss_gate'] = False
+     if args.job_suffix:
+@@ -744,9 +774,13 @@
+         jobs[f'r1-{tag}'] = (job, brief(
+             f"Pilot-program R1 arm {row['program_arm']} seed {row['seed']} ({row['hypothesis']}): from initialization "
+             'to the epoch-500 pause, one arm per RTX 3090.' + ('' if R2['rss_gate'] and not R2['job_suffix'] else
+-            ' Relaunch' + (f" {R2['job_suffix'].lstrip('-')}" if R2['job_suffix'] else '') + ': resumes from the '
+-            "arm's latest committed checkpoint under the same run dir, W&B run id and bundle"
+-            + ('; RSS gate off (BNJ_RSS_GATE_* unset)' if not R2['rss_gate'] else '') + '.'),
++            ' Relaunch' + (f" {R2['job_suffix'].lstrip('-')}" if R2['job_suffix'] else '') + ': '
++            + (start_text(R3['expected_start'][tag]) if tag in R3['expected_start'] else
++               "resumes from the arm's latest committed checkpoint")
++            + ' under the same run dir, W&B run id and bundle'
++            + ('; RSS gate off (BNJ_RSS_GATE_* unset)' if not R2['rss_gate'] else '')
++            + ('; nodes excluded beyond the standing list: ' + ', '.join(R3['exclude_nodes']) if R3['exclude_nodes'] else '')
++            + '.'),
+             f"Config {row['name']} ({row['arch_name']}, budget {row['budget']}, option (c) {row['option_c']}, "
+             f"warmup {row['warmup']}, variant {row['variant']}); generated by campaigns/pilot1005/generate.py from the byte-checked "
+             'chang0926/chang1002c config; only target, warmup, the NB/H3 quant key and its floor, and identity '
+@@ -814,7 +848,9 @@
+         target.write_bytes(enc({'status': 'offline_prepared_not_submitted' if GATE['status'] != 'cleared' else 'cleared',
+                                 'gate': GATE, 'bundle_sha256': bundle, 'manifest_sha256': msha, 'configmap': cm,
+                                 'image': IMAGE, 'gpu_product': GPU_PRODUCT, 'run_root': RUN_ROOT, 'jobs': prepared,
+-                                'options': {k: dict(OPTS) for k in prepared},
++                                'options': {k: {**OPTS, **({'expected_start_epoch': R3['expected_start'][k[len('r1-'):]]}
++                                                           if k[len('r1-'):] in R3['expected_start'] else {})}
++                                            for k in prepared},
+                                 'manifests_dir': str(OUT.relative_to(HERE)) if OUT.is_relative_to(HERE) else str(OUT)}))
+         for key, value in prepared.items():
+             print('PREPARED', key, value['job'], value['handoff'])

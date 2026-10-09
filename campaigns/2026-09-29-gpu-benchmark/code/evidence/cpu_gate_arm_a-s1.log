@@ -1,0 +1,40 @@
+# cwd /Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-29-gpu-benchmark/code; tree /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/tree (extraction of chang0926-code.tar.gz sha256 42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0)
+# driver sha256 5ede0778f716cb9299ca82c64547fb993c93d775572d33463a0fef4cbf676c45; cache /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/cache (True synthetic); 2026-09-29T08:31:27Z
+# platform Darwin arm64; CPU affinity API: none (arms cannot pin here; the kernel check is test_bench.py test_pinning_k2_phase_arms_see_4_cpus on Linux)
+# 1. arm mode: chang0926-a-n64-s1 --stop-after 2 --test-cpu --test-rows 11160,1240
+BENCH_ARM chang0926-a-n64-s1 tree /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/tree devices CPU-only tf32_enabled False test_cpu True utc 2026-09-29T08:32:09Z
+ARM_MANIFEST_SHA 041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42 expected 041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42 OK
+BENCH_CACHE {"x_train": "f7dc3cb254b8c32210b86d0ee490280f7d03d43ab02b2043d4c186e4177ad10d", "x_val": "6045efc877e7cdd34101af91aa2f03ca0959d6c318c9abb6ed60f49fd6bd4315", "y_train": "e54e08956a11d795783456c5ba9c9811b0b4ac954617299fcd9536b674d83c17", "y_val": "474ae3658cdf83005d5eb78e9aceef96a51c4406a49c2bcde8c39249011458d2"}
+BENCH_TEST_ROWS 11160 1240 (CPU gate only; sliced after run_engram.load_cache)
+[train] chang0926-a-n64-s1 params=31735 resume_epoch=0 initial_ebops=9515667
+[epoch 1/7000] EBOPs=9605779 target=350000 above_floor=9434253 feasible=0 degenerate=0 beta=1e-07 val_AUC=0.508496 val_accuracy=0.210484 seconds=13.3 checkpoint=- ebops_trace_seconds=3.79 ebops_trace_over_epoch=0.286 loss=2.581331 host_rss_mb=1398
+[epoch 2/7000] EBOPs=untraced in_training_ebops=9681043 target=350000 beta=1e-07 val_AUC=0.484001 val_accuracy=0.197581 seconds=7.9 checkpoint=epoch-0002 ebops_trace_seconds=0.00 ebops_trace_over_epoch=0.001 loss=2.572640 host_rss_mb=1864
+WARNING:tensorflow:5 out of the last 134 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x161317380> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+CHECKPOINT_VERIFICATION_PASS {"index": 0, "name": "chang0926-a-n64-s1", "arm": "A", "seed": 1, "n_part": 64, "file": "chang0926-a-n64-s1.json", "production": true, "target_ebops": 350000, "zero_floor_ebops": 171526, "arch": {"d_model": 24, "n_heads": 2, "pos_enc": "none"}, "quant_set": "chang", "config_sha256": "d47d6799702cf67a49baa333aa2204b17a384289f32b106eb30433db8b2dec94", "status": "verified_canary", "completed_epochs": 2, "selected": {"epoch": 0, "val_macro_auc": 0.5084963649605424, "val_categorical_accuracy": 0.21048387096774193, "ebops": 9605779, "ebops_above_floor": 9434253}, "checkpoint": "model_min_ebops.keras", "checkpoint_sha256": "36bfbf7756ba0f9877ed672b086e57c30608e3ef3a35f6cd56c1c28ae2af9b56", "budget_met": false, "validation_accuracy": 0.21048387096774193, "validation_macro_auc": 0.5084963649605424, "validation_per_class_auc": [0.5168975080650471, 0.52617230522551, 0.513319191919192, 0.4918504026531777, 0.4942424169397853], "wall_seconds_this_invocation": 33.85091237499728, "test_set_used": false, "hardware_validated": false, "validation_labels_sha256": "474ae3658cdf83005d5eb78e9aceef96a51c4406a49c2bcde8c39249011458d2", "reload_ebops_check": "stored", "source_sha256": "041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42", "selection_cost": 9605779, "selection_cost_convention": "native_hgq2", "native_hgq2_backbone_ebops": 9605779, "custom_estimated_bitops": 0, "modules": {}, "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals."}
+WANDB_IMPORTED False
+ARM_DONE chang0926-a-n64-s1 exit 0 wall_seconds 33.9 utc 2026-09-29T08:32:44Z
+EXIT 0
+# run root after the arm (files under /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/work/arm1):
+./runs/chang0926-a-n64-s1/activation_widths.jsonl
+./runs/chang0926-a-n64-s1/checkpoints/epoch-0002/model.keras
+./runs/chang0926-a-n64-s1/checkpoints/epoch-0002/model_min_ebops.keras
+./runs/chang0926-a-n64-s1/checkpoints/epoch-0002/model_unconstrained.keras
+./runs/chang0926-a-n64-s1/checkpoints/epoch-0002/optimizer.npz
+./runs/chang0926-a-n64-s1/checkpoints/epoch-0002/state.json
+./runs/chang0926-a-n64-s1/config.json
+./runs/chang0926-a-n64-s1/cost_contract.json
+./runs/chang0926-a-n64-s1/data_info.json
+./runs/chang0926-a-n64-s1/i_decay_speed.json
+./runs/chang0926-a-n64-s1/initialization.json
+./runs/chang0926-a-n64-s1/input_std.json
+./runs/chang0926-a-n64-s1/latest.json
+./runs/chang0926-a-n64-s1/model_min_ebops.keras
+./runs/chang0926-a-n64-s1/model_unconstrained.keras
+./runs/chang0926-a-n64-s1/nondegenerate_rule.json
+./runs/chang0926-a-n64-s1/run.lock
+./runs/chang0926-a-n64-s1/screen_result.json
+./runs/chang0926-a-n64-s1/source_manifest.json
+./runs/chang0926-a-n64-s1/validation_candidate.keras
+./runs/chang0926-a-n64-s1/validation_predictions.npz
+# any wandb file or directory under the run root:
+       0

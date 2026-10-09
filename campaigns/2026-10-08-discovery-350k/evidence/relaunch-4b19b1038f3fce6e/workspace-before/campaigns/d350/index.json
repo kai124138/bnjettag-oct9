@@ -1,0 +1,67 @@
+{
+  "runs": [
+    {
+      "index": 0,
+      "name": "d350-baseline-e-350k-s1",
+      "arm": "A",
+      "seed": 1,
+      "n_part": 64,
+      "file": "d350-baseline-e-350k-s1.json",
+      "production": false,
+      "target_ebops": 350000,
+      "zero_floor_ebops": 171526,
+      "headroom_zero": 178474,
+      "headroom_flag": false,
+      "arch": {
+        "d_model": 24,
+        "n_heads": 2,
+        "pos_enc": "none"
+      },
+      "quant_set": "chang",
+      "round": "D350",
+      "program_arm": "baseline-e-350k-s1",
+      "hypothesis": "baseline",
+      "arch_name": "E",
+      "budget": 350000,
+      "option_c": true,
+      "warmup": 1,
+      "variant": null,
+      "d350_arm": "baseline-e-350k-s1",
+      "pack": "packs/d350-baseline-e-350k-s1.json",
+      "config_sha256": "0e3c54548292595c07f6801c5f96666c01dc638fa899da1671db4dd9bc52b609"
+    },
+    {
+      "index": 1,
+      "name": "d350-reference-e-5m-s1",
+      "arm": "A",
+      "seed": 1,
+      "n_part": 64,
+      "file": "d350-reference-e-5m-s1.json",
+      "production": false,
+      "target_ebops": 5000000,
+      "zero_floor_ebops": 171526,
+      "headroom_zero": 4828474,
+      "headroom_flag": false,
+      "arch": {
+        "d_model": 24,
+        "n_heads": 2,
+        "pos_enc": "none"
+      },
+      "quant_set": "chang",
+      "round": "D350",
+      "program_arm": "reference-e-5m-s1",
+      "hypothesis": "reference",
+      "arch_name": "E",
+      "budget": 5000000,
+      "option_c": true,
+      "warmup": 1,
+      "variant": null,
+      "d350_arm": "reference-e-5m-s1",
+      "pack": "packs/d350-reference-e-5m-s1.json",
+      "config_sha256": "c0b6539502f6836940b0fd8c160d6db4f3c52ca57d09e3d281c9d1570679049b"
+    }
+  ],
+  "count": 2,
+  "production_count": 0,
+  "round": "D350"
+}

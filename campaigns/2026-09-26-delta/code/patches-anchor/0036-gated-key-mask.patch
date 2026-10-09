@@ -1,0 +1,204 @@
+From b415571e1c71203639e26f2f8f387221e0136b1e Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:41:14 -0700
+Subject: [PATCH 36/38] gated-key-mask: arch.mask_gated_keys, key validity from
+ the raw pT gate (standardized pad value from the cache input_std) through
+ QSoftmax's native mask (M039)
+
+---
+ code/bnhgq2/ablation.py   | 17 +++++++++----
+ code/bnhgq2/delta_keys.py | 19 +++++++++++++++
+ code/bnhgq2/qat.py        | 50 ++++++++++++++++++++++++++++++++-------
+ code/run_engram.py        |  5 +++-
+ 4 files changed, 77 insertions(+), 14 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 93911b7..d802771 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -111,8 +111,15 @@ def _copy_latents(source, target, require=False):
+     return copied
+ 
+ 
+-def matching_initialization(cfg, sample, seed):
+-    """Copy equal-shape kernels/biases/position tables; channel grids start identical."""
++def matching_initialization(cfg, sample, seed, input_std=None):
++    """Copy equal-shape kernels/biases/position tables; channel grids start identical.
++    input_std (Delta gated-key-mask only): the cache's train-split {'mu', 'sigma'}; the key
++    mask needs the standardized value of a raw-zero slot."""
++    std_kw = {}
++    if cfg['arch'].get('mask_gated_keys'):
++        if input_std is None:
++            raise ValueError(f"{cfg['name']}: arch.mask_gated_keys needs input_std (run_engram.builder_for)")
++        std_kw = {'input_mu': input_std['mu'], 'input_sigma': input_std['sigma']}
+     if cfg['arch'].get('body') == 'deepsets':  # Delta: binary Deep Sets body (newmods, M006)
+         from newmods.deepsets import deepsets_initialization
+         return deepsets_initialization(cfg, sample, seed)
+@@ -121,12 +128,12 @@ def matching_initialization(cfg, sample, seed):
+     baseline = copy.deepcopy(cfg)
+     baseline['arch']['ffn_dim'] = 64
+     baseline['quant'].update(act_granularity='tensor', softmax_out_bits=10, softmax_out_i=1)
+-    reference, rtaps = qat.build_qat_model(baseline, seed=seed)
++    reference, rtaps = qat.build_qat_model(baseline, seed=seed, **std_kw)
+     if source_model is not None:
+         _copy_latents(source_model, reference)
+     qat.init_delta_scales(reference)
+     qat.calibrate_activations(reference, rtaps, sample, cfg['quant']['act_bits'])
+-    model, taps = qat.build_qat_model(cfg, seed=seed)
++    model, taps = qat.build_qat_model(cfg, seed=seed, **std_kw)
+     source = {v.path: v for v in reference.weights if v.name in ('kernel', 'bias', 'pos_table')}
+     copied = []
+     for variable in model.weights:
+@@ -153,7 +160,7 @@ def matching_initialization(cfg, sample, seed):
+             # functionally equivalent to the historical reference.
+             tensor_cfg = copy.deepcopy(cfg)
+             tensor_cfg['quant']['act_granularity'] = 'tensor'
+-            reference, rtaps = qat.build_qat_model(tensor_cfg, seed=seed)
++            reference, rtaps = qat.build_qat_model(tensor_cfg, seed=seed, **std_kw)
+             initialized = {v.path: v for v in model.weights if v.name in ('kernel', 'bias', 'pos_table')}
+             for variable in reference.weights:
+                 if variable.path in initialized:
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index ee9544c..4411ac8 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -685,3 +685,22 @@ def _derived(value, cfg):
+ 
+ 
+ register('arch.derived_features', 'derived-input-features', _derived)
++
++# gated-key-mask (anchor tree only; M039, M076-M080): arch.mask_gated_keys true zeroes the
++# attention to padded / pT-gated key slots: qat.KeyPadMask derives key validity from the model
++# input (standardized pT != the standardized value of a raw-zero slot, computed from the cache's
++# train-split input_std with the cache's own float32 ops), and QSoftmax's native mask sets
++# exp = 0 on masked keys. Needs the runner's builder (run_engram.builder_for passes input_std).
++# A jet whose keys are all masked gets all-zero attention. Mask not billed in EBOPs; no HLS path.
++UNWIRED.pop('arch.mask_gated_keys', None)
++_DEEPSETS_EXCLUSIVE += ('arch.mask_gated_keys',)
++
++
++def _mask_keys(value, cfg):
++    if value is not True:
++        return 'must be true (absent = no mask)'
++    if lookup(cfg, 'arch.attn_kind') is not None:
++        return 'defined for softmax attention over the N keys only (not with arch.attn_kind)'
++
++
++register('arch.mask_gated_keys', 'gated-key-mask', _mask_keys)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index b3ba505..d128c3b 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -379,6 +379,25 @@ class ChannelShift(keras.layers.Layer):
+         return {**super().get_config(), "axes": list(self.axes)}
+ 
+ 
++@keras.saving.register_keras_serializable(package="bnhgq2")
++class KeyPadMask(keras.layers.Layer):
++    """Delta (gated-key-mask): (B, 1, 1, T) float mask, 1 on real keys, 0 on padded / pT-gated
++    keys. Those slots are all-zero in raw space, so their standardized pT equals exactly
++    `pad_value` = apply_input_std(0) of the train-split stats (same float32 ops as the cache);
++    a real constituent has raw pT != 0. Parameter-free; not billed in EBOPs; no HLS path."""
++
++    def __init__(self, pt_index=0, pad_value=0.0, **kwargs):
++        super().__init__(**kwargs)
++        self.pt_index, self.pad_value = int(pt_index), float(pad_value)
++
++    def call(self, x):
++        valid = ops.cast(ops.not_equal(x[..., self.pt_index], self.pad_value), x.dtype)
++        return valid[:, None, None, :]
++
++    def get_config(self):
++        return {**super().get_config(), "pt_index": self.pt_index, "pad_value": self.pad_value}
++
++
+ @keras.saving.register_keras_serializable(package="bnhgq2")
+ class PairFeatures(keras.layers.Layer):
+     """Per ordered-pair (i,j) physics features from the RAW constituents: (B,T,F)->(B,T,T,3)
+@@ -800,29 +819,33 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+     # Delta (softmax-table-min-bits): lower bound of the learned exp/inv table widths (Chang Min(4))
+     table_min_bits = int(cfg["quant"].get("softmax_table_min_bits", 4))
+ 
+-    def softmax(name, x, scale):
++    def softmax(name, x, scale, mask=None):
++        """mask (Delta gated-key-mask): (B, 1, 1, T) key validity; QSoftmax zeroes masked keys."""
+         if fp32:
+-            return QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
++            layer = QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
+                             exp_iq_conf=_dummy(), inv_iq_conf=_dummy(),
+                             exp_oq_conf=_table(1, 20), inv_oq_conf=_table(1, 20),
+-                            name=name)(x)
++                            name=name)
++            return layer(x) if mask is None else layer(x, mask=mask)
+         if softmax_quant == "chang":
+-            return QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
++            layer = QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
+                             exp_iq_conf=_chang_softmax_iq(act_bw_l1, 1, 6, max(ab, 10) - 7, "SAT"),
+                             inv_iq_conf=_chang_softmax_iq(act_bw_l1, 0, 4, 8, "WRAP"),
+                             exp_oq_conf=_chang_table(act_bw_l1, min_bits=table_min_bits),
+                             inv_oq_conf=_chang_table(act_bw_l1, min_bits=table_min_bits),
+-                            allow_heterogeneous_table=False, name=name)(x)
++                            allow_heterogeneous_table=False, name=name)
++            return layer(x) if mask is None else layer(x, mask=mask)
+         # generous static tables (softmax internals are LN/softmax-bounded; the
+         # substitution cost was measured negligible in the rebuild gold experiments)
+-        return QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
++        layer = QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
+                         exp_iq_conf=_static_act(max(ab, 10), 6),
+                         inv_iq_conf=QuantizerConfig("kif", "datalane", k0=0, i0=4, f0=8,
+                                                     round_mode="RND_CONV",
+                                                     overflow_mode="SAT", trainable=False,
+                                                     heterogeneous_axis=()),
+                         exp_oq_conf=_table(1, 11), inv_oq_conf=_table(1, 11),
+-                        name=name)(x)
++                        name=name)
++        return layer(x) if mask is None else layer(x, mask=mask)
+ 
+     with LayerConfigScope(enable_ebops=enable_ebops, beta0=beta0):
+         x_in = keras.Input((T, F), name="input_1")
+@@ -838,6 +861,17 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             # equals the learned-PE build at the same seed. No layer, no weight, no cost.
+             keras.initializers.GlorotUniform()(shape=(1, T, D))
+ 
++        # ---- Delta (gated-key-mask): key validity from the raw pT gate, (B, 1, 1, T) ----
++        key_mask = None
++        if A.get("mask_gated_keys"):
++            if input_mu is None or input_sigma is None:
++                raise ValueError(f"{cfg['name']}: arch.mask_gated_keys needs the cache input_std "
++                                 "(build through run_engram.builder_for)")
++            from .data import apply_input_std
++            pt_index = list(A["features"]).index("pt")
++            pad = float(apply_input_std(np.zeros((1, 1, F), "float32"), input_mu, input_sigma)[0, 0, pt_index])
++            key_mask = KeyPadMask(pt_index=pt_index, pad_value=pad, name="key_pad_mask")(x_in)
++
+         # ---- pairwise-invariant attention-logit bias (shared across blocks) ----
+         pair_bias_tensor = None
+         if pair_bias:
+@@ -870,7 +904,7 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                 if pair_bias_tensor is not None:                        # add shared pair bias
+                     scores = keras.layers.Add(name=f"{blk}_attn_pairbias")(
+                         [scores, pair_bias_tensor])
+-                attn = softmax(f"{blk}_attn_softmax", scores, 1.0 / np.sqrt(E))
++                attn = softmax(f"{blk}_attn_softmax", scores, 1.0 / np.sqrt(E), mask=key_mask)
+             if fp32:
+                 attn_iq = _dummy("datalane")
+             elif softmax_quant == "chang":
+diff --git a/code/run_engram.py b/code/run_engram.py
+index ec5cd50..8d9760c 100644
+--- a/code/run_engram.py
++++ b/code/run_engram.py
+@@ -162,7 +162,10 @@ def builder_for(data_info):
+     ablation, engram = runtime()
+ 
+     def builder(cfg, sample, seed):
+-        base, evidence = ablation.matching_initialization(cfg, sample, seed)
++        if cfg['arch'].get('mask_gated_keys'):   # Delta (gated-key-mask): the mask needs the cache input_std
++            base, evidence = ablation.matching_initialization(cfg, sample, seed, input_std=data_info['input_std'])
++        else:
++            base, evidence = ablation.matching_initialization(cfg, sample, seed)
+         spec = cfg['engram_study']['module']
+         if spec is None:
+             return base, evidence
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,446 @@
+{
+  "campaign": "discovery-350k-20261008",
+  "counters": {
+    "agent_invocations": 1,
+    "attempt": 4,
+    "infra_relaunches": {
+      "baseline-e-350k-s1": 1,
+      "reference-e-5m-s1": 1
+    },
+    "repairs": {}
+  },
+  "dispatched": {
+    "d350-wave1-interpret-20261009-c1": {
+      "at": "2026-10-08T23:10:51Z",
+      "decision": "PROCEED",
+      "results": [
+        {
+          "action": {
+            "node": "C1",
+            "spec": "plan/specs/C1.md",
+            "type": "implement"
+          },
+          "outcome": "refused: spec must be an existing file under plan/"
+        }
+      ],
+      "task": "interpret-wave1-034e6e062d05"
+    }
+  },
+  "evaluations": {
+    "kai-d350-baseline-e-350k-s1-a2#0": {
+      "at": "2026-10-08T17:15:05Z",
+      "reason": "INVALID[scientific]: no feasible checkpoint in epochs < 1000",
+      "valid": false
+    },
+    "kai-d350-reference-e-5m-s1-a4#0": {
+      "at": "2026-10-08T22:45:09Z",
+      "reason": null,
+      "valid": true,
+      "value": 0.6497741935483871
+    }
+  },
+  "events_seen": [
+    "02ab96ddf4f62f2c",
+    "0c970a2211098fb6",
+    "11499a7559fd500b",
+    "3ce08dc1938302fb",
+    "46914b83b9a741cc",
+    "4b19b1038f3fce6e",
+    "5d00f63135681e89",
+    "6e3c4fcaa6b18146",
+    "82225ae55853d54f"
+  ],
+  "handled": {
+    "kai-d350-baseline-e-350k-s1-a1#0": {
+      "event": "corrected 2026-10-08T10:4xZ",
+      "status": "failed"
+    },
+    "kai-d350-baseline-e-350k-s1-a2#0": {
+      "event": "11499a7559fd500b",
+      "status": "succeeded"
+    },
+    "kai-d350-reference-e-5m-s1-a1#0": {
+      "event": "corrected 2026-10-08T10:4xZ",
+      "status": "failed"
+    },
+    "kai-d350-reference-e-5m-s1-a4#0": {
+      "event": "5d00f63135681e89",
+      "status": "succeeded"
+    },
+    "kai-d350-sc-baseline-e-350k-s1-a2-s1": {
+      "event": "02ab96ddf4f62f2c",
+      "status": "failed"
+    },
+    "kai-d350-sc-reference-e-5m-s1-a4-s1": {
+      "event": "82225ae55853d54f",
+      "status": "succeeded"
+    }
+  },
+  "lock": null,
+  "monitor": {
+    "error_kind": null,
+    "last_ok": "2026-10-09T21:30:01Z"
+  },
+  "notices": [],
+  "observations": {
+    "kai-d350-baseline-e-350k-s1-a1#0": {
+      "arm": "baseline-e-350k-s1 a1 baseline E budget 350000 warmup 1 stop 1000",
+      "index": 0,
+      "job": "kai-d350-baseline-e-350k-s1-a1",
+      "pod_records": 0,
+      "role": "train",
+      "stage": "wave1",
+      "status": "failed"
+    },
+    "kai-d350-baseline-e-350k-s1-a2#0": {
+      "arm": "baseline-e-350k-s1 a2 baseline E budget 350000 warmup 1 stop 1000",
+      "index": 0,
+      "job": "kai-d350-baseline-e-350k-s1-a2",
+      "pod_records": 1,
+      "role": "train",
+      "stage": "wave1",
+      "status": "succeeded"
+    },
+    "kai-d350-reference-e-5m-s1-a1#0": {
+      "arm": "reference-e-5m-s1 a1 reference E budget 5000000 warmup 1 stop 1000",
+      "index": 0,
+      "job": "kai-d350-reference-e-5m-s1-a1",
+      "pod_records": 0,
+      "role": "train",
+      "stage": "wave1",
+      "status": "failed"
+    },
+    "kai-d350-reference-e-5m-s1-a4#0": {
+      "arm": "reference-e-5m-s1 a4 reference E budget 5000000 warmup 1 stop 1000",
+      "index": 0,
+      "job": "kai-d350-reference-e-5m-s1-a4",
+      "pod_records": 0,
+      "role": "train",
+      "stage": "wave1",
+      "status": "succeeded"
+    },
+    "kai-d350-sc-baseline-e-350k-s1-a2-s1": {
+      "arm": null,
+      "index": null,
+      "job": "kai-d350-sc-baseline-e-350k-s1-a2-s1",
+      "pod_records": 1,
+      "role": "score",
+      "stage": null,
+      "status": "failed"
+    },
+    "kai-d350-sc-reference-e-5m-s1-a4-s1": {
+      "arm": null,
+      "index": null,
+      "job": "kai-d350-sc-reference-e-5m-s1-a4-s1",
+      "pod_records": 1,
+      "role": "score",
+      "stage": null,
+      "status": "succeeded"
+    }
+  },
+  "queue": [
+    {
+      "claimed_by": "cron",
+      "detail": {
+        "class": null,
+        "exit_code": null,
+        "why": "last attempt disrupted (UnexpectedAdmissionError)"
+      },
+      "event": "4b19b1038f3fce6e",
+      "id": "relaunch-4b19b1038f3fce6e",
+      "key": "kai-d350-baseline-e-350k-s1-a1#0",
+      "lease_expires": "2026-10-08T11:15:03Z",
+      "status": "done",
+      "steps": {
+        "done": true,
+        "evidence": {
+          "dir": "campaigns/2026-10-08-discovery-350k/evidence/relaunch-4b19b1038f3fce6e",
+          "pod": "kai-d350-baseline-e-350k-s1-a1-0-zwxck"
+        },
+        "prepare": {
+          "attempt": 2,
+          "handoff": "/home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-6facf4ed7c2b1a01f26e2b4d"
+        },
+        "submit": {
+          "job": "kai-d350-baseline-e-350k-s1-a2",
+          "reserved_gpu_h": 26.244444,
+          "stage": "wave1",
+          "status": "submitted"
+        }
+      },
+      "task": "relaunch"
+    },
+    {
+      "claimed_by": "cron",
+      "detail": {
+        "class": null,
+        "exit_code": null,
+        "why": "last attempt disrupted (UnexpectedAdmissionError)"
+      },
+      "event": "6e3c4fcaa6b18146",
+      "id": "relaunch-6e3c4fcaa6b18146",
+      "key": "kai-d350-reference-e-5m-s1-a1#0",
+      "lease_expires": "2026-10-08T12:00:03Z",
+      "status": "done",
+      "steps": {
+        "done": true,
+        "evidence": {
+          "dir": "campaigns/2026-10-08-discovery-350k/evidence/relaunch-6e3c4fcaa6b18146",
+          "pod": null
+        },
+        "prepare": {
+          "attempt": 4,
+          "handoff": "/home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-fae7f97029721a068ded4f0b"
+        },
+        "requeued": "prepare failed: node-exclusion builder mismatch (fixed in d350_common)",
+        "submit": {
+          "job": "kai-d350-reference-e-5m-s1-a4",
+          "reserved_gpu_h": 26.244444,
+          "stage": "wave1",
+          "status": "submitted"
+        }
+      },
+      "task": "relaunch"
+    },
+    {
+      "claimed_by": null,
+      "detail": {
+        "class": "unknown",
+        "exit_code": null,
+        "why": "no pod records for this index"
+      },
+      "event": "3ce08dc1938302fb",
+      "id": "investigate-3ce08dc1938302fb",
+      "key": "kai-d350-baseline-e-350k-s1-a1#0",
+      "lease_expires": null,
+      "status": "cancelled",
+      "steps": {
+        "cancelled": "duplicate event: finished Job index re-observed after Kubernetes deleted its evicted pods (harness defect, fixed)"
+      },
+      "task": "investigate"
+    },
+    {
+      "claimed_by": null,
+      "detail": {
+        "class": "unknown",
+        "exit_code": null,
+        "why": "no pod records for this index"
+      },
+      "event": "0c970a2211098fb6",
+      "id": "investigate-0c970a2211098fb6",
+      "key": "kai-d350-reference-e-5m-s1-a1#0",
+      "lease_expires": null,
+      "status": "cancelled",
+      "steps": {
+        "cancelled": "duplicate event: finished Job index re-observed after Kubernetes deleted its evicted pods (harness defect, fixed)"
+      },
+      "task": "investigate"
+    },
+    {
+      "claimed_by": "cron",
+      "detail": {
+        "class": null,
+        "exit_code": null,
+        "why": null
+      },
+      "event": "11499a7559fd500b",
+      "id": "evaluate-11499a7559fd500b",
+      "key": "kai-d350-baseline-e-350k-s1-a2#0",
+      "lease_expires": "2026-10-08T18:15:03Z",
+      "status": "done",
+      "steps": {
+        "done": true,
+        "evaluate": {
+          "reason": "INVALID[scientific]: no feasible checkpoint in epochs < 1000",
+          "valid": false
+        },
+        "evaluate_polls": 1
+      },
+      "task": "evaluate"
+    },
+    {
+      "claimed_by": "cron",
+      "detail": {
+        "class": null,
+        "exit_code": null,
+        "why": null
+      },
+      "event": "5d00f63135681e89",
+      "id": "evaluate-5d00f63135681e89",
+      "key": "kai-d350-reference-e-5m-s1-a4#0",
+      "lease_expires": "2026-10-08T23:45:03Z",
+      "status": "done",
+      "steps": {
+        "done": true,
+        "evaluate": {
+          "metrics": "/home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/evidence/scores/reference-e-5m-s1-a4.metrics.json",
+          "valid": true
+        },
+        "evaluate_polls": 3
+      },
+      "task": "evaluate"
+    },
+    {
+      "claimed_by": "cron",
+      "detail": {
+        "results": {
+          "kai-d350-baseline-e-350k-s1-a2#0": {
+            "reason": "INVALID[scientific]: no feasible checkpoint in epochs < 1000",
+            "valid": false,
+            "value": null
+          },
+          "kai-d350-reference-e-5m-s1-a4#0": {
+            "reason": null,
+            "valid": true,
+            "value": 0.6497741935483871
+          }
+        },
+        "stage": "wave1"
+      },
+      "event": "interpret-wave1-034e6e062d05",
+      "id": "interpret-wave1-034e6e062d05",
+      "key": "wave1",
+      "lease_expires": "2026-10-09T00:00:03Z",
+      "status": "done",
+      "steps": {
+        "dispatch": {
+          "plan_id": "d350-wave1-interpret-20261009-c1",
+          "results": [
+            {
+              "action": {
+                "node": "C1",
+                "spec": "plan/specs/C1.md",
+                "type": "implement"
+              },
+              "outcome": "refused: spec must be an existing file under plan/"
+            }
+          ],
+          "status": "dispatched"
+        },
+        "done": true,
+        "interpret": {
+          "changed": [
+            "ideas.json",
+            "notes/wave1-interpretation.md",
+            "plan/next.json",
+            "plan/specs/C1.md"
+          ],
+          "kind": "claude-cli"
+        }
+      },
+      "task": "interpret"
+    }
+  ],
+  "resources": {
+    "jobs": {
+      "kai-d350-baseline-e-350k-s1-a1": {
+        "authority_sha256": "9496cf6361a2fce6bfdf2d3f56d57eef3091693295e113975fa02707d395ac79",
+        "bound": 26.244444,
+        "bound_note": "hard: Job deadline enforced by Kubernetes; includes retries and replacements",
+        "estimated": null,
+        "final": false,
+        "lifetime_upper": 0.655833,
+        "measured": null,
+        "operations_sha256": "a7735034dfd892c844a2b8167e1c57f451172a8b52ee326348040f76662f1b0b",
+        "pod_records": 0,
+        "reserved": 26.244444,
+        "stage": "wave1",
+        "submission": "submitted",
+        "submit_output": "\n== /home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-adce3a6b9ad29ca7ab6f1f81/job.json :: kai-d350-baseline-e-350k-s1-a1 ==\n  WARN   backoffLimitPerIndex=1: one blip kills an index. Suggest 3.\n  note   required pool = 1 products / 48 nodes cluster-wide\n\n(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')\nconfigmap/kai-d350-code-6107b771d6 created\nconfigmap/kai-rh-adce3a6b9ad29ca7ab6f1f81 created\njob.batch/kai-d350-baseline-e-350k-s1-a1 created\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> cpu limit/request ratio <10> exceeds maximum allowed ratio <1.2>\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> memory limit <256Mi> is higher than the maximum allowed ratio of <1.2>\n",
+        "submitted_at": "2026-10-08T09:30:35Z",
+        "superseded_by": "kai-d350-baseline-e-350k-s1-a2",
+        "tracked": true,
+        "unknown_pods": 0
+      },
+      "kai-d350-baseline-e-350k-s1-a2": {
+        "authority_sha256": "9496cf6361a2fce6bfdf2d3f56d57eef3091693295e113975fa02707d395ac79",
+        "bound": 26.244444,
+        "bound_note": "hard: Job deadline enforced by Kubernetes; includes retries and replacements",
+        "estimated": 6.265278,
+        "final": true,
+        "measured": 6.265278,
+        "operations_sha256": "a7735034dfd892c844a2b8167e1c57f451172a8b52ee326348040f76662f1b0b",
+        "pod_records": 1,
+        "reserved": null,
+        "stage": "wave1",
+        "submission": "submitted",
+        "submit_output": "\n== /home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-6facf4ed7c2b1a01f26e2b4d/job.json :: kai-d350-baseline-e-350k-s1-a2 ==\n  WARN   backoffLimitPerIndex=1: one blip kills an index. Suggest 3.\n  note   required pool = 1 products / 47 nodes cluster-wide\n\n(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')\nconfigmap/kai-rh-6facf4ed7c2b1a01f26e2b4d created\njob.batch/kai-d350-baseline-e-350k-s1-a2 created\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> cpu limit/request ratio <10> exceeds maximum allowed ratio <1.2>\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> memory limit <256Mi> is higher than the maximum allowed ratio of <1.2>\n",
+        "submitted_at": "2026-10-08T10:15:49Z",
+        "tracked": true,
+        "unknown_pods": 0
+      },
+      "kai-d350-reference-e-5m-s1-a1": {
+        "authority_sha256": "9496cf6361a2fce6bfdf2d3f56d57eef3091693295e113975fa02707d395ac79",
+        "bound": 26.244444,
+        "bound_note": "hard: Job deadline enforced by Kubernetes; includes retries and replacements",
+        "estimated": null,
+        "final": false,
+        "lifetime_upper": 0.643611,
+        "measured": null,
+        "operations_sha256": "a7735034dfd892c844a2b8167e1c57f451172a8b52ee326348040f76662f1b0b",
+        "pod_records": 0,
+        "reserved": 26.244444,
+        "stage": "wave1",
+        "submission": "submitted",
+        "submit_output": "\n== /home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-e066021d9a5e350f0bc0ffe4/job.json :: kai-d350-reference-e-5m-s1-a1 ==\n  WARN   backoffLimitPerIndex=1: one blip kills an index. Suggest 3.\n  note   required pool = 1 products / 48 nodes cluster-wide\n\n(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')\nconfigmap/kai-rh-e066021d9a5e350f0bc0ffe4 created\njob.batch/kai-d350-reference-e-5m-s1-a1 created\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> cpu limit/request ratio <10> exceeds maximum allowed ratio <1.2>\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> memory limit <256Mi> is higher than the maximum allowed ratio of <1.2>\n",
+        "submitted_at": "2026-10-08T09:30:47Z",
+        "superseded_by": "kai-d350-reference-e-5m-s1-a4",
+        "tracked": true,
+        "unknown_pods": 0
+      },
+      "kai-d350-reference-e-5m-s1-a4": {
+        "authority_sha256": "9496cf6361a2fce6bfdf2d3f56d57eef3091693295e113975fa02707d395ac79",
+        "bound": 26.244444,
+        "bound_note": "hard: Job deadline enforced by Kubernetes; includes retries and replacements",
+        "estimated": null,
+        "final": false,
+        "lifetime_upper": 10.893889,
+        "measured": null,
+        "operations_sha256": "6ee302e8a2bf2ed7f6caff02347ce2d78a48b2315fda0957020bef65967a1405",
+        "pod_records": 0,
+        "reserved": null,
+        "stage": "wave1",
+        "submission": "submitted",
+        "submit_output": "\n== /home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-fae7f97029721a068ded4f0b/job.json :: kai-d350-reference-e-5m-s1-a4 ==\n  WARN   backoffLimitPerIndex=1: one blip kills an index. Suggest 3.\n  note   required pool = 1 products / 48 nodes cluster-wide\n\n(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')\nconfigmap/kai-rh-fae7f97029721a068ded4f0b created\njob.batch/kai-d350-reference-e-5m-s1-a4 created\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> cpu limit/request ratio <10> exceeds maximum allowed ratio <1.2>\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> memory limit <256Mi> is higher than the maximum allowed ratio of <1.2>\n",
+        "submitted_at": "2026-10-08T11:00:16Z",
+        "tracked": true,
+        "unknown_pods": 0
+      },
+      "kai-d350-sc-baseline-e-350k-s1-a2-s1": {
+        "authority_sha256": "9496cf6361a2fce6bfdf2d3f56d57eef3091693295e113975fa02707d395ac79",
+        "bound": 0.0,
+        "bound_note": "no GPU requested",
+        "estimated": 0.0,
+        "final": true,
+        "measured": 0.0,
+        "operations_sha256": "6ee302e8a2bf2ed7f6caff02347ce2d78a48b2315fda0957020bef65967a1405",
+        "pod_records": 1,
+        "reserved": null,
+        "stage": "score",
+        "submission": "submitted",
+        "submit_output": "\n== /home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-c4564ce8c8a3f301847ff296/job.json :: kai-d350-sc-baseline-e-350k-s1-a2-s1 ==\n  note   no required GPU product list \u2014 widest possible pool (good)\n  note   single (non-Indexed) Job \u2014 per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here\n  OK\n\n(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')\nconfigmap/kai-d350-score-b6c79b2549 created\nconfigmap/kai-rh-c4564ce8c8a3f301847ff296 created\njob.batch/kai-d350-sc-baseline-e-350k-s1-a2-s1 created\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> cpu limit/request ratio <10> exceeds maximum allowed ratio <1.2>\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> memory limit <256Mi> is higher than the maximum allowed ratio of <1.2>\n",
+        "submitted_at": "2026-10-08T17:00:22Z",
+        "tracked": true,
+        "unknown_pods": 0
+      },
+      "kai-d350-sc-reference-e-5m-s1-a4-s1": {
+        "authority_sha256": "9496cf6361a2fce6bfdf2d3f56d57eef3091693295e113975fa02707d395ac79",
+        "bound": 0.0,
+        "bound_note": "no GPU requested",
+        "estimated": 0.0,
+        "final": true,
+        "measured": 0.0,
+        "operations_sha256": "6ee302e8a2bf2ed7f6caff02347ce2d78a48b2315fda0957020bef65967a1405",
+        "pod_records": 1,
+        "reserved": null,
+        "stage": "score",
+        "submission": "submitted",
+        "submit_output": "\n== /home/kaimoe/lab/bnjettag/campaigns/2026-10-08-discovery-350k/handoffs/rh-8f83d2feda938c663f25ac8c/job.json :: kai-d350-sc-reference-e-5m-s1-a4-s1 ==\n  note   no required GPU product list \u2014 widest possible pool (good)\n  note   single (non-Indexed) Job \u2014 per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here\n  OK\n\n(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')\nconfigmap/kai-rh-8f83d2feda938c663f25ac8c created\njob.batch/kai-d350-sc-reference-e-5m-s1-a4-s1 created\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> cpu limit/request ratio <10> exceeds maximum allowed ratio <1.2>\nWarning: [container-must-meet-memory-and-cpu-ratio] container <record-run-handoff> memory limit <256Mi> is higher than the maximum allowed ratio of <1.2>\n",
+        "submitted_at": "2026-10-08T22:00:17Z",
+        "tracked": true,
+        "unknown_pods": 0
+      }
+    }
+  },
+  "stopped": false
+}

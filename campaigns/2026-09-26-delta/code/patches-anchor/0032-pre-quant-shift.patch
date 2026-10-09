@@ -1,0 +1,106 @@
+From 1539de80f9574848b639d3b8c972c23b47381f9a Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:38:08 -0700
+Subject: [PATCH 32/38] pre-quant-shift: quant.pre_quant_shift channel,
+ zero-init learnable shift before each projection input quantizer and the
+ Q/K/V streams (M026, M066)
+
+---
+ code/bnhgq2/delta_keys.py | 17 +++++++++++++++++
+ code/bnhgq2/qat.py        | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index b3e353d..ff4335a 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -599,3 +599,20 @@ def _qk_min_bits(value, cfg):
+ 
+ 
+ register('quant.qk_min_bits', 'qk-stream-min-bits', _qk_min_bits, export_ok=True)
++
++# pre-quant-shift (anchor tree only; M026, M066): quant.pre_quant_shift "channel" puts a learnable
++# per-channel additive shift (qat.ChannelShift, zero init) before the input quantizer of every
++# projection (dense_einsum, dense) and before the Q, K, V stream quantizers. Not billed in EBOPs
++# (a float add; in hardware it folds into the previous layer's bias except at the model input).
++UNWIRED.pop('quant.pre_quant_shift', None)
++_DEEPSETS_EXCLUSIVE += ('quant.pre_quant_shift',)
++
++
++def _pre_shift(value, cfg):
++    if value != 'channel':
++        return 'only "channel" is implemented'
++    if lookup(cfg, 'arch.attn_kind') is not None:
++        return 'not combined with arch.attn_kind (the stream shifts are placed on the softmax path)'
++
++
++register('quant.pre_quant_shift', 'pre-quant-shift', _pre_shift)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 0e2cbee..8d67835 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -357,6 +357,28 @@ def _resolve_pair_indices(names):
+     return idx
+ 
+ 
++@keras.saving.register_keras_serializable(package="bnhgq2")
++class ChannelShift(keras.layers.Layer):
++    """Delta (pre-quant-shift): learnable additive shift over the trailing `axes` (per channel,
++    or per (head, channel) on a 4-D stream), placed before an activation quantizer; zero at
++    init, so the forward equals the unshifted build. RSign-style shift only, no slope. Its
++    weight is named "shift", so matching_initialization (kernel/bias/pos_table) leaves it 0."""
++
++    def __init__(self, axes=(-1,), **kwargs):
++        super().__init__(**kwargs)
++        self.axes = tuple(int(a) for a in axes)
++
++    def build(self, input_shape):
++        self.shift = self.add_weight(name="shift", shape=tuple(input_shape[a] for a in self.axes),
++                                     initializer="zeros", trainable=True)
++
++    def call(self, x):
++        return x + self.shift
++
++    def get_config(self):
++        return {**super().get_config(), "axes": list(self.axes)}
++
++
+ @keras.saving.register_keras_serializable(package="bnhgq2")
+ class PairFeatures(keras.layers.Layer):
+     """Per ordered-pair (i,j) physics features from the RAW constituents: (B,T,F)->(B,T,T,3)
+@@ -682,8 +704,12 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+     def _elem(x):
+         return tuple(range(-(len(x.shape) - 1), 0))   # every non-batch axis
+ 
++    pre_shift = cfg["quant"].get("pre_quant_shift") == "channel"  # Delta (pre-quant-shift)
++
+     def dense_einsum(name, equation, out_shape, x, bias_axes=None):
+         """One projection: A-bit input quant + (binary|int8|float) weights."""
++        if pre_shift and not fp32:
++            x = ChannelShift(axes=(-2, -1) if len(x.shape) == 4 else (-1,), name=f"{name}_pqshift")(x)
+         if not fp32:
+             taps[name] = x
+         lmode = layer_modes.get(name, wmode)
+@@ -715,6 +741,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                    name=name, **extra)(x)
+ 
+     def dense(name, units, x, use_bias=True):
++        if pre_shift and not fp32:
++            x = ChannelShift(axes=(-1,), name=f"{name}_pqshift")(x)
+         if not fp32:
+             taps[name] = x
+         lmode = layer_modes.get(name, wmode)
+@@ -831,6 +859,10 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             q = dense_einsum(f"{blk}_attn_Wq", "btd,dhe->bthe", (T, H, E), ln)
+             k = dense_einsum(f"{blk}_attn_Wk", "btd,dhe->bthe", (T, H, E), ln)
+             v = dense_einsum(f"{blk}_attn_Wv", "btd,dhe->bthe", (T, H, E), ln)
++            if pre_shift and not fp32:   # Delta: shifts before the Q, K and V stream quantizers
++                q = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_q_pqshift")(q)
++                k = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_k_pqshift")(k)
++                v = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_v_pqshift")(v)
+             scores = einsum(f"{blk}_attn_scores", "bthe,bshe->bhts", [q, k],
+                             [stream_iq(), stream_iq()])
+             if pair_bias_tensor is not None:                        # add shared pair bias
+-- 
+2.50.1 (Apple Git-155)
+

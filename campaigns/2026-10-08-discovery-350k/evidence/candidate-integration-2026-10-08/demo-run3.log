@@ -1,0 +1,45 @@
+run 1 (interrupted after review): interrupted  219 s
+steps after run 1: ['branch', 'implement', 'implement_started', 'review'] agent calls: 2
+run 2 (resumed by another holder): done  670 s
+final status: done | agent calls: 2
+{
+ "branch": {
+  "base": "43e8326c85c1850537eb66d71a55d6b1348c1df8",
+  "branch": "cand-c0"
+ },
+ "check": {
+  "exit": 0
+ },
+ "commit": {
+  "commit": "c86a2de7567daeb3daa5f38a5d68d5c195d83676",
+  "tree": "37fd593b94bc9d3fa0b1796a6723deb24bcfd378"
+ },
+ "implement": {
+  "changed": [
+   "campaigns/d350/configs/d350-c0-ctl-s1.json",
+   "campaigns/d350/index.json",
+   "campaigns/d350/packs/d350-c0-ctl-s1.json"
+  ],
+  "kind": "codex-cli",
+  "tree": "37fd593b94bc9d3fa0b1796a6723deb24bcfd378"
+ },
+ "prepare": {
+  "attempt": 1,
+  "commit": "c86a2de7567daeb3daa5f38a5d68d5c195d83676",
+  "handoff": "/tmp/claude-1000/-home-kaimoe-lab-bnjettag/ad4a06b9-0db4-4d70-adaf-87077a4f504e/scratchpad/cand-demo3/lab/campaigns/2026-10-08-discovery-350k/handoffs/rh-1e08a4b602356a0ca0724e79",
+  "job": "kai-d350-c0-ctl-s1-a1"
+ },
+ "review": {
+  "findings": [
+   "Scope: the diff touches exactly three files, all in candidate_paths and none in candidate_protected: campaigns/d350/index.json (one row appended, count 2->3), new campaigns/d350/configs/d350-c0-ctl-s1.json, new campaigns/d350/packs/d350-c0-ctl-s1.json. The implementer's git status shows the same three. No change to the baseline/reference configs, their rows or packs, generate.py, cpu_gate.py, monitor_p.py, bnhgq2/, eval/, data, split or EBOPs code, or any test.",
+   "Config: compared key by key with d350-baseline-e-350k-s1.json. Only the identity keys differ: name, experiment.arm, campaign.pilot.arm ('c0-ctl-s1') and campaign.pilot.hypothesis ('control'). These are the same identity keys in which baseline and reference differ, apart from the reference's target and budget. Every arch, quant, train, ebops/pid, hls, experiment, engram_study and campaign setting is identical, including weight=binary_absmean, n_part=64, target_ebops=350000, budget=350000, split_seed=1, validation_split=0.1, data=data/train, epochs=7000 (same as baseline; the 1,000-epoch stop is applied at launch) and test_set_used_for_selection=false.",
+   "Index row: same fields and order as the baseline row; index=2 matches its position at the end of runs; file, pack path, target_ebops, zero_floor_ebops, headroom_zero (178474 = 350000-171526) and the identity fields program_arm/d350_arm/hypothesis are consistent. Pack file contains [[2]].",
+   "config_sha256 (ddde2772...) was not recomputed by this reviewer, because the instructions say not to run commands. tests/test_d350.py::test_generator_reproduces_committed_configs checks it against the file bytes, and the implementer's log shows `python -m pytest -q tests/test_d350.py` with 4 passed. The independent re-run of the tests that PROPOSAL \u00a76 step 4 requires should confirm this, and candidate_check_command does that re-run.",
+   "No leakage: no data, split or validation-label handling changed; the config keeps split_seed 1 / validation_split 0.1 and does not reference the test set.",
+   "No hardcoded results: the change contains only configuration and index metadata, with no scores, accuracies or EBOPs
+job creates: ['rh-1e08a4b602356a0ca0724e79']
+replay: None | job creates now: 1
+notifications:
+2026-10-08T10:19:53Z [file] implement-C0: candidate C0 at commit c86a2de7567d submitted as kai-d350-c0-ctl-s1-a1
+
+evidence: /tmp/claude-1000/-home-kaimoe-lab-bnjettag/ad4a06b9-0db4-4d70-adaf-87077a4f504e/scratchpad/cand-demo3/lab/campaigns/2026-10-08-discovery-350k/evidence/implement-C0

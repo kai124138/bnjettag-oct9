@@ -1,0 +1,27 @@
+28:def digest_json(value):
+32:def array_hash(a):
+36:def atomic_json(path, value):
+43:def prepare_arrays(cfg, data_dir):
+60:def matching_initialization(cfg, sample, seed):
+93:def learning_rate(cfg, epoch):
+101:def training_target(cfg, epoch):
+109:def optimizer_for(cfg, model):
+118:def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None):
+156:def raw_widths(model):
+161:def save_checkpoint(out, model, optimizer, state):
+187:def restore_checkpoint(out, cfg, dataset_info):
+214:    history.write_text('\n'.join(kept) + ('\n' if kept else ''))
+218:def binary_gate(model):
+223:def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=False, stop_after=None):
+232:    resumed = restore_checkpoint(out, cfg, data_info)
+233:    if resumed:
+234:        model, optimizer, state = resumed
+251:    print(f"[train] {cfg['name']} params={model.count_params()} resume_epoch={state['completed_epochs']} initial_ebops={state['initial_ebops']}", flush=True)
+268:        wandb_run = wandb.init(**init_kwargs(name=cfg['name'] + '-s1', job_type='train',
+271:                         id=run_id, resume='allow')
+330:        print(f"[epoch {epoch + 1}/{epochs}] EBOPs={cost['total']} target={final_target} beta={pid.beta:.3g} AUC={auc:.6f} seconds={elapsed:.1f} checkpoint={saved.name}", flush=True)
+336:                log_files_artifact(wandb_run, name='resume-' + cfg['name'], type='checkpoint', files=[str(saved)], metadata={'completed_epochs': epoch + 1})
+keras                    3.15.0
+numpy                    2.5.0
+tensorflow               2.21.0
+wandb                    0.28.0

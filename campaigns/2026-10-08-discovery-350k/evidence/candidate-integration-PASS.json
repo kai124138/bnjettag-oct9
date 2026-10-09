@@ -1,0 +1,11 @@
+{
+  "passed_at": "2026-10-08T10:19:53Z",
+  "what": "end-to-end candidate task on a scratch copy with the REAL configured runners (Codex gpt-6.1-sol implement, Claude review), real candidate_check_d350.py and prepare_candidate_d350.py, real run_handoff submission to a SUBSTITUTED cluster",
+  "evidence": "evidence/candidate-integration-2026-10-08/ (demo-run3.log, implement-C0/, demo-STATE.json, demo-substitute-kubectl-calls.log)",
+  "verified": ["interrupted after review and resumed by another holder without repeating the implementation (2 agent calls)",
+               "committed tree == reviewed and checked tree; branch from R0 commit 43e8326c",
+               "handoff code-commit == reviewed commit c86a2de7; stage search; pod 61,100 s / Job 122,200 s; reserved 34.08 GPU-h",
+               "replay created no second Job; no delete/patch calls"],
+  "unit_tests": "tests/test_harness.py Candidate (simulated runners): happy path, interrupt after every step, partial-edit discard, refusals, integration gate",
+  "not_verified": "live NRP submission of a candidate"
+}

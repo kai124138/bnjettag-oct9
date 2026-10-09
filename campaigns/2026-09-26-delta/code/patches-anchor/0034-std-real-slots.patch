@@ -1,0 +1,123 @@
+From 192bd321c0207766460666cb4996c7370cf9b8a0 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:39:24 -0700
+Subject: [PATCH 34/38] std-real-slots: data.std_scope real_slots, train-split
+ standardization over real (raw pT != 0) slots in prepare_cache; recorded in
+ the cache identity (M041)
+
+---
+ code/bnhgq2/data.py       | 17 +++++++++++++++++
+ code/bnhgq2/delta_keys.py | 14 ++++++++++++++
+ code/prepare_cache.py     | 12 +++++++++++-
+ code/run_engram.py        |  2 ++
+ 4 files changed, 44 insertions(+), 1 deletion(-)
+
+diff --git a/code/bnhgq2/data.py b/code/bnhgq2/data.py
+index a64b08e..260cc1e 100644
+--- a/code/bnhgq2/data.py
++++ b/code/bnhgq2/data.py
+@@ -116,5 +116,22 @@ def input_std_stats(X, eps=1e-6):
+     return mu.astype("float32"), sigma.astype("float32")
+ 
+ 
++def real_slot_mask(X, features):
++    """Delta (std-real-slots): True on real constituents. Padded and pT-gated slots are all-zero
++    rows in raw space (apply_pt_gate zeroes every feature), so a slot is real iff its RAW pT != 0.
++    Call before standardization."""
++    return X[..., list(features).index('pt')] != 0
++
++
++def input_std_stats_real_slots(X, features, eps=1e-6):
++    """Delta (std-real-slots): per-feature z-score stats over real slots only (train split).
++    Gated / padded slots then standardize to -mu/sigma of the real slots."""
++    real = X[real_slot_mask(X, features)]
++    mu = real.mean(axis=0)
++    sigma = real.std(axis=0)
++    sigma = np.where(sigma < eps, 1.0, sigma)
++    return mu.astype("float32"), sigma.astype("float32")
++
++
+ def apply_input_std(X, mu, sigma):
+     return ((X - np.asarray(mu, dtype="float32")) / np.asarray(sigma, dtype="float32")).astype("float32")
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index e047275..082aea7 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -649,3 +649,17 @@ def _linformer_k(value, cfg):
+ 
+ register('arch.attn_kind', 'attn-linformer / attn-relu-over-n', _attn_kind)
+ register('arch.linformer_k', 'attn-linformer', _linformer_k)
++
++# std-real-slots (anchor tree only; M041, M079, M080): data.std_scope "real_slots" computes the
++# train-split standardization over real slots only (raw pT != 0: padded and pT-gated slots are
++# all-zero rows), in prepare_cache; the scope is part of the cache identity (data_info std_scope,
++# checked by run_engram.load_cache and prepare_cache.verify), so it needs its own cache.
++UNWIRED.pop('data.std_scope', None)
++
++
++def _std_scope(value, cfg):
++    if value != 'real_slots':
++        return 'only "real_slots" is implemented (all slots is the default when absent)'
++
++
++register('data.std_scope', 'std-real-slots', _std_scope, export_ok=True)
+diff --git a/code/prepare_cache.py b/code/prepare_cache.py
+index b43a470..7083408 100644
+--- a/code/prepare_cache.py
++++ b/code/prepare_cache.py
+@@ -46,6 +46,7 @@ def verify(cache, n_part, config, require_ready=True):
+     assert info['validation_split'] == config['train']['validation_split']
+     assert info['order_seed'] == cache_order_seed(config)
+     assert info.get('pt_gate_gev') == config['arch'].get('pt_gate_gev')
++    assert info.get('std_scope') == config.get('data', {}).get('std_scope')  # Delta (std-real-slots)
+     n_train, n_val = split_sizes(config['train']['validation_split'])
+     arrays = [np.load(cache / (name + '.npy'), mmap_mode='r') for name in NAMES]
+     assert arrays[0].shape == (n_train, n_part, 3) and arrays[2].shape == (n_val, n_part, 3)
+@@ -81,6 +82,7 @@ def main():
+             assert ref['arch']['features'] == cfg['arch']['features']
+             assert all(ref['train'][k] == cfg['train'][k] for k in ('split_seed', 'validation_split', 'order_seed'))
+             assert ref['arch'].get('pt_gate_gev') == cfg['arch'].get('pt_gate_gev')
++            assert ref.get('data', {}).get('std_scope') == cfg.get('data', {}).get('std_scope')  # Delta
+         by_n[n] = cfg
+     assert set(requested) <= set(by_n) <= {8, 64}
+     args.root.mkdir(parents=True, exist_ok=True)
+@@ -122,7 +124,12 @@ def main():
+                 x = apply_pt_gate(x, cfg['arch']['features'], cfg['arch']['pt_gate_gev'], gate_stats)
+             nv = int(len(x) * cfg['train']['validation_split'])
+             assert nv == split_sizes(cfg['train']['validation_split'])[1]
+-            mu, sigma = input_std_stats(x[nv:])
++            std_scope = cfg.get('data', {}).get('std_scope')  # Delta (std-real-slots)
++            if std_scope == 'real_slots':
++                from bnhgq2.data import input_std_stats_real_slots
++                mu, sigma = input_std_stats_real_slots(x[nv:], cfg['arch']['features'])
++            else:
++                mu, sigma = input_std_stats(x[nv:])
+             arrays = (apply_input_std(x[nv:], mu, sigma), y[nv:], apply_input_std(x[:nv], mu, sigma), y[:nv])
+             hashes = {name: array_hash(a) for name, a in zip(NAMES, arrays)}
+             info = {
+@@ -142,6 +149,9 @@ def main():
+                             sort_stats=sort_stats, standardization='after the pT gate, train split only',
+                             y_class_counts={'train': np.asarray(arrays[1]).sum(0).astype(int).tolist(),
+                                             'val': np.asarray(arrays[3]).sum(0).astype(int).tolist()})
++            if std_scope is not None:
++                info['std_scope'] = std_scope   # Delta: part of the cache identity (load_cache, verify)
++                info['input_std']['computed_from'] = 'train split only, real (non-gated, non-padded) slots'
+             previous = Path('/data/ebops-n8-20260912-ablation/data/data_info.json')
+             if n == 8 and previous.exists():
+                 old = json.loads(previous.read_text())
+diff --git a/code/run_engram.py b/code/run_engram.py
+index 3c0091a..80fc27e 100644
+--- a/code/run_engram.py
++++ b/code/run_engram.py
+@@ -191,6 +191,8 @@ def load_cache(path, cfg):
+     if 'pt_gate_gev' in info or cfg['arch'].get('pt_gate_gev') is not None:
+         checks += [('pt_gate_gev', cfg['arch'].get('pt_gate_gev')),
+                    ('validation_split', cfg['train']['validation_split'])]
++    if 'std_scope' in info or cfg.get('data', {}).get('std_scope') is not None:   # Delta (std-real-slots)
++        checks.append(('std_scope', cfg.get('data', {}).get('std_scope')))
+     for key, value in checks:
+         if info.get(key) != value:
+             raise ValueError(f'Cache {key} mismatch or missing; expected {value!r}, got {info.get(key)!r}')
+-- 
+2.50.1 (Apple Git-155)
+

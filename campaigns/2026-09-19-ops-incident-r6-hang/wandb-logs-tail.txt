@@ -1,0 +1,81 @@
+.:
+total 6540
+drwxr-xr-x 2 root root      71 2026-09-15 08:35:09.471925949 +0000 .
+drwxr-xr-x 5 root root      92 2026-09-15 08:35:10.032921996 +0000 ..
+lrwxrwxrwx 1 root root      54 2026-09-15 08:35:09.471925949 +0000 debug-core.log -> /root/.cache/wandb/logs/core-debug-20260915_083433.log
+-rw-r--r-- 1 root root 6649741 2026-09-19 19:51:55.975066853 +0000 debug-internal.log
+-rw-r--r-- 1 root root    4521 2026-09-15 08:35:10.674917471 +0000 debug.log
+
+..:
+total 35588
+drwxr-xr-x 5 root root       92 2026-09-15 08:35:10.032921996 +0000 .
+drwxr-xr-x 3 root root      127 2026-09-15 08:35:09.469925964 +0000 ..
+drwxr-xr-x 2 root root       75 2026-09-15 08:36:28.409365533 +0000 files
+drwxr-xr-x 2 root root       71 2026-09-15 08:35:09.471925949 +0000 logs
+-rw-r--r-- 1 root root 35422208 2026-09-19 19:48:25.637744824 +0000 run-b01b23c8027b.wandb
+drwxr-xr-x 3 root root       18 2026-09-15 08:35:09.469925964 +0000 tmp
+--- debug.log tail
+2026-09-15 08:35:09,471 INFO    MainThread:1 [wandb_init.py:setup_run_log_directory():726] Logging internal logs to /wandb/run-20260915_083509-b01b23c8027b/logs/debug-internal.log
+2026-09-15 08:35:09,471 INFO    MainThread:1 [wandb_init.py:init():768] calling init triggers
+2026-09-15 08:35:09,471 INFO    MainThread:1 [wandb_init.py:init():773] wandb.init called with sweep_config: {}
+config: {'experiment_config': {'name': 'ebops-n8-20260912-ablation-r6-distill-w1a8', 'era': 2, 'arch': {'n_part': 8, 'n_feat': 3, 'features': ['pt', 'etarel', 'phirel'], 'd_model': 32, 'n_heads': 4, 'n_layers': 2, 'ffn_dim': 64, 'n_classes': 5, 'pool': 'gap', 'ffn_act': 'relu', 'norm': 'none', 'norm_placement': 'per_linear', 'pos_enc': 'learned', 'softmax_free': False, 'input_std': True}, 'quant':
+2026-09-15 08:35:09,472 INFO    MainThread:1 [wandb_init.py:init():816] starting backend
+2026-09-15 08:35:09,472 INFO    MainThread:1 [wandb_init.py:init():831] sending inform_init request
+2026-09-15 08:35:10,034 INFO    MainThread:1 [wandb_init.py:init():836] backend started and connected
+2026-09-15 08:35:10,036 INFO    MainThread:1 [wandb_init.py:init():906] updated telemetry
+2026-09-15 08:35:10,036 INFO    MainThread:1 [wandb_init.py:init():929] communicating run to backend with 90.0 second timeout
+2026-09-15 08:35:10,635 INFO    MainThread:1 [wandb_init.py:init():974] starting run threads in backend
+2026-09-15 08:35:10,674 INFO    MainThread:1 [wandb_run.py:_console_start():2523] atexit reg
+2026-09-15 08:35:10,674 INFO    MainThread:1 [wandb_run.py:_redirect():2373] redirect: wrap_raw
+2026-09-15 08:35:10,674 INFO    MainThread:1 [wandb_run.py:_redirect():2442] Wrapping output streams.
+2026-09-15 08:35:10,675 INFO    MainThread:1 [wandb_run.py:_redirect():2465] Redirects installed.
+2026-09-15 08:35:10,676 INFO    MainThread:1 [wandb_init.py:init():1012] run started, returning control to user process
+--- debug-internal tail
+{"time":"2026-09-19T19:47:10.641745689Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51454,"events_lines":2}
+{"time":"2026-09-19T19:47:10.948557671Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:47:25.641643038Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51456,"events_lines":2}
+{"time":"2026-09-19T19:47:25.817885605Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:47:40.641478128Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51458,"events_lines":2}
+{"time":"2026-09-19T19:47:40.930377078Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:47:55.641990453Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51460,"events_lines":2}
+{"time":"2026-09-19T19:47:55.953480924Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:48:10.641453619Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51462,"events_lines":2}
+{"time":"2026-09-19T19:48:11.005307299Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:48:25.641909495Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51464,"events_lines":2}
+{"time":"2026-09-19T19:48:25.949888791Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:48:40.641815505Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51466,"events_lines":2}
+{"time":"2026-09-19T19:48:40.933279669Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:48:55.641171498Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51468,"events_lines":2}
+{"time":"2026-09-19T19:48:55.876000648Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:49:10.641218719Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51470,"events_lines":2}
+{"time":"2026-09-19T19:49:10.922072863Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:49:25.641996548Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51472,"events_lines":2}
+{"time":"2026-09-19T19:49:26.011287128Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:49:40.64138868Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51474,"events_lines":2}
+{"time":"2026-09-19T19:49:40.99435491Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:49:55.641722488Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51476,"events_lines":2}
+{"time":"2026-09-19T19:49:55.815755707Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:50:10.641306676Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51478,"events_lines":2}
+{"time":"2026-09-19T19:50:10.818968498Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:50:25.641162208Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51480,"events_lines":2}
+{"time":"2026-09-19T19:50:25.820591108Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:50:40.641526619Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51482,"events_lines":2}
+{"time":"2026-09-19T19:50:40.958290498Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:50:55.640956054Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51484,"events_lines":2}
+{"time":"2026-09-19T19:50:56.219198687Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:51:10.641531779Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51486,"events_lines":2}
+{"time":"2026-09-19T19:51:11.018104737Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:51:25.641584136Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51488,"events_lines":2}
+{"time":"2026-09-19T19:51:25.848445002Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:51:40.641158761Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51490,"events_lines":2}
+{"time":"2026-09-19T19:51:41.040638367Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+{"time":"2026-09-19T19:51:55.641072791Z","level":"INFO","msg":"filestream: sending request","total_files":1,"events_offset":51492,"events_lines":2}
+{"time":"2026-09-19T19:51:55.976293339Z","level":"INFO","msg":"filestream: request sent","status":"200 OK"}
+--- core
+{"time":"2026-09-15T08:34:33.117284279Z","level":"INFO","msg":"main: starting server","port-filename":"/tmp/tmpo2nps6oa/port-1.txt","pid":1,"detached":false,"idle-timeout":600000000000,"log-level":0,"disable-analytics":false,"shutdown-on-parent-exit":false,"enable-dcgm-profiling":false}
+{"time":"2026-09-15T08:34:33.117698615Z","level":"INFO","msg":"server: will exit if parent process dies","ppid":1}
+{"time":"2026-09-15T08:34:33.117699263Z","level":"INFO","msg":"server: accepting connections","addr":{"Name":"/tmp/wandb-1-105-474966414/socket","Net":"unix"}}
+{"time":"2026-09-15T08:34:33.308092916Z","level":"INFO","msg":"connection: ManageConnectionData: new connection created","id":"1(@)"}
+{"time":"2026-09-15T08:35:09.47297438Z","level":"INFO","msg":"handleInformInit: received","streamId":"b01b23c8027b","id":"1(@)"}
+{"time":"2026-09-15T08:35:10.034280301Z","level":"INFO","msg":"handleInformInit: stream started","streamId":"b01b23c8027b","id":"1(@)"}
+{"time":"2026-09-15T08:35:15.681748473Z","level":"INFO","msg":"connection: cancelling request","id":"1(@)","requestId":"jl6nurfhuoeb"}

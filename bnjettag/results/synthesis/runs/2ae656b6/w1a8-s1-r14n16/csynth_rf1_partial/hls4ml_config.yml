@@ -1,0 +1,31 @@
+Backend: Vitis
+ClockPeriod: 2.5
+ClockUncertainty: 27%
+HLSConfig:
+  Model:
+    BitExact: true
+    Precision: fixed<24,12>
+    ReuseFactor: 1
+    Strategy: Latency
+IOType: io_parallel
+InputData: null
+InputShapes:
+  input_1:
+  - 16
+  - 3
+KerasModel: !keras_model '/Users/kaiyamaguchi/Downloads/bnjettag-training-results/bnjettag/results/final/runs/2ae656b6/w1a8-s1-r14n16/hls_prj_rf1/keras_model.keras'
+OutputDir: /Users/kaiyamaguchi/Downloads/bnjettag-training-results/bnjettag/results/final/runs/2ae656b6/w1a8-s1-r14n16/hls_prj_rf1
+OutputPredictions: null
+OutputShapes:
+  layer83_out:
+  - 5
+Part: xcvu13p-flga2577-2-e
+ProjectName: myproject
+Stamp: 7705808b
+Version: 1.0.0
+WriterConfig:
+  Namespace: null
+  TBOutputStream: both
+  WriteEmulationConstants: false
+  WriteTar: false
+  WriteWeightsTxt: true

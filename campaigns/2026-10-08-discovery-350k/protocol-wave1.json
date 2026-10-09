@@ -1,0 +1,109 @@
+{
+ "version": 1,
+ "purpose": "discovery-350k wave 1 (PROPOSAL.md v2 amended 2026-10-08 \u00a73-\u00a75, \u00a77): baseline E-350k-C unchanged and reference E-5M, seed 1, full data, 1,000 epochs; validity check before any candidate. Discovery evidence, not quotable before a VERIFY.md.",
+ "scope": "screen",
+ "dataset": {
+  "id": "hls4ml LHC jet (Zenodo 3602260), N=64 cache chang-n64-20260926",
+  "identity_sha256": "c6d058f5d79bcf063a1dc74452d5204ea38bb82300d524872e2bf56b66c9e228",
+  "train_split": "training archive 90 % (split_seed 1), n=558000",
+  "validation_split": "training archive 10 % (split_seed 1), n=62000",
+  "test_split": "held-out validation archive (ROC-test, n=260000); not read during the search"
+ },
+ "inputs": {
+  "n_constituents": 64,
+  "features": [
+   "pt",
+   "etarel",
+   "phirel"
+  ]
+ },
+ "arms": [
+  {
+   "name": "d350-baseline-e-350k-s1",
+   "group": "baseline",
+   "seed": 1,
+   "schedule": {
+    "epochs": 1000,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 1000 of 7000 (run_pack.py <pack> 1000)"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 350000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B",
+    "attn_bit_floor": "none"
+   },
+   "changed_factors": [],
+   "config_path": "campaigns/2026-10-08-discovery-350k/code/campaigns/d350/configs/d350-baseline-e-350k-s1.json"
+  },
+  {
+   "name": "d350-reference-e-5m-s1",
+   "group": "reference",
+   "seed": 1,
+   "schedule": {
+    "epochs": 1000,
+    "batch_size": 2790,
+    "optimizer": "adam (Chang defaults)",
+    "learning_rate": 0.003,
+    "lr_schedule": "cosine restarts, 500-epoch cycles, stopped at epoch 1000 of 7000 (run_pack.py <pack> 1000)"
+   },
+   "quantization": {
+    "weights": "binary",
+    "activations": "[D19] Chang WRAP learned",
+    "model_arch": "E",
+    "ebops_target": 5000000,
+    "option_c": true,
+    "pid_warmup": 1,
+    "regime": "B",
+    "attn_bit_floor": "none"
+   },
+   "changed_factors": [
+    "quantization.ebops_target"
+   ],
+   "config_path": "campaigns/2026-10-08-discovery-350k/code/campaigns/d350/configs/d350-reference-e-5m-s1.json"
+  }
+ ],
+ "selection": {
+  "split": "validation",
+  "metric": "top-1 accuracy, ties by macro-OvR AUC, -EBOPs, -epoch",
+  "rule": "eval/score.py: best checkpoint over epochs < 1000 meeting traced EBOPs <= target, above the 0-bit floor 171526, val acc > 0.2109624456315518, certify_ebops CERTIFIED",
+  "cost_checkpoint": "selected"
+ },
+ "metrics": [
+  {
+   "name": "score (best feasible val top-1 accuracy)",
+   "split": "validation",
+   "n": 62000,
+   "status": "single seed, discovery, not quotable"
+  },
+  {
+   "name": "selected val macro-OvR AUC",
+   "split": "validation",
+   "n": 62000,
+   "status": "single seed, discovery, not quotable"
+  }
+ ],
+ "stop_rules": [
+  {
+   "condition": "pod deadline 47,000 s, divergence, fingerprint mismatch, final exit codes",
+   "action": "existing runner guard; FailIndex",
+   "approval_ref": "tools/prepare_attempt.py job shape (pilot freeze_p r3 options)"
+  },
+  {
+   "condition": "GPU-h stage cap reached",
+   "action": "harness.py submit refuses",
+   "approval_ref": "PROPOSAL.md \u00a78"
+  }
+ ],
+ "outputs": [
+  "/data/discovery-350k-20261008/attempts/<arm>-a<attempt>/runs/<config>",
+  "<run dir>/score.json",
+  "wandb://kayamaguchi-uc-san-diego/BNJetTag-ChangRecipe/discovery-350k-20261008"
+ ]
+}

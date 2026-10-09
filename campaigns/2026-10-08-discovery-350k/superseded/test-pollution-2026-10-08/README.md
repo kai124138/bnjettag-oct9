@@ -1,0 +1,1 @@
+Written into the real campaign by test_policy_d350 on 2026-10-08 because BRIEF commands used absolute paths. Substitute cluster only; never submitted to NRP. Kept for the record; the cause is fixed with the {cdir} placeholder.

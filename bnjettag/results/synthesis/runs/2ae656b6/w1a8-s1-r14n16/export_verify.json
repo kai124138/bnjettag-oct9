@@ -1,0 +1,329 @@
+{
+ "written": "2026-08-04T17:35:14",
+ "config": "r14-l1x3-n16-w1a8",
+ "config_hash": "2ae656b6",
+ "variant": "w1a8",
+ "seed": 1,
+ "tag": "r14n16",
+ "wandb_run": "final-w1a8-s1",
+ "attn_grids": "build_default",
+ "checkpoint": "bnjettag/roc-results/r14/n16/_ckpt_dl/w1a8-s1/model_best.keras",
+ "train_meta": {
+  "variant": "w1a8",
+  "seed": 1,
+  "config": "r14-l1x3-n16-w1a8",
+  "config_hash": "2ae656b6",
+  "params": 19169,
+  "trainable_params": 19023,
+  "best_epoch": 79,
+  "best_val_macro_auc": 0.8968083917636965,
+  "act_bits": 8,
+  "weight": "binary_absmean",
+  "lr": 2e-05,
+  "clip_mode": "value",
+  "epochs_run": 101,
+  "smoke": false,
+  "n_train": 496000,
+  "n_val": 124000,
+  "n_files": 62,
+  "features": [
+   "pt",
+   "etarel",
+   "phirel"
+  ],
+  "train_seconds": 820.0,
+  "act_calib_i": {
+   "input_proj": 4,
+   "bit_block_0_attn_Wq": 1,
+   "bit_block_0_attn_Wk": 1,
+   "bit_block_0_attn_Wv": 1,
+   "bit_block_0_attn_scores__in0": 2,
+   "bit_block_0_attn_scores__in1": 2,
+   "bit_block_0_attn_Wo": 1,
+   "bit_block_0_ffn_fc1": 2,
+   "bit_block_0_ffn_fc2": 2,
+   "bit_block_1_attn_Wq": 2,
+   "bit_block_1_attn_Wk": 2,
+   "bit_block_1_attn_Wv": 2,
+   "bit_block_1_attn_scores__in0": 2,
+   "bit_block_1_attn_scores__in1": 2,
+   "bit_block_1_attn_Wo": 1,
+   "bit_block_1_ffn_fc1": 2,
+   "bit_block_1_ffn_fc2": 2,
+   "head_fc1": 1,
+   "head_fc2": 1
+  },
+  "act_calib": "trainable",
+  "act_recalib_epochs": [],
+  "act_grid_before": {
+   "input_proj": [
+    4.0,
+    3.0
+   ],
+   "bit_block_0_attn_Wq": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_Wk": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wv": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_0_attn_ctx__in1": [
+    6.0,
+    1.0
+   ],
+   "bit_block_0_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wq": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wk": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wv": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_1_attn_ctx__in1": [
+    6.0,
+    1.0
+   ],
+   "bit_block_1_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_1_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "head_fc1": [
+    1.0,
+    6.0
+   ],
+   "head_fc2": [
+    1.0,
+    6.0
+   ]
+  },
+  "act_grid_after": {
+   "input_proj": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_attn_Wq": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_Wk": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wv": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_0_attn_ctx__in1": [
+    5.0,
+    2.0
+   ],
+   "bit_block_0_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wq": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wk": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wv": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_1_attn_ctx__in1": [
+    5.0,
+    2.0
+   ],
+   "bit_block_1_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_1_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "head_fc1": [
+    1.0,
+    6.0
+   ],
+   "head_fc2": [
+    1.0,
+    6.0
+   ]
+  },
+  "front": [],
+  "front_selected": null,
+  "started": "2026-08-01T09:45:47",
+  "finished": "2026-08-01T09:59:27"
+ },
+ "n_bitlayers": 15,
+ "act_ibits": {
+  "input_proj": 3,
+  "bit_block_0_attn_Wq": 1,
+  "bit_block_0_attn_Wk": 1,
+  "bit_block_0_attn_Wv": 1,
+  "bit_block_0_attn_Wo": 1,
+  "bit_block_0_ffn_fc1": 2,
+  "bit_block_0_ffn_fc2": 2,
+  "bit_block_1_attn_Wq": 2,
+  "bit_block_1_attn_Wk": 2,
+  "bit_block_1_attn_Wv": 2,
+  "bit_block_1_attn_Wo": 1,
+  "bit_block_1_ffn_fc1": 2,
+  "bit_block_1_ffn_fc2": 2,
+  "head_fc1": 1,
+  "head_fc2": 1
+ },
+ "beta_restore": {
+  "input_proj": 0.29340463773129255,
+  "bit_block_0_attn_Wq": 0.1681229019801573,
+  "bit_block_0_attn_Wk": 0.17420948980856363,
+  "bit_block_0_attn_Wv": 0.16864943134002158,
+  "bit_block_0_attn_Wo": 0.15480578187681762,
+  "bit_block_0_ffn_fc1": 0.15388454995863718,
+  "bit_block_0_ffn_fc2": 0.15000573626342975,
+  "bit_block_1_attn_Wq": 0.17050722850916475,
+  "bit_block_1_attn_Wk": 0.1724337127004342,
+  "bit_block_1_attn_Wv": 0.18543641648736056,
+  "bit_block_1_attn_Wo": 0.17936574859725588,
+  "bit_block_1_ffn_fc1": 0.15863628018091222,
+  "bit_block_1_ffn_fc2": 0.15280987190304504,
+  "head_fc1": 0.19854123217867625,
+  "head_fc2": 0.33687797851980256
+ },
+ "gate1": {
+  "n": 4096,
+  "corr_scores": 0.9973841842773415,
+  "corr_logits": 0.9983123152722156,
+  "corr_per_class": [
+   0.9988043716506235,
+   0.9990620519144988,
+   0.9958849131402813,
+   0.9950942384917844,
+   0.9995215170474915
+  ],
+  "max_abs_diff_scores": 0.21736490074398507,
+  "mean_abs_diff_scores": 0.008239608944949411,
+  "max_abs_diff_logits": 0.7274999618530273,
+  "argmax_agreement": 0.976318359375,
+  "weight_export_max_abs_diff": 2.9802322387695312e-08,
+  "beta_mode": "fx8"
+ },
+ "gate1_pass": true,
+ "gate1_threshold": 0.997,
+ "gate1_policy": "norm-free 0.997 (decisions.md 2026-08-04)",
+ "gate1_ladder": {
+  "fx8": {
+   "corr_scores": 0.9973841842773415,
+   "corr_logits": 0.9983123152722156,
+   "argmax_agreement": 0.976318359375
+  },
+  "csd2": {
+   "corr_scores": 0.9903291439124331,
+   "corr_logits": 0.9934630412158432,
+   "argmax_agreement": 0.947265625
+  },
+  "csd3": {
+   "corr_scores": 0.9954928577299421,
+   "corr_logits": 0.9972593684251662,
+   "argmax_agreement": 0.965576171875
+  },
+  "exact": {
+   "corr_scores": 0.9991166854669965,
+   "corr_logits": 0.9994184530828917,
+   "argmax_agreement": 0.983642578125
+  }
+ }
+}

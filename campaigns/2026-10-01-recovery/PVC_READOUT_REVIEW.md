@@ -1,0 +1,62 @@
+# PVC metadata and log readout — 1 October 2026
+
+Status: **inventory complete; scientific validation pending**. This review reads saved JSON and logs only. No model or array was loaded, and no metric, reload, entropy or cost certification was recomputed. The source PVC was mounted read-only by the recovery operation.
+
+The [structured inventory](pvc-readout-status-20261001.json) records exact paths, metadata/log SHA-256 values, checkpoint hashes from the receipts, line references and uncertainties for all 17 runs. It does not certify resumability.
+
+## Transport and metadata
+
+The completed transport records 253 files and 63,514,020 bytes, with finish response 204. The subsequent export contains 216 copied-file entries, 37 sanitized log derivatives and 150 explicit missing entries. Missing optional markers or checkpoint roles are not automatically failures. All 17 accepted pointers name the exported current generation; every such generation contains `state.json`, `model.keras` and `optimizer.npz`. Model/optimizer hashes are receipt evidence, not independently loaded checkpoints.
+
+- Export receipt: `captures/pvc-20261001T0555Z/export-receipt.json`, recorded `2026-10-01T05:54:31.733342+00:00`, SHA-256 `f2527c2327a0be249a1b2de268f1df258fb06dd345466aca935f794ea20a268b`.
+- Transport manifest: `captures/reader-run-20261001T0540Z/transfer-localfix-01/transport-manifest.json`, SHA-256 `1ce0c4fd969f03b84e1753c7274611d0e17669caaf22874b7baa0bcba862a41f`.
+- Transfer receipt in the same directory: SHA-256 `ef5cf9a7316b8c068299dcca5297d28eae699658f931a64dc0fb4c7904ab90f1`.
+
+All three cache metadata records match the historical array-hash fields and split counts: confirmation 496,000/124,000 training/validation rows for each N; Chang 558,000/62,000 with the 2 GeV gate. READY records agree with their cache metadata. Actual array bytes were not rehashed. All 17 run metadata records agree with their cache hash fields and preprocessing; state config/data hashes equal SHA-256 of `json.dumps(value, sort_keys=True)`, and state code hashes equal their saved source-manifest identity. Archive, cache-code and training-source hashes remain distinct. These are internal metadata checks, not historical immutable-handoff recovery.
+
+## Twelve confirmations
+
+Every linked state records the listed committed epoch at line 5. All configured schedules remain 1,000 epochs. The current generations also contain the three selected variants `model_best`, `model_min_ebops` and `model_unconstrained`. “No exception” means none in the exported logs, not successful full training.
+
+| Run | Committed generation | Required state/model/optimizer | Saved-log diagnosis |
+| --- | --- | --- | --- |
+| [N8 a00-s2](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a00-s2-e1000/checkpoints/epoch-0298/state.json:5) | `epoch-0298` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a00-s2-e1000-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): No exception in exported logs. |
+| [N8 a02-s2](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s2-e1000/checkpoints/epoch-0281/state.json:5) | `epoch-0281` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a02-s2-e1000-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): No exception in exported logs. |
+| [N8 a03-s2](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s2-e1000/checkpoints/epoch-0286/state.json:5) | `epoch-0286` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a03-s2-e1000-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): No exception in exported logs. |
+| [N8 a00-s3](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a00-s3-e1000/checkpoints/epoch-0318/state.json:5) | `epoch-0318` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a00-s3-e1000-kai-confirm-recovery-0924-ec5534-0.log): No `e0c0a3-r2` log exported; recovery log reaches 318. |
+| [N8 a02-s3](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/checkpoints/epoch-0300/state.json:5) | `epoch-0300` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a02-s3-e1000-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): Reload assertion after chunk 200; later resumed; last assertion at 300 (613–633). |
+| [N8 a03-s3](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/checkpoints/epoch-0300/state.json:5) | `epoch-0300` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a03-s3-e1000-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): Last reload assertion at 300 (638–658). |
+| [N64 a07-s2](captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/checkpoints/epoch-0300/state.json:5) | `epoch-0300` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-a07-n64-s2-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): Last reload assertion at 300 (1090–1111). |
+| [N64 e02-s2](captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/checkpoints/epoch-0300/state.json:5) | `epoch-0300` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-e02-n64-s2-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): Earlier CUDA illegal address, then resumed; last reload assertion at 300 (2859–2880). |
+| [N64 e05-s2](captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s2-e1000-5m/checkpoints/epoch-0280/state.json:5) | `epoch-0280` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-e05-n64-s2-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): No exception in exported logs. |
+| [N64 a07-s3](captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s3-e1000-5m/checkpoints/epoch-0300/state.json:5) | `epoch-0300` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-a07-n64-s3-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): Earlier nonfinite metrics (680–689), then resumed to 300. |
+| [N64 e02-s3](captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s3-e1000-5m/checkpoints/epoch-0280/state.json:5) | `epoch-0280` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-e02-n64-s3-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): Earlier CUDA illegal address (1726–1839), then resumed to 280. |
+| [N64 e05-s3](captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s3-e1000-5m/checkpoints/epoch-0280/state.json:5) | `epoch-0280` | Present | [Log](captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-e05-n64-s3-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log): No exception in exported logs. |
+
+The `e0c0a3-r2` filenames contain concatenated `[one-gpu round …]` invocations and repeated resumes. Earlier CUDA illegal-address errors in both E02 runs and nonfinite training in A07-s3 have subsequent training output; they cannot be called the final failure. Four logs end in selected-checkpoint metric assertions at `run_engram.py:275`, with `rtol=0, atol=1e-7`. This identifies recorded failure mechanisms. It does not identify which arm first caused the Job condition at `2026-09-26T07:24:11Z`: the final assertion blocks lack absolute timestamps and the terminal queue/pod log is absent. Kubernetes `status.failed=5` is not a count of failed scientific arms.
+
+## Five b5 pilot runs
+
+All five current states and epoch-0500 snapshot states record 500 completed epochs and are identical as JSON. Each arm log ends with `CHECKPOINT_VERIFICATION_PASS`; each `screen_result.json` says `verified_canary`, `reload_ebops_check="stored"`, `test_set_used=false` and `hardware_validated=false` (fields at lines 18–43). Those are saved pilot checks, not the offline readout. All five logs record RSS PASS; no exported b5 log contains a traceback. Requested divergence/RSS-failure markers are absent, which alone does not prove a clean history.
+
+| Run | Committed generation | Required state/model/optimizer | Snapshot selection recorded by trainer |
+| --- | --- | --- | --- |
+| [chang0926-a-n64-s1](captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s1/snapshots/epoch-0500/state.json:5) | `epoch-0500` | Present in current generation | Minimum-cost/unconstrained only; `best_feasible=null`. |
+| [chang0926-a-n64-s2](captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s2/snapshots/epoch-0500/state.json:5) | `epoch-0500` | Present in current generation | Primary and AUC-sensitivity present; `best_feasible` recorded. |
+| [chang0926-d-n64-s1](captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-d-n64-s1/snapshots/epoch-0500/state.json:5) | `epoch-0500` | Present in current generation | Primary and AUC-sensitivity present; `best_feasible` recorded. |
+| [chang0926-cprime-n64-s1](captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-cprime-n64-s1/snapshots/epoch-0500/state.json:5) | `epoch-0500` | Present in current generation | Minimum-cost/unconstrained only; `best_feasible=null`. |
+| [chang0926-e1-n64-s1](captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-e1-n64-s1/snapshots/epoch-0500/state.json:5) | `epoch-0500` | Present in current generation | Minimum-cost/unconstrained only; `best_feasible=null`. |
+
+The selected snapshot hashes match the hashes recorded in each saved screen result. Snapshot directories contain selected files plus state; absent snapshot `model.keras`/`optimizer.npz` does not mean the current generation lacks them. A-s1, C′-s1 and E1-s1 use the recorded minimum-cost fallback. A-s2 and D-s1 have recorded feasible selections. No AUC or accuracy value is promoted here, and no A-rule or C′ production decision is made.
+
+Both requested real readout outputs are **missing**: `readout-epoch-0500-42abed-b5/certify-snapshot-0500.json` and `a26-entropy-epoch-0500.json` under the pilot-b root. The export receipt records this at lines 3431–3437. No completed readout log is present. This establishes absence at those recovered paths, not that a readout never ran elsewhere. Synthetic `dry_readout_b5*` fixtures are excluded.
+
+## Remaining evidence and gates
+
+1. Recover `/data/chang-n64-20260926/pilot-b/runs/<each of the five b5 runs>/activation_widths.jsonl` and inspect its fields. It was outside this transport scope, not observed missing on the source. The exported arm logs have traced costs and beta but do not supply genuine in-training/traced pairs. Exact W&B history may also be needed; stdout’s saved cost cannot substitute for the registered in-training series.
+2. A new authorized CPU readout must bind the original frozen source, exact cache and snapshot roles to new output/Job identities. Require real certification and entropy outputs, zero `certify_exit`/`a26_exit`, and an empty `missing=` list. Stored-cost verification does not replace full-training-split retracing; applicable certification disagreement follows the registered adjudication rule.
+3. Full pilot interpretation still requires both A seeds, C′ feasibility/constraint inputs, complete K1 traces over epochs 100–500, the registered matched regime-A/B table and the attention-state fields. Certification plus entropy alone does not complete those rules. No new rule arithmetic was performed in this inventory.
+4. Diagnose confirmation reload assertions and recover causal queue evidence before any resume decision. Copied optimizer/checkpoint files and internally consistent metadata do not establish successful reload, optimizer restoration, stability or metric reproduction.
+5. **Kai has now explicitly chosen option (c)** in the active session: feed traced cost directly into the PID controller. K1 remains fired and uncleared. The historical readout is still required; a dated amendment, new freeze/handoff, preflight and fresh pilot gates remain necessary. No historical source or result record is changed by that choice.
+
+Legacy immutable context remains unavailable. This inventory authorizes no launch, resume, training, production advancement or outward scientific claim.

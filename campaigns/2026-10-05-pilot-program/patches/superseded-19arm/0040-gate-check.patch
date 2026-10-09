@@ -1,0 +1,245 @@
+diff --git a/campaigns/pilot1005/gate_check.py b/campaigns/pilot1005/gate_check.py
+new file mode 100644
+index 0000000..da77e3c
+--- /dev/null
++++ b/campaigns/pilot1005/gate_check.py
+@@ -0,0 +1,142 @@
++#!/usr/bin/env python3
++"""Pass/fail checks for the pilot-program CPU gate Job (standard library only).
++
++python campaigns/pilot1005/gate_check.py threshold --json OUT/threshold.json
++python campaigns/pilot1005/gate_check.py cpu-gate --log OUT/cpu_gate.log --exit-code N
++python campaigns/pilot1005/gate_check.py pytest --junit OUT/pytest.xml --exit-code N
++
++Each mode prints one line `GATE_CHECK <mode> PASS` or `GATE_CHECK <mode> FAIL <reason>` and exits 0 or 1.
++The Job script stops at the first FAIL and prints `GATE_RESULT FAIL <reason>` as its last line.
++
++pytest: the suite must show exactly the known skips and every other collected test passed
++(option-(c) review B2, campaigns/2026-10-02-chang-option-c/review/PREFLIGHT_critical_v1.md):
++  - failures = errors = 0 and pytest exit 0;
++  - exactly EXPECTED_SKIPS skipped tests, each at analysis/test_attn_entropy.py:142 (the C-prime
++    main() case, skipped unconditionally);
++  - exactly PYTEST_TOTAL tests collected (the count of this tree, measured locally at freeze);
++  - every file in REQUIRED has at least one test and all of its tests passed.
++cpu-gate: exit 0, `PREFLIGHT_ALL_PASS <N_CONFIGS>`, N_CONFIGS CONFIG_PREFLIGHT_PASS lines, one PID line
++  per config, PAIRED_INIT_OK for the E and A07 groups.
++threshold: nondegenerate_threshold.py on the cache gives the registered threshold (c) and labels sha.
++"""
++from __future__ import annotations
++
++import argparse
++import json
++import sys
++import xml.etree.ElementTree as ET
++from pathlib import Path
++
++PYTEST_TOTAL = 143             # collected tests in this tree (local --collect-only at freeze; PREFLIGHT)
++EXPECTED_SKIPS = 2
++SKIP_SITE = 'analysis/test_attn_entropy.py:142'
++REQUIRED = ('tests/test_run_pack.py', 'tests/test_pid_traced_only.py', 'tests/test_option_c_amendment.py',
++            'tests/test_pilot1005.py', 'tests/test_pilot_stage.py', 'tests/test_readout_pilot.py',
++            'tests/test_gate_check.py')
++N_CONFIGS = 19
++THRESHOLD_C = 0.2109624456315518
++LABELS_SHA256 = 'e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617'
++
++
++def case_file(case):
++    """tests/test_x.py from a junit testcase: pytest writes classname 'tests.test_x' or
++    'tests.test_x.ClassName'; the file attribute is used when present."""
++    if case.get('file'):
++        return case.get('file')
++    parts = case.get('classname', '').split('.')
++    for cut in range(len(parts), 0, -1):
++        if parts[cut - 1].startswith('test_'):
++            return '/'.join(parts[:cut]) + '.py'
++    return case.get('classname', '')
++
++
++def check_pytest(junit, exit_code, total=PYTEST_TOTAL):
++    root = ET.parse(junit).getroot()
++    cases = list(root.iter('testcase'))
++    outcome = {}
++    skipped = []
++    for case in cases:
++        key = f"{case_file(case)}::{case.get('name')}"
++        if case.find('failure') is not None or case.find('error') is not None:
++            outcome[key] = 'failed'
++        elif case.find('skipped') is not None:
++            node = case.find('skipped')
++            outcome[key] = 'skipped'
++            skipped.append((key, (node.get('message') or '') + ' ' + (node.text or '')))
++        else:
++            outcome[key] = 'passed'
++    failed = [k for k, v in outcome.items() if v == 'failed']
++    suite_errors = sum(int(s.get('errors', 0)) for s in root.iter('testsuite'))
++    if failed:
++        return f'{len(failed)} failed: {",".join(failed[:5])}'
++    if suite_errors:
++        return f'{suite_errors} collection/suite errors'
++    if exit_code != 0:
++        return f'pytest exit {exit_code}'
++    if len(skipped) != EXPECTED_SKIPS:
++        return f'{len(skipped)} skipped, expected {EXPECTED_SKIPS}: {[k for k, _ in skipped]}'
++    stray = [k for k, text in skipped if SKIP_SITE not in text or not k.startswith('analysis/test_attn_entropy.py::')]
++    if stray:
++        return f'unexpected skip: {stray}'
++    if len(outcome) != total:
++        return f'{len(outcome)} tests collected, expected {total}'
++    for name in REQUIRED:
++        mine = {k: v for k, v in outcome.items() if k.startswith(name + '::')}
++        if not mine or any(v != 'passed' for v in mine.values()):
++            return f'required file {name}: {len(mine)} tests, not all passed'
++    return None
++
++
++def check_cpu_gate(log, exit_code):
++    lines = Path(log).read_text().splitlines()
++    if exit_code != 0:
++        return f'cpu_gate exit {exit_code}'
++    if f'PREFLIGHT_ALL_PASS {N_CONFIGS} production 0 pilot_only {N_CONFIGS}' not in lines:
++        return 'no PREFLIGHT_ALL_PASS line for all configs'
++    n_pass = sum(line.startswith('CONFIG_PREFLIGHT_PASS ') for line in lines)
++    n_pid = sum(line.startswith(('PID_TRACED_ONLY_OK ', 'PID_HISTORICAL_INPUT_OK ')) for line in lines)
++    groups = {line.split()[1] for line in lines if line.startswith('PAIRED_INIT_OK ')}
++    if n_pass != N_CONFIGS or n_pid != N_CONFIGS:
++        return f'{n_pass} CONFIG_PREFLIGHT_PASS, {n_pid} PID lines, expected {N_CONFIGS}'
++    if groups != {'E', 'A07'}:
++        return f'PAIRED_INIT_OK groups {sorted(groups)}'
++    return None
++
++
++def check_threshold(path):
++    rule = json.loads(Path(path).read_text())
++    if rule.get('val_accuracy_threshold') != THRESHOLD_C:
++        return f"threshold {rule.get('val_accuracy_threshold')} != {THRESHOLD_C}"
++    if rule.get('labels_sha256') != LABELS_SHA256:
++        return f"labels sha {rule.get('labels_sha256')} != {LABELS_SHA256}"
++    return None
++
++
++def main(argv=None):
++    ap = argparse.ArgumentParser()
++    sub = ap.add_subparsers(dest='mode', required=True)
++    p = sub.add_parser('pytest')
++    p.add_argument('--junit', required=True)
++    p.add_argument('--exit-code', type=int, required=True)
++    p.add_argument('--total', type=int, default=PYTEST_TOTAL)
++    c = sub.add_parser('cpu-gate')
++    c.add_argument('--log', required=True)
++    c.add_argument('--exit-code', type=int, required=True)
++    t = sub.add_parser('threshold')
++    t.add_argument('--json', required=True)
++    args = ap.parse_args(argv)
++    try:
++        if args.mode == 'pytest':
++            problem = check_pytest(args.junit, args.exit_code, args.total)
++        elif args.mode == 'cpu-gate':
++            problem = check_cpu_gate(args.log, args.exit_code)
++        else:
++            problem = check_threshold(args.json)
++    except (OSError, ValueError, ET.ParseError) as exc:
++        problem = f'unreadable input: {type(exc).__name__}: {exc}'
++    print(f'GATE_CHECK {args.mode} ' + ('PASS' if problem is None else f'FAIL {problem}'), flush=True)
++    return 0 if problem is None else 1
++
++
++if __name__ == '__main__':
++    sys.exit(main())
+diff --git a/tests/test_gate_check.py b/tests/test_gate_check.py
+new file mode 100644
+index 0000000..d8e6a86
+--- /dev/null
++++ b/tests/test_gate_check.py
+@@ -0,0 +1,91 @@
++"""CPU-gate pass/fail checks (patch 0040): gate_check.py on synthetic junit XML, logs and threshold files."""
++import importlib.util
++import json
++import tempfile
++import unittest
++from pathlib import Path
++
++TREE = Path(__file__).resolve().parents[1]
++spec = importlib.util.spec_from_file_location('gate_check', TREE / 'campaigns' / 'pilot1005' / 'gate_check.py')
++gc = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(gc)
++
++SKIP = ('<skipped type="pytest.skip" message="main() is exercised on the A build">'
++        'analysis/test_attn_entropy.py:142: main() is exercised on the A build</skipped>')
++
++
++def junit(extra_pass=0, fail=None, skips=2, stray_skip=False, missing_required=None):
++    cases = []
++    for name in gc.REQUIRED:
++        if name == missing_required:
++            continue
++        mod = name[:-3].replace('/', '.')
++        cases.append(f'<testcase classname="{mod}" name="test_one" time="0.1"/>')
++    for i in range(extra_pass):
++        cases.append(f'<testcase classname="tests.test_other" name="test_{i}" time="0.1"/>')
++    for i in range(skips):
++        cases.append(f'<testcase classname="analysis.test_attn_entropy" name="test_main[{i}]" time="0">{SKIP}</testcase>')
++    if stray_skip:
++        cases.append('<testcase classname="tests.test_other" name="test_skipme" time="0">'
++                     '<skipped message="no gpu">tests/test_other.py:9: no gpu</skipped></testcase>')
++    if fail:
++        cases.append(f'<testcase classname="{fail}" name="test_bad" time="0"><failure message="x">boom</failure></testcase>')
++    return ('<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" '
++            f'failures="0" skipped="{skips}" tests="{len(cases)}">' + ''.join(cases) + '</testsuite></testsuites>')
++
++
++class PytestCheck(unittest.TestCase):
++    def check(self, xml, exit_code=0, total=None):
++        with tempfile.TemporaryDirectory() as tmp:
++            path = Path(tmp) / 'p.xml'
++            path.write_text(xml)
++            n = total if total is not None else len(gc.REQUIRED) + 10 + 2
++            return gc.check_pytest(path, exit_code, n)
++
++    def test_pass(self):
++        self.assertIsNone(self.check(junit(extra_pass=10)))
++
++    def test_failure_exit_and_count(self):
++        self.assertIn('failed', self.check(junit(extra_pass=9, fail='tests.test_other'), exit_code=1))
++        self.assertIn('pytest exit 1', self.check(junit(extra_pass=10), exit_code=1))
++        self.assertIn('collected', self.check(junit(extra_pass=11)))
++
++    def test_skips_exact(self):
++        self.assertIn('skipped', self.check(junit(extra_pass=11, skips=1)))
++        self.assertIn('skipped', self.check(junit(extra_pass=9, skips=2, stray_skip=True)))
++
++    def test_required_file_missing(self):
++        problem = self.check(junit(extra_pass=11, missing_required='tests/test_run_pack.py'))
++        self.assertIn('tests/test_run_pack.py', problem)
++
++
++class OtherChecks(unittest.TestCase):
++    def test_cpu_gate_log(self):
++        lines = []
++        for i in range(gc.N_CONFIGS):
++            lines += [f'PID_TRACED_ONLY_OK n{i} warmup 1', f'CONFIG_PREFLIGHT_PASS n{i} params 1']
++        lines += ['PAIRED_INIT_OK E seed 1 arms 9', 'PAIRED_INIT_OK A07 seed 1 arms 5',
++                  f'PREFLIGHT_ALL_PASS {gc.N_CONFIGS} production 0 pilot_only {gc.N_CONFIGS}']
++        with tempfile.TemporaryDirectory() as tmp:
++            log = Path(tmp) / 'g.log'
++            log.write_text('\n'.join(lines) + '\n')
++            self.assertIsNone(gc.check_cpu_gate(log, 0))
++            self.assertIn('exit', gc.check_cpu_gate(log, 1))
++            log.write_text('\n'.join(lines[2:]) + '\n')
++            self.assertIsNotNone(gc.check_cpu_gate(log, 0))
++
++    def test_threshold(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            path = Path(tmp) / 't.json'
++            path.write_text(json.dumps({'val_accuracy_threshold': gc.THRESHOLD_C, 'labels_sha256': gc.LABELS_SHA256}))
++            self.assertIsNone(gc.check_threshold(path))
++            path.write_text(json.dumps({'val_accuracy_threshold': 0.21, 'labels_sha256': gc.LABELS_SHA256}))
++            self.assertIn('threshold', gc.check_threshold(path))
++
++    def test_main_prints_one_line(self):
++        with tempfile.TemporaryDirectory() as tmp:
++            self.assertEqual(gc.main(['threshold', '--json', str(Path(tmp) / 'missing.json')]), 1)
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)

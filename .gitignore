@@ -1,0 +1,124 @@
+# Repo root since 2026-07-05 (was qkeras-bitnet-run-2026-06-22/, itself renamed to
+# bnjettag/ later the same day once the dated name had calcified into the permanent
+# working tree; models/ was folded into bnjettag/models/ in that same rename).
+# Personal learning notes (moved into _attic/learning-vault/ on 2026-08-13).
+LEARN/
+.vibe-wise/
+.obsidian/
+_attic/learning-vault/
+
+# Secrets — never commit
+**/wandb-api-key.txt
+*.env
+
+# Heavy / generated artifacts (noise for agents too)
+.venv-plots/
+.venv-hgq2/
+session-export-*/
+*-local-command-caveat*.txt
+# local W&B run dirs, wherever they appear (never build inputs)
+wandb/
+!bnjettag/code/hgq2/bnhgq2/wandb_util.py
+*.zip
+__pycache__/
+.DS_Store
+
+# Large binaries — fetch from W&B (models) / Zenodo (data); docs stay tracked
+# (anchored to repo root: other tracked subdirs must not match)
+/bnjettag/models/*
+!/bnjettag/models/MODEL.md
+/data/
+
+# Third-party clones and heavy superseded material. Everything pre-Round-14 moved to
+# _attic/ on 2026-08-13 (see _attic/README.md); the manifest and restore script stay
+# tracked so the move is reversible, the bulk clones and legacy archive do not.
+/reference-code/
+/archive/
+/_attic/legacy-archive/
+/_attic/pre-r14/models/
+
+# Downloaded third-party paper PDFs (notes + INDEX + fetch script stay tracked)
+docs/literature/**/*.pdf
+
+# Claude Code local settings (machine-specific); agents/, commands/, memory/ stay shareable
+.claude/settings.local.json
+
+# Obsidian mirror of the assistant sessions, written by ~/.claude/hooks/claude_to_obsidian.py
+# (the vault itself, .obsidian/, is ignored further up). Agent context, not the record.
+/Sessions/
+
+# ---------------------------------------------------------------------------
+# Local "lab" layer — personal agents / skills / tools. NEVER pushed.
+# The shared team (5 agents, 3 skills, 7 commands) stays tracked; everything
+# listed here is Kai's private augmentation. See .claude/lab/README.md.
+# Adding a new lab agent/skill/command? Add its path here in the same breath.
+# ---------------------------------------------------------------------------
+.claude/lab/
+
+# lab agents
+.claude/agents/explainer.md
+.claude/agents/repo-artisan.md
+.claude/agents/paper-miner.md
+.claude/agents/arxiv-scout.md
+.claude/agents/upstream-diff.md
+.claude/agents/kb-builder.md
+.claude/agents/skeptic.md
+.claude/agents/figure-smith.md
+
+# lab skills
+.claude/skills/explain-well/
+.claude/skills/human-repo/
+.claude/skills/upstream-compare/
+.claude/skills/paper-dossier/
+.claude/skills/red-team/
+.claude/skills/prespawn-qa/
+.claude/skills/figure-forge/
+
+# lab commands
+.claude/commands/ask.md
+.claude/commands/kb.md
+.claude/commands/explain.md
+.claude/commands/dossier.md
+.claude/commands/scout.md
+.claude/commands/upstream.md
+.claude/commands/redteam.md
+.claude/commands/humanize.md
+
+
+# ---------------------------------------------------------------------------
+# Store policy (decisions.md 2026-08-24): big regenerable/durable-elsewhere
+# artifacts stay out of git; the numbers-of-record files beside them are
+# tracked. Manifest: bnjettag/results/synthesis/MANIFEST-ignored-artifacts.md
+bnjettag/roc-results/**/*.npz
+bnjettag/roc-results/**/_dl*/
+bnjettag/roc-results/**/_ckpt_dl/
+bnjettag/results/synthesis/runs/**/hls_prj*/
+bnjettag/results/synthesis/runs/**/*.tar.gz
+bnjettag/results/synthesis/runs/**/csynth.xml
+bnjettag/results/synthesis/runs/**/vivado_run.log
+bnjettag/results/synthesis/runs/**/vivado.log
+bnjettag/results/synthesis/runs/**/csynth_rf1_partial/*.rpt
+bnjettag/results/synthesis/runs/**/mulder_evidence/
+bnjettag/results/r14/runs/
+bnjettag/results/hgq2/runs/
+# new debris under the attic (tracked history there is unaffected)
+_attic/
+# personal scratch at the repo root
+/Untitled.base
+/Untitled.canvas
+/files (2)/
+/practice.py
+/solutions.md
+/notes-2026-08-13.md
+/.claudian/
+/docs/reports/~$*.pptx
+
+# ---------------------------------------------------------------------------
+# Fresh lab 2026-10-10 (bnjettag-oct9): machine-local or over GitHub's size limits
+/data
+/local/runs-cache/
+/local/jev-runtime/
+campaigns/**/telemetry-raw-*/
+bnjettag/results/synthesis/runs/**/csynth_rf1/csynth.xml
+# own git repos with their own history
+/publication/

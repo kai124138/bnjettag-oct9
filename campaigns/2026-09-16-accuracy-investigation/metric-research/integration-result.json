@@ -1,0 +1,96 @@
+{
+  "synthetic_regression_only": true,
+  "versions": {
+    "keras": "3.15.0",
+    "tensorflow": "2.21.0",
+    "numpy": "2.5.0"
+  },
+  "ablation_sha256": "4e720147f07de0f708956814629ff5ec89dae098d4a1508de67911add000667e",
+  "cases": [
+    {
+      "case": "accuracy_feasible",
+      "passed": true,
+      "selection": "max_accuracy_under_final_budget",
+      "selected": {
+        "epoch": 0,
+        "val_macro_auc": 0.525,
+        "val_categorical_accuracy": 0.25,
+        "ebops": 1739182
+      },
+      "epoch_metrics": [
+        {
+          "epoch": 0,
+          "train_categorical_accuracy": 0.15000000596046448,
+          "val_categorical_accuracy": 0.25,
+          "val_macro_auc": 0.525,
+          "ebops": 1739182
+        },
+        {
+          "epoch": 1,
+          "train_categorical_accuracy": 0.15000000596046448,
+          "val_categorical_accuracy": 0.2,
+          "val_macro_auc": 0.525,
+          "ebops": 1739182
+        }
+      ]
+    },
+    {
+      "case": "default_auc_feasible",
+      "passed": true,
+      "selection": "max_auc_under_final_budget",
+      "selected": {
+        "epoch": 0,
+        "val_macro_auc": 0.525,
+        "val_categorical_accuracy": 0.25,
+        "ebops": 1739182
+      },
+      "epoch_metrics": [
+        {
+          "epoch": 0,
+          "train_categorical_accuracy": 0.15000000596046448,
+          "val_categorical_accuracy": 0.25,
+          "val_macro_auc": 0.525,
+          "ebops": 1739182
+        },
+        {
+          "epoch": 1,
+          "train_categorical_accuracy": 0.15000000596046448,
+          "val_categorical_accuracy": 0.2,
+          "val_macro_auc": 0.525,
+          "ebops": 1739182
+        }
+      ]
+    },
+    {
+      "case": "accuracy_infeasible",
+      "passed": true,
+      "selection": "minimum_ebops_no_feasible_checkpoint",
+      "selected": {
+        "epoch": 0,
+        "val_macro_auc": 0.525,
+        "val_categorical_accuracy": 0.25,
+        "ebops": 1739182
+      },
+      "epoch_metrics": [
+        {
+          "epoch": 0,
+          "train_categorical_accuracy": 0.15000000596046448,
+          "val_categorical_accuracy": 0.25,
+          "val_macro_auc": 0.525,
+          "ebops": 1739182
+        },
+        {
+          "epoch": 1,
+          "train_categorical_accuracy": 0.15000000596046448,
+          "val_categorical_accuracy": 0.2,
+          "val_macro_auc": 0.525,
+          "ebops": 1739182
+        }
+      ]
+    }
+  ],
+  "job_wall_seconds": 204.0,
+  "reserved_cpu_seconds_upper_bound": 408.0,
+  "job": "cms-ml/kai-accuracy-selection-smoke-0917",
+  "cleanup_verified": true
+}

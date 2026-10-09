@@ -1,0 +1,181 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-ptw-n8-0925-k6-p3
+  namespace: cms-ml
+  labels:
+    app: kai-ptw-n8
+    pack: p3
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app: kai-ptw-n8
+        pack: p3
+    spec:
+      restartPolicy: Never
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                - nautilus-ext-gpu01.fullerton.edu
+                - ren-gp-argo-01.madren.org
+                - k8s-chase-ci-07.calit2.optiputer.net
+                - k8s-chase-ci-10.calit2.optiputer.net
+                - k8s-haosu-22.sdsc.optiputer.net
+                - ry-gpu-08.sdsc.optiputer.net
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-L40S
+                - NVIDIA-L40
+                - NVIDIA-A100-SXM4-80GB
+                - NVIDIA-A100-80GB-PCIe
+                - NVIDIA-A100-PCIE-40GB
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-L40S
+                - NVIDIA-L40
+      containers:
+      - name: train
+        image: python:3.12
+        command:
+        - bash
+        - -c
+        args:
+        - "set -eo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\n\
+          export TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=2 OMP_NUM_THREADS=2\n\
+          mkdir -p /work/code /work/data /work/outputs\nCODE=/work/code\necho \"aad983805cbaec6f87d810f199cbee2d47ea22c747596429939c57eae3ffd747\
+          \  /cmcode/hgq2.tar.gz\" | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz\
+          \ -C \"$CODE\" --strip-components=1\necho \"bad6494c6ee6e881d09850ebc3a92bf54a3d52980808727d72bf087a160425ed\
+          \  $CODE/bnhgq2/train.py\" | sha256sum -c -\necho \"960a67b2d6b59c8763964b67305d8a07ffa9111e7c8b7e76d0e77addb6afcd61\
+          \  $CODE/bnhgq2/pt_weights.py\" | sha256sum -c -\nfor f in \"$CODE/configs/ptw-n8-20260925-base-w1a8.json\"\
+          \ \"$CODE/configs/ptw-n8-20260925-ptw5-w1a8.json\" \"$CODE/configs/ptw-n8-20260925-ptwnc-w1a8.json\"\
+          ; do test -f \"$f\" || { echo \"[fatal] missing $f\"; exit 1; }; done\n\
+          echo \"[gate] archive aad983805cba + train.py + pt_weights.py + 3 arm configs\
+          \ verified\"\nexport PYTHONPATH=\"$CODE\" BNHGQ2_CODE_SHA256=aad983805cbaec6f87d810f199cbee2d47ea22c747596429939c57eae3ffd747\n\
+          \nUTIL=/work/outputs/gpu_util.csv\n( set +e +o pipefail; while true; do\n\
+          \    q=$(nvidia-smi --query-gpu=name,utilization.gpu,memory.used --format=csv,noheader,nounits\
+          \ 2>/dev/null | head -1)\n    m=$(cat /sys/fs/cgroup/memory.current 2>/dev/null\
+          \ || echo NA)\n    c=$(awk '/usage_usec/{print $2}' /sys/fs/cgroup/cpu.stat\
+          \ 2>/dev/null || echo NA)\n    echo \"$(date +%s), $q, $m, $c\" >> \"$UTIL\"\
+          ; sleep 5\n  done ) &\n( set +e +o pipefail; while sleep 300; do\n    echo\
+          \ \"[gpu-util] $(date -u +%FT%TZ) $(tail -n 60 \"$UTIL\" | awk -F', ' '{s+=$3;\
+          \ n++; if($5!=\"NA\") m=$5} END{if(n) printf \"last5min_mean=%.1f%% n=%d\
+          \ ram=%.1fGiB\", s/n, n, m/1073741824}')\"\n  done ) &\n\necho \"[setup]\
+          \ $(date -u +%FT%TZ) pinned deps\"\npip install -q --no-cache-dir \"tensorflow[and-cuda]==2.21.0\"\
+          \ \"keras==3.15.0\" \"hgq2==0.1.9\" \"quantizers==1.2.2\" \"scikit-learn==1.9.0\"\
+          \ \"h5py==3.14.0\" \"wandb==0.28.0\" \"hls4ml==1.3.0\" \"numpy==2.5.0\"\
+          \ \"matplotlib==3.11.0\"\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\"\
+          )\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\
+          \nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo\
+          \ '[fatal] no GPU'; exit 1; }\npython -c \"import tensorflow as tf; g=tf.config.list_physical_devices('GPU');\
+          \ assert g, 'NO GPU'; print('[gpu] TF sees', g)\"\nexport WANDB_PROJECT=BNJetTag-Weights\
+          \ WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_GROUP=ptw-n8-20260925 WANDB_MODE=online\n\
+          python -c \"import wandb; wandb.Api().viewer; print('[wandb] authentication\
+          \ OK')\"\necho \"[data] $(date -u +%FT%TZ) fetch HLS4ML LHC Jet 150p TRAIN\
+          \ split from Zenodo\"\npython -u -c 'import urllib.request; urllib.request.urlretrieve(\"\
+          https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1\"\
+          , \"/work/data/train.tar.gz\")'\nsz=$(stat -c %s /work/data/train.tar.gz);\
+          \ echo \"[data] tarball bytes: $sz\"\n[ \"$sz\" -gt 2500000000 ] || { echo\
+          \ \"[fatal] train tarball too small ($sz)\"; exit 1; }\ntar -xzf /work/data/train.tar.gz\
+          \ -C /work/data && rm -f /work/data/train.tar.gz\nDATA=$(dirname \"$(find\
+          \ /work/data -name 'jetImage_*.h5' -print -quit)\")\n[ -n \"$DATA\" ] ||\
+          \ { echo \"[fatal] no jetImage_*.h5 after extract\"; exit 1; }\necho \"\
+          [data] DATA=$DATA ($(ls \"$DATA\" | wc -l) files) $(date -u +%FT%TZ)\"\n\
+          export BNHGQ2_TRAIN_DATA=\"$DATA\" BNHGQ2_OUT_ROOT=/work/outputs BNHGQ2_STORE=/work/outputs/_store\n\
+          \ncd \"$CODE\"\npids=(); leaves=()\nmkdir -p /work/outputs/ptw-n8-0925-base-s5\n\
+          ( set -o pipefail; WANDB_RUN_NAME=ptw-n8-0925-base-s5 WANDB_TAGS=ptw,l1x3,n8,w1a8,base,s5\
+          \ python -u \"$CODE/run_stage.py\" train --config \"$CODE/configs/ptw-n8-20260925-base-w1a8.json\"\
+          \ --seed 5 --out-dir /work/outputs/ptw-n8-0925-base-s5 2>&1 | tee /work/outputs/ptw-n8-0925-base-s5/train.log\
+          \ | sed -u \"s/^/[ptw-n8-0925-base-s5] /\" ) &\npids+=($!); leaves+=(ptw-n8-0925-base-s5)\n\
+          \nmkdir -p /work/outputs/ptw-n8-0925-ptw5-s5\n( set -o pipefail; WANDB_RUN_NAME=ptw-n8-0925-ptw5-s5\
+          \ WANDB_TAGS=ptw,l1x3,n8,w1a8,ptw5,s5 python -u \"$CODE/run_stage.py\" train\
+          \ --config \"$CODE/configs/ptw-n8-20260925-ptw5-w1a8.json\" --seed 5 --out-dir\
+          \ /work/outputs/ptw-n8-0925-ptw5-s5 2>&1 | tee /work/outputs/ptw-n8-0925-ptw5-s5/train.log\
+          \ | sed -u \"s/^/[ptw-n8-0925-ptw5-s5] /\" ) &\npids+=($!); leaves+=(ptw-n8-0925-ptw5-s5)\n\
+          \nmkdir -p /work/outputs/ptw-n8-0925-ptwnc-s5\n( set -o pipefail; WANDB_RUN_NAME=ptw-n8-0925-ptwnc-s5\
+          \ WANDB_TAGS=ptw,l1x3,n8,w1a8,ptwnc,s5 python -u \"$CODE/run_stage.py\"\
+          \ train --config \"$CODE/configs/ptw-n8-20260925-ptwnc-w1a8.json\" --seed\
+          \ 5 --out-dir /work/outputs/ptw-n8-0925-ptwnc-s5 2>&1 | tee /work/outputs/ptw-n8-0925-ptwnc-s5/train.log\
+          \ | sed -u \"s/^/[ptw-n8-0925-ptwnc-s5] /\" ) &\npids+=($!); leaves+=(ptw-n8-0925-ptwnc-s5)\n\
+          \nmkdir -p /work/outputs/ptw-n8-0925-base-s6\n( set -o pipefail; WANDB_RUN_NAME=ptw-n8-0925-base-s6\
+          \ WANDB_TAGS=ptw,l1x3,n8,w1a8,base,s6 python -u \"$CODE/run_stage.py\" train\
+          \ --config \"$CODE/configs/ptw-n8-20260925-base-w1a8.json\" --seed 6 --out-dir\
+          \ /work/outputs/ptw-n8-0925-base-s6 2>&1 | tee /work/outputs/ptw-n8-0925-base-s6/train.log\
+          \ | sed -u \"s/^/[ptw-n8-0925-base-s6] /\" ) &\npids+=($!); leaves+=(ptw-n8-0925-base-s6)\n\
+          \nmkdir -p /work/outputs/ptw-n8-0925-ptw5-s6\n( set -o pipefail; WANDB_RUN_NAME=ptw-n8-0925-ptw5-s6\
+          \ WANDB_TAGS=ptw,l1x3,n8,w1a8,ptw5,s6 python -u \"$CODE/run_stage.py\" train\
+          \ --config \"$CODE/configs/ptw-n8-20260925-ptw5-w1a8.json\" --seed 6 --out-dir\
+          \ /work/outputs/ptw-n8-0925-ptw5-s6 2>&1 | tee /work/outputs/ptw-n8-0925-ptw5-s6/train.log\
+          \ | sed -u \"s/^/[ptw-n8-0925-ptw5-s6] /\" ) &\npids+=($!); leaves+=(ptw-n8-0925-ptw5-s6)\n\
+          \nmkdir -p /work/outputs/ptw-n8-0925-ptwnc-s6\n( set -o pipefail; WANDB_RUN_NAME=ptw-n8-0925-ptwnc-s6\
+          \ WANDB_TAGS=ptw,l1x3,n8,w1a8,ptwnc,s6 python -u \"$CODE/run_stage.py\"\
+          \ train --config \"$CODE/configs/ptw-n8-20260925-ptwnc-w1a8.json\" --seed\
+          \ 6 --out-dir /work/outputs/ptw-n8-0925-ptwnc-s6 2>&1 | tee /work/outputs/ptw-n8-0925-ptwnc-s6/train.log\
+          \ | sed -u \"s/^/[ptw-n8-0925-ptwnc-s6] /\" ) &\npids+=($!); leaves+=(ptw-n8-0925-ptwnc-s6)\n\
+          \necho \"[pack] $(date -u +%FT%TZ) started 6 trainings: ${leaves[*]}\"\n\
+          fail=0\nfor i in \"${!pids[@]}\"; do\n  if wait \"${pids[$i]}\"; then echo\
+          \ \"[pack] ${leaves[$i]} OK $(date -u +%FT%TZ)\"\n  else rc=$?; echo \"\
+          [pack] ${leaves[$i]} FAILED rc=$rc $(date -u +%FT%TZ)\"; fail=1; fi\ndone\n\
+          python - <<'PYEOF' || echo \"[aux] upload skipped\"\nimport glob, os, wandb\n\
+          api = wandb.Api()\nfor d in sorted(glob.glob(\"/work/outputs/ptw-n8-0925-*\"\
+          )):\n    name = os.path.basename(d)\n    try:\n        runs = list(api.runs(\"\
+          kayamaguchi-uc-san-diego/BNJetTag-Weights\", filters={\"display_name\":\
+          \ name, \"group\": \"ptw-n8-20260925\"}))\n        for r in runs:\n    \
+          \        for f in [\"pt_weights.json\", \"train.log\"] + [os.path.basename(p)\
+          \ for p in glob.glob(d + \"/*.png\")]:\n                if os.path.exists(os.path.join(d,\
+          \ f)):\n                    r.upload_file(os.path.join(d, f), root=d)\n\
+          \            r.upload_file(\"/work/outputs/gpu_util.csv\", root=\"/work/outputs\"\
+          )\n        print(f\"[aux] {name}: uploaded to {len(runs)} run(s)\", flush=True)\n\
+          \    except Exception as e:\n        print(f\"[aux] {name}: upload warn\
+          \ {e}\", flush=True)\nPYEOF\n\necho \"[gpu-util] whole-pod mean over all\
+          \ samples:\"; awk -F\", \" '{s+=$3;n++} END{if(n) printf \"%.1f%% n=%d\\\
+          n\", s/n, n}' \"$UTIL\"\n[ \"$fail\" = 0 ] || exit 1\necho \"[done] $(date\
+          \ -u +%FT%TZ)\"\n"
+        resources:
+          requests:
+            cpu: '10'
+            memory: 28Gi
+            ephemeral-storage: 32Gi
+            nvidia.com/gpu: '1'
+          limits:
+            cpu: '10'
+            memory: 28Gi
+            ephemeral-storage: 32Gi
+            nvidia.com/gpu: '1'
+        volumeMounts:
+        - name: cmcode
+          mountPath: /cmcode
+        - name: work
+          mountPath: /work
+        env:
+        - name: WANDB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kai-wandb
+              key: WANDB_API_KEY
+      volumes:
+      - name: cmcode
+        configMap:
+          name: kai-ptw-n8-code-aad983805c
+      - name: work
+        emptyDir:
+          sizeLimit: 28Gi
+  activeDeadlineSeconds: 172800

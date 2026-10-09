@@ -1,0 +1,211 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-gpubench-l40s",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "gpu-bench-20260929",
+      "app": "kai-gpubench-l40s",
+      "bnjettag.io/arms-per-pod": "9"
+    },
+    "annotations": {
+      "bnjettag.io/telemetry-only": "GPU-product throughput benchmark, campaigns/2026-09-29-gpu-benchmark; nothing it writes is a result",
+      "bnjettag.io/gpu-product": "NVIDIA-L40S via nvidia.com/gpu (46068 MiB, node label nvidia.com/gpu.memory)",
+      "bnjettag.io/phases": "p1-E-k9 p2-A07-k4 p3-E-k4 p4-A07-k2; stop_after 21 (traced epochs 1, 10, 20)",
+      "bnjettag.io/k-rule": "K_rule = floor(0.9 x 46068 / per-process MiB), per-process E 4350 / A07 8446 (A10, TF_FORCE_GPU_ALLOW_GROWTH, nvidia-smi --query-compute-apps: E 4,350 MiB (K=5 pod, c5805), A07 8,446 MiB (K=3 pods, gpu-16 and gpu-17); campaigns/2026-09-26-training-batch/RUN.md \"Takeover check, 2026-09-29T02:47-03:10Z\"); K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+      "bnjettag.io/k-caps": "E: K_rule 9, K_run 9, K_low 4 (no cap binds); A07: K_rule 4, K_run 4, K_low 2 (no cap binds)",
+      "bnjettag.io/per-arm-resources": "2 CPU and 8Gi per arm at the largest K (9); smaller phases leave the rest unused",
+      "bnjettag.io/wandb": "disabled: no secret mounted, WANDB_MODE=disabled, bench_driver calls ablation.run_training(remote=False)",
+      "bnjettag.io/gpu-fingerprint": "kai-chang0926-fp-e9511d1aeb sha256 e9511d1aeb39c7c8: chang0926-a-n64-s1 initial_ebops == 11559681 before any arm, else exit 9 (Delta REGRESSION_TICKET); a mismatch on a new product is a finding",
+      "bnjettag.io/bundle-sha256": "42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0 (kai-chang0926-code-42abed4b5d, manifest 041f981a), unchanged",
+      "bnjettag.io/bench-driver": "kai-gpubench-driver-4d2dcd7d9c sha256 4d2dcd7d9cebf85d1da985122053741a18046e3b48bafdbf1082b06877c40c22",
+      "bnjettag.io/run-root": "/data/chang-n64-20260926/gpu-bench/l40s/<phase>/runs/<name>; samples.csv every 60 s",
+      "bnjettag.io/retries": "backoffLimit 0 and no podFailurePolicy: never re-run automatically (a preempted pod fails the Job)",
+      "bnjettag.io/active-deadline": "pod 39000 s from pod start = 1800 s header + per phase (K x 21 x A10 s/run-epoch E 28 / A07 44 x 2.5 + 15 s x K + 900 s), rounded up to 600 s; Job 60600 s from creation (Pending counts) = the 21600 s [D6] window + the pod bound, a backstop",
+      "bnjettag.io/not-practical-after": "6 h after kubectl apply with no Running pod: delete the Job and keep the PodScheduled message (STUDY [D6], exclusion rule 3); cluster-ops",
+      "bnjettag.io/narrow-pool": "one product on purpose: the controlled timing comparison the setup doc (Pool policy) allows; decisions.md 2026-09-29; ends when the benchmark Jobs are deleted",
+      "bnjettag.io/node-survey": "node_survey_20260929T065531Z.json (read 2026-09-29T06:55:31Z): 2 schedulable of 4 nodes; 2 can hold this pod by allocatable"
+    }
+  },
+  "spec": {
+    "backoffLimit": 0,
+    "activeDeadlineSeconds": 60600,
+    "ttlSecondsAfterFinished": 604800,
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "gpu-bench-20260929",
+          "app": "kai-gpubench-l40s",
+          "bnjettag.io/arms-per-pod": "9"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 39000,
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-L40S"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "hcc-nrp-shor-c6017.unl.edu",
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "containers": [
+          {
+            "name": "bench",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nBR=/data/chang-n64-20260926/gpu-bench/l40s\necho \"BENCH_POD ${POD_NAME:-na} product NVIDIA-L40S slug l40s $(date -u +%Y-%m-%dT%H:%M:%SZ)\"\necho \"HOSTNAME_NODE ${NODE_NAME:-na}\"\nif [ -e \"$BR/samples.csv\" ] || compgen -G \"$BR/p[0-9]*\" > /dev/null; then echo \"BENCH_ROOT_NOT_EMPTY $BR: move it aside (never delete), then re-apply\"; exit 11; fi\nmkdir -p \"$BR\"\nexec > >(tee -a \"$BR/pod-${POD_NAME:-pod}.log\") 2>&1\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=\"$BR\" BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nunset BNJ_STAGE WANDB_PROJECT WANDB_ENTITY WANDB_API_KEY WANDB_TAGS\nexport WANDB_MODE=disabled\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nexport BNJ_RSS_GATE_LIMIT_MB=8192 BNJ_RSS_GATE_WINDOW=5:105\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\necho CACHE_READY\necho \"GPU_INFO $(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader || echo na)\"\ndf -h /data\necho \"PIP_FREEZE_SHA256 $(python -m pip freeze --all | sha256sum | cut -d' ' -f1)\"\necho 'e9511d1aeb39c7c8e48cc7dbc148ac623f3b2d9844d108da38f1ecfa2bdff1f1  /cmfp/fingerprint_check.py' | sha256sum -c -\nFP=0\npython -u /cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --data-root /data/chang-n64-20260926 --campaign-dir /work/code/campaigns/chang0926 --env-report || FP=$?\nif [ \"$FP\" != 0 ]; then echo \"FINGERPRINT_GATE_FAIL exit=$FP node=${NODE_NAME:-na}; no arm started\"; exit \"$FP\"; fi\necho '4d2dcd7d9cebf85d1da985122053741a18046e3b48bafdbf1082b06877c40c22  /cmbench/bench_driver.py' | sha256sum -c -\nexec python -u /cmbench/bench_driver.py pod --bench-root \"$BR\" --plan-json \"$BENCH_PLAN\"\n"
+            ],
+            "env": [
+              {
+                "name": "NODE_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.nodeName"
+                  }
+                }
+              },
+              {
+                "name": "POD_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.name"
+                  }
+                }
+              },
+              {
+                "name": "WANDB_MODE",
+                "value": "disabled"
+              },
+              {
+                "name": "BENCH_PLAN",
+                "value": "{\"product\":\"NVIDIA-L40S\",\"slug\":\"l40s\",\"card_mib\":46068,\"stop_after\":21,\"phases\":[{\"phase\":\"p1-E-k9\",\"class\":\"E\",\"k\":9,\"names\":[\"chang0926-a-n64-s1\",\"chang0926-a-n64-s2\",\"chang0926-a-n64-s3\",\"chang0926-a-n64-s4\",\"chang0926-a-n64-s5\",\"chang0926-a-n64-s6\",\"chang0926-a-n64-s7\",\"chang0926-a-n64-s8\",\"chang0926-b-n64-s1\"]},{\"phase\":\"p2-A07-k4\",\"class\":\"A07\",\"k\":4,\"names\":[\"chang0926-c-n64-s1\",\"chang0926-c-n64-s2\",\"chang0926-c-n64-s3\",\"chang0926-c-n64-s4\"]},{\"phase\":\"p3-E-k4\",\"class\":\"E\",\"k\":4,\"names\":[\"chang0926-a-n64-s1\",\"chang0926-a-n64-s2\",\"chang0926-a-n64-s3\",\"chang0926-a-n64-s4\"]},{\"phase\":\"p4-A07-k2\",\"class\":\"A07\",\"k\":2,\"names\":[\"chang0926-c-n64-s1\",\"chang0926-c-n64-s2\"]}]}"
+              },
+              {
+                "name": "BENCH_SAMPLE_SECONDS",
+                "value": "60"
+              },
+              {
+                "name": "BENCH_STALL_SECONDS",
+                "value": "3600"
+              },
+              {
+                "name": "BENCH_STAGGER_SECONDS",
+                "value": "15"
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "18",
+                "memory": "72Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "limits": {
+                "cpu": "18",
+                "memory": "72Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              },
+              {
+                "mountPath": "/cmfp",
+                "name": "fingerprint",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/cmbench",
+                "name": "bench",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-chang0926-code-42abed4b5d",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          },
+          {
+            "name": "fingerprint",
+            "configMap": {
+              "name": "kai-chang0926-fp-e9511d1aeb",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "bench",
+            "configMap": {
+              "name": "kai-gpubench-driver-4d2dcd7d9c",
+              "defaultMode": 420
+            }
+          }
+        ]
+      }
+    }
+  }
+}

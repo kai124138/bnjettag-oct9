@@ -1,0 +1,52 @@
+{
+  "n_validation": 124000,
+  "initialization_seed": 1,
+  "completed_epochs": 100,
+  "runs": [
+    {
+      "arm": "engram-e02-s1",
+      "validation_accuracy": 0.6102983870967742,
+      "macro_ovr_auc": 0.86945815285001,
+      "per_class_auc": [
+        0.8387572071956456,
+        0.869682177652637,
+        0.8660077798883674,
+        0.8514408123326486,
+        0.9214027871807515
+      ],
+      "augmented_cost": 533092,
+      "budget_met": false,
+      "predictions_sha256": "989e0858b8aa8f9ad6a7decd0d4e1ee905489cf0742f3c5da5b80d7a6bb161ec"
+    },
+    {
+      "arm": "engram-e03-s1",
+      "validation_accuracy": 0.6018467741935484,
+      "macro_ovr_auc": 0.8639880318540216,
+      "per_class_auc": [
+        0.8334595697441611,
+        0.8668100207741356,
+        0.857391410277304,
+        0.845055276717951,
+        0.9172238817565564
+      ],
+      "augmented_cost": 578158,
+      "budget_met": false,
+      "predictions_sha256": "e3e2d2c184418c97ae2c310f7955699c374ab8069178c3583f5aa0b82cefb8c4"
+    }
+  ],
+  "comparison": "E02 minus E03 categorical accuracy",
+  "difference_percentage_points": 0.8451612903225825,
+  "paired_bootstrap_95_percent_interval_percentage_points": [
+    0.628225806451613,
+    1.0612903225806452
+  ],
+  "joint_correctness_counts": [
+    39402,
+    8921,
+    9969,
+    65708
+  ],
+  "bootstrap_replicates": 50000,
+  "bootstrap_seed": 20260920,
+  "caveat": "Descriptive validation-sample uncertainty conditional on these selected single-seed checkpoints; not training-seed uncertainty or an independent test-set significance claim."
+}

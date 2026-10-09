@@ -1,0 +1,282 @@
+{
+ "written": "2026-08-24T17:27:32",
+ "config": "r14-l1x3-n8-w8a8",
+ "config_hash": "9cc6e336",
+ "variant": "w8a8",
+ "seed": 3,
+ "tag": "r14n8",
+ "checkpoint": "bnjettag/roc-results/r14/n8/_ckpt_dl/w8a8-s3/model_best.keras",
+ "train_meta": {
+  "variant": "w8a8",
+  "seed": 3,
+  "config": "r14-l1x3-n8-w8a8",
+  "config_hash": "9cc6e336",
+  "params": 18657,
+  "trainable_params": 18511,
+  "best_epoch": 98,
+  "best_val_macro_auc": 0.8841044885502194,
+  "act_bits": 8,
+  "weight": "int8_absmax",
+  "lr": 2e-05,
+  "clip_mode": "value",
+  "epochs_run": 101,
+  "smoke": false,
+  "n_train": 496000,
+  "n_val": 124000,
+  "n_files": 62,
+  "features": [
+   "pt",
+   "etarel",
+   "phirel"
+  ],
+  "train_seconds": 1841.3,
+  "act_calib_i": {
+   "input_proj": 3,
+   "bit_block_0_attn_Wq": 2,
+   "bit_block_0_attn_Wk": 2,
+   "bit_block_0_attn_Wv": 2,
+   "bit_block_0_attn_scores__in0": 3,
+   "bit_block_0_attn_scores__in1": 2,
+   "bit_block_0_attn_Wo": 3,
+   "bit_block_0_ffn_fc1": 3,
+   "bit_block_0_ffn_fc2": 2,
+   "bit_block_1_attn_Wq": 3,
+   "bit_block_1_attn_Wk": 3,
+   "bit_block_1_attn_Wv": 3,
+   "bit_block_1_attn_scores__in0": 3,
+   "bit_block_1_attn_scores__in1": 3,
+   "bit_block_1_attn_Wo": 3,
+   "bit_block_1_ffn_fc1": 4,
+   "bit_block_1_ffn_fc2": 3,
+   "head_fc1": 3,
+   "head_fc2": 3
+  },
+  "act_calib": "trainable",
+  "act_recalib_epochs": [],
+  "act_grid_before": {
+   "input_proj": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_attn_Wq": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wk": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_scores__in0": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wv": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_0_attn_ctx__in1": [
+    6.0,
+    1.0
+   ],
+   "bit_block_0_attn_Wo": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_ffn_fc1": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wq": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_Wk": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_scores__in0": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_scores__in1": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_Wv": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_1_attn_ctx__in1": [
+    6.0,
+    1.0
+   ],
+   "bit_block_1_attn_Wo": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_ffn_fc1": [
+    4.0,
+    3.0
+   ],
+   "bit_block_1_ffn_fc2": [
+    3.0,
+    4.0
+   ],
+   "head_fc1": [
+    3.0,
+    4.0
+   ],
+   "head_fc2": [
+    3.0,
+    4.0
+   ]
+  },
+  "act_grid_after": {
+   "input_proj": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_attn_Wq": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wk": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_scores__in0": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wv": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_0_attn_ctx__in1": [
+    4.0,
+    3.0
+   ],
+   "bit_block_0_attn_Wo": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_ffn_fc1": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wq": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_Wk": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_scores__in0": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_scores__in1": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_Wv": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_1_attn_ctx__in1": [
+    5.0,
+    2.0
+   ],
+   "bit_block_1_attn_Wo": [
+    3.0,
+    4.0
+   ],
+   "bit_block_1_ffn_fc1": [
+    4.0,
+    3.0
+   ],
+   "bit_block_1_ffn_fc2": [
+    3.0,
+    4.0
+   ],
+   "head_fc1": [
+    3.0,
+    4.0
+   ],
+   "head_fc2": [
+    3.0,
+    4.0
+   ]
+  },
+  "front": [],
+  "front_selected": null,
+  "started": "2026-08-01T08:38:16",
+  "finished": "2026-08-01T09:08:58"
+ },
+ "mechanism": "direct HGQ2 QAT graph (int8_absmax weights, trained KBI act grids): no \u03b2 restoration \u2014 the export is the trained model rebuilt WITHOUT the AddPositional layer (qat.build_qat_model with_pos_enc=False), all variables copied per layer, the trained (T,D) pos table folded into input_proj's bias_axes='td' bias (the build.py PE fold)",
+ "pos_fold": {
+  "max_abs_pos": 0.47196143865585327,
+  "layers_ported": 21,
+  "n_weighted_layers": 15
+ },
+ "bias_snap": {
+  "applied": false,
+  "grid": "2^-16 (binary-export bq_wide f=16 parity)",
+  "n_biases": 0,
+  "max_abs_delta": 0.0
+ },
+ "input_std": "bnjettag/roc-results/r14/n8/_ckpt_dl/w8a8-s3/input_std.json",
+ "gate1": {
+  "n": 4096,
+  "corr_scores": 1.0,
+  "corr_logits": 0.9999999999999999,
+  "corr_per_class": [
+   0.9999999999999999,
+   1.0,
+   1.0,
+   0.9999999999999999,
+   1.0
+  ],
+  "max_abs_diff_scores": 0.0,
+  "mean_abs_diff_scores": 0.0,
+  "max_abs_diff_logits": 0.0,
+  "argmax_agreement": 1.0,
+  "weight_port_max_abs_diff": 0.0
+ },
+ "gate1_pass": true,
+ "gate1_threshold": 0.997,
+ "gate1_policy": "direct QAT graph, no \u03b2 story \u2014 threshold 0.997 per the binary bar. Raw biases (default): the export IS the trained function up to bias+pos float reassociation, expected corr 1.000000. With --snap-biases the \u22642^-17 bias delta flips RND_CONV ties on the post-einsum lattice (measured 0.999802). Below the sanity bar the driver aborts as a porting bug."
+}

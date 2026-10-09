@@ -1,0 +1,41 @@
+{
+  "approval_ref": "DISCOVERY-350K-2026-10-08",
+  "changes": "eval/ (MANIFEST.json sha256 22dca83517bc) shipped as d350_eval/ beside code/ commit d4f665929965 (the training commit, needed to load the checkpoint). No training; reads the run record and the cache; writes score.json into the run directory.",
+  "decision_ref": "campaigns/2026-10-08-discovery-350k/PROPOSAL.md \u00a74, \u00a79",
+  "expected_metrics": [
+    {
+      "expectation": "one finite number or INVALID: <reason> as the last log line",
+      "name": "score",
+      "split": "validation n=62000, epochs < 1000"
+    }
+  ],
+  "limitations": [
+    "Certification and replay run on CPU (as the pilot readout did); the score is not a result before a VERIFY.md."
+  ],
+  "outputs": [
+    "/data/discovery-350k-20261008/attempts/baseline-e-350k-s1-a1/runs/d350-baseline-e-350k-s1/score.json"
+  ],
+  "production_gate": {
+    "reference": "not a production readout",
+    "status": "pending"
+  },
+  "purpose": "Score run baseline-e-350k-s1-a1 (d350-baseline-e-350k-s1) with the frozen discovery-350k evaluator (PROPOSAL.md \u00a74), epochs < 1000; CPU only.",
+  "runs": [
+    {
+      "config_path": "code/campaigns/d350/configs/d350-baseline-e-350k-s1.json",
+      "name": "d350-baseline-e-350k-s1"
+    }
+  ],
+  "scientific_gate": {
+    "reference": "Kai approval 2026-10-08, campaigns/2026-10-08-discovery-350k/APPROVAL.json",
+    "status": "cleared"
+  },
+  "stop_rules": [
+    {
+      "action": "existing-runner-guard",
+      "approval_ref": "score.py exit status; activeDeadlineSeconds 3600; backoffLimit 0",
+      "condition": "any failure, nonzero exit or deadline"
+    }
+  ],
+  "study_ref": "campaigns/2026-10-08-discovery-350k/PROPOSAL.md"
+}

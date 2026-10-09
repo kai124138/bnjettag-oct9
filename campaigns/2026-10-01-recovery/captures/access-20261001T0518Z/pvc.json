@@ -1,0 +1,29 @@
+{
+  "observed_at_utc": "2026-10-01T05:17:47.601818+00:00",
+  "command": [
+    "/home/kaimoe/.local/bin/kubectl",
+    "--context",
+    "nautilus",
+    "--request-timeout=25s",
+    "-n",
+    "cms-ml",
+    "get",
+    "pvc",
+    "kai-data",
+    "-o",
+    "json"
+  ],
+  "exit_code": 0,
+  "source_stdout_sha256": "16926d2ceaa01ac54bb551d141aceb2052f54f7b9bd1bf344931384e62c6a75b",
+  "data": {
+    "name": "kai-data",
+    "uid": "c5be55ec-3362-40a9-b283-f8d0750dcf95",
+    "phase": "Bound",
+    "capacity": {
+      "storage": "100Gi"
+    },
+    "accessModes": [
+      "ReadWriteMany"
+    ]
+  }
+}

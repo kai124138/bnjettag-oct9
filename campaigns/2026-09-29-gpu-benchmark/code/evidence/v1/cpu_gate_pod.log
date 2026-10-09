@@ -1,0 +1,105 @@
+# cwd /Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-29-gpu-benchmark/code; tree /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/bundle (extraction of chang0926-code.tar.gz sha256 42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0)
+# driver sha256 4d2dcd7d9cebf85d1da985122053741a18046e3b48bafdbf1082b06877c40c22; cache /private/tmp/claude-501/-Users-kaiyamaguchi-Desktop-bnjettag/7b6e0813-957c-4313-97c2-6b6b64d4b173/scratchpad/gate/data (True synthetic); 2026-09-29T07:21:03Z
+# 2. pod mode, plan: {"product": "CPU-gate", "slug": "cpu-gate", "stop_after": 2, "phases": [{"phase": "p1-E-k2", "class": "E", "k": 2, "names": ["chang0926-a-n64-s1", "chang0926-a-n64-s2"]}, {"phase": "p2-A07-k2", "class": "A07", "k": 2, "names": ["chang0926-c-n64-s1", "chang0926-c-n64-s2"]}, {"phase": "p3-E-k1", "class": "E", "k": 1, "names": ["chang0926-a-n64-s1"]}]}
+# injected: p2-A07-k2:chang0926-c-n64-s2 (test flag)
+BENCH_PLAN_OK CPU-gate cpu-gate stop_after 2 phases p1-E-k2 p2-A07-k2 p3-E-k1 driver_sha256 4d2dcd7d9cebf85d1da985122053741a18046e3b48bafdbf1082b06877c40c22 stall_s 3600.0 sample_s 10.0 stagger_s 2.0
+PHASE_START p1-E-k2 class E k 2 names chang0926-a-n64-s1,chang0926-a-n64-s2 2026-09-29T07:21:03Z
+ARM_STARTED p1-E-k2 chang0926-a-n64-s1 pid 99254 2026-09-29T07:21:03Z
+ARM_STARTED p1-E-k2 chang0926-a-n64-s2 pid 99266 2026-09-29T07:21:05Z
+ARM_EXIT p1-E-k2 chang0926-a-n64-s1 0 outcome ok epochs 2 verification PASS 2026-09-29T07:21:50Z
+ARM_EXIT p1-E-k2 chang0926-a-n64-s2 0 outcome ok epochs 2 verification PASS 2026-09-29T07:21:50Z
+PHASE_DONE p1-E-k2 wall_seconds 52.1 outcomes {"ok": 2} 2026-09-29T07:21:55Z
+PHASE_START p2-A07-k2 class A07 k 2 names chang0926-c-n64-s1,chang0926-c-n64-s2 2026-09-29T07:21:55Z
+ARM_STARTED p2-A07-k2 chang0926-c-n64-s1 pid 99585 2026-09-29T07:21:55Z
+ARM_STARTED p2-A07-k2 chang0926-c-n64-s2 pid 99588 2026-09-29T07:21:57Z
+ARM_EXIT p2-A07-k2 chang0926-c-n64-s2 7 outcome oom epochs 0 verification none 2026-09-29T07:22:02Z
+ARM_OOM_RECORDED p2-A07-k2 chang0926-c-n64-s2 (no retry; the phase continues)
+ARM_EXIT p2-A07-k2 chang0926-c-n64-s1 0 outcome ok epochs 2 verification PASS 2026-09-29T07:22:57Z
+PHASE_DONE p2-A07-k2 wall_seconds 67.1 outcomes {"ok": 1, "oom": 1} 2026-09-29T07:23:02Z
+PHASE_START p3-E-k1 class E k 1 names chang0926-a-n64-s1 2026-09-29T07:23:02Z
+ARM_STARTED p3-E-k1 chang0926-a-n64-s1 pid 99760 2026-09-29T07:23:02Z
+ARM_EXIT p3-E-k1 chang0926-a-n64-s1 0 outcome ok epochs 2 verification PASS 2026-09-29T07:23:37Z
+PHASE_DONE p3-E-k1 wall_seconds 40.1 outcomes {"ok": 1} 2026-09-29T07:23:42Z
+BENCH_DONE cpu-gate phases 3 samples 17 2026-09-29T07:23:42Z
+EXIT 0
+# bench root after the pod:
+./bench_result.json
+./p1-E-k2/logs/chang0926-a-n64-s1.log
+./p1-E-k2/logs/chang0926-a-n64-s2.log
+./p1-E-k2/phase_result.json
+./p1-E-k2/runs/chang0926-a-n64-s1/activation_widths.jsonl
+./p1-E-k2/runs/chang0926-a-n64-s1/config.json
+./p1-E-k2/runs/chang0926-a-n64-s1/cost_contract.json
+./p1-E-k2/runs/chang0926-a-n64-s1/data_info.json
+./p1-E-k2/runs/chang0926-a-n64-s1/i_decay_speed.json
+./p1-E-k2/runs/chang0926-a-n64-s1/initialization.json
+./p1-E-k2/runs/chang0926-a-n64-s1/input_std.json
+./p1-E-k2/runs/chang0926-a-n64-s1/latest.json
+./p1-E-k2/runs/chang0926-a-n64-s1/model_min_ebops.keras
+./p1-E-k2/runs/chang0926-a-n64-s1/model_unconstrained.keras
+./p1-E-k2/runs/chang0926-a-n64-s1/nondegenerate_rule.json
+./p1-E-k2/runs/chang0926-a-n64-s1/run.lock
+./p1-E-k2/runs/chang0926-a-n64-s1/screen_result.json
+./p1-E-k2/runs/chang0926-a-n64-s1/source_manifest.json
+./p1-E-k2/runs/chang0926-a-n64-s1/validation_candidate.keras
+./p1-E-k2/runs/chang0926-a-n64-s1/validation_predictions.npz
+./p1-E-k2/runs/chang0926-a-n64-s2/activation_widths.jsonl
+./p1-E-k2/runs/chang0926-a-n64-s2/config.json
+./p1-E-k2/runs/chang0926-a-n64-s2/cost_contract.json
+./p1-E-k2/runs/chang0926-a-n64-s2/data_info.json
+./p1-E-k2/runs/chang0926-a-n64-s2/i_decay_speed.json
+./p1-E-k2/runs/chang0926-a-n64-s2/initialization.json
+./p1-E-k2/runs/chang0926-a-n64-s2/input_std.json
+./p1-E-k2/runs/chang0926-a-n64-s2/latest.json
+./p1-E-k2/runs/chang0926-a-n64-s2/model_min_ebops.keras
+./p1-E-k2/runs/chang0926-a-n64-s2/model_unconstrained.keras
+./p1-E-k2/runs/chang0926-a-n64-s2/nondegenerate_rule.json
+./p1-E-k2/runs/chang0926-a-n64-s2/run.lock
+./p1-E-k2/runs/chang0926-a-n64-s2/screen_result.json
+./p1-E-k2/runs/chang0926-a-n64-s2/source_manifest.json
+./p1-E-k2/runs/chang0926-a-n64-s2/validation_candidate.keras
+./p1-E-k2/runs/chang0926-a-n64-s2/validation_predictions.npz
+./p2-A07-k2/logs/chang0926-c-n64-s1.log
+./p2-A07-k2/logs/chang0926-c-n64-s2.log
+./p2-A07-k2/phase_result.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/activation_widths.jsonl
+./p2-A07-k2/runs/chang0926-c-n64-s1/config.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/cost_contract.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/data_info.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/i_decay_speed.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/initialization.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/input_std.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/latest.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/model_min_ebops.keras
+./p2-A07-k2/runs/chang0926-c-n64-s1/model_unconstrained.keras
+./p2-A07-k2/runs/chang0926-c-n64-s1/nondegenerate_rule.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/run.lock
+./p2-A07-k2/runs/chang0926-c-n64-s1/screen_result.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/source_manifest.json
+./p2-A07-k2/runs/chang0926-c-n64-s1/validation_candidate.keras
+./p2-A07-k2/runs/chang0926-c-n64-s1/validation_predictions.npz
+./p2-A07-k2/runs/chang0926-c-n64-s2/cost_contract.json
+./p2-A07-k2/runs/chang0926-c-n64-s2/run.lock
+./p2-A07-k2/runs/chang0926-c-n64-s2/source_manifest.json
+./p3-E-k1/logs/chang0926-a-n64-s1.log
+./p3-E-k1/phase_result.json
+./p3-E-k1/runs/chang0926-a-n64-s1/activation_widths.jsonl
+./p3-E-k1/runs/chang0926-a-n64-s1/config.json
+./p3-E-k1/runs/chang0926-a-n64-s1/cost_contract.json
+./p3-E-k1/runs/chang0926-a-n64-s1/data_info.json
+./p3-E-k1/runs/chang0926-a-n64-s1/i_decay_speed.json
+./p3-E-k1/runs/chang0926-a-n64-s1/initialization.json
+./p3-E-k1/runs/chang0926-a-n64-s1/input_std.json
+./p3-E-k1/runs/chang0926-a-n64-s1/latest.json
+./p3-E-k1/runs/chang0926-a-n64-s1/model_min_ebops.keras
+./p3-E-k1/runs/chang0926-a-n64-s1/model_unconstrained.keras
+./p3-E-k1/runs/chang0926-a-n64-s1/nondegenerate_rule.json
+./p3-E-k1/runs/chang0926-a-n64-s1/run.lock
+./p3-E-k1/runs/chang0926-a-n64-s1/screen_result.json
+./p3-E-k1/runs/chang0926-a-n64-s1/source_manifest.json
+./p3-E-k1/runs/chang0926-a-n64-s1/validation_candidate.keras
+./p3-E-k1/runs/chang0926-a-n64-s1/validation_predictions.npz
+./plan.json
+./samples.csv
+# any wandb file or directory under the bench root:
+       0

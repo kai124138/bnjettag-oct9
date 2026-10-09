@@ -1,0 +1,43 @@
+2026-09-18T21:11:21.384973706Z /cmcode/hgq2.tar.gz: OK
+2026-09-18T21:12:50.325469977Z WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+2026-09-18T21:12:50.931628351Z 
+2026-09-18T21:12:50.931665271Z [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+2026-09-18T21:12:50.931670121Z [notice] To update, run: pip install --upgrade pip
+2026-09-18T21:12:52.157103911Z {"project": "BNJetTag-Engram-Experimental", "entity": "kayamaguchi-uc-san-diego", "access": "PRIVATE", "anonymous_read": "denied", "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental"}
+2026-09-18T21:12:52.196098785Z NVIDIA A10, 23028 MiB
+2026-09-18T21:12:52.551590072Z WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+2026-09-18T21:12:52.551634542Z I0000 00:00:1789765972.551422      69 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-09-18T21:12:52.551641512Z To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-09-18T21:12:55.766654019Z GPU_GATE_PASS
+2026-09-18T21:13:47.634291576Z [train] engram-e01-s1 params=9716 resume_epoch=100 initial_ebops=2158628
+2026-09-18T21:13:47.644795001Z wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+2026-09-18T21:13:48.522797482Z wandb: Resuming run engram-e01-s1
+2026-09-18T21:13:48.522863372Z wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/a768d794fb1a
+2026-09-18T21:13:48.683198667Z wandb: uploading summary; updating run metadata
+2026-09-18T21:13:49.084634078Z wandb: uploading config.yaml; uploading wandb-metadata.json; uploading requirements.txt; uploading wandb-summary.json
+2026-09-18T21:13:49.586621181Z wandb: uploading summary
+2026-09-18T21:13:49.626893312Z wandb: 🚀 View run engram-e01-s1 at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/a768d794fb1a
+2026-09-18T21:13:49.626906372Z wandb: ⭐️ View project at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental
+2026-09-18T21:13:49.626912012Z wandb: Synced 4 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+2026-09-18T21:14:01.300474192Z Traceback (most recent call last):
+2026-09-18T21:14:01.300674802Z   File "/work/code/run_engram.py", line 464, in <module>
+2026-09-18T21:14:01.300680922Z     main()
+2026-09-18T21:14:01.300711711Z   File "/work/code/run_engram.py", line 454, in main
+2026-09-18T21:14:01.300715921Z     train(args)
+2026-09-18T21:14:01.300727251Z   File "/work/code/run_engram.py", line 275, in train
+2026-09-18T21:14:01.300733271Z     np.testing.assert_allclose([auc, accuracy],
+2026-09-18T21:14:01.300757251Z   File "/usr/local/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1780, in assert_allclose
+2026-09-18T21:14:01.300772091Z     assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+2026-09-18T21:14:01.300783751Z   File "/usr/local/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+2026-09-18T21:14:01.300790421Z     raise AssertionError(msg)
+2026-09-18T21:14:01.300860591Z AssertionError: 
+2026-09-18T21:14:01.300867841Z Not equal to tolerance rtol=0, atol=1e-07
+2026-09-18T21:14:01.300872301Z 
+2026-09-18T21:14:01.300876381Z Mismatched elements: 2 / 2 (100%)
+2026-09-18T21:14:01.300881691Z Mismatch at indices:
+2026-09-18T21:14:01.300907361Z  [0]: 0.8413084351658098 (ACTUAL), 0.8413353345788277 (DESIRED)
+2026-09-18T21:14:01.300910391Z  [1]: 0.5708548387096775 (ACTUAL), 0.5705887096774194 (DESIRED)
+2026-09-18T21:14:01.300912971Z Max absolute difference among violations: 0.00026613
+2026-09-18T21:14:01.300915351Z Max relative difference among violations: 0.00046641
+2026-09-18T21:14:01.300917791Z  ACTUAL: array([0.841308, 0.570855])
+2026-09-18T21:14:01.300920611Z  DESIRED: array([0.841335, 0.570589])

@@ -1,0 +1,110 @@
+From 207e8c3b2611f0dcbd65f21d5ab086b005244e96 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:40:37 -0700
+Subject: [PATCH 09/38] kd-unblock-s-runner: admit experiment.distillation on
+ the S runner; teacher loaded by artifact and run per batch (M035)
+
+---
+ code/bnhgq2/ablation.py   | 21 +++++++++++++++++----
+ code/bnhgq2/delta_keys.py | 21 +++++++++++++++++++++
+ code/run_engram.py        |  2 +-
+ 3 files changed, 39 insertions(+), 5 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 3c26156..c93fff8 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -248,7 +248,7 @@ def optimizer_for(cfg, model):
+     return optimizer
+ 
+ 
+-def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None):
++def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None):
+     x = tf.convert_to_tensor(xt, dtype=tf.float32)
+     y = tf.convert_to_tensor(yt, dtype=tf.float32)
+     teacher = tf.convert_to_tensor(teacher_logits if teacher_logits is not None else np.zeros_like(yt), dtype=tf.float32)
+@@ -273,7 +273,10 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None):
+             with tf.GradientTape() as tape:
+                 logits = model(xb, training=True)
+                 ce = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=yb, logits=logits))
+-                teacher_logp = tf.nn.log_softmax(tf.gather(teacher, idx) / temperature)
++                if teacher_model is not None:  # Delta: teacher forward on this batch
++                    teacher_logp = tf.nn.log_softmax(teacher_model(xb, training=False) / temperature)
++                else:
++                    teacher_logp = tf.nn.log_softmax(tf.gather(teacher, idx) / temperature)
+                 student_logp = tf.nn.log_softmax(logits / temperature)
+                 kd = temperature ** 2 * tf.reduce_mean(tf.reduce_sum(tf.exp(teacher_logp) * (teacher_logp - student_logp), axis=-1)) if distillation else tf.constant(0.)
+                 resource_loss = tf.add_n(model.losses) if model.losses else tf.constant(0.)
+@@ -812,7 +815,17 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         pid.beta, pid._ebops = p['beta'], p['ebops']
+         pid.pid.integral, pid.pid.prev_error = p['integral'], p['prev_error']
+         pid.set_beta(pid.beta)
+-    if cfg['experiment'].get('distillation'):
++    teacher_model = None
++    if cfg['experiment'].get('distillation') and teacher_logits is None:
++        # Delta (kd-unblock-s-runner): the S runner loads the teacher and runs it per batch
++        name = cfg['experiment']['distillation']['teacher_artifact']
++        evidence = check_artifact_std(name, data_info)
++        if (out / 'teacher_artifact.json').exists():
++            assert json.loads((out / 'teacher_artifact.json').read_text()) == evidence, 'Teacher changed on resume'
++        atomic_json(out / 'teacher_artifact.json', evidence)
++        teacher_model = keras.models.load_model(evidence['path'], compile=False)
++        teacher_model.trainable = False
++    if cfg['experiment'].get('distillation') and teacher_model is None:
+         assert teacher_logits is not None and teacher_logits.shape == yt.shape
+     wandb_run = None
+     if remote:
+@@ -830,7 +843,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             wandb_run.summary.update(training_status_summary(state, selection_metric, stop_after, paused=True))
+             wandb_run.finish()
+         return state
+-    step = make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits)
++    step = make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits, teacher_model=teacher_model)
+     epochs = cfg['train']['epochs']
+     reload_candidate = ValidationReloader()
+     rss_gate = rss_gate_from_env(epochs)
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 8e22b74..852b68e 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -162,3 +162,24 @@ def _artifact_name(value, cfg):
+ 
+ 
+ register('experiment.init_checkpoint', 'init-from-checkpoint', _artifact_name, export_ok=True)
++
++# kd-unblock-s-runner: logit KD on the S runner; the teacher runs per batch (M035 and combos).
++FLAGS['distillation_admitted'] = True
++DISTILLATION_KEYS = {'teacher_artifact', 'temperature', 'coefficient'}
++
++
++def _distillation(value, cfg):
++    if not isinstance(value, dict):
++        return 'must be {"teacher_artifact", "temperature", "coefficient"}'
++    extra = set(value) - DISTILLATION_KEYS
++    if extra or not {'teacher_artifact', 'temperature', 'coefficient'} <= set(value):
++        return f'keys must be {sorted(DISTILLATION_KEYS)} (unknown: {sorted(extra)})'
++    if not isinstance(value['teacher_artifact'], str) or not value['teacher_artifact']:
++        return 'teacher_artifact must name a checkpoint (an empty teacher is refused)'
++    if _positive_number(value['temperature']):
++        return 'temperature must be > 0'
++    if not isinstance(value['coefficient'], (int, float)) or value['coefficient'] < 0:
++        return 'coefficient must be >= 0'
++
++
++register('experiment.distillation', 'kd-unblock-s-runner', _distillation, export_ok=True)
+diff --git a/code/run_engram.py b/code/run_engram.py
+index d1008c6..ba8b43d 100644
+--- a/code/run_engram.py
++++ b/code/run_engram.py
+@@ -118,7 +118,7 @@ def validate_cfg(cfg):
+         raise ValueError('Pair-bias preprocessing has separate unaccounted costs; disable for this screen')
+     if cfg['experiment']['selection_metric'] != 'val_categorical_accuracy':
+         raise ValueError('Checkpoint selection must prioritize validation accuracy')
+-    if cfg['experiment'].get('distillation'):
++    if cfg['experiment'].get('distillation') and not delta_keys.FLAGS['distillation_admitted']:
+         raise ValueError('Distillation is not part of this controlled screen')
+     study = cfg['engram_study']
+     if study.get('memory_weight_decay') != 0. or not 0 < study.get('memory_lr_multiplier', 0) <= 100:
+-- 
+2.50.1 (Apple Git-155)
+

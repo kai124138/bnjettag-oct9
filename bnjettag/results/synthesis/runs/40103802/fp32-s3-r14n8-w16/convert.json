@@ -1,0 +1,390 @@
+{
+ "written": "2026-09-02T16:56:36",
+ "config_hash": "40103802",
+ "variant": "fp32-realization",
+ "width": 16,
+ "seed": 3,
+ "tag": "r14n8",
+ "output_dir": "bnjettag/results/synthesis/runs/40103802/fp32-s3-r14n8-w16/hls_prj_rf1",
+ "tarball": "bnjettag/results/synthesis/runs/40103802/fp32-s3-r14n8-w16/hls_prj_rf1.tar.gz",
+ "rf": 1,
+ "strategy": "Latency",
+ "rf_note": "ReuseFactor OVERRIDDEN to 1; the config carries hls.rf=256 which is NOT the comparator",
+ "realization": "PTQ static grids at width W (memo reading (b)); NOT float silicon",
+ "model_precision_used": "fixed<28,12>",
+ "part": "xcvu13p-flga2577-2-e",
+ "clock_ns": 2.5,
+ "io": "io_parallel",
+ "checkpoint": "bnjettag/models/cache/r14-l1x3-n8-fp32-s3/model_best.keras",
+ "input_std": "bnjettag/models/cache/r14-l1x3-n8-fp32-s3/input_std.json",
+ "train_meta": {
+  "variant": "fp32",
+  "seed": 3,
+  "config": "r14-l1x3-n8-fp32",
+  "config_hash": "40103802",
+  "params": 18531,
+  "trainable_params": 18469,
+  "best_epoch": 100,
+  "best_val_macro_auc": 0.8848259242727924,
+  "act_bits": 32,
+  "weight": "none",
+  "lr": 2e-05,
+  "clip_mode": "value",
+  "epochs_run": 101,
+  "smoke": false,
+  "n_train": 496000,
+  "n_val": 124000,
+  "n_files": 62,
+  "features": [
+   "pt",
+   "etarel",
+   "phirel"
+  ],
+  "train_seconds": 647.2,
+  "act_calib_i": {},
+  "act_calib": "trainable",
+  "act_recalib_epochs": [],
+  "act_grid_before": {},
+  "act_grid_after": {},
+  "front": [],
+  "front_selected": null,
+  "started": "2026-08-01T08:32:02",
+  "finished": "2026-08-01T08:42:50"
+ },
+ "firmware_audit": {
+  "model_default_t": "ap_fixed<28,12>",
+  "weight_typedefs": {
+   "input_proj": "ap_fixed<16,0>",
+   "bit_block_0_ffn_fc1": "ap_fixed<16,0>",
+   "bit_block_0_ffn_fc2": "ap_fixed<16,0>",
+   "bit_block_1_ffn_fc1": "ap_fixed<16,0>",
+   "bit_block_1_ffn_fc2": "ap_fixed<16,0>",
+   "head_fc1": "ap_fixed<16,0>",
+   "head_fc2": "ap_fixed<16,1>"
+  },
+  "n_weight_typedefs": 7,
+  "bias_typedefs": {
+   "input_proj": "ap_fixed<32,1>",
+   "bit_block_0_ffn_fc1": "ap_fixed<30,-2>",
+   "bit_block_0_ffn_fc2": "ap_fixed<29,-3>",
+   "bit_block_1_ffn_fc1": "ap_fixed<30,-2>",
+   "bit_block_1_ffn_fc2": "ap_fixed<29,-3>",
+   "head_fc1": "ap_fixed<30,-2>",
+   "head_fc2": "ap_fixed<27,-4>"
+  },
+  "config_weight_t_kinds": [
+   "bit_block_0_ffn_fc1_weight_t",
+   "bit_block_0_ffn_fc2_weight_t",
+   "bit_block_1_ffn_fc1_weight_t",
+   "bit_block_1_ffn_fc2_weight_t",
+   "head_fc1_weight_t",
+   "head_fc2_weight_t",
+   "input_proj_weight_t",
+   "model_default_t"
+  ],
+  "n_model_default_weight_t": 8,
+  "n_model_default_bias_t": 16,
+  "weighted_cores": {
+   "input_proj": {
+    "core": "einsum_dense",
+    "weight_array": "w3",
+    "type": "input_proj_weight_t",
+    "n": 96
+   },
+   "bit_block_0_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w5",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w7",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w13",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w18",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w21",
+    "type": "bit_block_0_ffn_fc1_weight_t",
+    "n": 2048
+   },
+   "bit_block_0_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w24",
+    "type": "bit_block_0_ffn_fc2_weight_t",
+    "n": 2048
+   },
+   "bit_block_1_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w27",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w29",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w35",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w40",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w43",
+    "type": "bit_block_1_ffn_fc1_weight_t",
+    "n": 2048
+   },
+   "bit_block_1_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w46",
+    "type": "bit_block_1_ffn_fc2_weight_t",
+    "n": 2048
+   },
+   "head_fc1": {
+    "core": "dense",
+    "weight_array": "w50",
+    "type": "head_fc1_weight_t",
+    "n": 1024
+   },
+   "head_fc2": {
+    "core": "dense",
+    "weight_array": "w53",
+    "type": "head_fc2_weight_t",
+    "n": 160
+   }
+  },
+  "n_einsum_dense": 13,
+  "n_dense": 2
+ },
+ "f6": {
+  "falsifier": "F6 -- emitted precision must represent the intended realization",
+  "intended_width": 16,
+  "model_default_t": "ap_fixed<28,12>",
+  "n_weighted_layers": 15,
+  "per_layer": {
+   "input_proj": {
+    "core": "einsum_dense",
+    "weight_array": "w3",
+    "container_typedef": "input_proj_weight_t",
+    "container": "ap_fixed<16,0>",
+    "container_width": 16,
+    "container_integer": 0,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w5",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w7",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w13",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w18",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w21",
+    "container_typedef": "bit_block_0_ffn_fc1_weight_t",
+    "container": "ap_fixed<16,0>",
+    "container_width": 16,
+    "container_integer": 0,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w24",
+    "container_typedef": "bit_block_0_ffn_fc2_weight_t",
+    "container": "ap_fixed<16,0>",
+    "container_width": 16,
+    "container_integer": 0,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w27",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w29",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w35",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w40",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<28,12>",
+    "container_width": 28,
+    "container_integer": 12,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w43",
+    "container_typedef": "bit_block_1_ffn_fc1_weight_t",
+    "container": "ap_fixed<16,0>",
+    "container_width": 16,
+    "container_integer": 0,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w46",
+    "container_typedef": "bit_block_1_ffn_fc2_weight_t",
+    "container": "ap_fixed<16,0>",
+    "container_width": 16,
+    "container_integer": 0,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "head_fc1": {
+    "core": "dense",
+    "weight_array": "w50",
+    "container_typedef": "head_fc1_weight_t",
+    "container": "ap_fixed<16,0>",
+    "container_width": 16,
+    "container_integer": 0,
+    "container_frac": 16,
+    "grid": "ap_fixed<16,0>",
+    "grid_frac": 16,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "head_fc2": {
+    "core": "dense",
+    "weight_array": "w53",
+    "container_typedef": "head_fc2_weight_t",
+    "container": "ap_fixed<16,1>",
+    "container_width": 16,
+    "container_integer": 1,
+    "container_frac": 15,
+    "grid": "ap_fixed<16,1>",
+    "grid_frac": 15,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   }
+  },
+  "offenders": [],
+  "pass": true,
+  "rule": "container must hold every quantized weight EXACTLY (max|w - stored(w)| == 0); BitExact narrowing of a named typedef to the occupied range is NOT a failure, silent truncation is"
+ },
+ "stage": "convert + C-sim only (LOCAL) -- no synthesis was run by this driver",
+ "mulder_cmd": "./mulder_csynth.sh hls_prj_rf1.tar.gz"
+}

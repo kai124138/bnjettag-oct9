@@ -1,0 +1,106 @@
+From 9c27a953814bfe4cd5141a7cbd103c87722a91dc Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:48:58 -0700
+Subject: [PATCH 13/38] beta-schedule-s-runner: train.ebops.controller schedule
+ uses hgq2 PieceWiseSchedule on the S runner (M014)
+
+---
+ code/bnhgq2/ablation.py   | 33 ++++++++++++++++++++++++++++++++-
+ code/bnhgq2/delta_keys.py | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 65 insertions(+), 1 deletion(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index fa736e9..c3318bf 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -198,6 +198,37 @@ def chang_cosine_restarts(eta0, period, t_mul=1.0, m_mul=1.0, alpha=0.0, hold=0)
+     return schedule
+ 
+ 
++def beta_controller(cfg):
++    """BetaPID (the bundle), or the Delta open-loop schedule (beta-schedule-s-runner)
++    when train.ebops.controller == "schedule"."""
++    eb = cfg['train']['ebops']
++    if eb.get('controller') != 'schedule':
++        return BetaPID(**eb['pid'])
++    from hgq.utils.sugar import PieceWiseSchedule
++    from hgq.utils.sugar.beta_pid import BaseBetaPID
++
++    class ScheduleBeta(BaseBetaPID):
++        """hgq2 PieceWiseSchedule behind the interface the epoch loop uses; the PID fields stay 0."""
++
++        def __init__(self, intervals, target_ebops):
++            super().__init__(target_ebops, 0., 0.)
++            self.schedule = PieceWiseSchedule([tuple(v) for v in intervals])
++            self.beta, self._ebops = float(self.schedule(0)), None
++
++        def on_train_begin(self, logs=None):
++            self.set_beta(self.beta)
++            self._ebops = self.get_ebops()
++
++        def on_epoch_begin(self, epoch, logs=None):
++            self.beta = float(self.schedule(epoch))
++            self.set_beta(self.beta)
++
++        def on_epoch_end(self, epoch, logs=None):
++            self._ebops = self.get_ebops()
++
++    return ScheduleBeta(eb['beta_schedule'], eb['pid']['target_ebops'])
++
++
+ def learning_rate(cfg, epoch):
+     tr = cfg['train']
+     if tr.get('lr_schedule') == 'chang_cosine_restarts':
+@@ -891,7 +922,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+     binary_gate(model, cfg)
+     print(f"[train] {cfg['name']} params={model.count_params()} resume_epoch={state['completed_epochs']} initial_ebops={state['initial_ebops']}", flush=True)
+     final_target = cfg['train']['ebops']['pid']['target_ebops']
+-    pid = BetaPID(**cfg['train']['ebops']['pid'])
++    pid = beta_controller(cfg)
+     pid.set_model(model)
+     pid.on_train_begin({})
+     if state['pid']:
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index ff123f4..fc25602 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -222,3 +222,36 @@ def _decay(value, cfg):
+ 
+ 
+ register('experiment.latent_ema_decay', 'latent-ema-eval', _decay, export_ok=True)
++
++# beta-schedule-s-runner: honour train.ebops.controller "schedule" with hgq2 PieceWiseSchedule
++# (Chang's open-loop beta; card Q04; M014). "pid" (every bundle config) keeps BetaPID.
++def _beta_schedule(value, cfg):
++    if value is None:
++        return None
++    if lookup(cfg, 'train.ebops.controller') != 'schedule':
++        return 'a beta_schedule is read only with train.ebops.controller "schedule"'
++    if not isinstance(value, list) or not value:
++        return 'must be a non-empty list of [epoch, beta, "linear" | "log" | "constant"]'
++    epochs = []
++    for point in value:
++        if not (isinstance(point, list) and len(point) == 3 and isinstance(point[0], int)
++                and isinstance(point[1], (int, float)) and point[1] >= 0
++                and point[2] in ('linear', 'log', 'constant')):
++            return f'bad point {point!r}'
++        epochs.append(point[0])
++    if epochs != sorted(set(epochs)) or epochs[0] != 0:
++        return 'epochs must start at 0 and increase strictly'
++    for a, b in zip(value, value[1:]):
++        if a[2] == 'log' and (a[1] <= 0 or b[1] <= 0):
++            return 'log interpolation needs positive betas at both ends'
++
++
++def _controller(value, cfg):
++    if value == 'schedule' and not lookup(cfg, 'train.ebops.beta_schedule'):
++        return 'controller "schedule" needs train.ebops.beta_schedule'
++
++
++register('train.ebops.controller', 'beta-schedule-s-runner', _controller,
++         active=lambda v: v == 'schedule', export_ok=True)
++register('train.ebops.beta_schedule', 'beta-schedule-s-runner', _beta_schedule,
++         active=lambda v: v is not None, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

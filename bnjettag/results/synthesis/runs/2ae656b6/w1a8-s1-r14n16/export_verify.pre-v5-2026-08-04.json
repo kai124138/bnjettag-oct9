@@ -1,0 +1,333 @@
+{
+ "written": "2026-08-04T16:19:05",
+ "config": "r14-l1x3-n16-w1a8",
+ "config_hash": "2ae656b6",
+ "variant": "w1a8",
+ "seed": 1,
+ "tag": "r14n16",
+ "wandb_run": "final-w1a8-s1",
+ "attn_grids": "build_default",
+ "checkpoint": "bnjettag/roc-results/r14/n16/_ckpt_dl/w1a8-s1/model_best.keras",
+ "train_meta": {
+  "variant": "w1a8",
+  "seed": 1,
+  "config": "r14-l1x3-n16-w1a8",
+  "config_hash": "2ae656b6",
+  "params": 19169,
+  "trainable_params": 19023,
+  "best_epoch": 79,
+  "best_val_macro_auc": 0.8968083917636965,
+  "act_bits": 8,
+  "weight": "binary_absmean",
+  "lr": 2e-05,
+  "clip_mode": "value",
+  "epochs_run": 101,
+  "smoke": false,
+  "n_train": 496000,
+  "n_val": 124000,
+  "n_files": 62,
+  "features": [
+   "pt",
+   "etarel",
+   "phirel"
+  ],
+  "train_seconds": 820.0,
+  "act_calib_i": {
+   "input_proj": 4,
+   "bit_block_0_attn_Wq": 1,
+   "bit_block_0_attn_Wk": 1,
+   "bit_block_0_attn_Wv": 1,
+   "bit_block_0_attn_scores__in0": 2,
+   "bit_block_0_attn_scores__in1": 2,
+   "bit_block_0_attn_Wo": 1,
+   "bit_block_0_ffn_fc1": 2,
+   "bit_block_0_ffn_fc2": 2,
+   "bit_block_1_attn_Wq": 2,
+   "bit_block_1_attn_Wk": 2,
+   "bit_block_1_attn_Wv": 2,
+   "bit_block_1_attn_scores__in0": 2,
+   "bit_block_1_attn_scores__in1": 2,
+   "bit_block_1_attn_Wo": 1,
+   "bit_block_1_ffn_fc1": 2,
+   "bit_block_1_ffn_fc2": 2,
+   "head_fc1": 1,
+   "head_fc2": 1
+  },
+  "act_calib": "trainable",
+  "act_recalib_epochs": [],
+  "act_grid_before": {
+   "input_proj": [
+    4.0,
+    3.0
+   ],
+   "bit_block_0_attn_Wq": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_Wk": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wv": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_0_attn_ctx__in1": [
+    6.0,
+    1.0
+   ],
+   "bit_block_0_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wq": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wk": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wv": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_1_attn_ctx__in1": [
+    6.0,
+    1.0
+   ],
+   "bit_block_1_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_1_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "head_fc1": [
+    1.0,
+    6.0
+   ],
+   "head_fc2": [
+    1.0,
+    6.0
+   ]
+  },
+  "act_grid_after": {
+   "input_proj": [
+    3.0,
+    4.0
+   ],
+   "bit_block_0_attn_Wq": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_Wk": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_attn_Wv": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_0_attn_ctx__in1": [
+    5.0,
+    2.0
+   ],
+   "bit_block_0_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_0_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_0_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wq": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wk": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in0": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_scores__in1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_Wv": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_attn_ctx__in0": [
+    1.0,
+    9.0
+   ],
+   "bit_block_1_attn_ctx__in1": [
+    5.0,
+    2.0
+   ],
+   "bit_block_1_attn_Wo": [
+    1.0,
+    6.0
+   ],
+   "bit_block_1_ffn_fc1": [
+    2.0,
+    5.0
+   ],
+   "bit_block_1_ffn_fc2": [
+    2.0,
+    5.0
+   ],
+   "head_fc1": [
+    1.0,
+    6.0
+   ],
+   "head_fc2": [
+    1.0,
+    6.0
+   ]
+  },
+  "front": [],
+  "front_selected": null,
+  "started": "2026-08-01T09:45:47",
+  "finished": "2026-08-01T09:59:27"
+ },
+ "n_bitlayers": 15,
+ "act_ibits": {
+  "input_proj": 3,
+  "bit_block_0_attn_Wq": 1,
+  "bit_block_0_attn_Wk": 1,
+  "bit_block_0_attn_Wv": 1,
+  "bit_block_0_attn_Wo": 1,
+  "bit_block_0_ffn_fc1": 2,
+  "bit_block_0_ffn_fc2": 2,
+  "bit_block_1_attn_Wq": 2,
+  "bit_block_1_attn_Wk": 2,
+  "bit_block_1_attn_Wv": 2,
+  "bit_block_1_attn_Wo": 1,
+  "bit_block_1_ffn_fc1": 2,
+  "bit_block_1_ffn_fc2": 2,
+  "head_fc1": 1,
+  "head_fc2": 1
+ },
+ "norm_free_grids": {
+  "bit_block_0_attn_Wo": {
+   "max": 22.264923095703125,
+   "i": 6,
+   "f": 7,
+   "width": 14
+  },
+  "bit_block_0_ffn_fc2": {
+   "max": 49.391815185546875,
+   "i": 7,
+   "f": 7,
+   "width": 15
+  },
+  "bit_block_1_attn_Wo": {
+   "max": 52.72167205810547,
+   "i": 7,
+   "f": 7,
+   "width": 15
+  },
+  "bit_block_1_ffn_fc2": {
+   "max": 86.54833984375,
+   "i": 8,
+   "f": 7,
+   "width": 16
+  },
+  "head_fc2": {
+   "max": 34.16583251953125,
+   "i": 7,
+   "f": 7,
+   "width": 15
+  }
+ },
+ "gate1": {
+  "n": 4096,
+  "corr_scores": 0.8388878146242278,
+  "corr_logits": 0.8798967254794249,
+  "corr_per_class": [
+   0.5362385163043578,
+   0.9031731810491888,
+   0.9474166370332027,
+   0.9453145306152057,
+   0.956992111603418
+  ],
+  "max_abs_diff_scores": 0.7426127543265618,
+  "mean_abs_diff_scores": 0.09681049867565257,
+  "max_abs_diff_logits": 5.845109939575195,
+  "argmax_agreement": 0.739013671875,
+  "weight_export_max_abs_diff": 2.9802322387695312e-08,
+  "beta_mode": "csd2"
+ },
+ "gate1_pass": false,
+ "gate1_threshold": 0.9999,
+ "gate1_exact_beta": {
+  "corr_scores": 0.8490659744150644,
+  "corr_logits": 0.8839145048833537,
+  "argmax_agreement": 0.757568359375,
+  "note": "exact-\u03b2 affine (DSP cost on mulder unmeasured) \u2014 isolates the CSD-2 \u03b2 \u0394"
+ },
+ "gate1_copy_qat_ceiling": {
+  "corr_scores": 0.8521605809566859,
+  "corr_logits": 0.8868244161778687,
+  "argmax_agreement": 0.76611328125,
+  "note": "attn_grids='copy_qat' (QAT attention grids via scaler=1/\u03b2). KERAS-SIDE ceiling: hls4ml's FixedPointQuantizer frontend ignores q.scaler (measured gate-2 below), so this is not hardware-faithful; build_default ships."
+ }
+}

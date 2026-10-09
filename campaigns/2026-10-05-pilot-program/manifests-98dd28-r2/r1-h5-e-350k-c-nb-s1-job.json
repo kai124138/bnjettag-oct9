@@ -1,0 +1,214 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "annotations": {
+      "bnjettag.io/active-deadline": "pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) and PID-1 kill (137/143) are FailIndex; a pre-arm failure within 600 s exits 75 and is retried once (PREFLIGHT fixes after review v1, A2)",
+      "bnjettag.io/arm": "NB350-C s1 H5 E budget 350000 warmup 1",
+      "bnjettag.io/controller": "option (c): train.ebops.pid_input traced_only, pid_traced_integral per_epoch",
+      "bnjettag.io/gpu-fingerprint": "kai-chang0926-fp-e9511d1aeb sha256 e9511d1aeb39c7c8: chang1002c-a-n64-s1 initial_ebops == 11559681 before the arm",
+      "bnjettag.io/pack": "packs/pilot1005-h5-e-350k-c-nb-s1.json pilot1005-h5-e-350k-c-nb-s1",
+      "bnjettag.io/per-arm-memory": "10Gi host RAM, 2 CPU, one arm",
+      "bnjettag.io/regime": "B: [D20] trace every 10 epochs",
+      "bnjettag.io/rss-gate": "off: BNJ_RSS_GATE_* unset (r2 relaunch, Kai 2026-10-07)",
+      "bnjettag.io/single-arm-justified": "campaigns/2026-09-29-gpu-benchmark/VERIFY.md:109: RTX 3090 A07 K=1 GPU util 61.6 % all / 74.3 % steady (1 arm x 20 epochs), peak 8,484 / 24,576 MiB; one arm per GPU is the approved pilot shape (decisions.md 2026-10-05 10:08 item 2). E at K=1 is unmeasured: utilization is checked 30 min after launch (PILOT_PROGRAM.md \u00a74)."
+    },
+    "labels": {
+      "app": "kai-pilot1005-r1",
+      "bnjettag.io/arms-per-pod": "1",
+      "bnjettag.io/round": "r1",
+      "campaign": "chang-n64-20261005-pilot",
+      "user": "kai"
+    },
+    "name": "kai-p1005r1-h5-e-350k-c-nb-s1-98dd28-r2",
+    "namespace": "cms-ml"
+  },
+  "spec": {
+    "backoffLimitPerIndex": 1,
+    "completionMode": "Indexed",
+    "completions": 1,
+    "parallelism": 1,
+    "podFailurePolicy": {
+      "rules": [
+        {
+          "action": "Ignore",
+          "onPodConditions": [
+            {
+              "type": "DisruptionTarget"
+            }
+          ]
+        },
+        {
+          "action": "FailJob",
+          "onExitCodes": {
+            "containerName": "train",
+            "operator": "In",
+            "values": [
+              10
+            ]
+          }
+        },
+        {
+          "action": "FailIndex",
+          "onExitCodes": {
+            "containerName": "train",
+            "operator": "In",
+            "values": [
+              5,
+              76,
+              124,
+              137,
+              143
+            ]
+          }
+        }
+      ]
+    },
+    "podReplacementPolicy": "Failed",
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "kai-pilot1005-r1",
+          "bnjettag.io/arms-per-pod": "1",
+          "bnjettag.io/round": "r1",
+          "campaign": "chang-n64-20261005-pilot",
+          "user": "kai"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 18000,
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-GeForce-RTX-3090"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "hcc-nrp-shor-c6017.unl.edu",
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "args": [
+              "set -euo pipefail\nT0=$(date +%s); ARM_PHASE=pre; ARM_FINAL_RC=\"\"\npod_exit() { rc=$?; trap - EXIT; el=$(( $(date +%s) - T0 )); if [ \"$rc\" = 0 ] || [ \"$rc\" = 10 ]; then exit \"$rc\"; fi; if [ -n \"$ARM_FINAL_RC\" ]; then echo \"POD_EXIT_FINAL rc=$rc exit=$ARM_FINAL_RC elapsed_s=$el\"; exit \"$ARM_FINAL_RC\"; fi; if [ \"$ARM_PHASE\" = pre ] && [ \"$el\" -lt 600 ]; then echo \"POD_EXIT_RETRYABLE rc=$rc phase=pre elapsed_s=$el exit=75\"; exit 75; fi; echo \"POD_EXIT_FINAL rc=$rc phase=$ARM_PHASE elapsed_s=$el exit=76\"; exit 76; }\ntrap pod_exit EXIT\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '98dd2875b7c902bb881562a7acbf00f7cf266a369a74528b6fb8471e0cdc0059  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=/data/chang-n64-20260926/pilot-program-20261005/r1 BNJ_CAMPAIGN_DIR=/work/code/campaigns/pilot1005\nexport BNJ_STAGE=pilot-r1\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nunset WANDB_PROJECT\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_MODE=online\nexport WANDB_TAGS=pilot1005,pilot-program,r1,option-c-ladder,regime-b,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"e6ff034bfc44580a44fc96a27fedcd302f43babbef70169e90802f4ea9a0a8e3\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true\ndf -h /data\necho 'e9511d1aeb39c7c8e48cc7dbc148ac623f3b2d9844d108da38f1ecfa2bdff1f1  /cmfp/fingerprint_check.py' | sha256sum -c -\nFP=0\npython -u /cmfp/fingerprint_check.py --run chang1002c-a-n64-s1 --expect 11559681 --data-root /data/chang-n64-20260926 --campaign-dir /work/code/campaigns/chang1002c --env-report || FP=$?\nif [ \"$FP\" != 0 ]; then echo \"FINGERPRINT_GATE_FAIL exit=$FP node=${NODE_NAME:-na}; no arm started\"; exit \"$FP\"; fi\n( while sleep 60; do echo \"GPU_SAMPLE $(date -u +%FT%TZ) $(nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader,nounits | tr -d ' ')\"; done ) &\nSMI=$!\n( while sleep 1800; do test -s /data/chang-n64-20260926/pilot-program-20261005/r1/runs/pilot1005-h5-e-350k-c-nb-s1/pid_telemetry.jsonl || continue; python -u /work/code/campaigns/pilot1005/monitor_p.py --config /work/code/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s1.json --telemetry /data/chang-n64-20260926/pilot-program-20261005/r1/runs/pilot1005-h5-e-350k-c-nb-s1/pid_telemetry.jsonl | sed \"s/^/MONITOR /\" || echo \"MONITOR_ERROR pilot1005-h5-e-350k-c-nb-s1\"; done ) &\nMON=$!\nPACKS=packs/pilot1005-h5-e-350k-c-nb-s1.json\nRP=0; E0=0\nARM_PHASE=train\nARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))\necho \"ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S\"\nif [ \"$ARM_BUDGET_S\" -le 0 ]; then ARM_FINAL_RC=124; echo \"ARM_DEADLINE_EXCEEDED pilot1005-h5-e-350k-c-nb-s1 before_start\"; exit 124; fi\nTS=$(date +%s)\ntimeout --signal=TERM --kill-after=150 \"$ARM_BUDGET_S\" python -u /work/code/run_pack.py \"$PACKS\" 500 || RP=$?\nif [ \"$RP\" = 124 ] || { [ \"$RP\" = 137 ] && [ $(( $(date +%s) - TS )) -ge \"$ARM_BUDGET_S\" ]; }; then ARM_FINAL_RC=124; echo \"ARM_DEADLINE_EXCEEDED pilot1005-h5-e-350k-c-nb-s1 run_pack_exit=$RP budget_s=$ARM_BUDGET_S\"; fi\nkill \"$SMI\" $MON 2>/dev/null || true\npython - \"$PACKS\" <<'PY' || E0=$?\nimport json, os, sys\nfrom pathlib import Path\ncamp = Path(os.environ['BNJ_CAMPAIGN_DIR'])\nruns = Path(os.environ['BNJ_RUN_ROOT']) / 'runs'\npack = json.loads((camp / sys.argv[1]).read_text())[int(os.environ['JOB_COMPLETION_INDEX'])]\nrows = json.loads((camp / 'index.json').read_text())['runs']\nseen = []\nfor i in pack:\n    marker = runs / rows[i]['name'] / 'DIVERGED.json'\n    seen.append((rows[i]['name'], json.loads(marker.read_text()).get('divergence_epoch_zero_based') if marker.exists() else None))\nprint('PACK_EPOCH0_CHECK', ' '.join(f'{n}={e}' for n, e in seen), flush=True)\nsys.exit(10 if seen and all(e == 0 for _, e in seen) else 0)\nPY\nif [ \"$E0\" = 10 ]; then echo \"POD_EPOCH0_ALL_DIVERGED node=${NODE_NAME:-na} run_pack_exit=$RP\"; exit 10; fi\nif [ \"$E0\" != 0 ]; then echo \"PACK_EPOCH0_CHECK_ERROR $E0\"; fi\ntest -s /data/chang-n64-20260926/pilot-program-20261005/r1/runs/pilot1005-h5-e-350k-c-nb-s1/pid_telemetry.jsonl && python -u /work/code/campaigns/pilot1005/monitor_p.py --config /work/code/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s1.json --telemetry /data/chang-n64-20260926/pilot-program-20261005/r1/runs/pilot1005-h5-e-350k-c-nb-s1/pid_telemetry.jsonl | sed \"s/^/FINAL /\" || echo \"FINAL_MONITOR_MISSING pilot1005-h5-e-350k-c-nb-s1\"\necho \"PILOT_ARM_DONE pilot1005-h5-e-350k-c-nb-s1 run_pack_exit=$RP\"\nexit \"$RP\"\n"
+            ],
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "key": "WANDB_API_KEY",
+                    "name": "kai-wandb"
+                  }
+                }
+              },
+              {
+                "name": "NODE_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.nodeName"
+                  }
+                }
+              }
+            ],
+            "image": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "train",
+            "resources": {
+              "limits": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "10Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "requests": {
+                "cpu": "2",
+                "ephemeral-storage": "16Gi",
+                "memory": "10Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              },
+              {
+                "mountPath": "/cmfp",
+                "name": "fingerprint",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "volumes": [
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-pilot1005-code-98dd2875b7"
+            },
+            "name": "code"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "16Gi"
+            },
+            "name": "work"
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          },
+          {
+            "configMap": {
+              "defaultMode": 420,
+              "name": "kai-chang0926-fp-e9511d1aeb"
+            },
+            "name": "fingerprint"
+          }
+        ]
+      }
+    },
+    "ttlSecondsAfterFinished": 604800
+  }
+}

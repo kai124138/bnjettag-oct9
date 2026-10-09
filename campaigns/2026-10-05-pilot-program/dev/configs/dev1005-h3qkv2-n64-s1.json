@@ -1,0 +1,153 @@
+{
+  "name": "dev1005-h3qkv2-n64-s1",
+  "era": 2,
+  "arch": {
+    "n_part": 64,
+    "n_feat": 3,
+    "features": [
+      "pt",
+      "etarel",
+      "phirel"
+    ],
+    "d_model": 24,
+    "n_heads": 2,
+    "n_layers": 1,
+    "ffn_dim": 32,
+    "n_classes": 5,
+    "pool": "gap",
+    "ffn_act": "relu",
+    "norm": "none",
+    "norm_placement": "per_linear",
+    "pos_enc": "none",
+    "softmax_free": false,
+    "input_std": true,
+    "pos_enc_none_consume_rng": true,
+    "pt_gate_gev": 2.0
+  },
+  "quant": {
+    "weight": "binary_absmean",
+    "act_bits": 8,
+    "act_policy": "learned_per_tensor_width",
+    "calib_n": 8192,
+    "act_calib": "free",
+    "act_bw_l1": 1e-08,
+    "beta0": 1e-07,
+    "act_granularity": "channel",
+    "softmax_out_bits": 10,
+    "softmax_out_i": 1,
+    "act_overflow": "WRAP",
+    "softmax_quant": "chang",
+    "i_decay_speed": 0.001,
+    "attn_bit_floor": {
+      "bits": 2,
+      "sites": [
+        "q",
+        "k",
+        "v"
+      ]
+    }
+  },
+  "train": {
+    "data": "data/train",
+    "validation_split": 0.1,
+    "epochs": 7000,
+    "batch": 2790,
+    "lr": 0.003,
+    "clip_mode": "value",
+    "clipnorm": 1.0,
+    "es_patience": 0,
+    "wandb_project": "BNJetTag-ChangRecipe",
+    "ebops": {
+      "enable": true,
+      "monitor_widths": true,
+      "controller": "pid",
+      "beta_schedule": null,
+      "front_dir": "front",
+      "metrics": [
+        "val_macro_auc",
+        "ebops"
+      ],
+      "sides": [
+        1,
+        -1
+      ],
+      "pid": {
+        "init_beta": 1e-07,
+        "p": 1.0,
+        "i": 0.05,
+        "d": 0.0,
+        "warmup": 1,
+        "log": true,
+        "min_beta": 1e-10,
+        "max_beta": 0.001,
+        "damp_beta_on_target": 0.0,
+        "target_ebops": 350000
+      },
+      "selection": "max_accuracy",
+      "stop_on_target": false,
+      "pid_input": "traced_only",
+      "pid_traced_integral": "per_epoch"
+    },
+    "jit_compile": false,
+    "split_seed": 1,
+    "order_seed": 2026092601,
+    "val_batch": 1024,
+    "lr_schedule": "chang_cosine_restarts",
+    "lr_cycle_epochs": 500,
+    "lr_t_mul": 1.0,
+    "lr_m_mul": 1.0,
+    "lr_alpha": 1e-06,
+    "lr_alpha_epochs": 10,
+    "optimizer": "adam_default",
+    "ebops_trace_sample": "train_full",
+    "ebops_trace_batch": 2048,
+    "ebops_reload_check": "stored",
+    "ebops_trace_every": 10
+  },
+  "hls": {
+    "backend": "Vitis",
+    "part": "xcvu13p-flga2577-2-e",
+    "clock_ns": 2.5,
+    "rf": 1,
+    "io": "io_parallel"
+  },
+  "experiment": {
+    "arm": "dev1005-h3qkv2-n64-s1",
+    "group": "dev-20261005-local",
+    "seed": 1,
+    "selection_metric": "val_categorical_accuracy",
+    "cost_before_auc": false,
+    "keep_auc_selected_feasible": true,
+    "checkpoint_every_epochs": 25,
+    "snapshot_every_epochs": 500,
+    "remote_every_epochs": 500,
+    "nondegenerate": {
+      "zero_floor_ebops": 171526,
+      "se_multiple": 5
+    }
+  },
+  "engram_study": {
+    "module": null,
+    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+    "memory_lr_multiplier": 5.0,
+    "memory_weight_decay": 0.0,
+    "wandb_entity": "kayamaguchi-uc-san-diego",
+    "wandb_project_access": "PRIVATE",
+    "max_logical_table_bytes": 65536,
+    "max_replicated_table_bytes": 2097152,
+    "cost_convention": "native_hgq2_plus_custom_estimate",
+    "status": "experimental; training ready, HLS unsupported"
+  },
+  "campaign": {
+    "study": "campaigns/2026-10-05-pilot-program/dev",
+    "arm": "H3QKV2",
+    "seed": 1,
+    "production": false,
+    "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+    "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+    "test_set_used_for_selection": false,
+    "tf32_enabled": false,
+    "revision_of": "chang1002c-a-n64-s1",
+    "amendment": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md"
+  }
+}

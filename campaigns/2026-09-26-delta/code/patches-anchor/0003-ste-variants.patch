@@ -1,0 +1,164 @@
+From 8f09f113484033eb5b038c9c03059c180bb2709b Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:30:22 -0700
+Subject: [PATCH 03/38] ste-variants: quant.ste {bounded, clip_identity, ede} +
+ quant.ste_ede_period (B04, B07; M018/M019)
+
+---
+ code/bnhgq2/ablation.py   |  1 +
+ code/bnhgq2/delta_keys.py | 21 ++++++++++++++++
+ code/bnhgq2/qat.py        | 51 ++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 70 insertions(+), 3 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 71cbe59..92ce577 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -767,6 +767,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         start = time.monotonic()
+         lr = learning_rate(cfg, epoch)
+         optimizer.learning_rate.assign(lr)
++        qat.set_delta_epoch(cfg, epoch)
+         pid.target_ebops = training_target(cfg, epoch)
+         pid.on_epoch_begin(epoch, {})
+         order = np.random.default_rng(np.random.SeedSequence([cfg['train']['order_seed'], epoch])).permutation(len(xt)).astype('int32')
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 5249b23..dccf51b 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -88,3 +88,24 @@ def _one_of(*allowed):
+ # binarizer-center-flag: uncentered absmean (card B02).
+ register('quant.binary_center', 'binarizer-center-flag', _is_bool,
+          active=lambda v: v is False)  # export: binarize.py honours it; convert path not run (DR-17)
++
++# ste-variants: backward rule of the binarizer (cards B04, B07); training only.
++def _ste_period(value, cfg):
++    if isinstance(value, str):
++        return 'must be an integer number of epochs; the generator resolves "=horizon"'
++    if not isinstance(value, int) or isinstance(value, bool) or value < 1:
++        return 'must be a positive integer (epochs)'
++    if lookup(cfg, 'quant.ste') != 'ede':
++        return 'only meaningful with quant.ste "ede"'
++
++
++def _ste(value, cfg):
++    message = _one_of('bounded', 'clip_identity', 'ede')(value)
++    if message:
++        return message
++    if value == 'ede' and lookup(cfg, 'quant.ste_ede_period') is None:
++        return 'quant.ste "ede" needs quant.ste_ede_period'
++
++
++register('quant.ste', 'ste-variants', _ste, active=lambda v: v != 'bounded', export_ok=True)
++register('quant.ste_ede_period', 'ste-variants', _ste_period, export_ok=True)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index f1af97e..11a2cd2 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -40,7 +40,7 @@ EPS_BETA = 1e-6
+ # --------------------------------------------------------------------------- #
+ # (a) BitNet absmean straight-through binarizer                               #
+ # --------------------------------------------------------------------------- #
+-def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True):
++def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True, ste: str = "bounded"):
+     """Effective weight = beta * bipolar_sign(w - mean(w)), STE identity backward.
+ 
+     Replicates qkerasModel.AbsMeanQuantizer (binary branch), with two deliberate,
+@@ -57,7 +57,14 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True):
+     export re-binarization gives the same +/-beta on the same latents).
+ 
+     center=False (Delta, quant.binary_center false): uncentered absmean, the
+-    BitNet/XNOR-Net convention (alpha = 0)."""
++    BitNet/XNOR-Net convention (alpha = 0).
++
++    ste (Delta, quant.ste; the forward value is q*beta in every case):
++      "bounded"       the bundle backward above (default);
++      "clip_identity" canonical BNN backward (card B04): d/dwc = 1{|wc| <= 1}, no beta path;
++      "ede"           IR-Net error-decay estimator (card B07): the identity surrogate ws is
++                      replaced by k*tanh(t*ws), k = max(1/t, 1); t comes from
++                      ede_temperature(), set once per epoch by set_delta_epoch."""
+     w = ops.cast(w, "float32")
+     if center:
+         alpha = ops.mean(w)
+@@ -67,10 +74,42 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True):
+     beta = ops.mean(ops.abs(wc)) + eps
+     ws = wc / ops.stop_gradient(beta)               # bounded backward (see docstring)
+     q = ops.where(wc >= 0.0, 1.0, -1.0)             # strict bipolar, never 0
++    if ste == "clip_identity":
++        wg = ops.clip(wc, -1.0, 1.0)
++        # forward exactly q*beta (wg - wg == 0 exactly); `wg + sg(q*beta - wg)` left ulp residue
++        return ops.stop_gradient(q * beta) + (wg - ops.stop_gradient(wg))
++    if ste == "ede":
++        t = ede_temperature()
++        ws = ops.maximum(1.0 / t, 1.0) * ops.tanh(t * ws)
+     wq = ws + ops.stop_gradient(q - ws)             # STE: forward=q
+     return wq * beta                                 # in {-beta, +beta}
+ 
+ 
++_EDE_T = []   # one non-trainable, never-saved temperature shared by every EDE layer
++EDE_T_MIN, EDE_T_MAX = 0.1, 10.0   # IR-Net (arXiv:1909.10788) T_min = 1e-1, T_max = 1e1
++
++
++def ede_temperature():
++    """Created eagerly (layer __init__), never inside a traced call."""
++    if not _EDE_T:
++        import tensorflow as tf
++        _EDE_T.append(tf.Variable(EDE_T_MIN, trainable=False, dtype="float32", name="delta_ede_t"))
++    return _EDE_T[0]
++
++
++def ede_temperature_at(epoch: int, period: int) -> float:
++    """t = T_min * 10^(p * log10(T_max / T_min)), p = (epoch mod period) / period: restarts
++    every `period` epochs (period = the horizon anneals once)."""
++    p = (int(epoch) % int(period)) / float(period)
++    return float(EDE_T_MIN * 10.0 ** (p * np.log10(EDE_T_MAX / EDE_T_MIN)))
++
++
++def set_delta_epoch(cfg: dict, epoch: int) -> None:
++    """Per-epoch state of opt-in Delta binarizer options; a no-op for bundle configs."""
++    if cfg["quant"].get("ste") == "ede":
++        ede_temperature().assign(ede_temperature_at(epoch, cfg["quant"]["ste_ede_period"]))
++
++
+ # --------------------------------------------------------------------------- #
+ # (b) binary-weight einsum / dense layers                                     #
+ # --------------------------------------------------------------------------- #
+@@ -84,6 +123,8 @@ class BitQEinsumDense(QEinsumDense):
+     def __init__(self, *args, binary=None, **kwargs):
+         super().__init__(*args, **kwargs)
+         self.binary = dict(binary or {})
++        if self.binary.get("ste") == "ede":
++            ede_temperature()
+ 
+     def get_config(self):
+         config = super().get_config()
+@@ -115,6 +156,8 @@ class BitQDense(QDense):
+     def __init__(self, *args, binary=None, **kwargs):
+         super().__init__(*args, **kwargs)
+         self.binary = dict(binary or {})
++        if self.binary.get("ste") == "ede":
++            ede_temperature()
+ 
+     def get_config(self):
+         config = super().get_config()
+@@ -142,7 +185,7 @@ def _delta_binarize(layer, w):
+     opts = layer.binary
+     if not opts:
+         return bitnet_binary_ste(w)
+-    return bitnet_binary_ste(w, center=opts.get("center", True))
++    return bitnet_binary_ste(w, center=opts.get("center", True), ste=opts.get("ste", "bounded"))
+ 
+ 
+ def delta_binary_options(cfg: dict, layer_name: str) -> dict:
+@@ -151,6 +194,8 @@ def delta_binary_options(cfg: dict, layer_name: str) -> dict:
+     opts = {}
+     if q.get("binary_center", True) is False:
+         opts["center"] = False
++    if q.get("ste", "bounded") != "bounded":
++        opts["ste"] = q["ste"]
+     return opts
+ 
+ 
+-- 
+2.50.1 (Apple Git-155)
+

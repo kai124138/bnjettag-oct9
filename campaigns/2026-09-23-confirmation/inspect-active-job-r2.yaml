@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-confirm-active-inspect-0924-r2
+  namespace: cms-ml
+  labels: {user: kai, campaign: confirmation-20260923, app: kai-confirm-active-inspect-r2}
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  ttlSecondsAfterFinished: 604800
+  template:
+    metadata:
+      labels: {user: kai, campaign: confirmation-20260923, app: kai-confirm-active-inspect-r2}
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      nodeSelector: {kubernetes.io/arch: amd64}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - nautilus-ext-gpu01.fullerton.edu
+                      - ren-gp-argo-01.madren.org
+                      - k8s-chase-ci-03.calit2.optiputer.net
+      containers:
+        - name: inspect
+          image: alpine:3.20
+          command: [sh, -c]
+          args:
+            - |
+              set -eu
+              root=/data/confirmation-20260923/architecture
+              for run in "$root"/runs/*; do
+                echo "RUN=$(basename "$run")"
+                cat "$run/latest.json"
+                generation=$(find "$run/checkpoints" -mindepth 1 -maxdepth 1 -type d | sort | tail -1)
+                echo "GENERATION=$(basename "$generation")"
+                cat "$generation/state.json"
+                logfile=$(find "$root/logs" -name "$(basename "$run")-*.log" -type f | sort | tail -1)
+                echo "LOG=$logfile"
+                tail -20 "$logfile"
+              done
+              echo PREFLIGHT_ALL_PASS
+          resources:
+            requests: {cpu: "1", memory: 1Gi, ephemeral-storage: 1Gi}
+            limits: {cpu: "1", memory: 1Gi, ephemeral-storage: 1Gi}
+          volumeMounts:
+            - {name: persistent, mountPath: /data, readOnly: true}
+      volumes:
+        - name: persistent
+          persistentVolumeClaim: {claimName: kai-data}

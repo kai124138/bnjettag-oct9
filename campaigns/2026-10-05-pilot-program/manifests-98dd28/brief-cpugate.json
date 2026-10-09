@@ -1,0 +1,150 @@
+{
+  "approval_ref": "local/2026-10-05-execution/r1-98dd28-approval.json (Kai 2026-10-06)",
+  "changes": "Tree 42abed4b + 0032 + 0033 (option c) + 0034 (test env fix) + 0036 (NB arm) + 0037 (attention bit floor) + 0035 (23 pilot configs) + 0038 (W&B stages pilot-r1/2/3) + 0039 (readout) + 0040 (gate checks, NB pairing) + 0041 (validate_cfg accepts NB) + 0042 + 0043 (24-arm R1 configs, STUDY [A3]). No GPU, no training, no checkpoint read.",
+  "decision_ref": ".claude/memory/decisions.md 2026-10-05 10:08 JST",
+  "expected_metrics": [
+    {
+      "expectation": "val_accuracy_threshold 0.2109624456315518 and labels sha e593f51f...7617",
+      "name": "threshold",
+      "split": "validation labels, n=62000"
+    },
+    {
+      "expectation": "PREFLIGHT_ALL_PASS 24; 24 PID lines; PAIRED_INIT_OK E and A07",
+      "name": "cpu_gate.py",
+      "split": "synthetic inputs, n=4096 rows"
+    },
+    {
+      "expectation": "NB_PAIRING_ALL_OK 8",
+      "name": "pair_nb.py",
+      "split": "synthetic inputs, n=4096 rows"
+    },
+    {
+      "expectation": "exactly 2 known skips (analysis/test_attn_entropy.py:142), all other tests passed, exact collected count",
+      "name": "pytest suite",
+      "split": "synthetic fixtures only"
+    }
+  ],
+  "limitations": [
+    "Pilots are directional (STUDY.md): no pilot number is a result, enters verify.json or appears in outward text.",
+    "No historical checkpoint may initialize or resume these runs (config and code SHA guards).",
+    "The epoch-500 pause does not observe the first LR restart after epoch 500."
+  ],
+  "outputs": [
+    "/data/chang-n64-20260926/pilot-program-20261005/cpu-gate-98dd28-r1"
+  ],
+  "production_gate": {
+    "reference": "STUDY.md \u00a79 production trigger; PROGRAM.json unsigned",
+    "status": "pending"
+  },
+  "purpose": "CPU gate for the pilot-program round-1 bundle before any pilot: threshold (c) from the cache, per-config build/step/reload/floor/PID-schedule gate with matched initialization, NB [A22] pairing at seeds 1-8, and the full unit suite.",
+  "runs": [
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json",
+      "name": "pilot1005-h1-e-350k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s2.json",
+      "name": "pilot1005-h1-e-350k-c-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s1.json",
+      "name": "pilot1005-h1-e-350k-noc-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s2.json",
+      "name": "pilot1005-h1-e-350k-noc-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-250k-c-s1.json",
+      "name": "pilot1005-h2-e-250k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-500k-c-s1.json",
+      "name": "pilot1005-h2-e-500k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-750k-c-s1.json",
+      "name": "pilot1005-h2-e-750k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-1m-c-s1.json",
+      "name": "pilot1005-h2-e-1m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-2m-c-s1.json",
+      "name": "pilot1005-h2-e-2m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-e-5m-c-s1.json",
+      "name": "pilot1005-h2-e-5m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-500k-c-s1.json",
+      "name": "pilot1005-h2-a07-500k-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-1m-c-s1.json",
+      "name": "pilot1005-h2-a07-1m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-2m-c-s1.json",
+      "name": "pilot1005-h2-a07-2m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h2-a07-5m-c-s1.json",
+      "name": "pilot1005-h2-a07-5m-c-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s1.json",
+      "name": "pilot1005-h4-e-350k-c-w50-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s2.json",
+      "name": "pilot1005-h4-e-350k-c-w50-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s1.json",
+      "name": "pilot1005-h4-e-350k-c-w100-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w100-s2.json",
+      "name": "pilot1005-h4-e-350k-c-w100-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s1.json",
+      "name": "pilot1005-h5-e-350k-c-nb-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s2.json",
+      "name": "pilot1005-h5-e-350k-c-nb-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s1.json",
+      "name": "pilot1005-h3-e-350k-c-qkv1-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s2.json",
+      "name": "pilot1005-h3-e-350k-c-qkv1-s2"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-h3-e-450k-c-qkv1-s1.json",
+      "name": "pilot1005-h3-e-450k-c-qkv1-s1"
+    },
+    {
+      "config_path": "code/campaigns/pilot1005/configs/pilot1005-ctl-e-unc-c-s1.json",
+      "name": "pilot1005-ctl-e-unc-c-s1"
+    }
+  ],
+  "scientific_gate": {
+    "reference": "local/2026-10-05-execution/r1-98dd28-approval.json (Kai 2026-10-06: run the CPU gate on the new bundle; review v1 L3)",
+    "status": "cleared"
+  },
+  "stop_rules": [
+    {
+      "action": "existing-runner-guard",
+      "approval_ref": "Job script: fail fast, last line GATE_RESULT FAIL <reason>; activeDeadlineSeconds 14400",
+      "condition": "any check FAIL, nonzero exit or deadline"
+    }
+  ],
+  "study_ref": "campaigns/2026-10-05-pilot-program/STUDY.md"
+}

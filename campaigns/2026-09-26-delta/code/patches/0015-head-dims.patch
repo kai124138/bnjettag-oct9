@@ -1,0 +1,80 @@
+From 975aa269421522f2997150e77fa091f77924b552 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 08:37:10 -0700
+Subject: [PATCH 15/24] head-dims: arch.head_dims hidden head widths (Chang
+ 32/32/32; M045); export blocked until convert_binary has a deep head
+
+---
+ code/bnhgq2/ablation.py   |  7 +++++--
+ code/bnhgq2/delta_keys.py |  9 +++++++++
+ code/bnhgq2/qat.py        | 19 ++++++++++++++-----
+ 3 files changed, 28 insertions(+), 7 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 8e37b6e..6d5ba7f 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -430,8 +430,11 @@ def expected_binary_layers(cfg):
+ 
+ 
+ def projection_layers(cfg):
+-    """The configured transformer has 6 projections per block and 3 outside it."""
+-    names = {'input_proj', 'head_fc1', 'head_fc2'}
++    """The configured transformer has 6 projections per block and 3 outside it
++    (with Delta arch.head_dims: 1 + len(head_dims) + 1 outside it)."""
++    head_dims = cfg['arch'].get('head_dims')
++    names = {'input_proj', 'head_fc1', 'head_fc2'} if head_dims is None else \
++        {'input_proj', *(f'head_fc{i}' for i in range(1, len(head_dims) + 2))}
+     for index in range(cfg['arch']['n_layers']):
+         names.update(f'bit_block_{index}_{suffix}' for suffix in
+                      ('attn_Wq', 'attn_Wk', 'attn_Wv', 'attn_Wo', 'ffn_fc1', 'ffn_fc2'))
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index d4db2f5..840a2da 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -267,3 +267,12 @@ def _collapse(value, cfg):
+ 
+ 
+ register('experiment.collapse_stop', 'screen-collapse-stop', _collapse, export_ok=True)
++
++# head-dims: hidden head widths GAP -> head_dims... -> n_classes (Chang 32/32/32; card A08; M045).
++# Export: fold classes are all "explicit" under norm none; convert_binary has no deep head yet.
++def _head_dims(value, cfg):
++    ok = isinstance(value, list) and value and all(isinstance(v, int) and not isinstance(v, bool) and v > 0 for v in value)
++    return None if ok else 'must be a non-empty list of positive integers'
++
++
++register('arch.head_dims', 'head-dims', _head_dims)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 197c099..debcd64 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -711,11 +711,20 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+ 
+         # ---- head ----
+         h = QGlobalAveragePooling1D(enable_iq=False, name="gap")(h)
+-        h = norm("ln_head_fc1")(h)
+-        h = dense("head_fc1", D, h, use_bias=True)
+-        h = keras.layers.ReLU(name="head_act")(h)
+-        h = norm("ln_head_fc2")(h)
+-        out = dense("head_fc2", C, h, use_bias=True)
++        head_dims = A.get("head_dims")  # Delta: hidden head widths (Chang 32/32/32)
++        if head_dims is None:
++            h = norm("ln_head_fc1")(h)
++            h = dense("head_fc1", D, h, use_bias=True)
++            h = keras.layers.ReLU(name="head_act")(h)
++            h = norm("ln_head_fc2")(h)
++            out = dense("head_fc2", C, h, use_bias=True)
++        else:
++            for i, width in enumerate(head_dims, start=1):
++                h = norm(f"ln_head_fc{i}")(h)
++                h = dense(f"head_fc{i}", int(width), h, use_bias=True)
++                h = keras.layers.ReLU(name="head_act" if i == 1 else f"head_act{i}")(h)
++            h = norm(f"ln_head_fc{len(head_dims) + 1}")(h)
++            out = dense(f"head_fc{len(head_dims) + 1}", C, h, use_bias=True)
+ 
+         model = keras.Model(x_in, out, name=cfg["name"])
+     return model, taps
+-- 
+2.50.1 (Apple Git-155)
+

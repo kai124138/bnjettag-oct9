@@ -1,0 +1,300 @@
+From 5e78fa0f9614a8ac542d29bd6cd63b9a7064b38f Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 00:42:02 -0700
+Subject: [PATCH 01/14] A20: opt-in Chang quantizer set
+ (quant.act_overflow=WRAP, quant.softmax_quant=chang) on hgq2 0.1.9, width
+ records for WRAP/KBI, unit tests
+
+---
+ bnhgq2/ebops_target.py      | 29 +++++++++++--
+ bnhgq2/qat.py               | 83 ++++++++++++++++++++++++++++++++++---
+ tests/test_a20_quantizer.py | 82 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 184 insertions(+), 10 deletions(-)
+ create mode 100644 tests/test_a20_quantizer.py
+
+diff --git a/bnhgq2/ebops_target.py b/bnhgq2/ebops_target.py
+index 4b62495..d630ca1 100644
+--- a/bnhgq2/ebops_target.py
++++ b/bnhgq2/ebops_target.py
+@@ -21,15 +21,26 @@ from .ebops_calc import compute_ebops
+ def activation_quantizers(model):
+     for layer in model.layers:
+         iq = getattr(layer, "iq", None)
+-        if iq is None:
+-            continue
+-        qs = list(iq) if hasattr(iq, "__len__") else [iq]
++        qs = [] if iq is None else list(iq) if hasattr(iq, "__len__") else [iq]
+         for index, q in enumerate(qs):
+             qz = getattr(q, "quantizer", None)
+             if qz is None or getattr(qz, "__dummy__", False):
+                 continue
+             name = layer.name if len(qs) == 1 else f"{layer.name}__in{index}"
+             yield name, qz
++        # [A20] learned softmax internals (quant.softmax_quant="chang"). Fixed internals
++        # are trainable=False and are skipped, so older configs log exactly as before.
++        for table in ("exp_table", "inv_table"):
++            sub = getattr(layer, table, None)
++            if sub is None:
++                continue
++            for role in ("iq", "oq"):
++                if not getattr(sub, f"enable_{role}", False):
++                    continue
++                qz = getattr(getattr(sub, role, None), "quantizer", None)
++                if qz is None or getattr(qz, "__dummy__", False) or not qz.trainable:
++                    continue
++                yield f"{layer.name}__{table[:3]}_{role}", qz
+ 
+ 
+ def width_snapshot(model):
+@@ -41,13 +52,23 @@ def width_snapshot(model):
+         def scalar(value):
+             a = np.asarray(ops.convert_to_numpy(value))
+             return float(a.item()) if a.size == 1 else a.tolist()
+-        result[name] = {
++        entry = {
+             "bits": scalar(q.fbits), "i": scalar(q.i), "f": scalar(q.f),
+             "raw_i": scalar(q._i),
+             "raw_f": scalar(q._f) if hasattr(q, "_f") else None,
+             "width_trainable": all(id(getattr(q, key, None)) in trainable_ids
+                                    for key in ("_i", "_f")),
+         }
++        if q.overflow_mode != "SAT" or not hasattr(q, "_f"):
++            # [A20] WRAP (i tracked, not trainable) and KBI tables. `bits` above is
++            # HGQ2 fbits (b + k when b > 0); EBOPs price `ebops_bits` = HGQ2 `bits`
++            # (relu(i+f) in WRAP, b + k in SAT). `b` is the magnitude width, `k` the
++            # sign bit. A 0-bit WRAP channel outputs exactly 0 at inference.
++            learned = "_f" if hasattr(q, "_f") else "_b"
++            entry.update(width_trainable=id(getattr(q, learned)) in trainable_ids,
++                         b=scalar(q.b), k=scalar(q.k), ebops_bits=scalar(q.bits),
++                         overflow_mode=q.overflow_mode)
++        result[name] = entry
+     return result
+ 
+ 
+diff --git a/bnhgq2/qat.py b/bnhgq2/qat.py
+index 99f9f1c..084e532 100644
+--- a/bnhgq2/qat.py
++++ b/bnhgq2/qat.py
+@@ -276,7 +276,8 @@ class MeanMonoL1(keras.regularizers.Regularizer):
+         return {"l1": self.l1}
+ 
+ 
+-def _free_act(act_bits: int, i0: int, bw_l1: float = 1e-8, heterogeneous_axis=()):
++def _free_act(act_bits: int, i0: int, bw_l1: float = 1e-8, heterogeneous_axis=(),
++              overflow: str = "SAT"):
+     """LEARNABLE-BITWIDTH activation quantizer (reference experiment / jsc150 style).
+ 
+     Stock HGQ2 KIF datalane quantizer with `trainable=True` and a MonoL1 regulariser on
+@@ -295,6 +296,20 @@ def _free_act(act_bits: int, i0: int, bw_l1: float = 1e-8, heterogeneous_axis=()
+     from hgq.regularizers import MonoL1
+     f0 = act_bits - 1 - int(i0)
+     regularizer = MeanMonoL1 if heterogeneous_axis else MonoL1
++    if overflow == "WRAP":
++        # [A20] (2026-09-27, opt-in via quant.act_overflow="WRAP"): the jsc150 datalane
++        # quantizer. HGQ2 0.1.9 FixedPointQuantizerKIF in WRAP+trainable mode tracks i
++        # from the data range (get_minimal_i; i is NOT trainable, ic MinMax(0, 12) as in
++        # jsc150 get_model), only f feels the EBOPs gradient, and bits = relu(i + f)
++        # WITHOUT the sign bit k, so a channel can reach 0 bits and 0 EBOPs (inference
++        # output is exactly 0 there). fc MinMax(-24, 24) is the HGQ2 default jsc150
++        # inherits; with our (-8, 16) a channel at i = 12 could never reach 0 bits.
++        # Rounding stays RND_CONV (jsc150: RND; differs only at exact ties).
++        return QuantizerConfig("kif", "datalane", k0=1, i0=int(i0), f0=f0,
++                               round_mode="RND_CONV", overflow_mode="WRAP",
++                               trainable=True, heterogeneous_axis=heterogeneous_axis,
++                               ic=MinMax(0, 12), fc=MinMax(-24, 24),
++                               ir=regularizer(float(bw_l1)), fr=regularizer(float(bw_l1)))
+     return QuantizerConfig("kif", "datalane", k0=1, i0=int(i0), f0=f0,
+                            round_mode="RND_CONV", overflow_mode="SAT",
+                            trainable=True, heterogeneous_axis=heterogeneous_axis,
+@@ -302,6 +317,32 @@ def _free_act(act_bits: int, i0: int, bw_l1: float = 1e-8, heterogeneous_axis=()
+                            ir=regularizer(float(bw_l1)), fr=regularizer(float(bw_l1)))
+ 
+ 
++def _chang_table(bw_l1: float, b0: int = 12, i0: int = 1):
++    """[A20] learned softmax table (jsc150 `place='table'` scope, bc=Min(4)).
++    KBI, trainable b and i, b >= 4. QSoftmax (HGQ2 0.1.9) forces SAT, RND_CONV, k0=0 and,
++    with allow_heterogeneous_table=False (the MHA default jsc150 uses), a per-tensor
++    width. Init b0=12, i0=1 equals the fixed `_table(1, 11)` grid, so a fresh model is
++    forward-identical at init to the fixed-softmax build."""
++    from hgq.constraints import Min
++    from hgq.regularizers import MonoL1
++    return QuantizerConfig("kbi", "table", k0=0, b0=int(b0), i0=int(i0),
++                           round_mode="RND_CONV", overflow_mode="SAT", trainable=True,
++                           heterogeneous_axis=(), bc=Min(4), br=MonoL1(float(bw_l1)),
++                           ir=MonoL1(float(bw_l1)))
++
++
++def _chang_softmax_iq(bw_l1: float, k0: int, i0: int, f0: int, overflow: str):
++    """[A20] learned softmax-internal datalane quantizer (exp input: SAT as the HGQ2
++    0.1.9 QMultiHeadAttention default `softmax_exp_iq_conf`; inv input: WRAP datalane
++    default). Per tensor (QSoftmax forces it). Init equals the current fixed grids."""
++    from hgq.constraints import MinMax
++    from hgq.regularizers import MonoL1
++    return QuantizerConfig("kif", "datalane", k0=int(k0), i0=int(i0), f0=int(f0),
++                           round_mode="RND_CONV", overflow_mode=overflow, trainable=True,
++                           heterogeneous_axis=(), ic=MinMax(0, 12), fc=MinMax(-24, 24),
++                           ir=MonoL1(float(bw_l1)), fr=MonoL1(float(bw_l1)))
++
++
+ def _static_w8(i0: int = 2):
+     """Static per-tensor 8-bit weight grid (w8a8 baseline): fixed<8,1+i0>, SAT, frozen.
+     Latent weights adapt inside the fixed grid; weight_decay keeps them in range."""
+@@ -363,6 +404,19 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         raise ValueError(f"{cfg['name']}: unsupported quant.act_calib={act_calib!r}")
+     act_bw_l1 = float(cfg["quant"].get("act_bw_l1", 1e-8))
+     beta0 = float(cfg["quant"].get("beta0", 0.0))
++    # [A20] opt-in quantizer set (absent keys => byte-identical to the SAT/fixed build):
++    #   quant.act_overflow  "SAT" (default) | "WRAP"  -> every learned datalane activation
++    #   quant.softmax_quant "fixed" (default) | "chang" -> learned softmax output width
++    #       into A.V (WRAP), learned exp/inv inputs, learned tables with b >= 4.
++    act_overflow = str(cfg["quant"].get("act_overflow", "SAT")).upper()
++    softmax_quant = str(cfg["quant"].get("softmax_quant", "fixed")).lower()
++    if act_overflow not in ("SAT", "WRAP"):
++        raise ValueError(f"{cfg['name']}: unsupported quant.act_overflow={act_overflow!r}")
++    if softmax_quant not in ("fixed", "chang"):
++        raise ValueError(f"{cfg['name']}: unsupported quant.softmax_quant={softmax_quant!r}")
++    if (act_overflow != "SAT" or softmax_quant != "fixed") and (act_calib != "free" or not binv):
++        raise ValueError(f"{cfg['name']}: act_overflow/softmax_quant need binary weights "
++                         "and act_calib='free'")
+     taps: dict = {}
+ 
+     # Norm placement: 'subln' (default -> PSubLN, existing behavior) | 'none' (identity
+@@ -392,7 +446,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             if granularity not in ("tensor", "channel"):
+                 raise ValueError(f"Unsupported act_granularity: {granularity}")
+             return _free_act(ab, i0, act_bw_l1,
+-                             heterogeneous_axis=axes if granularity == "channel" else ())
++                             heterogeneous_axis=axes if granularity == "channel" else (),
++                             overflow=act_overflow)
+         return _trainable_act(ab, i0) if act_calib == "trainable" else _static_act(ab, i0)
+ 
+     def bias_conf():
+@@ -448,6 +503,12 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                             exp_iq_conf=_dummy(), inv_iq_conf=_dummy(),
+                             exp_oq_conf=_table(1, 20), inv_oq_conf=_table(1, 20),
+                             name=name)(x)
++        if softmax_quant == "chang":
++            return QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
++                            exp_iq_conf=_chang_softmax_iq(act_bw_l1, 1, 6, max(ab, 10) - 7, "SAT"),
++                            inv_iq_conf=_chang_softmax_iq(act_bw_l1, 0, 4, 8, "WRAP"),
++                            exp_oq_conf=_chang_table(act_bw_l1), inv_oq_conf=_chang_table(act_bw_l1),
++                            allow_heterogeneous_table=False, name=name)(x)
+         # generous static tables (softmax internals are LN/softmax-bounded; the
+         # substitution cost was measured negligible in the rebuild gold experiments)
+         return QSoftmax(axis=-1, stable=True, input_scaler=float(scale),
+@@ -493,10 +554,20 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                 scores = keras.layers.Add(name=f"{blk}_attn_pairbias")(
+                     [scores, pair_bias_tensor])
+             attn = softmax(f"{blk}_attn_softmax", scores, 1.0 / np.sqrt(E))
+-            attn_iq = _dummy("datalane") if fp32 else \
+-                QuantizerConfig("kif", "datalane", k0=0, i0=sm_out_i, f0=sm_out_bits - sm_out_i,
+-                                round_mode="RND_CONV", overflow_mode="SAT",
+-                                trainable=False, heterogeneous_axis=())
++            if fp32:
++                attn_iq = _dummy("datalane")
++            elif softmax_quant == "chang":
++                # [A20] learned softmax-output width into A.V (jsc150: MHA softmax_oq_conf,
++                # WRAP datalane, per element over (h, t, s)). Per element under channel
++                # granularity, per tensor under tensor granularity. Init = the fixed grid
++                # (i = softmax_out_i, f = softmax_out_bits - softmax_out_i).
++                sm_axes = (-3, -2, -1) if cfg["quant"].get("act_granularity", "tensor") == "channel" else ()
++                attn_iq = _free_act(sm_out_bits + 1, sm_out_i, act_bw_l1,  # f0 = bits - i
++                                    heterogeneous_axis=sm_axes, overflow="WRAP")
++            else:
++                attn_iq = QuantizerConfig("kif", "datalane", k0=0, i0=sm_out_i, f0=sm_out_bits - sm_out_i,
++                                          round_mode="RND_CONV", overflow_mode="SAT",
++                                          trainable=False, heterogeneous_axis=())
+             ctx = QEinsum("bhts,bshe->bthe",
+                           iq_confs=[attn_iq, stream_iq()],
+                           name=f"{blk}_attn_ctx")([attn, v])
+diff --git a/tests/test_a20_quantizer.py b/tests/test_a20_quantizer.py
+new file mode 100644
+index 0000000..6d0b472
+--- /dev/null
++++ b/tests/test_a20_quantizer.py
+@@ -0,0 +1,82 @@
++"""[A20] unit tests: a WRAP activation channel at relu(i+f) = 0 costs 0 EBOPs and outputs 0;
++the SAT channel at its floor still costs 1 bit (the sign bit k). CPU, synthetic inputs."""
++import copy
++import json
++import os
++from pathlib import Path
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++HERE = Path(__file__).resolve().parents[1]
++BASE = HERE / 'configs' / 'const0922-a07-n64-s1-fast50-fp32.json'
++
++
++def _layer_model(overflow):
++    import keras
++    from bnhgq2 import qat
++    from bnhgq2.compat import apply_keras_compat
++    apply_keras_compat()
++    keras.utils.set_random_seed(0)
++    x = keras.Input((8, 3))
++    layer = qat.BitQDense(4, use_bias=True, name='probe',
++                          iq_conf=qat._free_act(8, 2, 1e-8, heterogeneous_axis=(-1,), overflow=overflow),
++                          kq_conf=qat._binary_kq(), bq_conf=qat._dummy('bias'))
++    return keras.Model(x, layer(x)), layer
++
++
++@pytest.mark.parametrize('overflow,expect_zero', [('WRAP', True), ('SAT', False)])
++def test_channel_floor(overflow, expect_zero):
++    from hgq.utils import trace_minmax
++    model, layer = _layer_model(overflow)
++    q = layer.iq.quantizer
++    x = np.random.default_rng(1).standard_normal((64, 8, 3)).astype('float32')
++    if overflow == 'SAT':
++        q._i.assign(np.full(q._i.shape, q.i_constraint.min_value, 'float32'))
++    q._f.assign(np.full(q._f.shape, q.f_constraint.min_value, 'float32'))
++    total = trace_minmax(model, x, batch_size=64)
++    ebops = int(layer.ebops)
++    out = np.asarray(layer.iq(x, training=False))
++    if expect_zero:
++        assert ebops == 0 and total == 0
++        assert np.all(np.asarray(q.bits) == 0)
++        assert np.all(out == 0)
++    else:
++        # SAT at i = ic.min, f = fc.min: EBOPs still bill the sign bit k (1 bit per
++        # channel), while HGQ2 0.1.9 inference zeroes the output (k + i + f <= 0 branch
++        # of FixedPointQuantizerBase.call). Billed but silent: the SAT floor is 1 bit.
++        assert np.all(np.asarray(q.bits) == 1)
++        assert ebops == 8 * 3 * 4                       # 1 bit x 1-bit weight per MAC
++        assert np.all(out == 0)
++
++
++def test_softmax_internals_learned_and_floor():
++    import keras
++    from bnhgq2 import qat
++    from bnhgq2.ebops_target import activation_quantizers
++    cfg = json.loads(BASE.read_text())
++    cfg['quant'].update(act_overflow='WRAP', softmax_quant='chang')
++    model, _ = qat.build_qat_model(cfg, seed=1)
++    names = {n for n, q in activation_quantizers(model) if q.trainable}
++    for role in ('exp_iq', 'exp_oq', 'inv_iq', 'inv_oq'):
++        assert f'bit_block_0_attn_softmax__{role}' in names
++    sm = model.get_layer('bit_block_0_attn_softmax')
++    for table in (sm.exp_table, sm.inv_table):
++        oq = table.oq.quantizer
++        assert oq.b_constraint.min_value == 4 and oq.overflow_mode == 'SAT' and oq.trainable
++    ctx = model.get_layer('bit_block_0_attn_ctx')
++    assert ctx.iq[0].quantizer.overflow_mode == 'WRAP' and ctx.iq[0].quantizer.trainable
++
++
++def test_absent_keys_unchanged():
++    """No [A20] key => the fixed/SAT build: same trainable set and same quantizer modes."""
++    from bnhgq2 import qat
++    from bnhgq2.ebops_target import activation_quantizers
++    cfg = json.loads(BASE.read_text())
++    model, _ = qat.build_qat_model(cfg, seed=1)
++    assert all(q.overflow_mode == 'SAT' for _, q in activation_quantizers(model))
++    assert not any('__exp_' in n or '__inv_' in n for n, _ in activation_quantizers(model))
++    sm = model.get_layer('bit_block_0_attn_softmax')
++    assert not sm.exp_table.oq.quantizer.trainable
++    assert not model.get_layer('bit_block_0_attn_ctx').iq[0].quantizer.trainable
+-- 
+2.50.1 (Apple Git-155)
+

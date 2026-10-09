@@ -1,0 +1,88 @@
+/cmcode/hgq2.tar.gz: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+=== BNJetTag FINAL preflight (PVC-free) Fri Sep 11 00:52:06 UTC 2026 ===
+[deps] pinned install (mirror .venv-hgq2)
+--- data source reachability: Zenodo train tarball (HEAD, no download) ---
+  OK Zenodo train tarball reachable: 2725115104 bytes
+  PASS data-source
+--- build all 5 configs (CPU) + param counts + binary gate ---
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789087927.926348      21 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1789087927.993154      21 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789087930.221722      21 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789087932.104694      21 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+  ebops-n8-20260910-b25-w1a8 [3817d3c8] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260910-b50-w1a8 [ccaa1033] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260910-b75-w1a8 [ac37330a] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  ebops-n8-20260910-control-w1a8 [6c498e72] params=18,657 trainable=18,511 taps=19 binary_gate=OK(15 layers)
+  PASS build
+PREFLIGHT_ALL_PASS
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789087937.091029       1 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+I0000 00:00:1789087937.158190       1 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789087939.094371       1 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789087940.962041       1 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[train] EBOPs pressure ON: beta_schedule=None threshold=1304386.5 front -> /tmp/tmpi63hg5hs/front
+[budget] epoch=0 ebops=1739182 target=1304386.5 width_sites_changed=0
+[budget] epoch=1 ebops=1739182 target=1739183 width_sites_changed=0
+[budget] epoch=2 ebops=1739182 target=1739183 width_sites_changed=0
+[check] ebops-n8-20260910-b25-w1a8 params=18657 initial_ebops=1739182
+[check] ebops-n8-20260910-b50-w1a8 params=18657 initial_ebops=1739182
+[check] ebops-n8-20260910-b75-w1a8 params=18657 initial_ebops=1739182
+[check] ebops-n8-20260910-control-w1a8 params=18657 initial_ebops=1739182
+[check] 42 width variables have finite connected gradients; one-bit perturbation changes EBOPs 1739182->1738414
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 1 files, 400 jets (320 train / 80 val), class counts [80, 80, 80, 80, 80]
+[train] input_std ON: per-feature z-score from train split (|mu|max=0.03412, sigma_max=0.9966) -> input_std.json
+[budget] initial=1739182 target=1000000000.0
+[train] ebops-n8-20260910-b75-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=free
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+[train] EBOPs pressure ON: beta_schedule=None threshold=1000000000.0 front -> /tmp/tmpkon00ivg/front
+Epoch 1/3
+  [epoch 0] val_macro_auc=0.51968 per_class=[0.5083, 0.5364, 0.5257, 0.5316, 0.4964]
+  [epoch 0] new best -> saved /tmp/tmpkon00ivg/model_unconstrained.keras
+[budget] epoch=0 ebops=1739182 target=1000000000.0 width_sites_changed=0
+2/2 - 34s - 17s/step - categorical_accuracy: 0.1688 - loss: 1.8194 - val_macro_auc: 0.5197 - learning_rate: 2.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1000000000.0000 - budget_met: 1.0000 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 1.0000e-07
+Epoch 2/3
+  [epoch 1] val_macro_auc=0.51664 per_class=[0.5017, 0.5313, 0.5266, 0.5293, 0.4944]
+[budget] epoch=1 ebops=1739182 target=1000000000.0 width_sites_changed=0
+2/2 - 1s - 463ms/step - categorical_accuracy: 0.1688 - loss: 1.7722 - val_macro_auc: 0.5166 - learning_rate: 1.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1000000000.0000 - budget_met: 1.0000 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 7.2781e-08
+Epoch 3/3
+  [epoch 2] val_macro_auc=0.51664 per_class=[0.5017, 0.5313, 0.5266, 0.5293, 0.4944]
+[budget] epoch=2 ebops=1739182 target=1000000000.0 width_sites_changed=0
+2/2 - 1s - 450ms/step - categorical_accuracy: 0.1656 - loss: 1.7378 - val_macro_auc: 0.5166 - learning_rate: 0.0000e+00 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1000000000.0000 - budget_met: 1.0000 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 5.2971e-08
+[train] pareto front: 1 admitted point(s); selected={'epoch': 0, 'val_macro_auc': 0.51968, 'ebops': 1739182, 'file': 'epoch=0_auc=0.51968_ebops=1739182.keras'}
+[train] DONE best_epoch=0 best_val_macro_auc=0.51968 in 36s
+[train] wrote /tmp/tmpkon00ivg/model_best.keras + /tmp/tmpkon00ivg/train_meta.json
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 1 files, 400 jets (320 train / 80 val), class counts [80, 80, 80, 80, 80]
+[train] input_std ON: per-feature z-score from train split (|mu|max=0.03412, sigma_max=0.9966) -> input_std.json
+[budget] initial=1739182 target=1.0
+[train] ebops-n8-20260910-b75-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=free
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+[train] EBOPs pressure ON: beta_schedule=None threshold=1.0 front -> /tmp/tmp_7r9pziw/front
+Epoch 1/3
+  [epoch 0] val_macro_auc=0.51968 per_class=[0.5083, 0.5364, 0.5257, 0.5316, 0.4964]
+  [epoch 0] new best -> saved /tmp/tmp_7r9pziw/model_unconstrained.keras
+[budget] epoch=0 ebops=1739182 target=1.0 width_sites_changed=0
+2/2 - 32s - 16s/step - categorical_accuracy: 0.1688 - loss: 1.8194 - val_macro_auc: 0.5197 - learning_rate: 2.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1.0000 - budget_met: 0.0000e+00 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 1.0000e-07
+Epoch 2/3
+  [epoch 1] val_macro_auc=0.51664 per_class=[0.5017, 0.5313, 0.5266, 0.5293, 0.4944]
+[budget] epoch=1 ebops=1739182 target=1.0 width_sites_changed=0
+2/2 - 1s - 457ms/step - categorical_accuracy: 0.1688 - loss: 2.0023 - val_macro_auc: 0.5166 - learning_rate: 1.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1.0000 - budget_met: 0.0000e+00 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 2.0512e-07
+Epoch 3/3
+  [epoch 2] val_macro_auc=0.51664 per_class=[0.5017, 0.5313, 0.5266, 0.5293, 0.4944]
+[budget] epoch=2 ebops=1739182 target=1.0 width_sites_changed=0
+2/2 - 1s - 455ms/step - categorical_accuracy: 0.1656 - loss: 2.3775 - val_macro_auc: 0.5166 - learning_rate: 0.0000e+00 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1.0000 - budget_met: 0.0000e+00 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 4.2076e-07
+[train] pareto front: 0 admitted point(s); selected=None
+[train] DONE best_epoch=0 best_val_macro_auc=0.51968 in 34s
+[train] wrote /tmp/tmp_7r9pziw/model_unconstrained.keras + /tmp/tmp_7r9pziw/train_meta.json
+[check] feasible and unmet-budget training integration PASS
+EBOPS_TARGET_ALL_PASS

@@ -1,0 +1,455 @@
+From 53fd49b5a02505f912d30afd1e0496a153929dd3 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:07 -0700
+Subject: [PATCH 07/14] A12: recorded divergence (DIVERGED.json, exit 3, W&B
+ finished), W&B marked failed on crash, run_pack per-arm isolation/retry/log
+ tail/skip markers, env roots; tests
+
+---
+ bnhgq2/ablation.py           |  40 +++++++++-
+ run_pack.py                  | 149 +++++++++++++++++++++++++----------
+ run_study.py                 |  45 ++++++++---
+ tests/test_resume_cadence.py |  18 +++++
+ tests/test_run_pack.py       |  64 +++++++++++++++
+ 5 files changed, 262 insertions(+), 54 deletions(-)
+ create mode 100644 tests/test_run_pack.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index f27799d..3a7b9c7 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -389,6 +389,32 @@ def validation_metrics(labels, logits):
+     return auc, per_auc, accuracy
+ 
+ 
++class Diverged(RuntimeError):
++    """[A12] A recorded divergence: DIVERGED.json is written, the arm is never resumed."""
++
++
++def record_divergence(out, cfg, state, epoch, reason, metrics, wandb_run=None):
++    """Write DIVERGED.json (zero-based divergence epoch, the non-finite metrics, the last
++    completed epoch's selection state) before raising. STUDY: a diverged run is an outcome,
++    never relaunched; its pre-divergence best-feasible checkpoint is reported, not used."""
++    def finite(value):
++        return value if isinstance(value, (int, float)) and np.isfinite(value) else repr(value)
++    record = {'name': cfg['name'], 'divergence_epoch_zero_based': int(epoch),
++              'completed_epochs_before': int(state['completed_epochs']), 'reason': reason,
++              'metrics_at_divergence': {k: finite(float(v)) for k, v in metrics.items()},
++              'best_feasible_before': state['best_feasible'], 'lowest_before': state['lowest'],
++              'best_auc_before': state['best_auc'],
++              'best_feasible_auc_before': state.get('best_feasible_auc'),
++              'model_best_present': (Path(out) / 'model_best.keras').exists(),
++              'code_sha256': state['code_sha256'], 'config_sha256': state['config_sha256']}
++    atomic_json(Path(out) / 'DIVERGED.json', record)
++    print('ARM_DIVERGED', cfg['name'], json.dumps(record), flush=True)
++    if wandb_run is not None:
++        wandb_run.summary.update({'phase': 'diverged', 'divergence_epoch': int(epoch) + 1})
++        wandb_run.finish(exit_code=3)
++    return record
++
++
+ def seeded_run_name(name, seed):
+     suffix = f'-s{seed}'
+     return name if name.endswith(suffix) else name + suffix
+@@ -480,7 +506,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         order = np.random.default_rng(np.random.SeedSequence([cfg['train']['order_seed'], epoch])).permutation(len(xt)).astype('int32')
+         loss, ce, kd, accuracy = [float(v) for v in step(order, state['recovery_frozen']).numpy()]
+         if not np.isfinite([loss, ce, kd, accuracy]).all():
+-            raise RuntimeError('Nonfinite training metrics')
++            record_divergence(out, cfg, state, epoch, 'nonfinite training metrics',
++                              {'loss': loss, 'task_loss': ce, 'distillation_loss': kd,
++                               'train_categorical_accuracy': accuracy}, wandb_run)
++            raise Diverged('Nonfinite training metrics')
+         # Cost tracing updates HGQ range state. Validate the traced state that
+         # is actually saved, so checkpoint metrics and reloaded predictions agree.
+         cost = compute_ebops(model, sample)
+@@ -492,6 +521,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         verified_cost = compute_ebops(validation_model, sample)
+         assert verified_cost['total'] == cost['total'], 'Candidate cost changed after reload'
+         logits = np.asarray(validation_model.predict(xv, batch_size=cfg['train']['val_batch'], verbose=0))
++        if not np.isfinite(logits).all():
++            record_divergence(out, cfg, state, epoch, 'nonfinite validation logits',
++                              {'loss': loss, 'train_categorical_accuracy': accuracy}, wandb_run)
++            raise Diverged('Nonfinite validation logits')
+         auc, per_auc, val_accuracy = validation_metrics(yv, logits)
+         del validation_model
+         gc.collect()
+@@ -502,7 +535,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         point = {'epoch': epoch, 'val_macro_auc': auc,
+                  'val_categorical_accuracy': val_accuracy, 'ebops': cost['total']}
+         if not np.isfinite(auc):
+-            raise RuntimeError('Nonfinite validation AUC')
++            record_divergence(out, cfg, state, epoch, 'nonfinite validation AUC',
++                              {'loss': loss, 'train_categorical_accuracy': accuracy,
++                               'val_categorical_accuracy': val_accuracy}, wandb_run)
++            raise Diverged('Nonfinite validation AUC')
+         if state['lowest'] is None or cost['total'] < state['lowest']['ebops']:
+             shutil.copy2(candidate, out / 'model_min_ebops.keras')
+             state['lowest'] = point
+diff --git a/run_pack.py b/run_pack.py
+index d5eda4a..5133608 100644
+--- a/run_pack.py
++++ b/run_pack.py
+@@ -1,4 +1,15 @@
+-"""Run several independent models on one GPU, preserving per-model checkpoints."""
++"""Run several independent models on one GPU, preserving per-model checkpoints.
++
++[A12] failed-arm isolation (2026-09-27; incident: cluster-inventory.md, 2026-09-26):
++- an arm with DIVERGED.json or VERIFIED_COMPLETE.json is skipped at start;
++- a child exit 3 is a recorded divergence: the arm stops, the others keep running, and the
++  pod does not fail because of it;
++- any other non-zero exit (crash, stall kill) tails the child's log into this pod's stdout
++  and relaunches THAT arm only, from its own checkpoint, up to BNJ_ARM_RETRIES times;
++- the pod exits 1 only if an arm still fails after its retries, and only after every other
++  arm has finished.
++Roots: BNJ_RUN_ROOT (runs/, logs/), default the 2026-09-22 screen root.
++"""
+ import json
+ import os
+ from pathlib import Path
+@@ -8,58 +19,112 @@ import sys
+ import time
+ 
+ HERE = Path(__file__).resolve().parent
++ROOT = Path(os.environ.get('BNJ_RUN_ROOT', '/data/constituent-study-20260922/fp32'))
++RETRIES = int(os.environ.get('BNJ_ARM_RETRIES', '2'))
++STALL_SECONDS = int(os.environ.get('BNJ_STALL_SECONDS', '1800'))
++TAIL_LINES = int(os.environ.get('BNJ_TAIL_LINES', '80'))
++STAGGER = float(os.environ.get('BNJ_STAGGER_SECONDS', '15'))
++RETRY_DELAY = float(os.environ.get('BNJ_RETRY_DELAY_SECONDS', '30'))
++EXIT_DIVERGED = 3
+ children = []
+ 
+ 
+ def stop(signum, frame):
+-    for child, *_ in children:
+-        if child.poll() is None:
+-            os.killpg(child.pid, signal.SIGTERM)
++    for entry in children:
++        if entry['child'].poll() is None:
++            os.killpg(entry['child'].pid, signal.SIGTERM)
+     raise SystemExit(128 + signum)
+ 
+ 
+-signal.signal(signal.SIGTERM, stop)
+-signal.signal(signal.SIGINT, stop)
+-packs = json.loads((HERE / sys.argv[1]).read_text())
+-indices = packs[int(os.environ['JOB_COMPLETION_INDEX'])]
+-rows = json.loads((HERE / 'index.json').read_text())['runs']
+-stop_after = sys.argv[2] if len(sys.argv) > 2 else None
+-for index in indices:
++def tail(path, lines=TAIL_LINES):
++    try:
++        text = Path(path).read_text(errors='replace').splitlines()[-lines:]
++    except OSError as error:
++        text = [f'<log unreadable: {error}>']
++    for line in text:
++        print('ARM_LOG', line, flush=True)
++
++
++def launch(index, name, stop_after, attempt):
+     command = [sys.executable, '-u', str(HERE / 'run_study.py'), 'train', '--index', str(index)]
+     if stop_after:
+         command += ['--stop-after', stop_after]
+-    name = rows[index]['name']
+-    log = Path('/data/constituent-study-20260922/fp32/logs')
++    log = ROOT / 'logs'
+     log.mkdir(parents=True, exist_ok=True)
+-    handle = (log / f'{name}-{os.environ.get("HOSTNAME", "pod")}.log').open('a', buffering=1)
++    path = log / f'{name}-{os.environ.get("HOSTNAME", "pod")}.log'
++    handle = path.open('a', buffering=1)
++    handle.write(f'==== ARM_ATTEMPT {attempt} {time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}\n')
+     child = subprocess.Popen(command, stdout=handle, stderr=subprocess.STDOUT, start_new_session=True)
+-    children.append((child, name, handle, time.monotonic()))
+-    print('ARM_STARTED', index, name, 'pid', child.pid, flush=True)
+-    # Avoid overlapping the largest calibration allocations during startup.
+-    time.sleep(15)
+-failed = False
+-last_gpu = 0
+-while children:
+-    for entry in children[:]:
+-        child, name, handle, started = entry
+-        if child.poll() is not None:
+-            failed |= child.returncode != 0
+-            print('ARM_EXIT', name, child.returncode, flush=True)
+-            handle.close()
+-            children.remove(entry)
++    print('ARM_STARTED', index, name, 'pid', child.pid, 'attempt', attempt, flush=True)
++    return {'child': child, 'index': index, 'name': name, 'handle': handle, 'log': path,
++            'started': time.monotonic(), 'attempt': attempt}
++
++
++def heartbeat_age(entry):
++    run = ROOT / 'runs' / entry['name']
++    stamps = [p.stat().st_mtime for p in (run / 'latest.json', run / 'activation_widths.jsonl') if p.exists()]
++    return time.time() - max(stamps) if stamps else time.monotonic() - entry['started']
++
++
++def main():
++    signal.signal(signal.SIGTERM, stop)
++    signal.signal(signal.SIGINT, stop)
++    packs = json.loads((HERE / sys.argv[1]).read_text())
++    indices = packs[int(os.environ['JOB_COMPLETION_INDEX'])]
++    rows = json.loads((HERE / 'index.json').read_text())['runs']
++    stop_after = sys.argv[2] if len(sys.argv) > 2 else None
++    for index in indices:
++        name = rows[index]['name']
++        run = ROOT / 'runs' / name
++        marker = next((m for m in ('DIVERGED.json', 'VERIFIED_COMPLETE.json') if (run / m).exists()), None)
++        if marker:
++            print('ARM_SKIPPED', index, name, marker, flush=True)
+             continue
+-        latest = Path('/data/constituent-study-20260922/fp32/runs') / name / 'latest.json'
+-        age = time.time() - latest.stat().st_mtime if latest.exists() else time.monotonic() - started
+-        if age > 1800:
+-            print('ARM_STALLED_NO_CHECKPOINT_30MIN', name, flush=True)
+-            os.killpg(child.pid, signal.SIGTERM)
++        children.append(launch(index, name, stop_after, 0))
++        # Avoid overlapping the largest calibration allocations during startup.
++        time.sleep(STAGGER)
++    failed, diverged = [], []
++    last_gpu = 0
++    while children:
++        for entry in children[:]:
++            child, name = entry['child'], entry['name']
++            code = child.poll()
++            if code is None:
++                if heartbeat_age(entry) > STALL_SECONDS:
++                    print('ARM_STALLED_NO_PROGRESS', name, int(heartbeat_age(entry)), 's', flush=True)
++                    os.killpg(child.pid, signal.SIGTERM)
++                    try:
++                        child.wait(timeout=120)
++                    except subprocess.TimeoutExpired:
++                        os.killpg(child.pid, signal.SIGKILL)
++                continue
++            entry['handle'].close()
++            children.remove(entry)
++            print('ARM_EXIT', name, code, 'attempt', entry['attempt'], flush=True)
++            if code == 0:
++                continue
++            if code == EXIT_DIVERGED:
++                diverged.append(name)
++                tail(entry['log'], 20)
++                continue
++            tail(entry['log'])
++            if entry['attempt'] < RETRIES:
++                time.sleep(RETRY_DELAY)
++                children.append(launch(entry['index'], name, stop_after, entry['attempt'] + 1))
++            else:
++                print('ARM_FAILED_AFTER_RETRIES', name, flush=True)
++                failed.append(name)
++        if time.monotonic() - last_gpu > 60:
+             try:
+-                child.wait(timeout=120)
+-            except subprocess.TimeoutExpired:
+-                os.killpg(child.pid, signal.SIGKILL)
+-    if time.monotonic() - last_gpu > 60:
+-        subprocess.run(['nvidia-smi', '--query-gpu=timestamp,name,utilization.gpu,memory.used,memory.total',
+-                        '--format=csv,noheader'], check=False)
+-        last_gpu = time.monotonic()
+-    time.sleep(5)
+-raise SystemExit(1 if failed else 0)
++                subprocess.run(['nvidia-smi', '--query-gpu=timestamp,name,utilization.gpu,memory.used,memory.total',
++                                '--format=csv,noheader'], check=False)
++            except FileNotFoundError:
++                pass
++            last_gpu = time.monotonic()
++        time.sleep(float(os.environ.get('BNJ_POLL_SECONDS', '5')))
++    print('PACK_DONE', 'diverged', diverged, 'failed', failed, flush=True)
++    raise SystemExit(1 if failed else 0)
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/run_study.py b/run_study.py
+index 0332539..c90a574 100644
+--- a/run_study.py
++++ b/run_study.py
+@@ -2,6 +2,8 @@
+ import argparse
+ import fcntl
+ import hashlib
++import signal
++import sys
+ import importlib.metadata
+ import json
+ import os
+@@ -12,8 +14,11 @@ import numpy as np
+ import run_engram
+ 
+ HERE = Path(__file__).resolve().parent
+-DATA_ROOT = Path('/data/constituent-study-20260922')
+-ROOT = DATA_ROOT / 'fp32'
++# Roots are environment values (defaults = the 2026-09-22 screen) so a campaign can point
++# the same code at its own cache and run directory without a code fork.
++DATA_ROOT = Path(os.environ.get('BNJ_DATA_ROOT', '/data/constituent-study-20260922'))
++ROOT = Path(os.environ.get('BNJ_RUN_ROOT', str(DATA_ROOT / 'fp32')))
++EXIT_DIVERGED = 3
+ 
+ 
+ def manifest():
+@@ -48,12 +53,13 @@ def preflight(shard, shards):
+     out = ROOT / 'preflight'
+     out.mkdir(parents=True, exist_ok=True)
+     caches = {}
+-    for n in (8, 64):
++    for n in sorted({r['n_part'] for r in rows}):
+         cfg = json.loads((HERE / 'configs' / next(r['file'] for r in rows if r['n_part'] == n)).read_text())
+         caches[n] = run_engram.load_cache(DATA_ROOT / f'n{n}' / 'data', cfg)
+-    assert caches[8][1]['permutation_sha256'] == caches[64][1]['permutation_sha256']
+-    for split in ('y_train', 'y_val'):
+-        assert caches[8][1]['array_sha256'][split] == caches[64][1]['array_sha256'][split]
++    if {8, 64} <= set(caches):
++        assert caches[8][1]['permutation_sha256'] == caches[64][1]['permutation_sha256']
++        for split in ('y_train', 'y_val'):
++            assert caches[8][1]['array_sha256'][split] == caches[64][1]['array_sha256'][split]
+     for row in rows[shard::shards]:
+         keras.backend.clear_session()
+         cfg = json.loads((HERE / 'configs' / row['file']).read_text())
+@@ -96,6 +102,12 @@ def train(index, stop_after):
+     run_engram.validate_tracking_destination(cfg)
+     out = ROOT / 'runs' / row['name']
+     out.mkdir(parents=True, exist_ok=True)
++    if (out / 'DIVERGED.json').exists():
++        # [A12] a recorded divergence is an outcome; never resume or replay it
++        print('ALREADY_DIVERGED', row['name'], flush=True)
++        raise SystemExit(EXIT_DIVERGED)
++    # Pod eviction / pack-runner SIGTERM: unwind so W&B and file handles close.
++    signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit(128 + signum))
+     with (out / 'run.lock').open('a') as lock:
+         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+         source = manifest()
+@@ -115,9 +127,20 @@ def train(index, stop_after):
+         start = time.monotonic()
+         # Keep the same immutable 50-epoch config for the two-epoch GPU canary
+         # and its continuation. Per-epoch checkpoints include optimizer and PID.
+-        state = ablation.run_training(cfg, arrays, info, out, remote=True,
+-            stop_after=stop_after, model_builder=run_engram.builder_for(info),
+-            epoch_observer=engram.diagnostic_observer())
++        try:
++            state = ablation.run_training(cfg, arrays, info, out, remote=True,
++                stop_after=stop_after, model_builder=run_engram.builder_for(info),
++                epoch_observer=engram.diagnostic_observer())
++        except ablation.Diverged:
++            raise SystemExit(EXIT_DIVERGED)
++        except BaseException:
++            # [A12] never leave a dead arm's W&B run "running": mark it failed
++            # (exit code 1; W&B has no client call for "crashed"). A resume reopens it.
++            import wandb
++            if wandb.run is not None:
++                wandb.run.summary.update({'phase': 'crashed'})
++                wandb.run.finish(exit_code=1)
++            raise
+         if (out / 'COMPLETE.json').exists():
+             (out / 'COMPLETE.json').replace(out / 'TRAINING_COMPLETE.json')
+         selected = state['best_feasible'] or state['lowest']
+@@ -130,7 +153,9 @@ def train(index, stop_after):
+         np.testing.assert_allclose([auc, accuracy],
+             [selected['val_macro_auc'], selected['val_categorical_accuracy']], atol=1e-7, rtol=0)
+         np.savez_compressed(out / 'validation_predictions.npz', labels=np.asarray(arrays[3]), logits=logits)
+-        report = {**row, 'status': 'verified_screen' if state['completed_epochs'] == 50 else 'verified_canary',
++        status = ('verified_screen' if state['completed_epochs'] == 50 else
++                  'verified_complete' if state['completed_epochs'] == cfg['train']['epochs'] else 'verified_canary')
++        report = {**row, 'status': status,
+                   'completed_epochs': state['completed_epochs'], 'selected': selected,
+                   'checkpoint': filename, 'checkpoint_sha256': run_engram.file_hash(out / filename),
+                   'budget_met': state['best_feasible'] is not None,
+diff --git a/tests/test_resume_cadence.py b/tests/test_resume_cadence.py
+index c8c8d0b..304e23e 100644
+--- a/tests/test_resume_cadence.py
++++ b/tests/test_resume_cadence.py
+@@ -80,3 +80,21 @@ def test_cadence_rollback_resume(tmp_path):
+     assert [l['epoch'] for l in lines] == [0, 1, 2, 3, 4]
+     assert lines[0]['learning_rate'] == pytest.approx(3e-3) and lines[3]['learning_rate'] == pytest.approx(1e-6)
+     assert 'bit_block_0_attn_softmax__exp_oq' in lines[-1]['widths']
++
++
++def test_divergence_is_recorded(tmp_path):
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    (xt, yt, xv, yv), info = data(1)
++    calls = {'n': 0}
++
++    def poison(model, sample, epoch):       # after epoch 0 completes, corrupt a kernel
++        if epoch == 0:
++            k = next(v for v in model.trainable_variables if v.name == 'kernel')
++            k.assign(np.full(k.shape, np.nan, 'float32'))
++        return {}
++    with pytest.raises(ablation.Diverged):
++        ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path, epoch_observer=poison)
++    record = json.loads((tmp_path / 'DIVERGED.json').read_text())
++    assert record['divergence_epoch_zero_based'] == 1 and record['completed_epochs_before'] == 1
++    assert record['best_feasible_before']['epoch'] == 0
+diff --git a/tests/test_run_pack.py b/tests/test_run_pack.py
+new file mode 100644
+index 0000000..7e4577d
+--- /dev/null
++++ b/tests/test_run_pack.py
+@@ -0,0 +1,64 @@
++"""[A12] pack runner isolation with fake arms (no TF): a divergence (exit 3) and a crash do
++not stop the other arms; the crash is retried alone with its log tailed; markers skip."""
++import json
++import os
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parents[1]
++
++FAKE = r'''
++import sys, os, json
++from pathlib import Path
++idx = int(sys.argv[sys.argv.index('--index') + 1])
++root = Path(os.environ['BNJ_RUN_ROOT'])
++name = json.loads((Path(__file__).parent / 'index.json').read_text())['runs'][idx]['name']
++run = root / 'runs' / name; run.mkdir(parents=True, exist_ok=True)
++count = run / 'attempts'; n = int(count.read_text()) if count.exists() else 0; count.write_text(str(n + 1))
++print('child', name, 'attempt', n, flush=True)
++if name == 'ok': sys.exit(0)
++if name == 'div': (run / 'DIVERGED.json').write_text('{}'); sys.exit(3)
++if name == 'flaky': print('Traceback: boom', flush=True); sys.exit(0 if n >= 1 else 1)
++if name == 'dead': print('Traceback: always', flush=True); sys.exit(1)
++'''
++
++
++def setup(tmp, names):
++    shutil.copy(HERE / 'run_pack.py', tmp / 'run_pack.py')
++    (tmp / 'run_study.py').write_text(FAKE)
++    (tmp / 'index.json').write_text(json.dumps({'runs': [{'name': n} for n in names]}))
++    (tmp / 'packs.json').write_text(json.dumps([list(range(len(names)))]))
++    env = dict(os.environ, JOB_COMPLETION_INDEX='0', BNJ_RUN_ROOT=str(tmp / 'root'),
++               BNJ_STAGGER_SECONDS='0', BNJ_RETRY_DELAY_SECONDS='0', BNJ_POLL_SECONDS='0.2',
++               BNJ_ARM_RETRIES='2')
++    return env
++
++
++def run(tmp, env):
++    return subprocess.run([sys.executable, str(tmp / 'run_pack.py'), 'packs.json'], env=env, cwd=tmp,
++                          capture_output=True, text=True, timeout=120)
++
++
++def test_isolation_and_retry(tmp_path):
++    env = setup(tmp_path, ['ok', 'div', 'flaky'])
++    r = run(tmp_path, env)
++    assert r.returncode == 0, r.stdout + r.stderr
++    assert 'ARM_EXIT div 3' in r.stdout and 'ARM_EXIT ok 0' in r.stdout
++    assert 'ARM_LOG Traceback: boom' in r.stdout            # crashed child's log tailed
++    assert 'ARM_STARTED 2 flaky' in r.stdout and 'attempt 1' in r.stdout
++    assert (tmp_path / 'root' / 'runs' / 'flaky' / 'attempts').read_text() == '2'
++    assert (tmp_path / 'root' / 'runs' / 'ok' / 'attempts').read_text() == '1'
++    # second pod start: the diverged arm is skipped, never replayed
++    r2 = run(tmp_path, env)
++    assert 'ARM_SKIPPED 1 div DIVERGED.json' in r2.stdout
++    assert (tmp_path / 'root' / 'runs' / 'div' / 'attempts').read_text() == '1'
++
++
++def test_unrecorded_failure_fails_pod_after_others(tmp_path):
++    env = setup(tmp_path, ['dead', 'ok'])
++    r = run(tmp_path, env)
++    assert r.returncode == 1
++    assert 'ARM_FAILED_AFTER_RETRIES dead' in r.stdout and 'ARM_EXIT ok 0' in r.stdout
++    assert (tmp_path / 'root' / 'runs' / 'dead' / 'attempts').read_text() == '3'
+-- 
+2.50.1 (Apple Git-155)
+

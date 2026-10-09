@@ -1,0 +1,117 @@
+From 83fd018475f159ffe155cd71155b0aefc0e5dbfc Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:38:43 -0700
+Subject: [PATCH 33/38] attn-linformer: wire newmods/linformer.py
+ (arch.attn_kind linformer, arch.linformer_k) into the qat block loop and
+ expected_binary_layers; export refused (M004, M053)
+
+---
+ code/bnhgq2/ablation.py   |  3 +++
+ code/bnhgq2/delta_keys.py | 33 +++++++++++++++++++++++++++++++++
+ code/bnhgq2/qat.py        | 28 +++++++++++++++++++---------
+ 3 files changed, 55 insertions(+), 9 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index d358d20..93911b7 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -632,6 +632,9 @@ def projection_layers(cfg):
+                      ('attn_Wq', 'attn_Wk', 'attn_Wv', 'attn_Wo', 'ffn_fc1', 'ffn_fc2'))
+     if cfg['arch'].get('pair_bias', False):
+         names.update(('pair_fc1', 'pair_fc2'))
++    if cfg['arch'].get('attn_kind') == 'linformer':  # Delta (attn-linformer): E, F sequence projections
++        from newmods.linformer import linformer_binary_layers
++        names.update(linformer_binary_layers(cfg))
+     return names
+ 
+ 
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index ff4335a..e047275 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -616,3 +616,36 @@ def _pre_shift(value, cfg):
+ 
+ 
+ register('quant.pre_quant_shift', 'pre-quant-shift', _pre_shift)
++
++# attn-linformer (anchor tree only; wiring of newmods/linformer.py, new-files engineer; M004,
++# M053, M054, M056, M060): arch.attn_kind "linformer" replaces scores / softmax / A.V of every
++# block with binary sequence projections E, F (N -> arch.linformer_k) on K and V, built with the
++# block's own closures (so [A20] WRAP / Chang softmax apply unchanged); expected_binary_layers
++# adds bit_block_<i>_attn_{Elin,Flin}. No HLS path (hgq2 0.1.9 has no Linformer layer): export
++# refused.
++ATTN_KINDS = {'linformer': 'attn-linformer'}
++for _key in ('arch.attn_kind', 'arch.linformer_k'):
++    UNWIRED.pop(_key, None)
++_DEEPSETS_EXCLUSIVE += ('arch.attn_kind',)
++
++
++def _attn_kind(value, cfg):
++    if value not in ATTN_KINDS:
++        return f'must be one of {sorted(ATTN_KINDS)} (softmax attention is the default when absent)'
++    if lookup(cfg, 'arch.pair_bias'):
++        return 'not combined with arch.pair_bias (the pair bias adds to the (N, N) softmax scores)'
++    if (lookup(cfg, 'experiment.distillation') or {}).get('attention_coefficient'):
++        return 'attention-map KD compares (N, N) softmax maps; not defined for this attention'
++    if value == 'linformer' and lookup(cfg, 'arch.linformer_k') is None:
++        return 'linformer needs arch.linformer_k'
++
++
++def _linformer_k(value, cfg):
++    if lookup(cfg, 'arch.attn_kind') != 'linformer':
++        return 'read only with arch.attn_kind "linformer"'
++    if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= lookup(cfg, 'arch.n_part', 0):
++        return 'must be an int in [1, arch.n_part]'
++
++
++register('arch.attn_kind', 'attn-linformer / attn-relu-over-n', _attn_kind)
++register('arch.linformer_k', 'attn-linformer', _linformer_k)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 8d67835..b3ba505 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -863,12 +863,14 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                 q = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_q_pqshift")(q)
+                 k = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_k_pqshift")(k)
+                 v = ChannelShift(axes=(-2, -1), name=f"{blk}_attn_v_pqshift")(v)
+-            scores = einsum(f"{blk}_attn_scores", "bthe,bshe->bhts", [q, k],
+-                            [stream_iq(), stream_iq()])
+-            if pair_bias_tensor is not None:                        # add shared pair bias
+-                scores = keras.layers.Add(name=f"{blk}_attn_pairbias")(
+-                    [scores, pair_bias_tensor])
+-            attn = softmax(f"{blk}_attn_softmax", scores, 1.0 / np.sqrt(E))
++            attn_kind = A.get("attn_kind")  # Delta: "linformer" (newmods) | None (softmax attention)
++            if attn_kind is None:
++                scores = einsum(f"{blk}_attn_scores", "bthe,bshe->bhts", [q, k],
++                                [stream_iq(), stream_iq()])
++                if pair_bias_tensor is not None:                        # add shared pair bias
++                    scores = keras.layers.Add(name=f"{blk}_attn_pairbias")(
++                        [scores, pair_bias_tensor])
++                attn = softmax(f"{blk}_attn_softmax", scores, 1.0 / np.sqrt(E))
+             if fp32:
+                 attn_iq = _dummy("datalane")
+             elif softmax_quant == "chang":
+@@ -883,9 +885,17 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+                 attn_iq = QuantizerConfig("kif", "datalane", k0=0, i0=sm_out_i, f0=sm_out_bits - sm_out_i,
+                                           round_mode="RND_CONV", overflow_mode="SAT",
+                                           trainable=False, heterogeneous_axis=())
+-            ctx = QEinsum("bhts,bshe->bthe",
+-                          iq_confs=[attn_iq, stream_iq()],
+-                          name=f"{blk}_attn_ctx")([attn, v])
++            if attn_kind is None:
++                ctx = QEinsum("bhts,bshe->bthe",
++                              iq_confs=[attn_iq, stream_iq()],
++                              name=f"{blk}_attn_ctx")([attn, v])
++            elif attn_kind == "linformer":
++                from newmods.linformer import linformer_attention
++                ctx = linformer_attention(blk, q, k, v, lin_k=int(A["linformer_k"]),
++                                          dense_einsum=dense_einsum, einsum=einsum, softmax=softmax,
++                                          attn_iq=attn_iq, stream_iq=stream_iq, scale=1.0 / np.sqrt(E))
++            else:
++                raise ValueError(f"{cfg['name']}: unsupported arch.attn_kind={attn_kind!r}")
+             ctx = norm(f"ln_{blk}_attn_Wo", flatten_axes=2)(ctx)
+             wo = dense_einsum(f"{blk}_attn_Wo", "bthe,hed->btd", (T, D), ctx,
+                               bias_axes="d")
+-- 
+2.50.1 (Apple Git-155)
+

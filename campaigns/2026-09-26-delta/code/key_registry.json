@@ -1,0 +1,289 @@
+{
+  "_about": "Generator-side registry for generate_delta.py (renamed from the atlas registry 2026-09-27). A delta.json config_delta key that the base arm config does not carry must be registered here by a slug in the entry's own code_changes, be runner_live on the anchor tree, or be registered by a register('<key>', '<slug>', ...) line in patches-anchor/*.patch (bnhgq2/delta_keys.py; read as text). The applied tree's strict validator (classify_series.py) is the ground truth; this file only lets the generator fail early.",
+  "keys": {
+    "arch.attn_kind": {
+      "slugs": [
+        "attn-linformer",
+        "attn-relu-over-n"
+      ]
+    },
+    "arch.linformer_k": {
+      "slugs": [
+        "attn-linformer"
+      ]
+    },
+    "arch.body": {
+      "slugs": [
+        "body-deepsets"
+      ]
+    },
+    "arch.deepsets_dims": {
+      "slugs": [
+        "body-deepsets"
+      ]
+    },
+    "arch.derived_features": {
+      "slugs": [
+        "derived-input-features"
+      ]
+    },
+    "arch.head_dims": {
+      "slugs": [
+        "head-dims"
+      ]
+    },
+    "arch.mask_gated_keys": {
+      "slugs": [
+        "gated-key-mask"
+      ]
+    },
+    "arch.pre_block_act": {
+      "slugs": [
+        "pre-block-tanh-lut"
+      ]
+    },
+    "arch.pt_gate_gev": {
+      "slugs": [
+        "pt-gate-threshold"
+      ],
+      "anchor": "A3",
+      "anchor_name": "arch.pt_gate_gev",
+      "anchor_name_status": "present in the anchor pilot bundle 77f1ca4e",
+      "runner_live": "anchor [A3] key, present in every anchor arm config (bundle 77f1ca4e)"
+    },
+    "data.augment": {
+      "slugs": [
+        "augment-eta-phi-reflect"
+      ]
+    },
+    "data.std_scope": {
+      "slugs": [
+        "std-real-slots"
+      ]
+    },
+    "experiment.distillation": {
+      "slugs": [
+        "kd-unblock-s-runner"
+      ],
+      "note": "read by ablation.make_epoch_step but rejected by run_engram.validate_cfg:120"
+    },
+    "experiment.init_checkpoint": {
+      "slugs": [
+        "init-from-checkpoint"
+      ]
+    },
+    "experiment.latent_ema_decay": {
+      "slugs": [
+        "latent-ema-eval"
+      ]
+    },
+    "experiment.recovery_after_epochs": {
+      "slugs": [],
+      "runner_live": "bnhgq2/ablation.py:425 cfg['experiment'].get('recovery_after_epochs'); T0 per code-surface \u00a71f"
+    },
+    "quant.act_f0": {
+      "slugs": [
+        "act-init-f0"
+      ],
+      "anchor": "A20",
+      "anchor_name": null,
+      "anchor_name_status": "registered by patches-anchor/0028 (act-init-f0); no anchor key"
+    },
+    "quant.beta_mode": {
+      "slugs": [
+        "beta-mode"
+      ]
+    },
+    "quant.binary_center": {
+      "slugs": [
+        "binarizer-center-flag"
+      ]
+    },
+    "quant.channel_gain": {
+      "slugs": [
+        "channel-gain-pow2"
+      ]
+    },
+    "quant.ebops_group_weight": {
+      "slugs": [
+        "ebops-group-weight"
+      ]
+    },
+    "quant.latent_clip": {
+      "slugs": [
+        "latent-clip"
+      ]
+    },
+    "quant.layer_weight_override": {
+      "slugs": [
+        "weight-scheme-baselines"
+      ]
+    },
+    "quant.pre_quant_shift": {
+      "slugs": [
+        "pre-quant-shift"
+      ]
+    },
+    "quant.qk_min_bits": {
+      "slugs": [
+        "qk-stream-min-bits"
+      ]
+    },
+    "quant.softmax_table_min_bits": {
+      "slugs": [
+        "softmax-table-min-bits"
+      ]
+    },
+    "quant.ste": {
+      "slugs": [
+        "ste-variants"
+      ]
+    },
+    "quant.ste_ede_period": {
+      "slugs": [
+        "ste-variants"
+      ]
+    },
+    "train.binary_optimizer": {
+      "slugs": [
+        "bop-optimizer"
+      ]
+    },
+    "train.bop_gamma": {
+      "slugs": [
+        "bop-optimizer"
+      ]
+    },
+    "train.bop_tau": {
+      "slugs": [
+        "bop-optimizer"
+      ]
+    },
+    "train.lr_m_mul": {
+      "slugs": [
+        "lr-schedule-variants"
+      ]
+    },
+    "train.lr_warmup_epochs": {
+      "slugs": [
+        "lr-schedule-variants"
+      ]
+    },
+    "train.lr_cycle_epochs": {
+      "slugs": [],
+      "anchor": "A1",
+      "anchor_name": "train.lr_cycle_epochs",
+      "anchor_name_status": "present in the anchor pilot bundle 77f1ca4e",
+      "runner_live": "anchor [A1] key, present in every anchor arm config (bundle 77f1ca4e)"
+    },
+    "train.optimizer": {
+      "slugs": [],
+      "anchor": "A2",
+      "anchor_name": "train.optimizer",
+      "anchor_name_status": "present in the anchor pilot bundle 77f1ca4e",
+      "runner_live": "anchor [A2] key, present in every anchor arm config (bundle 77f1ca4e)"
+    },
+    "experiment.collapse_stop": {
+      "slugs": [
+        "screen-collapse-stop"
+      ],
+      "always_on": true
+    },
+    "experiment.accumulator_metric": {
+      "slugs": [
+        "accumulator-ebops-metric"
+      ],
+      "always_on": true
+    },
+    "experiment.diagnostics": {
+      "slugs": [
+        "diag-sign-flips",
+        "diag-beta-trajectory"
+      ],
+      "note": "list drawn from {sign_flips, beta_trajectory} (patches 0020, 0021); no atlas entry sets it"
+    },
+    "train.beta2": {
+      "slugs": [],
+      "runner_live": "anchor [A2] ablation.optimizer_for, train.optimizer adam_ours: beta_2=tr['beta2'], weight_decay=tr['weight_decay'], clipvalue=tr['clipvalue'] (apply_anchor.sh tree bnhgq2/ablation.py:318-319); anchor arm D carries all three"
+    },
+    "train.weight_decay": {
+      "slugs": [],
+      "runner_live": "anchor [A2] ablation.optimizer_for, train.optimizer adam_ours: beta_2=tr['beta2'], weight_decay=tr['weight_decay'], clipvalue=tr['clipvalue'] (apply_anchor.sh tree bnhgq2/ablation.py:318-319); anchor arm D carries all three"
+    },
+    "train.clipvalue": {
+      "slugs": [],
+      "runner_live": "anchor [A2] ablation.optimizer_for, train.optimizer adam_ours: beta_2=tr['beta2'], weight_decay=tr['weight_decay'], clipvalue=tr['clipvalue'] (apply_anchor.sh tree bnhgq2/ablation.py:318-319); anchor arm D carries all three"
+    }
+  },
+  "existing_keys_with_anchor_semantics": {
+    "_about": "empty since the base is the anchor itself: train.lr is the [A1] cosine peak in every generated config (was a stand-in placeholder)"
+  },
+  "values": {
+    "quant.weight": {
+      "binary_absmean": {
+        "slugs": []
+      },
+      "none": {
+        "slugs": [
+          "weight-scheme-baselines"
+        ]
+      },
+      "int8_absmax": {
+        "slugs": [
+          "weight-scheme-baselines"
+        ]
+      },
+      "ternary_absmean": {
+        "slugs": [
+          "ternary-absmean"
+        ]
+      },
+      "hgq_learnable": {
+        "slugs": [
+          "hgq-learnable-weights"
+        ]
+      }
+    }
+  },
+  "null_whitelist": {
+    "train.clipvalue": "Keras Adam default (no clipping); code-surface \u00a73 row 1, unverified by running",
+    "train.weight_decay": "Keras Adam default (no decay); code-surface \u00a73 row 1, unverified by running"
+  },
+  "value_map": {
+    "_about": "delta.json value -> anchor value, applied by generate_delta.py; every mapped cell carries the flag named here",
+    "arch.pt_gate_gev": {
+      "from": 0,
+      "to": null,
+      "flag": "pt_gate_0_mapped_to_null",
+      "why": "atlas uses 0 for ungated; the anchor key uses null (prepare_cache.py: gate applied iff not None)"
+    },
+    "train.optimizer": {
+      "from": "adam",
+      "to": "adam_ours",
+      "flag": "optimizer_adam_mapped_to_adam_ours",
+      "why": "anchor [A2] adam_ours is the explicit-field path (beta_1 0.9, beta2, weight_decay, clipvalue from the config); delta 'adam' deltas always state those fields"
+    }
+  },
+  "always_on": {
+    "_about": "keys added to every screen-tier cell, replica and placebo (delta.json always_on_diagnostics); names and value shapes from the patch series (0014, 0019)",
+    "screen-collapse-stop": {
+      "key": "experiment.collapse_stop",
+      "value": {
+        "threshold": 0.25,
+        "patience": 10,
+        "after_epoch": 20
+      },
+      "source": "ATLAS.md \u00a75.3 G1; patch 0014 _collapse"
+    },
+    "accumulator-ebops-metric": {
+      "key": "experiment.accumulator_metric",
+      "value": true,
+      "source": "patch 0019"
+    },
+    "diag-attention": {
+      "key": null,
+      "note": "post-run script newmods/diag_attention.py (WIRING.md); no config key"
+    }
+  },
+  "patch_registry": "generate_delta.py reads every register('<key>', '<slug>', ...) line added by code/patches-anchor/*.patch (code/patches/*.patch with --standin); a key registered there by one of the entry's slugs is accepted"
+}

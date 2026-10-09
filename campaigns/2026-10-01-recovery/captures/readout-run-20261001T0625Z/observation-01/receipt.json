@@ -1,0 +1,149 @@
+[
+  {
+    "name": "job",
+    "uid": "d0b7eb2f-baf9-4af2-89b6-de3c33cec225",
+    "sha256": "be7785114ea6eef8015ec6d3900fd5eeab4cb12073942b5242ae9685c7d8bbe0",
+    "observed_at_utc": "2026-10-01T06:25:44.712151+00:00",
+    "status": {
+      "active": 1,
+      "ready": 0,
+      "startTime": "2026-10-01T06:25:42Z",
+      "terminating": 0,
+      "uncountedTerminatedPods": {}
+    },
+    "created_at_utc": "2026-10-01T06:24:25Z"
+  },
+  {
+    "name": "pods",
+    "uid": null,
+    "sha256": "9fdbc6543d1c3ac36c80ce6ece79253a330a11612d7217d7987c62f0aa90e5e8",
+    "observed_at_utc": "2026-10-01T06:25:44.725993+00:00",
+    "pods": [
+      {
+        "name": "kai-chang1001-readoutb5-42abed-r1-gkzw8",
+        "uid": "88911bcc-9e16-4435-acf7-fb0149c0c469",
+        "owners": [
+          {
+            "apiVersion": "batch/v1",
+            "blockOwnerDeletion": true,
+            "controller": true,
+            "kind": "Job",
+            "name": "kai-chang1001-readoutb5-42abed-r1",
+            "uid": "d0b7eb2f-baf9-4af2-89b6-de3c33cec225"
+          }
+        ],
+        "phase": "Pending",
+        "conditions": [
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-10-01T06:25:43Z",
+            "status": "False",
+            "type": "PodReadyToStartContainers"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-10-01T06:25:43Z",
+            "message": "containers with incomplete status: [record-run-handoff]",
+            "reason": "ContainersNotInitialized",
+            "status": "False",
+            "type": "Initialized"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-10-01T06:25:43Z",
+            "message": "containers with unready status: [readout]",
+            "reason": "ContainersNotReady",
+            "status": "False",
+            "type": "Ready"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-10-01T06:25:43Z",
+            "message": "containers with unready status: [readout]",
+            "reason": "ContainersNotReady",
+            "status": "False",
+            "type": "ContainersReady"
+          },
+          {
+            "lastProbeTime": null,
+            "lastTransitionTime": "2026-10-01T06:25:43Z",
+            "status": "True",
+            "type": "PodScheduled"
+          }
+        ],
+        "containers": [
+          {
+            "image": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+            "imageID": "",
+            "lastState": {},
+            "name": "readout",
+            "ready": false,
+            "restartCount": 0,
+            "started": false,
+            "state": {
+              "waiting": {
+                "reason": "PodInitializing"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "init": [
+          {
+            "image": "docker.io/library/python@sha256:4d1caded1f729ae443eb803f26ffde7b61e696aeaef62f099abb6dd6b14257c7",
+            "imageID": "",
+            "lastState": {},
+            "name": "record-run-handoff",
+            "ready": false,
+            "restartCount": 0,
+            "started": false,
+            "state": {
+              "waiting": {
+                "reason": "PodInitializing"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/handoff",
+                "name": "run-handoff",
+                "readOnly": true,
+                "recursiveReadOnly": "Disabled"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "source-configmap",
+    "uid": "0cf58237-3bb8-4587-86eb-84779f547906",
+    "sha256": "8981e319363a3c930d3a14837982f67f553017b36e5c5415f12eaaf9d5d98bf8",
+    "observed_at_utc": "2026-10-01T06:25:44.957018+00:00"
+  },
+  {
+    "name": "handoff-configmap",
+    "uid": "b7d6a084-2bcf-4c53-8bad-86aef859415e",
+    "sha256": "9ec16c197347d75beab90b5674a738b442faeab49d69a55561c8d32c8b6a0caa",
+    "observed_at_utc": "2026-10-01T06:25:45.055341+00:00"
+  }
+]

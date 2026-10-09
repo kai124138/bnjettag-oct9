@@ -1,0 +1,342 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "batch.kubernetes.io/job-completion-index": "0",
+            "batch.kubernetes.io/job-index-failure-count": "0",
+            "cni.projectcalico.org/containerID": "5373c4d1410826cd0d15d7647171c574075d4cd0c1ee9dd173ec528680c5e3ef",
+            "cni.projectcalico.org/podIP": "",
+            "cni.projectcalico.org/podIPs": "",
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-29T00:29:46Z",
+        "generateName": "kai-chang0926-pilotb3-42abed-0-",
+        "generation": 1,
+        "labels": {
+            "app": "kai-chang0926-pilot-b3",
+            "batch.kubernetes.io/controller-uid": "a848d03d-d865-47ff-a6ca-6ce0af7cbf14",
+            "batch.kubernetes.io/job-completion-index": "0",
+            "batch.kubernetes.io/job-name": "kai-chang0926-pilotb3-42abed",
+            "bnjettag.io/arms-per-pod": "3",
+            "campaign": "chang-n64-20260926",
+            "controller-uid": "a848d03d-d865-47ff-a6ca-6ce0af7cbf14",
+            "job-name": "kai-chang0926-pilotb3-42abed",
+            "user": "kai"
+        },
+        "name": "kai-chang0926-pilotb3-42abed-0-vqxc7",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+            {
+                "apiVersion": "batch/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "Job",
+                "name": "kai-chang0926-pilotb3-42abed",
+                "uid": "a848d03d-d865-47ff-a6ca-6ce0af7cbf14"
+            }
+        ],
+        "resourceVersion": "14973067820",
+        "uid": "f8b3ac28-2ce7-40b9-a931-b1d0654700bd"
+    },
+    "spec": {
+        "affinity": {
+            "nodeAffinity": {
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                    "nodeSelectorTerms": [
+                        {
+                            "matchExpressions": [
+                                {
+                                    "key": "nvidia.com/gpu.product",
+                                    "operator": "In",
+                                    "values": [
+                                        "NVIDIA-A10"
+                                    ]
+                                },
+                                {
+                                    "key": "kubernetes.io/hostname",
+                                    "operator": "NotIn",
+                                    "values": [
+                                        "hcc-nrp-shor-c6017.unl.edu",
+                                        "k8s-chase-ci-07.calit2.optiputer.net",
+                                        "nautilus-ext-gpu01.fullerton.edu",
+                                        "ren-gp-argo-01.madren.org"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+            {
+                "args": [
+                    "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=/data/chang-n64-20260926/pilot-b BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nexport BNJ_STAGE=pilot-b\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nunset WANDB_PROJECT\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_MODE=online\nexport WANDB_TAGS=chang0926,pilot,pilot-b,regime-b,validation-only\nexport BNJ_RSS_GATE_LIMIT_MB=8192 BNJ_RSS_GATE_WINDOW=5:105\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true\ndf -h /data\necho 'e9511d1aeb39c7c8e48cc7dbc148ac623f3b2d9844d108da38f1ecfa2bdff1f1  /cmfp/fingerprint_check.py' | sha256sum -c -\nFP=0\npython -u /cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --data-root /data/chang-n64-20260926 --campaign-dir /work/code/campaigns/chang0926 --env-report || FP=$?\nif [ \"$FP\" != 0 ]; then echo \"FINGERPRINT_GATE_FAIL exit=$FP node=${NODE_NAME:-na}; no arm started\"; exit \"$FP\"; fi\nPACKS=pilot_b_k3_packs.json\nRP=0; E0=0\npython -u /work/code/run_pack.py \"$PACKS\" 500 || RP=$?\npython - \"$PACKS\" \u003c\u003c'PY' || E0=$?\nimport json, os, sys\nfrom pathlib import Path\ncamp = Path(os.environ['BNJ_CAMPAIGN_DIR'])\nruns = Path(os.environ['BNJ_RUN_ROOT']) / 'runs'\npack = json.loads((camp / sys.argv[1]).read_text())[int(os.environ['JOB_COMPLETION_INDEX'])]\nrows = json.loads((camp / 'index.json').read_text())['runs']\nseen = []\nfor i in pack:\n    marker = runs / rows[i]['name'] / 'DIVERGED.json'\n    seen.append((rows[i]['name'], json.loads(marker.read_text()).get('divergence_epoch_zero_based') if marker.exists() else None))\nprint('PACK_EPOCH0_CHECK', ' '.join(f'{n}={e}' for n, e in seen), flush=True)\nsys.exit(10 if seen and all(e == 0 for _, e in seen) else 0)\nPY\nif [ \"$E0\" = 10 ]; then echo \"POD_EPOCH0_ALL_DIVERGED node=${NODE_NAME:-na} run_pack_exit=$RP\"; exit 10; fi\nif [ \"$E0\" != 0 ]; then echo \"PACK_EPOCH0_CHECK_ERROR $E0\"; fi\nexit \"$RP\"\n"
+                ],
+                "command": [
+                    "bash",
+                    "-c"
+                ],
+                "env": [
+                    {
+                        "name": "WANDB_API_KEY",
+                        "valueFrom": {
+                            "secretKeyRef": {
+                                "key": "WANDB_API_KEY",
+                                "name": "kai-wandb"
+                            }
+                        }
+                    },
+                    {
+                        "name": "NODE_NAME",
+                        "valueFrom": {
+                            "fieldRef": {
+                                "apiVersion": "v1",
+                                "fieldPath": "spec.nodeName"
+                            }
+                        }
+                    },
+                    {
+                        "name": "JOB_COMPLETION_INDEX",
+                        "valueFrom": {
+                            "fieldRef": {
+                                "apiVersion": "v1",
+                                "fieldPath": "metadata.labels['batch.kubernetes.io/job-completion-index']"
+                            }
+                        }
+                    }
+                ],
+                "image": "python:3.12",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "train",
+                "resources": {
+                    "limits": {
+                        "cpu": "6",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "24Gi",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "requests": {
+                        "cpu": "6",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "24Gi",
+                        "nvidia.com/gpu": "1"
+                    }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    },
+                    {
+                        "mountPath": "/cmfp",
+                        "name": "fingerprint",
+                        "readOnly": true
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "hostname": "kai-chang0926-pilotb3-42abed-0",
+        "nodeName": "gpu-17.nrp.mghpcc.org",
+        "nodeSelector": {
+            "kubernetes.io/arch": "amd64"
+        },
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 180,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "PreferNoSchedule",
+                "key": "nvidia.com/gpu",
+                "operator": "Exists"
+            }
+        ],
+        "volumes": [
+            {
+                "configMap": {
+                    "defaultMode": 420,
+                    "name": "kai-chang0926-code-42abed4b5d"
+                },
+                "name": "code"
+            },
+            {
+                "emptyDir": {
+                    "sizeLimit": "24Gi"
+                },
+                "name": "work"
+            },
+            {
+                "name": "persistent",
+                "persistentVolumeClaim": {
+                    "claimName": "kai-data"
+                }
+            },
+            {
+                "configMap": {
+                    "defaultMode": 420,
+                    "name": "kai-chang0926-fp-e9511d1aeb"
+                },
+                "name": "fingerprint"
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-29T16:12:48Z",
+                "status": "False",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-29T00:50:30Z",
+                "reason": "PodCompleted",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-29T16:12:45Z",
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-29T16:12:45Z",
+                "reason": "PodCompleted",
+                "status": "False",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-29T00:50:30Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "6",
+                    "ephemeral-storage": "24Gi",
+                    "memory": "24Gi",
+                    "nvidia.com/gpu": "1"
+                },
+                "containerID": "containerd://20339e3e6992e07727c74a8f47d593794fc95ad6604e84139fb84e6e455b9dab",
+                "image": "docker.io/library/python:3.12",
+                "imageID": "docker.io/library/python@sha256:5b4cd1450900015d505c9801bf953922bc4cf607bfb22ee3c347a348ccccf16d",
+                "lastState": {},
+                "name": "train",
+                "ready": false,
+                "resources": {
+                    "limits": {
+                        "cpu": "6",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "24Gi",
+                        "nvidia.com/gpu": "1"
+                    },
+                    "requests": {
+                        "cpu": "6",
+                        "ephemeral-storage": "24Gi",
+                        "memory": "24Gi",
+                        "nvidia.com/gpu": "1"
+                    }
+                },
+                "restartCount": 0,
+                "started": false,
+                "state": {
+                    "terminated": {
+                        "containerID": "containerd://20339e3e6992e07727c74a8f47d593794fc95ad6604e84139fb84e6e455b9dab",
+                        "exitCode": 0,
+                        "finishedAt": "2026-09-29T16:12:44Z",
+                        "reason": "Completed",
+                        "startedAt": "2026-09-29T00:50:45Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0
+                        ],
+                        "uid": 0
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    },
+                    {
+                        "mountPath": "/cmfp",
+                        "name": "fingerprint",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "192.69.103.157",
+        "hostIPs": [
+            {
+                "ip": "192.69.103.157"
+            }
+        ],
+        "phase": "Succeeded",
+        "podIP": "10.244.101.190",
+        "podIPs": [
+            {
+                "ip": "10.244.101.190"
+            },
+            {
+                "ip": "fdf0:17b3:c3ec:1f79:10:0:1:e028"
+            }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2026-09-29T00:50:30Z"
+    }
+}

@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "status": "source_audit_complete; scientific conclusions remain diagnostic and unreviewed",
+  "request": "Inventory best compact-model results and diagnose low accuracy relative to Sub-microsecond Transformers for Jet Tagging on FPGAs.",
+  "scope": "Read-only source and artifact audit; local notes only. No scientific recomputation, training, launch, resume, checkpoint mutation, scientific promotion, publication, Mulder access, or active-campaign change.",
+  "target": {
+    "performance": "Paper-comparable N64 five-class categorical top-1 accuracy. Published references: MHA64 77.9%, Linformer64 79.8%, HGQ DeepSets64 79.4%; paper held-out260000, seed uncertainty unspecified.",
+    "paper_url": "https://arxiv.org/html/2510.24784v1",
+    "model_size": "User target approximately19000 parameters. Proposal: explicitly cap learned kernel/bias/positional coefficients and report Keras quantizer/state variables separately. Count convention must be declared before next experiment.",
+    "weight_policy": "Binary remains the lab thesis. HGQ reproduction and FP32 ceiling should be controls. Optional user preference question was unanswered at audit completion; no candidate policy changed.",
+    "data": "620000 raw training-pool jets,558000 train/62000 internal validation;260000 separate held-out test. The 62000 telemetry is validation, not training."
+  },
+  "established_findings": [
+    {
+      "id": "coverage",
+      "finding": "No620-jet or62000-jet training restriction is present in the audited pilot. Frozen cache reports558000 training rows; make_epoch_step traverses all rows every epoch after a full permutation. Calibration and tracing sample settings do not cap optimizer training rows.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/PREFLIGHT.md",
+        "campaigns/2026-09-26-training-batch/code/tree/bnhgq2/ablation.py",
+        "campaigns/2026-09-26-training-batch/code/tree/prepare_cache.py"
+      ],
+      "confidence": "source-confirmed"
+    },
+    {
+      "id": "data_integrity",
+      "finding": "Recorded cache is balanced across five classes, correctly sorted at topN, and has zero all-gated jets. pT>=2 gate removes constituent slots, not jets. There is no positive evidence here of class permutation, absent training classes, or tiny training-pool coverage. This is not a fresh raw-data or current prediction-array audit.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/PREFLIGHT.md"
+      ],
+      "confidence": "source-confirmed with limited scope"
+    },
+    {
+      "id": "training_duration",
+      "finding": "Eight current pilot-B arms completed500 epochs. The declared Chang reference schedule is7000 epochs with500-epoch LR restarts. No completed7000-epoch binary confirmation exists in the audited artifacts. Longer training might change trajectories, but completion alone has not been demonstrated to repair compression collapse.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/code/tree/campaigns/chang0926/configs/chang0926-a-n64-s1.json",
+        "campaigns/2026-09-26-training-batch/readout/b3/pvc-extract-b3.json",
+        "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s1/snapshots/epoch-0500/state.json"
+      ],
+      "confidence": "source-confirmed"
+    },
+    {
+      "id": "collapse",
+      "finding": "A-s1 initially learns discrimination but both training and validation accuracies later approachchance as cost and aggregate activation widths shrink. The existing recorded zero-based epochs4,299,499 give valaccuracy .652209677,.237564516,.201919355 and trainaccuracy .629146993,.238281369,.202878147. At epoch499 taskloss1.617011070 and total loss3.326268911 are recorded. This supports compression-associated representational failure, not ordinary overfitting. It does not isolate the responsible controller gain, layer, or binary mechanism.",
+      "sources": [
+        "campaigns/2026-10-01-recovery/readout-preparation/analysis/history-chang0926-a-n64-s1.csv",
+        "campaigns/2026-09-26-training-batch/code/tree/bnhgq2/ablation.py"
+      ],
+      "confidence": "observed trajectory; causal intervention absent"
+    },
+    {
+      "id": "attention",
+      "finding": "The NRP A26 readouts for350k-target selected/fallback A,D,F,E1 and A07 show exactly uniform attention and zero-width query paths. A/A-s2/E1 selected paths also have zero-width values. Attention is ineffective at these checkpoints. Attention collapse alone is insufficient to explain near-chance tagging: the paper reports its collapsed N64 MHA at77.9%. Global compression and loss deterioration must also be investigated.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/readout/b3/readout-epoch-0500-42abed-b3/a26-entropy-epoch-0500.json",
+        "campaigns/2026-10-01-recovery/captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/a26-entropy-epoch-0500.json",
+        "literature/jet-tagging-transformers/2510.24784_replication-targets_hgq2-examples.md"
+      ],
+      "confidence": "NRP source-quoted diagnostics, single selected checkpoint per arm"
+    },
+    {
+      "id": "structural_budget",
+      "finding": "Recorded synthetic CPU floors: A07 zero floor343053 at target350000 leaves6947; its minimal input/Wk/QK path costs8192. Under the present architecture, quantizers and cost model, feasible A07 cannot carry data-dependent attention. The smaller A/E floor171526 leaves178474, so this impossibility does not extend to all smaller binary models. Its fully alive1-bit attention-stream floor368134 also exceeds350000, so partial pruning is necessary; this is not proof that all partial attention is impossible.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/STUDY.md",
+        "campaigns/2026-09-26-training-batch/code/tree/campaigns/chang0926/static_floors.json",
+        "campaigns/2026-09-26-training-batch/code/tree/static_floor.py"
+      ],
+      "confidence": "engineering floor analysis; not tagging result"
+    },
+    {
+      "id": "architecture",
+      "finding": "Current A uses binary fixed-sign kernels, d24,2heads, head dimension12, no normalization, linear input projection, one24-unit classifier hidden layer. Released xfm uses learned per-weight HGQ precision/pruning, d24,2heads with head dimension16, input BN/ReLU, pre-attention and pre-FFN tanh LUTs, quantized residual adds and three32-unit BN/ReLU classifier hidden layers. Matching LR and batch does not reproduce that model. These changes are confounded, so their individual accuracy penalties are unknown.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/code/tree/bnhgq2/qat.py",
+        "reference-code/HGQ2-examples/jsc150/model.py"
+      ],
+      "confidence": "source-confirmed"
+    },
+    {
+      "id": "controller",
+      "finding": "Historical regime-B PID switches between full-training traced cost on traced epochs and fresh last-minibatch training cost on the other epochs. Cost is not held between traces. This is a known comparability issue; K1 remains triggered. Recorded user option(c) directs preparation of a traced-cost remedy, but remedy review/freeze/replacement-pilot validation and production clearance remain pending. Controller bias cannot alone be asserted to explain near-chance under-budget accuracy.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/code/tree/bnhgq2/ablation.py",
+        "campaigns/2026-09-26-training-batch/READOUT_epoch500.md",
+        "local/2026-10-01-execution/chang-option-c-decision.json"
+      ],
+      "confidence": "source-confirmed timing; causality undetermined"
+    },
+    {
+      "id": "beta_recipe",
+      "finding": "Released Chang code uses open-loop beta scheduling starting2e-8 and ramping over7000epochs; current pilot starts PIDbeta1e-7 with one-epochwarmup and aggressively pursues350k. Paper saysPID but publishes no gains. Present controller is not a reproduction of released beta schedule or documented paper gains. Early total/task losses show resource penalty is already substantial. A gentler or delayed compression schedule is a hypothesis requiring a separate registered intervention.",
+      "sources": [
+        "reference-code/HGQ2-examples/jsc150/run_train.py",
+        "campaigns/2026-09-26-training-batch/code/tree/campaigns/chang0926/configs/chang0926-a-n64-s1.json",
+        "campaigns/2026-10-01-recovery/readout-preparation/analysis/history-chang0926-a-n64-s1.csv"
+      ],
+      "confidence": "source-confirmed difference; remedy hypothetical"
+    },
+    {
+      "id": "cost_certification",
+      "finding": "NRP snapshot certification for selected A-s2 and D primary/AUC-sensitivity checkpoints found exact agreement among logged, stored and558000-row retraced cost. This rules out a stale cost display for those checkpoints; it does not establish training-controller comparability or full review clearance.",
+      "sources": [
+        "campaigns/2026-10-01-recovery/captures/readout-run-20261001T0625Z/terminal-handoff-20261001T0815Z/received/certify-snapshot-0500.json"
+      ],
+      "confidence": "source-confirmed NRP engineering certification"
+    },
+    {
+      "id": "parameters",
+      "finding": "Frozen CPU build counts distinguish coefficient count from all Keras variables: A/D6253 coefficients and31735 total; A07/C11653 and61951; E1(onehead)6253 and19447; Cprime11653 and12788. The19000 target is not documented in the paper. eBOP values in millions are operation/bit costs, not millions of learned coefficients.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/code/evidence/cpu_gate_shipped_42abed4b_full.json",
+        "campaigns/2026-09-26-training-batch/code/tree/campaigns/chang0926/cpu_gate.py",
+        "literature/jet-tagging-transformers/2510.24784_replication-targets_hgq2-examples.md"
+      ],
+      "confidence": "recorded engineering counts"
+    },
+    {
+      "id": "reproduction_status",
+      "finding": "Archived released-code N64 xfm80.56%@348k and xfmt80.85%@318k are promising but explicitly unverified, seed42 only and selected by maximizing test accuracy under350k. They are not independent evidence of beating the paper, and code is downstream of paper. No post-route hardware confirmation is present.",
+      "sources": [
+        "_attic/repro-chang/repro-chang/comparison.md"
+      ],
+      "confidence": "source-quoted historical result with selection bias"
+    },
+    {
+      "id": "preprocessing_confound",
+      "finding": "Both code lines use pT/etarel/phirel, N64 and pT>=2. Current cache uses train-only normalization,float32 and splitseed1; released loader normalizes620000 train/validation pool before90/10 split, storesfloat16 and shuffles under NumPy seed42. Backend differs(TensorFlow/JAX). These deserve controlled matching, but no evidence establishes them as the primary reason for severe collapse.",
+      "sources": [
+        "campaigns/2026-09-26-training-batch/code/tree/prepare_cache.py",
+        "reference-code/HGQ2-examples/jsc150/data.py",
+        "reference-code/HGQ2-examples/jsc150/run_train.py"
+      ],
+      "confidence": "source-confirmed confounds"
+    }
+  ],
+  "open_findings": [
+    "Cprime SAT zero-magnitude-width channels are labeled silent by A26, yet recorded attention is nonuniform. Magnitude0 with SAT signbit is not the same as WRAP zero-bit. Do not report Cprime attention as dead until the diagnostic semantics are checked in the pinned environment.",
+    "Full matched regime-A/B controller table is incomplete in the recovered local sources. The available B-only trajectories and certification do not close K1.",
+    "Historical prediction-audit values are existing local-audit source quotes of cluster predictions, not newly recomputed/promotion-ready results.",
+    "Confirmation jobs did not complete their full schedules; checkpoint metric replay assertions interrupted runs. Current evidence does not establish optimizer corruption or permit blind resume.",
+    "Delta has operational/canary/throughput evidence but no completed, verified physics ablation result in the audited sources.",
+    "Paper's actual selected model eBOP values, parameter count, training split details, schedule and PID gains are unspecified;350k is a shared training target.",
+    "An effective compact learned-weight baseline and a matched binary comparison have not been completed under the current full7000 recipe."
+  ],
+  "recommended_order": [
+    "Define compact inference-coefficient cap near19000 and separately report quantizer/state variables,eBOPs and hardware cost. Use the full available558000 training rows and reserve62000 internal validation.",
+    "Prioritize existing planned H(released-code reproduction),NB(same smaller architecture with learned-width HGQ weights),FP32-E(unconstrained precision ceiling),and A(binary) rather than a broad Delta sweep.",
+    "Keep H vs our architecture a labeled package comparison. NB vs A matches architecture/activation/cost/seed/selection settings. FP32-E changes activations and budget too, so it is a ceiling, not an isolated weight-effect estimate.",
+    "To isolate pre-compression weight loss, declare an additional matched unpenalized learned-width/binary pair with the same architecture and activation controls. Then test the compression schedule separately; do not modify a historical run in place.",
+    "Declare whether reproducing released open-loop schedule or testing paper-stylePID. Complete the matching7000-epoch reference where intended, with predeclared pilot diagnostics/stop rules and stable controller signal. Longer training remains an experimental question.",
+    "Select on validation categorical accuracy; report AUC separately. Keep260000 test jets out of checkpoint selection/tuning. Use matched seeds and intervals for claims.",
+    "Any experimental amendment must complete scientific review,actual-file freeze,validated immutable handoff,lint and action-time authorization. Existing K1/production gates remain pending."
+  ],
+  "operational_observation": {
+    "method": "nrp_doctor.py status, read-only, during2026-10-02 audit",
+    "our_running_pods": "none",
+    "our_pending_pods": "none",
+    "note": "Status returned failure warnings for historical completed/failed jobs; no training launched."
+  },
+  "checks": {
+    "snapshot_integrity": "250 per-file hashes matched historical manifest; see snapshot-integrity.json",
+    "advisory": "Jev claim checks advisory, all dispositionreview; method comparability/metric details remain missing; see jev-advisory.json",
+    "research_review": "not performed; no scientific phase advanced"
+  }
+}

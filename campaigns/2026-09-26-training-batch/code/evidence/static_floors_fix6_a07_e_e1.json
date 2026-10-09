@@ -1,0 +1,536 @@
+[
+  {
+    "name": "a07-probe-n64-s1",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": "WRAP",
+      "softmax_quant": "chang",
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 32,
+      "n_heads": 4,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "learned"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 13182317,
+      "per_layer": {
+        "input_proj": 47104,
+        "bit_block_0_attn_Wq": 458752,
+        "bit_block_0_attn_Wk": 458752,
+        "bit_block_0_attn_scores": 6004736,
+        "bit_block_0_attn_softmax": 2741837,
+        "bit_block_0_attn_Wv": 458752,
+        "bit_block_0_attn_ctx": 2359296,
+        "bit_block_0_attn_Wo": 131072,
+        "bit_block_0_ffn_fc1": 262144,
+        "bit_block_0_ffn_fc2": 253952,
+        "head_fc1": 5120,
+        "head_fc2": 800
+      }
+    },
+    "parameters": 61951,
+    "zero": {
+      "total": 343053,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 0,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 0,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": []
+      }
+    },
+    "one": {
+      "total": 1005741,
+      "per_layer": {
+        "input_proj": 6144,
+        "bit_block_0_attn_Wq": 65536,
+        "bit_block_0_attn_Wk": 65536,
+        "bit_block_0_attn_scores": 131072,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 65536,
+        "bit_block_0_attn_ctx": 131072,
+        "bit_block_0_attn_Wo": 65536,
+        "bit_block_0_ffn_fc1": 65536,
+        "bit_block_0_ffn_fc2": 65536,
+        "head_fc1": 1024,
+        "head_fc2": 160
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_Wk",
+          "bit_block_0_attn_Wo",
+          "bit_block_0_attn_Wq",
+          "bit_block_0_attn_Wv",
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1",
+          "bit_block_0_attn_softmax__exp_iq",
+          "bit_block_0_attn_softmax__inv_iq",
+          "bit_block_0_ffn_fc1",
+          "bit_block_0_ffn_fc2",
+          "head_fc1",
+          "head_fc2",
+          "input_proj"
+        ]
+      }
+    },
+    "attn_narrow": {
+      "total": 605197,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 131072,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 131072,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1"
+        ]
+      }
+    },
+    "attn_full": {
+      "total": 801805,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 65536,
+        "bit_block_0_attn_Wk": 65536,
+        "bit_block_0_attn_scores": 131072,
+        "bit_block_0_attn_softmax": 343053,
+        "bit_block_0_attn_Wv": 65536,
+        "bit_block_0_attn_ctx": 131072,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_Wk",
+          "bit_block_0_attn_Wq",
+          "bit_block_0_attn_Wv",
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1"
+        ]
+      }
+    },
+    "weights_only_rule": {
+      "total": 343053,
+      "why": "binary kernels are fixed at 1 bit; a 0-bit input costs 0 EBOPs"
+    },
+    "headroom": {
+      "250000": {
+        "zero": -93053,
+        "one": -755741,
+        "attn_narrow": -355197,
+        "attn_full": -551805
+      },
+      "350000": {
+        "zero": 6947,
+        "one": -655741,
+        "attn_narrow": -255197,
+        "attn_full": -451805
+      }
+    },
+    "zero_floor_over_target": 0.9801514285714286,
+    "one_bit_alive_over_target": 2.873545714285714,
+    "headroom_at_zero_floor": 6947,
+    "status": "STATIC_FEASIBLE"
+  },
+  {
+    "name": "e-probe-n64-s1",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": "WRAP",
+      "softmax_quant": "chang",
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 24,
+      "n_heads": 2,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "none"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 8965267,
+      "per_layer": {
+        "input_proj": 35328,
+        "bit_block_0_attn_Wq": 258048,
+        "bit_block_0_attn_Wk": 258048,
+        "bit_block_0_attn_scores": 4485120,
+        "bit_block_0_attn_softmax": 1373435,
+        "bit_block_0_attn_Wv": 258048,
+        "bit_block_0_attn_ctx": 1843200,
+        "bit_block_0_attn_Wo": 73728,
+        "bit_block_0_ffn_fc1": 198656,
+        "bit_block_0_ffn_fc2": 178176,
+        "head_fc1": 2880,
+        "head_fc2": 600
+      }
+    },
+    "parameters": 31735,
+    "zero": {
+      "total": 171526,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 0,
+        "bit_block_0_attn_softmax": 171526,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 0,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": []
+      }
+    },
+    "one": {
+      "total": 619198,
+      "per_layer": {
+        "input_proj": 4608,
+        "bit_block_0_attn_Wq": 36864,
+        "bit_block_0_attn_Wk": 36864,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 171526,
+        "bit_block_0_attn_Wv": 36864,
+        "bit_block_0_attn_ctx": 98304,
+        "bit_block_0_attn_Wo": 36864,
+        "bit_block_0_ffn_fc1": 49152,
+        "bit_block_0_ffn_fc2": 49152,
+        "head_fc1": 576,
+        "head_fc2": 120
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_Wk",
+          "bit_block_0_attn_Wo",
+          "bit_block_0_attn_Wq",
+          "bit_block_0_attn_Wv",
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1",
+          "bit_block_0_attn_softmax__exp_iq",
+          "bit_block_0_attn_softmax__inv_iq",
+          "bit_block_0_ffn_fc1",
+          "bit_block_0_ffn_fc2",
+          "head_fc1",
+          "head_fc2",
+          "input_proj"
+        ]
+      }
+    },
+    "attn_narrow": {
+      "total": 368134,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 171526,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 98304,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1"
+        ]
+      }
+    },
+    "attn_full": {
+      "total": 478726,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 36864,
+        "bit_block_0_attn_Wk": 36864,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 171526,
+        "bit_block_0_attn_Wv": 36864,
+        "bit_block_0_attn_ctx": 98304,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_Wk",
+          "bit_block_0_attn_Wq",
+          "bit_block_0_attn_Wv",
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1"
+        ]
+      }
+    },
+    "weights_only_rule": {
+      "total": 171526,
+      "why": "binary kernels are fixed at 1 bit; a 0-bit input costs 0 EBOPs"
+    },
+    "headroom": {
+      "250000": {
+        "zero": 78474,
+        "one": -369198,
+        "attn_narrow": -118134,
+        "attn_full": -228726
+      },
+      "350000": {
+        "zero": 178474,
+        "one": -269198,
+        "attn_narrow": -18134,
+        "attn_full": -128726
+      }
+    },
+    "zero_floor_over_target": 0.49007428571428574,
+    "one_bit_alive_over_target": 1.769137142857143,
+    "headroom_at_zero_floor": 178474,
+    "status": "STATIC_FEASIBLE"
+  },
+  {
+    "name": "e1-probe-n64-s1",
+    "target_ebops": 350000,
+    "quant": {
+      "act_overflow": "WRAP",
+      "softmax_quant": "chang",
+      "softmax_out_bits": 10,
+      "softmax_out_i": 1,
+      "act_granularity": "channel",
+      "act_bits": 8
+    },
+    "arch": {
+      "n_part": 64,
+      "d_model": 24,
+      "n_heads": 1,
+      "n_layers": 1,
+      "ffn_dim": 32,
+      "pos_enc": "none"
+    },
+    "sample": "synthetic standard normal, n=256, seed=0",
+    "init": {
+      "total": 8274965,
+      "per_layer": {
+        "input_proj": 35328,
+        "bit_block_0_attn_Wq": 258048,
+        "bit_block_0_attn_Wk": 258048,
+        "bit_block_0_attn_scores": 4485120,
+        "bit_block_0_attn_softmax": 686717,
+        "bit_block_0_attn_Wv": 258048,
+        "bit_block_0_attn_ctx": 1843200,
+        "bit_block_0_attn_Wo": 73728,
+        "bit_block_0_ffn_fc1": 196608,
+        "bit_block_0_ffn_fc2": 176640,
+        "head_fc1": 2880,
+        "head_fc2": 600
+      }
+    },
+    "parameters": 19447,
+    "zero": {
+      "total": 85763,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 0,
+        "bit_block_0_attn_softmax": 85763,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 0,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": []
+      }
+    },
+    "one": {
+      "total": 533435,
+      "per_layer": {
+        "input_proj": 4608,
+        "bit_block_0_attn_Wq": 36864,
+        "bit_block_0_attn_Wk": 36864,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 85763,
+        "bit_block_0_attn_Wv": 36864,
+        "bit_block_0_attn_ctx": 98304,
+        "bit_block_0_attn_Wo": 36864,
+        "bit_block_0_ffn_fc1": 49152,
+        "bit_block_0_ffn_fc2": 49152,
+        "head_fc1": 576,
+        "head_fc2": 120
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_Wk",
+          "bit_block_0_attn_Wo",
+          "bit_block_0_attn_Wq",
+          "bit_block_0_attn_Wv",
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1",
+          "bit_block_0_attn_softmax__exp_iq",
+          "bit_block_0_attn_softmax__inv_iq",
+          "bit_block_0_ffn_fc1",
+          "bit_block_0_ffn_fc2",
+          "head_fc1",
+          "head_fc2",
+          "input_proj"
+        ]
+      }
+    },
+    "attn_narrow": {
+      "total": 282371,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 0,
+        "bit_block_0_attn_Wk": 0,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 85763,
+        "bit_block_0_attn_Wv": 0,
+        "bit_block_0_attn_ctx": 98304,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1"
+        ]
+      }
+    },
+    "attn_full": {
+      "total": 392963,
+      "per_layer": {
+        "input_proj": 0,
+        "bit_block_0_attn_Wq": 36864,
+        "bit_block_0_attn_Wk": 36864,
+        "bit_block_0_attn_scores": 98304,
+        "bit_block_0_attn_softmax": 85763,
+        "bit_block_0_attn_Wv": 36864,
+        "bit_block_0_attn_ctx": 98304,
+        "bit_block_0_attn_Wo": 0,
+        "bit_block_0_ffn_fc1": 0,
+        "bit_block_0_ffn_fc2": 0,
+        "head_fc1": 0,
+        "head_fc2": 0
+      },
+      "width_check": {
+        "n_quantizers": 17,
+        "all_ok": true,
+        "held_at_one_bit": [
+          "bit_block_0_attn_Wk",
+          "bit_block_0_attn_Wq",
+          "bit_block_0_attn_Wv",
+          "bit_block_0_attn_ctx__in0",
+          "bit_block_0_attn_ctx__in1",
+          "bit_block_0_attn_scores__in0",
+          "bit_block_0_attn_scores__in1"
+        ]
+      }
+    },
+    "weights_only_rule": {
+      "total": 85763,
+      "why": "binary kernels are fixed at 1 bit; a 0-bit input costs 0 EBOPs"
+    },
+    "headroom": {
+      "250000": {
+        "zero": 164237,
+        "one": -283435,
+        "attn_narrow": -32371,
+        "attn_full": -142963
+      },
+      "350000": {
+        "zero": 264237,
+        "one": -183435,
+        "attn_narrow": 67629,
+        "attn_full": -42963
+      }
+    },
+    "zero_floor_over_target": 0.24503714285714287,
+    "one_bit_alive_over_target": 1.5241,
+    "headroom_at_zero_floor": 264237,
+    "status": "STATIC_FEASIBLE"
+  }
+]

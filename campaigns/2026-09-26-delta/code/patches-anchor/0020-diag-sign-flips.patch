@@ -1,0 +1,96 @@
+From ff5c6a31054baf31b6ad13d569cbeff724a274bd Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 08:42:57 -0700
+Subject: [PATCH 20/38] diag-sign-flips: experiment.diagnostics sign_flips logs
+ per-layer epoch flip fraction and C2I (Z08, DR-04)
+
+---
+ code/bnhgq2/ablation.py   | 37 +++++++++++++++++++++++++++++++++++++
+ code/bnhgq2/delta_keys.py | 12 ++++++++++++
+ 2 files changed, 49 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index ea3b253..e4ce1d5 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -328,6 +328,40 @@ class LatentEMA:
+         return {key: shadow.numpy() for key, _, shadow in self.pairs}
+ 
+ 
++class DeltaDiagnostics:
++    """Delta epoch-observer hooks (experiment.diagnostics); training-only reads, no state change.
++    "sign_flips": per binary layer, the fraction of effective signs that changed since the previous
++    epoch end (epoch-level flip-flop ratio, THEORY M3 / Liu et al. 2021) and the fraction that differ
++    from the init signs (C2I). Init signs are kept in diag_init_signs.npz so a resume keeps them."""
++
++    def __init__(self, cfg, model, out):
++        self.kinds = set(cfg['experiment'].get('diagnostics', []))
++        self.layers = [ly.name for ly in model.layers if isinstance(ly, (qat.BitQEinsumDense, qat.BitQDense))
++                       and ly.binary.get('scheme') != 'ternary_absmean']
++        self.prev = self._signs(model)
++        path = Path(out) / 'diag_init_signs.npz'
++        if 'sign_flips' in self.kinds:
++            if not path.exists():
++                np.savez(path, **self.prev)
++            self.init = dict(np.load(path))
++
++    def _signs(self, model):
++        return {n: np.asarray(model.get_layer(n).qkernel) > 0 for n in self.layers}
++
++    def __call__(self, model, epoch):
++        logs = {}
++        if 'sign_flips' in self.kinds:
++            now = self._signs(model)
++            for n in self.layers:
++                logs[f'diag/flip_fraction/{n}'] = float(np.mean(now[n] != self.prev[n]))
++                logs[f'diag/c2i/{n}'] = float(np.mean(now[n] != self.init[n]))
++            total = sum(v.size for v in now.values())
++            logs['diag/flip_fraction'] = float(sum((now[n] != self.prev[n]).sum() for n in self.layers) / total)
++            logs['diag/c2i'] = float(sum((now[n] != self.init[n]).sum() for n in self.layers) / total)
++            self.prev = now
++        return logs
++
++
+ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None, input_std=None,
+                     latent_ema=None):
+     x = tf.convert_to_tensor(xt, dtype=tf.float32)
+@@ -973,6 +1007,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         leaf = out / 'checkpoints' / json.loads((out / 'latest.json').read_text())['checkpoint'] if resumed else None
+         ema_saved = dict(np.load(leaf / 'latent_ema.npz')) if leaf is not None else None
+         latent_ema = LatentEMA(model, cfg['experiment']['latent_ema_decay'], ema_saved)
++    delta_diagnostics = DeltaDiagnostics(cfg, model, out) if cfg['experiment'].get('diagnostics') else None
+     step = make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits, teacher_model=teacher_model,
+                            input_std=data_info['input_std'], latent_ema=latent_ema)
+     epochs = cfg['train']['epochs']
+@@ -1137,6 +1172,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         if cfg['experiment'].get('accumulator_metric'):  # Delta: beside native EBOPs, never instead
+             from .ebops_calc import accumulator_bits
+             logs.update({f'accumulator_bits/{name}': v['b_acc'] for name, v in accumulator_bits(model).items()})
++        if delta_diagnostics is not None:
++            logs.update(delta_diagnostics(model, epoch))
+         if epoch_observer is not None:
+             diagnostics = epoch_observer(model, sample, epoch)
+             if set(diagnostics) & set(logs):
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index dec852b..2b1886b 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -292,3 +292,15 @@ WEIGHT_SCHEMES.add('hgq_learnable')
+ # (card Q13, DELTA.md Z03). Key name set here; no Delta entry names it (always-on diagnostic).
+ register('experiment.accumulator_metric', 'accumulator-ebops-metric', _is_bool,
+          active=lambda v: v is True, export_ok=True)
++
++# diag-sign-flips: epoch-observer hook (DELTA.md Z08, DR-04). experiment.diagnostics is a list; the
++# diag-beta-trajectory block extends DIAGNOSTICS. Key name set here; no Delta entry names it.
++DIAGNOSTICS = {'sign_flips'}
++
++
++def _diagnostics(value, cfg):
++    if not isinstance(value, list) or not value or set(value) - DIAGNOSTICS:
++        return f'must be a non-empty list drawn from {sorted(DIAGNOSTICS)}'
++
++
++register('experiment.diagnostics', 'diag-sign-flips', _diagnostics, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

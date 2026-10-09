@@ -1,0 +1,162 @@
+From f8d2b5ff17963d547d3d6c6f712dcd244eb427fa Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:07 -0700
+Subject: [PATCH 04/14] A13/A19: explicit experiment.cost_before_auc override
+ and opt-in AUC-selected feasible copy, rolled back with each checkpoint;
+ tests
+
+---
+ bnhgq2/ablation.py      | 39 ++++++++++++++++++++++++++++---
+ tests/test_selection.py | 52 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 88 insertions(+), 3 deletions(-)
+ create mode 100644 tests/test_selection.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 3f26930..934a550 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -26,6 +26,12 @@ from .train import load_train_data, macro_ovr_auc, _softmax
+ from .data import input_std_stats, apply_input_std
+ 
+ 
++# Files whose content depends on the trajectory; each checkpoint generation carries a copy
++# so that a resume rolls them back to the resume point ([A5]).
++SELECTED_FILES = ('model_best.keras', 'model_min_ebops.keras', 'model_unconstrained.keras',
++                  'model_best_auc_feasible.keras')
++
++
+ def digest_json(value):
+     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
+ 
+@@ -241,7 +247,7 @@ def save_checkpoint(out, model, optimizer, state):
+     model.save(temp / 'model.keras')
+     np.savez(temp / 'optimizer.npz', **{f'v{i}': v.numpy() for i, v in enumerate(optimizer.variables)})
+     atomic_json(temp / 'state.json', state)
+-    for name in ('model_best.keras', 'model_min_ebops.keras', 'model_unconstrained.keras'):
++    for name in SELECTED_FILES:
+         if (out / name).exists():
+             shutil.copyfile(out / name, temp / name)
+     final = root / leaf
+@@ -272,7 +278,7 @@ def restore_checkpoint(out, cfg, dataset_info):
+         for i, v in enumerate(optimizer.variables):
+             assert arrays[f'v{i}'].shape == v.shape
+             v.assign(arrays[f'v{i}'])
+-    for name in ('model_best.keras', 'model_min_ebops.keras', 'model_unconstrained.keras'):
++    for name in SELECTED_FILES:
+         target = out / name
+         if (directory / name).exists():
+             shutil.copyfile(directory / name, target)
+@@ -327,6 +333,22 @@ def checkpoint_selection_key(point, metric, *, cost_before_auc=False):
+     raise ValueError(f'Unsupported checkpoint selection metric: {metric!r}')
+ 
+ 
++def cost_before_auc(cfg):
++    """[A13] Tie-break order. `experiment.cost_before_auc` (bool) overrides the historical
++    inference from the presence of an `engram_study` block, which put -EBOPs before val AUC
++    (accuracy -> -EBOPs -> AUC -> -epoch). Absent key => historical behaviour."""
++    explicit = cfg['experiment'].get('cost_before_auc')
++    if explicit is not None:
++        if not isinstance(explicit, bool):
++            raise ValueError('experiment.cost_before_auc must be a bool')
++        return explicit
++    return bool(cfg.get('engram_study'))
++
++
++def keep_auc_feasible(cfg):
++    return bool(cfg['experiment'].get('keep_auc_selected_feasible', False))
++
++
+ def validation_metrics(labels, logits):
+     """Measure ranking and decisions on exactly the same inference outputs."""
+     logits = np.asarray(logits)
+@@ -458,10 +480,17 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             shutil.copy2(candidate, out / 'model_unconstrained.keras')
+             state['best_auc'] = point
+         previous = state['best_feasible']
+-        cost_first = bool(cfg.get('engram_study'))
++        cost_first = cost_before_auc(cfg)
+         if feasible and (previous is None or checkpoint_selection_key(point, selection_metric, cost_before_auc=cost_first) > checkpoint_selection_key(previous, selection_metric, cost_before_auc=cost_first)):
+             shutil.copy2(candidate, out / 'model_best.keras')
+             state['best_feasible'] = point
++        # [A19] AUC-selected sensitivity copy: the feasible checkpoint with the highest
++        # validation macro AUC (ties: lower EBOPs, earlier epoch). Never replaces model_best.
++        if keep_auc_feasible(cfg) and feasible:
++            prior = state.get('best_feasible_auc')
++            if prior is None or checkpoint_selection_key(point, 'val_macro_auc') > checkpoint_selection_key(prior, 'val_macro_auc'):
++                shutil.copy2(candidate, out / 'model_best_auc_feasible.keras')
++                state['best_feasible_auc'] = point
+         recovery_after = cfg['experiment'].get('recovery_after_epochs')
+         if recovery_after is not None and epoch + 1 >= recovery_after and feasible and not state['recovery_frozen']:
+             state.update(recovery_frozen=True, freeze_epoch=epoch + 1, freeze_widths=raw_widths(model))
+@@ -523,6 +552,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                             else 'max_auc_under_final_budget' if selection_metric == 'val_macro_auc'
+                             else 'max_accuracy_under_final_budget'),
+               'code_sha256': state['code_sha256']}
++    if keep_auc_feasible(cfg):
++        result['auc_selected_feasible'] = state.get('best_feasible_auc')
++        result['auc_selected_checkpoint'] = ('model_best_auc_feasible.keras'
++                                             if state.get('best_feasible_auc') else None)
+     atomic_json(out / 'ebops_budget.json', result)
+     meta = {'config': cfg['name'], 'seed': seed, 'epochs_run': state['completed_epochs'],
+             'params': model.count_params(), 'best_epoch': selected['epoch'],
+diff --git a/tests/test_selection.py b/tests/test_selection.py
+new file mode 100644
+index 0000000..f9a471e
+--- /dev/null
++++ b/tests/test_selection.py
+@@ -0,0 +1,52 @@
++"""[A13] tie-break order on a constructed accuracy tie; [A19] key semantics (CPU, no model)."""
++import copy
++import json
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parents[1]
++BASE = json.loads((HERE / 'configs' / 'const0922-a07-n64-s1-fast50-fp32.json').read_text())
++M = 'val_categorical_accuracy'
++
++
++def pick(points, cfg):
++    from bnhgq2.ablation import checkpoint_selection_key, cost_before_auc
++    first = cost_before_auc(cfg)
++    return max(points, key=lambda p: checkpoint_selection_key(p, M, cost_before_auc=first))
++
++
++def tie():
++    # equal accuracy; a has higher AUC but more EBOPs; b cheaper, lower AUC
++    return [{'epoch': 10, M: 0.79, 'val_macro_auc': 0.940, 'ebops': 340000},
++            {'epoch': 20, M: 0.79, 'val_macro_auc': 0.930, 'ebops': 300000}]
++
++
++def test_inherited_block_flips_order():
++    assert 'engram_study' in BASE and 'cost_before_auc' not in BASE['experiment']
++    assert pick(tie(), BASE)['epoch'] == 20          # historical: -EBOPs before AUC
++
++
++def test_override_restores_study_order():
++    cfg = copy.deepcopy(BASE)
++    cfg['experiment']['cost_before_auc'] = False
++    assert pick(tie(), cfg)['epoch'] == 10           # accuracy -> AUC -> -EBOPs -> -epoch
++    same_auc = [dict(p, val_macro_auc=0.94) for p in tie()]
++    assert pick(same_auc, cfg)['epoch'] == 20        # then lower EBOPs
++    same_cost = [dict(p, val_macro_auc=0.94, ebops=300000) for p in tie()]
++    assert pick(same_cost, cfg)['epoch'] == 10       # then earlier epoch
++    better = tie() + [{'epoch': 30, M: 0.80, 'val_macro_auc': 0.90, 'ebops': 349999}]
++    assert pick(better, cfg)['epoch'] == 30          # accuracy first
++
++
++def test_override_type_checked():
++    import pytest
++    from bnhgq2.ablation import cost_before_auc
++    cfg = copy.deepcopy(BASE)
++    cfg['experiment']['cost_before_auc'] = 'false'
++    with pytest.raises(ValueError):
++        cost_before_auc(cfg)
++
++
++def test_auc_selected_key():
++    from bnhgq2.ablation import checkpoint_selection_key
++    best = max(tie(), key=lambda p: checkpoint_selection_key(p, 'val_macro_auc'))
++    assert best['epoch'] == 10
+-- 
+2.50.1 (Apple Git-155)
+

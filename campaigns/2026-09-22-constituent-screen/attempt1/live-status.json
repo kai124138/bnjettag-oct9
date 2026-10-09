@@ -1,0 +1,394 @@
+{
+  "snapshot_utc": "2026-09-22T07:25:01.544357+00:00",
+  "runs": [
+    {
+      "name": "const0922-a02-n64-s1-fast50",
+      "completed_epochs": 1,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 0,
+        "val_macro_auc": 0.8507462208099458,
+        "val_categorical_accuracy": 0.5733467741935484,
+        "ebops": 49574940
+      },
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-a02-n8-s1-fast50",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.8531235130476127,
+        "val_categorical_accuracy": 0.5902983870967742,
+        "ebops": 1227679
+      },
+      "last_epoch_wall_seconds": 130.887127161026,
+      "estimated_hours_remaining": 1.7451616954803466,
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-e02-n8-s1-fast50",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.8467893547155547,
+        "val_categorical_accuracy": 0.5818548387096775,
+        "ebops": 627122
+      },
+      "last_epoch_wall_seconds": 95.34036207199097,
+      "estimated_hours_remaining": 1.2712048276265462,
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-e03-n64-s1-fast50",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.8803800099965887,
+        "val_categorical_accuracy": 0.62125,
+        "ebops": 18234827
+      },
+      "last_epoch_wall_seconds": 123.05140471458435,
+      "estimated_hours_remaining": 1.640685396194458,
+      "verified_complete": false
+    },
+    {
+      "name": "const0922-e03-n8-s1-fast50",
+      "completed_epochs": 2,
+      "best_feasible": null,
+      "lowest": {
+        "epoch": 1,
+        "val_macro_auc": 0.8441549072418024,
+        "val_categorical_accuracy": 0.5718225806451613,
+        "ebops": 658791
+      },
+      "last_epoch_wall_seconds": 100.00333547592163,
+      "estimated_hours_remaining": 1.3333778063456216,
+      "verified_complete": false
+    }
+  ],
+  "preflight": [
+    {
+      "file": "shard-0.json",
+      "status": "PASS",
+      "runs": 19
+    },
+    {
+      "file": "shard-1.json",
+      "status": "PASS",
+      "runs": 19
+    }
+  ],
+  "jobs": [
+    {
+      "name": "kai-n8n64-canary-0922-a2c434",
+      "status": {
+        "active": 2,
+        "failed": 1,
+        "failedIndexes": "",
+        "ready": 2,
+        "startTime": "2026-09-22T07:14:40Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "name": "kai-n8n64-data-0922",
+      "status": {
+        "completionTime": "2026-09-22T07:09:17Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T07:09:17Z",
+            "lastTransitionTime": "2026-09-22T07:09:17Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "SuccessCriteriaMet"
+          },
+          {
+            "lastProbeTime": "2026-09-22T07:09:17Z",
+            "lastTransitionTime": "2026-09-22T07:09:17Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-22T07:02:40Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-a2c434",
+      "status": {
+        "completedIndexes": "0,1",
+        "completionTime": "2026-09-22T07:14:08Z",
+        "conditions": [
+          {
+            "lastProbeTime": "2026-09-22T07:14:08Z",
+            "lastTransitionTime": "2026-09-22T07:14:08Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "SuccessCriteriaMet"
+          },
+          {
+            "lastProbeTime": "2026-09-22T07:14:08Z",
+            "lastTransitionTime": "2026-09-22T07:14:08Z",
+            "message": "Reached expected number of succeeded pods",
+            "reason": "CompletionsReached",
+            "status": "True",
+            "type": "Complete"
+          }
+        ],
+        "failedIndexes": "",
+        "ready": 0,
+        "startTime": "2026-09-22T07:09:55Z",
+        "succeeded": 2,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+      }
+    }
+  ],
+  "pods": [
+    {
+      "name": "kai-n8n64-canary-0922-a2c434-0-rgf6w",
+      "phase": "Running",
+      "node": "hcc-nrp-shor-c5921.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:37Z",
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:27Z",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:37Z",
+          "status": "True",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:37Z",
+          "status": "True",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:27Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-canary-0922-a2c434-0-vt6xd",
+      "phase": "Failed",
+      "node": "hcc-nrp-shor-c5921.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:21Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:41Z",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:18Z",
+          "reason": "PodFailed",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:22:18Z",
+          "reason": "PodFailed",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:41Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-canary-0922-a2c434-1-gn2rf",
+      "phase": "Running",
+      "node": "gpu-16.nrp.mghpcc.org",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:15:02Z",
+          "status": "True",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:41Z",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:15:02Z",
+          "status": "True",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:15:02Z",
+          "status": "True",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:41Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-data-0922-pvc25",
+      "phase": "Succeeded",
+      "node": "gpn-fiona-mizzou-8.rnet.missouri.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:16Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:02:41Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:13Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:13Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:02:41Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-a2c434-0-r5w7q",
+      "phase": "Succeeded",
+      "node": "hcc-nrp-shor-c5905.unl.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:07Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:05Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:05Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    },
+    {
+      "name": "kai-n8n64-preflight-0922-a2c434-1-5pqlc",
+      "phase": "Succeeded",
+      "node": "rci-nrp-gpu-05.sdsu.edu",
+      "conditions": [
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:07Z",
+          "status": "False",
+          "type": "PodReadyToStartContainers"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "reason": "PodCompleted",
+          "status": "True",
+          "type": "Initialized"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:06Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "Ready"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:14:06Z",
+          "reason": "PodCompleted",
+          "status": "False",
+          "type": "ContainersReady"
+        },
+        {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-22T07:09:55Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      ]
+    }
+  ]
+}

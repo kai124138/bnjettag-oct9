@@ -1,0 +1,1301 @@
+{
+ "survey": "node_survey_20260929T073945Z.json (read 2026-09-29T07:39:45Z)",
+ "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+ "rule_fraction": 0.9,
+ "per_process_mib": {
+  "E": 4350,
+  "A07": 8446
+ },
+ "per_process_source": "A10, TF_FORCE_GPU_ALLOW_GROWTH, nvidia-smi --query-compute-apps: E 4,350 MiB (K=5 pod, c5805), A07 8,446 MiB (K=3 pods, gpu-16 and gpu-17); campaigns/2026-09-26-training-batch/RUN.md \"Takeover check, 2026-09-29T02:47-03:10Z\"",
+ "cpu_per_arm": 2,
+ "mem_gi_per_arm": 8,
+ "cpu_pinning": "each phase: the first 2 x K CPUs of the pod allowed set (STUDY Amendment 1, A2)",
+ "cpu_budget_rule": "steady cgroup cores / K > 2.0 x 1.05 = 2.1: above budget, kept out of T (STUDY rule 5)",
+ "node_reserve": {
+  "cpu": 2,
+  "mem_gi": 16
+ },
+ "stop_after": 21,
+ "class_names": {
+  "E": [
+   "chang0926-a-n64-s1",
+   "chang0926-a-n64-s2",
+   "chang0926-a-n64-s3",
+   "chang0926-a-n64-s4",
+   "chang0926-a-n64-s5",
+   "chang0926-a-n64-s6",
+   "chang0926-a-n64-s7",
+   "chang0926-a-n64-s8",
+   "chang0926-b-n64-s1",
+   "chang0926-b-n64-s2",
+   "chang0926-b-n64-s3",
+   "chang0926-b-n64-s4",
+   "chang0926-b-n64-s5",
+   "chang0926-b-n64-s6",
+   "chang0926-b-n64-s7",
+   "chang0926-b-n64-s8"
+  ],
+  "A07": [
+   "chang0926-c-n64-s1",
+   "chang0926-c-n64-s2",
+   "chang0926-c-n64-s3",
+   "chang0926-c-n64-s4",
+   "chang0926-c-n64-s5",
+   "chang0926-c-n64-s6",
+   "chang0926-c-n64-s7",
+   "chang0926-c-n64-s8",
+   "chang0926-a07-350-n64-s1",
+   "chang0926-a07-350-n64-s2",
+   "chang0926-a07-350-n64-s3",
+   "chang0926-a07-350-n64-s4",
+   "chang0926-a07-350-n64-s5",
+   "chang0926-a07-350-n64-s6",
+   "chang0926-a07-350-n64-s7",
+   "chang0926-a07-350-n64-s8"
+  ]
+ },
+ "excluded_hostnames": [
+  "hcc-nrp-shor-c6017.unl.edu",
+  "k8s-chase-ci-07.calit2.optiputer.net",
+  "nautilus-ext-gpu01.fullerton.edu",
+  "ren-gp-argo-01.madren.org"
+ ],
+ "driver_configmap": "kai-gpubench-driver-5ede0778f7",
+ "driver_sha256": "5ede0778f716cb9299ca82c64547fb993c93d775572d33463a0fef4cbf676c45",
+ "jobs": 16,
+ "products": [
+  {
+   "product": "NVIDIA-L40",
+   "slug": "l40",
+   "role": "candidate",
+   "resource_key": "nvidia.com/gpu",
+   "card_mib": 46068,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 17,
+   "schedulable_nodes": 6,
+   "schedulable_gpus_allocatable": 24,
+   "node_cap": 9,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 9,
+     "k_run": 9,
+     "k_low": 4,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.85
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 4,
+     "k_run": 4,
+     "k_low": 2,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.733
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-l40-krule",
+     "root_slug": "l40-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/l40-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k9",
+       "class": "E",
+       "k": 9,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5",
+        "chang0926-a-n64-s6",
+        "chang0926-a-n64-s7",
+        "chang0926-a-n64-s8",
+        "chang0926-b-n64-s1"
+       ]
+      },
+      {
+       "phase": "p2-A07-k4",
+       "class": "A07",
+       "k": 4,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2",
+        "chang0926-c-n64-s3",
+        "chang0926-c-n64-s4"
+       ]
+      }
+     ],
+     "k_max": 9,
+     "pod_request": {
+      "cpu": 18,
+      "memory_gi": 72
+     },
+     "nodes_that_can_hold_pod": [
+      "rci-tide-gpu-01.sdsu.edu",
+      "rci-tide-gpu-02.sdsu.edu",
+      "rci-tide-gpu-03.sdsu.edu",
+      "rci-tide-gpu-04.sdsu.edu",
+      "rci-tide-gpu-05.sdsu.edu",
+      "rci-tide-gpu-06.sdsu.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 6,
+     "run_epochs": 273,
+     "pod_active_deadline_seconds": 26400,
+     "job_active_deadline_seconds": 48000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 8988.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 2.5,
+      "upper_with_header_allowance_h": 3.0
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-l40-klow",
+     "root_slug": "l40-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/l40-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p4-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "rci-tide-gpu-01.sdsu.edu",
+      "rci-tide-gpu-02.sdsu.edu",
+      "rci-tide-gpu-03.sdsu.edu",
+      "rci-tide-gpu-04.sdsu.edu",
+      "rci-tide-gpu-05.sdsu.edu",
+      "rci-tide-gpu-06.sdsu.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 12,
+     "run_epochs": 126,
+     "pod_active_deadline_seconds": 14400,
+     "job_active_deadline_seconds": 36000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4200.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 399
+  },
+  {
+   "product": "NVIDIA-L40S",
+   "slug": "l40s",
+   "role": "candidate",
+   "resource_key": "nvidia.com/gpu",
+   "card_mib": 46068,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 4,
+   "schedulable_nodes": 2,
+   "schedulable_gpus_allocatable": 8,
+   "node_cap": 13,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 9,
+     "k_run": 9,
+     "k_low": 4,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.85
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 4,
+     "k_run": 4,
+     "k_low": 2,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.733
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-l40s-krule",
+     "root_slug": "l40s-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/l40s-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k9",
+       "class": "E",
+       "k": 9,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5",
+        "chang0926-a-n64-s6",
+        "chang0926-a-n64-s7",
+        "chang0926-a-n64-s8",
+        "chang0926-b-n64-s1"
+       ]
+      },
+      {
+       "phase": "p2-A07-k4",
+       "class": "A07",
+       "k": 4,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2",
+        "chang0926-c-n64-s3",
+        "chang0926-c-n64-s4"
+       ]
+      }
+     ],
+     "k_max": 9,
+     "pod_request": {
+      "cpu": 18,
+      "memory_gi": 72
+     },
+     "nodes_that_can_hold_pod": [
+      "hcc-nrp-pki-c1703.unl.edu",
+      "hcc-nrp-pki-c1705.unl.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 2,
+     "run_epochs": 273,
+     "pod_active_deadline_seconds": 26400,
+     "job_active_deadline_seconds": 48000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 8988.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 2.5,
+      "upper_with_header_allowance_h": 3.0
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-l40s-klow",
+     "root_slug": "l40s-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/l40s-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p4-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "hcc-nrp-pki-c1703.unl.edu",
+      "hcc-nrp-pki-c1705.unl.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 6,
+     "run_epochs": 126,
+     "pod_active_deadline_seconds": 14400,
+     "job_active_deadline_seconds": 36000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4200.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 399
+  },
+  {
+   "product": "NVIDIA-GeForce-RTX-4090",
+   "slug": "geforce-rtx-4090",
+   "role": "candidate",
+   "resource_key": "nvidia.com/gpu",
+   "card_mib": 24564,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 4,
+   "schedulable_nodes": 3,
+   "schedulable_gpus_allocatable": 16,
+   "node_cap": 13,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 5,
+     "k_run": 5,
+     "k_low": 4,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.885
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 2,
+     "k_run": 2,
+     "k_low": 1,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.688
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-geforce-rtx-4090-krule",
+     "root_slug": "geforce-rtx-4090-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/geforce-rtx-4090-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k5",
+       "class": "E",
+       "k": 5,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5"
+       ]
+      },
+      {
+       "phase": "p2-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 5,
+     "pod_request": {
+      "cpu": 10,
+      "memory_gi": 40
+     },
+     "nodes_that_can_hold_pod": [
+      "hcc-nrp-shor-c5226.unl.edu",
+      "hcc-nrp-shor-c5834.unl.edu",
+      "k8s-4090-01.calit2.optiputer.net"
+     ],
+     "max_pods_by_allocatable_upper_bound": 6,
+     "run_epochs": 147,
+     "pod_active_deadline_seconds": 16200,
+     "job_active_deadline_seconds": 37800,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4788.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-geforce-rtx-4090-klow",
+     "root_slug": "geforce-rtx-4090-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/geforce-rtx-4090-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p4-A07-k1",
+       "class": "A07",
+       "k": 1,
+       "names": [
+        "chang0926-c-n64-s1"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "hcc-nrp-shor-c5226.unl.edu",
+      "hcc-nrp-shor-c5834.unl.edu",
+      "k8s-4090-01.calit2.optiputer.net"
+     ],
+     "max_pods_by_allocatable_upper_bound": 9,
+     "run_epochs": 105,
+     "pod_active_deadline_seconds": 12000,
+     "job_active_deadline_seconds": 33600,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 3276.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 252
+  },
+  {
+   "product": "NVIDIA-GeForce-RTX-3090",
+   "slug": "geforce-rtx-3090",
+   "role": "candidate",
+   "resource_key": "nvidia.com/gpu",
+   "card_mib": 24576,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 49,
+   "schedulable_nodes": 30,
+   "schedulable_gpus_allocatable": 115,
+   "node_cap": 29,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 5,
+     "k_run": 5,
+     "k_low": 4,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.885
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 2,
+     "k_run": 2,
+     "k_low": 1,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.687
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-geforce-rtx-3090-krule",
+     "root_slug": "geforce-rtx-3090-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/geforce-rtx-3090-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k5",
+       "class": "E",
+       "k": 5,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5"
+       ]
+      },
+      {
+       "phase": "p2-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 5,
+     "pod_request": {
+      "cpu": 10,
+      "memory_gi": 40
+     },
+     "nodes_that_can_hold_pod": [
+      "fiona-1.famu.edu",
+      "hcc-chase-shor-c4715.unl.edu",
+      "hpc-nrp-g1.nmsu.edu",
+      "k8s-3090-01.usd.edu",
+      "k8s-3090-02.clemson.edu",
+      "nautilus01.hsrn.nyu.edu",
+      "nrp-01.laccd.edu",
+      "nrp-fiona-001.sdmz.amnh.org",
+      "ry-gpu-01.sdsc.optiputer.net",
+      "ry-gpu-02.sdsc.optiputer.net",
+      "ry-gpu-03.sdsc.optiputer.net",
+      "ry-gpu-04.sdsc.optiputer.net",
+      "ry-gpu-09.sdsc.optiputer.net",
+      "ry-gpu-10.sdsc.optiputer.net",
+      "suncave-1",
+      "suncave-10",
+      "suncave-12",
+      "suncave-13",
+      "suncave-14",
+      "suncave-15",
+      "suncave-17",
+      "suncave-2",
+      "suncave-3",
+      "suncave-4",
+      "suncave-6",
+      "suncave-7",
+      "suncave-8",
+      "suncave-9",
+      "uicnrp-fiona2.evl.uic.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 43,
+     "run_epochs": 147,
+     "pod_active_deadline_seconds": 16200,
+     "job_active_deadline_seconds": 37800,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4788.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-geforce-rtx-3090-klow",
+     "root_slug": "geforce-rtx-3090-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/geforce-rtx-3090-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p4-A07-k1",
+       "class": "A07",
+       "k": 1,
+       "names": [
+        "chang0926-c-n64-s1"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "fiona-1.famu.edu",
+      "hcc-chase-shor-c4715.unl.edu",
+      "hpc-nrp-g1.nmsu.edu",
+      "k8s-3090-01.usd.edu",
+      "k8s-3090-02.clemson.edu",
+      "nautilus01.hsrn.nyu.edu",
+      "nrp-01.laccd.edu",
+      "nrp-fiona-001.sdmz.amnh.org",
+      "ry-gpu-01.sdsc.optiputer.net",
+      "ry-gpu-02.sdsc.optiputer.net",
+      "ry-gpu-03.sdsc.optiputer.net",
+      "ry-gpu-04.sdsc.optiputer.net",
+      "ry-gpu-09.sdsc.optiputer.net",
+      "ry-gpu-10.sdsc.optiputer.net",
+      "suncave-1",
+      "suncave-10",
+      "suncave-12",
+      "suncave-13",
+      "suncave-14",
+      "suncave-15",
+      "suncave-17",
+      "suncave-2",
+      "suncave-3",
+      "suncave-4",
+      "suncave-6",
+      "suncave-7",
+      "suncave-8",
+      "suncave-9",
+      "uicnrp-fiona2.evl.uic.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 54,
+     "run_epochs": 105,
+     "pod_active_deadline_seconds": 12000,
+     "job_active_deadline_seconds": 33600,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 3276.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 252
+  },
+  {
+   "product": "NVIDIA-RTX-A6000",
+   "slug": "rtx-a6000",
+   "role": "candidate",
+   "resource_key": "nvidia.com/rtxa6000",
+   "card_mib": 49140,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 8,
+   "schedulable_nodes": 5,
+   "schedulable_gpus_allocatable": 27,
+   "node_cap": 9,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 10,
+     "k_run": 9,
+     "k_low": 4,
+     "binding_caps": [
+      "node cap 9 (2 CPU + 8 Gi per arm, node reserve 2 CPU / 16 Gi; largest schedulable node 20 CPU / 251.5 Gi)"
+     ],
+     "predicted_peak_fraction_at_k_run": 0.797
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 5,
+     "k_run": 5,
+     "k_low": 2,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.859
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-rtx-a6000-krule",
+     "root_slug": "rtx-a6000-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/rtx-a6000-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k9",
+       "class": "E",
+       "k": 9,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5",
+        "chang0926-a-n64-s6",
+        "chang0926-a-n64-s7",
+        "chang0926-a-n64-s8",
+        "chang0926-b-n64-s1"
+       ]
+      },
+      {
+       "phase": "p2-A07-k5",
+       "class": "A07",
+       "k": 5,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2",
+        "chang0926-c-n64-s3",
+        "chang0926-c-n64-s4",
+        "chang0926-c-n64-s5"
+       ]
+      }
+     ],
+     "k_max": 9,
+     "pod_request": {
+      "cpu": 18,
+      "memory_gi": 72
+     },
+     "nodes_that_can_hold_pod": [
+      "gpu00.nrp.hpc.udel.edu",
+      "k8s-a6000-01.csus.edu",
+      "k8s-a6000-01.unm.edu",
+      "nrp-01.csumb.edu",
+      "nrp-a6000-01.csuchico.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 5,
+     "run_epochs": 294,
+     "pod_active_deadline_seconds": 28800,
+     "job_active_deadline_seconds": 50400,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 9912.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 2.75,
+      "upper_with_header_allowance_h": 3.25
+     },
+     "longer_than_nrp_window_at_upper_bound": true
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-rtx-a6000-klow",
+     "root_slug": "rtx-a6000-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/rtx-a6000-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p4-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "gpu00.nrp.hpc.udel.edu",
+      "k8s-a6000-01.csus.edu",
+      "k8s-a6000-01.unm.edu",
+      "nrp-01.csumb.edu",
+      "nrp-a6000-01.csuchico.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 9,
+     "run_epochs": 126,
+     "pod_active_deadline_seconds": 14400,
+     "job_active_deadline_seconds": 36000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4200.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 420
+  },
+  {
+   "product": "NVIDIA-A40",
+   "slug": "a40",
+   "role": "candidate",
+   "resource_key": "nvidia.com/a40",
+   "card_mib": 46068,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 3,
+   "schedulable_nodes": 2,
+   "schedulable_gpus_allocatable": 4,
+   "node_cap": 29,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 9,
+     "k_run": 9,
+     "k_low": 4,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.85
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 4,
+     "k_run": 4,
+     "k_low": 2,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.733
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-a40-krule",
+     "root_slug": "a40-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/a40-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k9",
+       "class": "E",
+       "k": 9,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5",
+        "chang0926-a-n64-s6",
+        "chang0926-a-n64-s7",
+        "chang0926-a-n64-s8",
+        "chang0926-b-n64-s1"
+       ]
+      },
+      {
+       "phase": "p2-A07-k4",
+       "class": "A07",
+       "k": 4,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2",
+        "chang0926-c-n64-s3",
+        "chang0926-c-n64-s4"
+       ]
+      }
+     ],
+     "k_max": 9,
+     "pod_request": {
+      "cpu": 18,
+      "memory_gi": 72
+     },
+     "nodes_that_can_hold_pod": [
+      "k8s-usra-01.calit2.optiputer.net",
+      "rci-nautilus01.msu.montana.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 4,
+     "run_epochs": 273,
+     "pod_active_deadline_seconds": 26400,
+     "job_active_deadline_seconds": 48000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 8988.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 2.5,
+      "upper_with_header_allowance_h": 3.0
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-a40-klow",
+     "root_slug": "a40-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/a40-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p4-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "k8s-usra-01.calit2.optiputer.net",
+      "rci-nautilus01.msu.montana.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 4,
+     "run_epochs": 126,
+     "pod_active_deadline_seconds": 14400,
+     "job_active_deadline_seconds": 36000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4200.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 399
+  },
+  {
+   "product": "NVIDIA-A100-SXM4-80GB",
+   "slug": "a100-sxm4-80gb",
+   "role": "candidate",
+   "resource_key": "nvidia.com/a100",
+   "card_mib": 81920,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 22,
+   "schedulable_nodes": 16,
+   "schedulable_gpus_allocatable": 77,
+   "node_cap": 123,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 16,
+     "k_run": 16,
+     "k_low": 4,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.85
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 8,
+     "k_run": 8,
+     "k_low": 2,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.825
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-a100-sxm4-80gb-krule",
+     "root_slug": "a100-sxm4-80gb-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/a100-sxm4-80gb-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k16",
+       "class": "E",
+       "k": 16,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5",
+        "chang0926-a-n64-s6",
+        "chang0926-a-n64-s7",
+        "chang0926-a-n64-s8",
+        "chang0926-b-n64-s1",
+        "chang0926-b-n64-s2",
+        "chang0926-b-n64-s3",
+        "chang0926-b-n64-s4",
+        "chang0926-b-n64-s5",
+        "chang0926-b-n64-s6",
+        "chang0926-b-n64-s7",
+        "chang0926-b-n64-s8"
+       ]
+      },
+      {
+       "phase": "p2-A07-k8",
+       "class": "A07",
+       "k": 8,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2",
+        "chang0926-c-n64-s3",
+        "chang0926-c-n64-s4",
+        "chang0926-c-n64-s5",
+        "chang0926-c-n64-s6",
+        "chang0926-c-n64-s7",
+        "chang0926-c-n64-s8"
+       ]
+      }
+     ],
+     "k_max": 16,
+     "pod_request": {
+      "cpu": 32,
+      "memory_gi": 128
+     },
+     "nodes_that_can_hold_pod": [
+      "gp-engine.beocat.ksu.edu",
+      "gp-engine.hpc.okstate.edu",
+      "gp-engine.usd.edu",
+      "gpengine-uams.areon.net",
+      "gpengine-uark.areon.net",
+      "gpn-fiona-mizzou-3.rnet.missouri.edu",
+      "gpn-fiona-mizzou-4.rnet.missouri.edu",
+      "gpn-fiona-mizzou-5.rnet.missouri.edu",
+      "gpn-fiona-mizzou-6.rnet.missouri.edu",
+      "hcc-gpengine-shor-c5303.unl.edu",
+      "node-1-1.sdsc.optiputer.net",
+      "node-1-3.sdsc.optiputer.net",
+      "node-2-2.sdsc.optiputer.net",
+      "node-2-3.sdsc.optiputer.net",
+      "sphinx.sdstate.edu",
+      "tu.gp-engine.greatplains.net"
+     ],
+     "max_pods_by_allocatable_upper_bound": 57,
+     "run_epochs": 504,
+     "pod_active_deadline_seconds": 46200,
+     "job_active_deadline_seconds": 67800,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 16800.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 4.67,
+      "upper_with_header_allowance_h": 5.17
+     },
+     "longer_than_nrp_window_at_upper_bound": true
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-a100-sxm4-80gb-klow",
+     "root_slug": "a100-sxm4-80gb-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/a100-sxm4-80gb-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p4-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "gp-engine.beocat.ksu.edu",
+      "gp-engine.hpc.okstate.edu",
+      "gp-engine.usd.edu",
+      "gpengine-uams.areon.net",
+      "gpengine-uark.areon.net",
+      "gpn-fiona-mizzou-3.rnet.missouri.edu",
+      "gpn-fiona-mizzou-4.rnet.missouri.edu",
+      "gpn-fiona-mizzou-5.rnet.missouri.edu",
+      "gpn-fiona-mizzou-6.rnet.missouri.edu",
+      "hcc-gpengine-shor-c5303.unl.edu",
+      "node-1-1.sdsc.optiputer.net",
+      "node-1-3.sdsc.optiputer.net",
+      "node-2-2.sdsc.optiputer.net",
+      "node-2-3.sdsc.optiputer.net",
+      "sphinx.sdstate.edu",
+      "tu.gp-engine.greatplains.net"
+     ],
+     "max_pods_by_allocatable_upper_bound": 77,
+     "run_epochs": 126,
+     "pod_active_deadline_seconds": 14400,
+     "job_active_deadline_seconds": 36000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4200.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 630
+  },
+  {
+   "product": "NVIDIA-A10",
+   "slug": "a10",
+   "role": "baseline",
+   "resource_key": "nvidia.com/gpu",
+   "card_mib": 23028,
+   "k_low_rule": "K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])",
+   "nodes": 35,
+   "schedulable_nodes": 30,
+   "schedulable_gpus_allocatable": 237,
+   "node_cap": 60,
+   "classes": {
+    "E": {
+     "per_process_mib": 4350,
+     "k_rule": 4,
+     "k_run": 4,
+     "k_low": 3,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.756
+    },
+    "A07": {
+     "per_process_mib": 8446,
+     "k_rule": 2,
+     "k_run": 2,
+     "k_low": 1,
+     "binding_caps": [],
+     "predicted_peak_fraction_at_k_run": 0.734
+    }
+   },
+   "jobs": [
+    {
+     "shape": "krule",
+     "name": "kai-gpubench-a10-krule",
+     "root_slug": "a10-krule",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/a10-krule",
+     "phases": [
+      {
+       "phase": "p1-E-k4",
+       "class": "E",
+       "k": 4,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4"
+       ]
+      },
+      {
+       "phase": "p2-A07-k2",
+       "class": "A07",
+       "k": 2,
+       "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+       ]
+      }
+     ],
+     "k_max": 4,
+     "pod_request": {
+      "cpu": 8,
+      "memory_gi": 32
+     },
+     "nodes_that_can_hold_pod": [
+      "gpu-04.nrp.mghpcc.org",
+      "gpu-05.nrp.mghpcc.org",
+      "gpu-06.nrp.mghpcc.org",
+      "gpu-08.nrp.mghpcc.org",
+      "gpu-09.nrp.mghpcc.org",
+      "gpu-11.nrp.mghpcc.org",
+      "gpu-12.nrp.mghpcc.org",
+      "gpu-13.nrp.mghpcc.org",
+      "gpu-14.nrp.mghpcc.org",
+      "gpu-15.nrp.mghpcc.org",
+      "gpu-16.nrp.mghpcc.org",
+      "gpu-17.nrp.mghpcc.org",
+      "gpu-18.nrp.mghpcc.org",
+      "hcc-nrp-shor-c5805.unl.edu",
+      "hcc-nrp-shor-c5809.unl.edu",
+      "hcc-nrp-shor-c5813.unl.edu",
+      "hcc-nrp-shor-c5817.unl.edu",
+      "hcc-nrp-shor-c5821.unl.edu",
+      "hcc-nrp-shor-c5825.unl.edu",
+      "hcc-nrp-shor-c5905.unl.edu",
+      "hcc-nrp-shor-c5909.unl.edu",
+      "hcc-nrp-shor-c5913.unl.edu",
+      "hcc-nrp-shor-c5917.unl.edu",
+      "hcc-nrp-shor-c5921.unl.edu",
+      "hcc-nrp-shor-c5925.unl.edu",
+      "hcc-nrp-shor-c6009.unl.edu",
+      "hcc-nrp-shor-c6013.unl.edu",
+      "hcc-nrp-shor-c6021.unl.edu",
+      "hcc-nrp-shor-c6025.unl.edu",
+      "hcc-nrp-shor-c6029.unl.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 237,
+     "run_epochs": 126,
+     "pod_active_deadline_seconds": 14400,
+     "job_active_deadline_seconds": 36000,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 4200.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    },
+    {
+     "shape": "klow",
+     "name": "kai-gpubench-a10-klow",
+     "root_slug": "a10-klow",
+     "run_root": "/data/chang-n64-20260926/gpu-bench/a10-klow",
+     "phases": [
+      {
+       "phase": "p3-E-k3",
+       "class": "E",
+       "k": 3,
+       "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3"
+       ]
+      },
+      {
+       "phase": "p4-A07-k1",
+       "class": "A07",
+       "k": 1,
+       "names": [
+        "chang0926-c-n64-s1"
+       ]
+      }
+     ],
+     "k_max": 3,
+     "pod_request": {
+      "cpu": 6,
+      "memory_gi": 24
+     },
+     "nodes_that_can_hold_pod": [
+      "gpu-04.nrp.mghpcc.org",
+      "gpu-05.nrp.mghpcc.org",
+      "gpu-06.nrp.mghpcc.org",
+      "gpu-08.nrp.mghpcc.org",
+      "gpu-09.nrp.mghpcc.org",
+      "gpu-11.nrp.mghpcc.org",
+      "gpu-12.nrp.mghpcc.org",
+      "gpu-13.nrp.mghpcc.org",
+      "gpu-14.nrp.mghpcc.org",
+      "gpu-15.nrp.mghpcc.org",
+      "gpu-16.nrp.mghpcc.org",
+      "gpu-17.nrp.mghpcc.org",
+      "gpu-18.nrp.mghpcc.org",
+      "hcc-nrp-shor-c5805.unl.edu",
+      "hcc-nrp-shor-c5809.unl.edu",
+      "hcc-nrp-shor-c5813.unl.edu",
+      "hcc-nrp-shor-c5817.unl.edu",
+      "hcc-nrp-shor-c5821.unl.edu",
+      "hcc-nrp-shor-c5825.unl.edu",
+      "hcc-nrp-shor-c5905.unl.edu",
+      "hcc-nrp-shor-c5909.unl.edu",
+      "hcc-nrp-shor-c5913.unl.edu",
+      "hcc-nrp-shor-c5917.unl.edu",
+      "hcc-nrp-shor-c5921.unl.edu",
+      "hcc-nrp-shor-c5925.unl.edu",
+      "hcc-nrp-shor-c6009.unl.edu",
+      "hcc-nrp-shor-c6013.unl.edu",
+      "hcc-nrp-shor-c6021.unl.edu",
+      "hcc-nrp-shor-c6025.unl.edu",
+      "hcc-nrp-shor-c6029.unl.edu"
+     ],
+     "max_pods_by_allocatable_upper_bound": 237,
+     "run_epochs": 84,
+     "pod_active_deadline_seconds": 10800,
+     "job_active_deadline_seconds": 32400,
+     "expected_compute": {
+      "a10_aggregate_bound_s": 2688.0,
+      "a10_per_process_bound_s": 5880.0,
+      "upper_h": 1.63,
+      "upper_with_header_allowance_h": 2.13
+     },
+     "longer_than_nrp_window_at_upper_bound": false
+    }
+   ],
+   "run_epochs": 210
+  }
+ ]
+}

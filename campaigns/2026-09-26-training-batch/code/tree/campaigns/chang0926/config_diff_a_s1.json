@@ -1,0 +1,114 @@
+{
+  "changed": {
+    "arch.d_model": [
+      32,
+      24
+    ],
+    "arch.n_heads": [
+      4,
+      2
+    ],
+    "arch.pos_enc": [
+      "learned",
+      "none"
+    ],
+    "engram_study.question": [
+      "Matched architecture control",
+      "chang0926 arm A: primary: Sun et al. recipe on E at 350k"
+    ],
+    "experiment.arm": [
+      "const0922-a07-n64-s1-fast50-fp32",
+      "chang0926-a-n64-s1"
+    ],
+    "experiment.checkpoint_every_epochs": [
+      1,
+      25
+    ],
+    "experiment.group": [
+      "constituent-20260922-fast50",
+      "chang-n64-20260926"
+    ],
+    "experiment.remote_every_epochs": [
+      25,
+      500
+    ],
+    "name": [
+      "const0922-a07-n64-s1-fast50-fp32",
+      "chang0926-a-n64-s1"
+    ],
+    "train.batch": [
+      256,
+      2790
+    ],
+    "train.epochs": [
+      50,
+      7000
+    ],
+    "train.lr": [
+      0.0002,
+      0.003
+    ],
+    "train.order_seed": [
+      20260912,
+      2026092601
+    ],
+    "train.validation_split": [
+      0.2,
+      0.1
+    ],
+    "train.wandb_project": [
+      "BNJetTag-Engram-Experimental",
+      "BNJetTag-ChangRecipe"
+    ]
+  },
+  "removed": {
+    "constituent_study.aliases": [
+      "batch20260917-a07-s1",
+      "engram-e01-s1"
+    ],
+    "constituent_study.equal_arithmetic_budget_within_pair": true,
+    "constituent_study.pair": "a07",
+    "constituent_study.protocol": "fresh 50-epoch exploratory screen; not historical continuation",
+    "constituent_study.source_config_sha256": "3c604f993c275d5f510a867d2561b52ff05f66a5d37dcbe56541778118ea8501",
+    "constituent_study.test_set_used": false,
+    "constituent_study.tf32_enabled": false,
+    "constituent_study.validation_execution": "freshly reloaded checkpoint",
+    "train.beta2": 0.98,
+    "train.clipvalue": 1.0,
+    "train.decay_epochs": 49,
+    "train.decay_power": 1.0,
+    "train.warmup_epochs": 1,
+    "train.weight_decay": 0.01
+  },
+  "added": {
+    "arch.pos_enc_none_consume_rng": true,
+    "arch.pt_gate_gev": 2.0,
+    "campaign.arm": "A",
+    "campaign.production": true,
+    "campaign.seed": 1,
+    "campaign.source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+    "campaign.source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+    "campaign.study": "campaigns/2026-09-26-training-batch",
+    "campaign.test_set_used_for_selection": false,
+    "campaign.tf32_enabled": false,
+    "experiment.cost_before_auc": false,
+    "experiment.keep_auc_selected_feasible": true,
+    "experiment.nondegenerate.se_multiple": 5,
+    "experiment.nondegenerate.zero_floor_ebops": 171526,
+    "experiment.snapshot_every_epochs": 500,
+    "quant.act_overflow": "WRAP",
+    "quant.i_decay_speed": 0.001,
+    "quant.softmax_quant": "chang",
+    "train.ebops_reload_check": "stored",
+    "train.ebops_trace_batch": 2048,
+    "train.ebops_trace_every": 10,
+    "train.ebops_trace_sample": "train_full",
+    "train.lr_alpha": 1e-06,
+    "train.lr_alpha_epochs": 10,
+    "train.lr_cycle_epochs": 500,
+    "train.lr_m_mul": 1.0,
+    "train.lr_schedule": "chang_cosine_restarts",
+    "train.lr_t_mul": 1.0,
+    "train.optimizer": "adam_default"
+  }
+}

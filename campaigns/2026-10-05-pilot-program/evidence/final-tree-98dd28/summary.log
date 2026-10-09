@@ -1,0 +1,32 @@
+START 2026-10-05 15:25:46 JST tree=/tmp/claude-1000/-home-kaimoe-lab-bnjettag/e92600b4-dce3-4d77-b804-05a4a62d92c5/scratchpad/f2/tree
+TF 2.21.0
+PAIRED_INIT_OK A07 seed 1 arms 4 pilot1005-h2-a07-500k-c-s1 pilot1005-h2-a07-1m-c-s1 pilot1005-h2-a07-2m-c-s1 pilot1005-h2-a07-5m-c-s1
+PAIRED_INIT_OK E seed 1 arms 14 pilot1005-h1-e-350k-c-s1 pilot1005-h1-e-350k-noc-s1 pilot1005-h2-e-250k-c-s1 pilot1005-h2-e-500k-c-s1 pilot1005-h2-e-750k-c-s1 pilot1005-h2-e-1m-c-s1 pilot1005-h2-e-2m-c-s1 pilot1005-h2-e-5m-c-s1 pilot1005-h4-e-350k-c-w50-s1 pilot1005-h4-e-350k-c-w100-s1 pilot1005-h5-e-350k-c-nb-s1 pilot1005-h3-e-350k-c-qkv1-s1 pilot1005-h3-e-450k-c-qkv1-s1 pilot1005-ctl-e-unc-c-s1
+PAIRED_INIT_OK E seed 2 arms 6 pilot1005-h1-e-350k-c-s2 pilot1005-h1-e-350k-noc-s2 pilot1005-h4-e-350k-c-w50-s2 pilot1005-h4-e-350k-c-w100-s2 pilot1005-h5-e-350k-c-nb-s2 pilot1005-h3-e-350k-c-qkv1-s2
+PREFLIGHT_ALL_PASS 24 production 0 pilot_only 24
+GATE_CHECK cpu-gate PASS
+cpu_gate_exit=0 15:41:04
+NB_PAIRED_OK 1 kernels 15
+NB_PAIRED_OK 2 kernels 15
+NB_PAIRED_OK 3 kernels 15
+NB_PAIRED_OK 4 kernels 15
+NB_PAIRED_OK 5 kernels 15
+NB_PAIRED_OK 6 kernels 15
+NB_PAIRED_OK 7 kernels 15
+NB_PAIRED_OK 8 kernels 15
+NB_PAIRING_ALL_OK 8
+GATE_CHECK nb-pairing PASS
+nb_pairing_exit=0 15:45:29
+
+166 tests collected in 1.96s
+  Received: inputs=Tensor(shape=(16, 64, 3))
+    warnings.warn(msg)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /tmp/claude-1000/-home-kaimoe-lab-bnjettag/e92600b4-dce3-4d77-b804-05a4a62d92c5/scratchpad/f2/out/pytest.xml -
+=========================== short test summary info ============================
+SKIPPED [2] analysis/test_attn_entropy.py:142: main() is exercised on the A build (C-prime test cfg differs from its file: pos_enc)
+164 passed, 2 skipped, 36192 warnings in 617.98s (0:10:17)
+GATE_CHECK pytest PASS
+pytest_exit=0 15:56:02
+END 2026-10-05 15:56:02 JST

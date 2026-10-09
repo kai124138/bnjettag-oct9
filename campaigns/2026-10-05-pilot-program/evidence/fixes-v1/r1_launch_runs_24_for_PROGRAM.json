@@ -1,0 +1,254 @@
+[
+ {
+  "arm": "A350-C",
+  "hypothesis": "H1",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "A350-C",
+  "hypothesis": "H1",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 2
+ },
+ {
+  "arm": "A350-noC",
+  "hypothesis": "H1",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": false,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "A350-noC",
+  "hypothesis": "H1",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": false,
+  "warmup": 1,
+  "seed": 2
+ },
+ {
+  "arm": "E250k-C",
+  "hypothesis": "H2",
+  "arch": "E",
+  "budget": 250000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "E500k-C",
+  "hypothesis": "H2",
+  "arch": "E",
+  "budget": 500000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "E750k-C",
+  "hypothesis": "H2",
+  "arch": "E",
+  "budget": 750000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "E1000k-C",
+  "hypothesis": "H2",
+  "arch": "E",
+  "budget": 1000000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "E2000k-C",
+  "hypothesis": "H2",
+  "arch": "E",
+  "budget": 2000000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "E5000k-C",
+  "hypothesis": "H2",
+  "arch": "E",
+  "budget": 5000000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "A07-500k-C",
+  "hypothesis": "H2",
+  "arch": "A07",
+  "budget": 500000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "A07-1000k-C",
+  "hypothesis": "H2",
+  "arch": "A07",
+  "budget": 1000000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "A07-2000k-C",
+  "hypothesis": "H2",
+  "arch": "A07",
+  "budget": 2000000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "A07-5000k-C",
+  "hypothesis": "H2",
+  "arch": "A07",
+  "budget": 5000000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ },
+ {
+  "arm": "A350-C-w50",
+  "hypothesis": "H4",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 50,
+  "seed": 1
+ },
+ {
+  "arm": "A350-C-w50",
+  "hypothesis": "H4",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 50,
+  "seed": 2
+ },
+ {
+  "arm": "A350-C-w100",
+  "hypothesis": "H4",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 100,
+  "seed": 1
+ },
+ {
+  "arm": "A350-C-w100",
+  "hypothesis": "H4",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 100,
+  "seed": 2
+ },
+ {
+  "arm": "NB350-C",
+  "hypothesis": "H5",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1,
+  "config_extra": {
+   "quant.weight": "kbi_learnable"
+  }
+ },
+ {
+  "arm": "NB350-C",
+  "hypothesis": "H5",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 2,
+  "config_extra": {
+   "quant.weight": "kbi_learnable"
+  }
+ },
+ {
+  "arm": "A350-C-qkv1",
+  "hypothesis": "H3",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1,
+  "config_extra": {
+   "quant.attn_bit_floor": {
+    "bits": 1,
+    "sites": [
+     "q",
+     "k",
+     "v"
+    ]
+   }
+  }
+ },
+ {
+  "arm": "A350-C-qkv1",
+  "hypothesis": "H3",
+  "arch": "E",
+  "budget": 350000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 2,
+  "config_extra": {
+   "quant.attn_bit_floor": {
+    "bits": 1,
+    "sites": [
+     "q",
+     "k",
+     "v"
+    ]
+   }
+  }
+ },
+ {
+  "arm": "A350-C-qkv1-450k",
+  "hypothesis": "H3",
+  "arch": "E",
+  "budget": 450000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1,
+  "config_extra": {
+   "quant.attn_bit_floor": {
+    "bits": 1,
+    "sites": [
+     "q",
+     "k",
+     "v"
+    ]
+   }
+  }
+ },
+ {
+  "arm": "E-unc-C",
+  "hypothesis": "control",
+  "arch": "E",
+  "budget": 100000000,
+  "option_c": true,
+  "warmup": 1,
+  "seed": 1
+ }
+]

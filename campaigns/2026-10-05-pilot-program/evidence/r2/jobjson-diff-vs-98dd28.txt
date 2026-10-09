@@ -1,0 +1,26 @@
+JOBS 23
+NON-SCRIPT FIELD DIFFS (path: count of jobs)
+  /metadata/annotations/bnjettag.io/active-deadline: 23
+  /metadata/annotations/bnjettag.io/rss-gate: 23
+  /metadata/name: 23
+  /spec/template/spec/activeDeadlineSeconds: 23
+SCRIPT LINE DIFFS (line: count of jobs)
+  23  +ARM_BUDGET_S=$(( 18000 - ($(date +%s) - T0) - 420 ))
+  23  +echo "ARM_DEADLINE pod_deadline_s=18000 run_pack_budget_s=$ARM_BUDGET_S"
+  23  -ARM_BUDGET_S=$(( 20800 - ($(date +%s) - T0) - 420 ))
+  23  -echo "ARM_DEADLINE pod_deadline_s=20800 run_pack_budget_s=$ARM_BUDGET_S"
+  23  -export BNJ_RSS_GATE_LIMIT_MB=8192 BNJ_RSS_GATE_WINDOW=5:105
+  23  -if [ "$RP" != 0 ] && [ -z "$ARM_FINAL_RC" ] && test -f /data/chang-n64-20260926/pilot-program-20261005/r1/runs/pilot1005-<tag>/RSS_GATE_FAIL.json; then ARM_FINAL_RC=5; echo "ARM_RSS_GATE_FINAL pilot1
+EXAMPLE r1-ctl-e-unc-c-s1
+  /metadata/annotations/bnjettag.io/active-deadline 
+    old: 'pod 20800 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) and PID-1 kill (137/143) are FailIndex; a pre-arm failure within 600 s exits 75 and is retried once (PREFLIGHT fixes afte 
+    new: 'pod 18000 s; run_pack timeout = deadline - elapsed - 420 s; deadline (124), RSS gate (5), training-phase failure (76) and PID-1 kill (137/143) are FailIndex; a pre-arm failure within 600 s exits 75 and is retried once (PREFLIGHT fixes afte
+  /metadata/annotations/bnjettag.io/rss-gate 
+    old: 'projection <= 8192 MiB, fit over process epochs 5:105' 
+    new: 'off: BNJ_RSS_GATE_* unset (r2 relaunch, Kai 2026-10-07)'
+  /metadata/name 
+    old: 'kai-p1005r1-ctl-e-unc-c-s1-98dd28' 
+    new: 'kai-p1005r1-ctl-e-unc-c-s1-98dd28-r2'
+  /spec/template/spec/activeDeadlineSeconds 
+    old: 20800 
+    new: 18000

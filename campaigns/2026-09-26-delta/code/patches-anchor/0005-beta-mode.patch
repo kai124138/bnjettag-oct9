@@ -1,0 +1,222 @@
+From fd8657ee8882d811163d9bd7765982bfdf416481 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:33:38 -0700
+Subject: [PATCH 05/38] beta-mode: quant.beta_mode {absmean, absmean_pow2,
+ learned_pow2} (M022, M023)
+
+---
+ code/bnhgq2/ablation.py   |  3 +++
+ code/bnhgq2/binarize.py   | 14 +++++++---
+ code/bnhgq2/delta_keys.py |  4 +++
+ code/bnhgq2/qat.py        | 55 ++++++++++++++++++++++++++++++++++++---
+ code/convert_binary.py    |  2 ++
+ 5 files changed, 72 insertions(+), 6 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 0fc7642..d522a13 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -73,6 +73,7 @@ def matching_initialization(cfg, sample, seed):
+     baseline['arch']['ffn_dim'] = 64
+     baseline['quant'].update(act_granularity='tensor', softmax_out_bits=10, softmax_out_i=1)
+     reference, rtaps = qat.build_qat_model(baseline, seed=seed)
++    qat.init_delta_scales(reference)
+     qat.calibrate_activations(reference, rtaps, sample, cfg['quant']['act_bits'])
+     model, taps = qat.build_qat_model(cfg, seed=seed)
+     source = {v.path: v for v in reference.weights if v.name in ('kernel', 'bias', 'pos_table')}
+@@ -85,6 +86,7 @@ def matching_initialization(cfg, sample, seed):
+     expected_copied = {v.path for v in model.weights
+                        if v.path in source and v.shape == source[v.path].shape}
+     assert expected_copied and set(copied) == expected_copied, 'Missing equal-shape initialization weights'
++    qat.init_delta_scales(model)
+     matched_kernels = sum(v.name == 'kernel' and v.path in expected_copied for v in model.weights)
+     changed_ffn_kernels = 2 * cfg['arch']['n_layers'] if cfg['arch']['ffn_dim'] != baseline['arch']['ffn_dim'] else 0
+     assert matched_kernels == len(expected_binary_layers(cfg)) - changed_ffn_kernels, 'Unexpected matched projection count'
+@@ -104,6 +106,7 @@ def matching_initialization(cfg, sample, seed):
+             for variable in reference.weights:
+                 if variable.path in initialized:
+                     variable.assign(initialized[variable.path])
++            qat.init_delta_scales(reference)
+             qat.calibrate_activations(reference, rtaps, sample, cfg['quant']['act_bits'])
+         refs = dict(activation_quantizers(reference))
+         for name, q in activation_quantizers(model):
+diff --git a/code/bnhgq2/binarize.py b/code/bnhgq2/binarize.py
+index 6698911..c7a2790 100644
+--- a/code/bnhgq2/binarize.py
++++ b/code/bnhgq2/binarize.py
+@@ -34,13 +34,19 @@ SCORE_FOLD = ("_attn_Wq", "_attn_Wk")
+ LN_KILLED = ("_attn_Wv",)
+ 
+ 
+-def absmean_binarize(w: np.ndarray, center: bool = True):
++def absmean_binarize(w: np.ndarray, center: bool = True, beta_mode: str = "absmean",
++                     beta_log2=None):
+     """Returns (q int8 in {−1,0,+1}, beta float, alpha float, n_zero int).
+-    center=False: uncentered absmean (Delta quant.binary_center false), alpha = 0."""
++    center=False: uncentered absmean (Delta quant.binary_center false), alpha = 0.
++    beta_mode absmean_pow2 / learned_pow2: beta = 2^round(log2 absmean) / 2^round(beta_log2)."""
+     w = np.asarray(w, dtype=np.float64)
+     alpha = w.mean() if center else 0.0
+     wc = w - alpha
+     beta = np.abs(wc).mean() + 1e-6
++    if beta_mode == "absmean_pow2":
++        beta = float(2.0 ** np.round(np.log2(np.float32(beta))))
++    elif beta_mode == "learned_pow2":
++        beta = float(2.0 ** np.round(float(beta_log2)))
+     q = np.sign(wc)
+     n_zero = int((q == 0).sum())
+     return q.astype(np.int8), float(beta), float(alpha), n_zero
+@@ -70,7 +76,9 @@ def binarize_checkpoint(layers: dict, norm: str = "subln") -> dict:
+     out, total_zeros = {}, 0
+     for name, wb in layers.items():
+         opts = wb.get("binary") or {}
+-        q, beta, alpha, n_zero = absmean_binarize(wb["kernel"], center=opts.get("center", True))
++        q, beta, alpha, n_zero = absmean_binarize(wb["kernel"], center=opts.get("center", True),
++                                                  beta_mode=opts.get("beta_mode", "absmean"),
++                                                  beta_log2=wb.get("beta_log2"))
+         total_zeros += n_zero
+         out[name] = {
+             "q": q, "beta": beta, "alpha": alpha, "n_zero": n_zero,
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index aabd53c..1990249 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -112,3 +112,7 @@ register('quant.ste_ede_period', 'ste-variants', _ste_period, export_ok=True)
+ 
+ # latent-clip: clip binary latent kernels to [-c, c] after every optimizer step (BinaryConnect).
+ register('quant.latent_clip', 'latent-clip', _positive_number, export_ok=True)
++
++# beta-mode: power-of-two or learned power-of-two binary scale (THEORY M3/M6; M022, M023).
++register('quant.beta_mode', 'beta-mode', _one_of('absmean', 'absmean_pow2', 'learned_pow2'),
++         active=lambda v: v != 'absmean')
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 11a2cd2..10342df 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -40,7 +40,8 @@ EPS_BETA = 1e-6
+ # --------------------------------------------------------------------------- #
+ # (a) BitNet absmean straight-through binarizer                               #
+ # --------------------------------------------------------------------------- #
+-def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True, ste: str = "bounded"):
++def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True, ste: str = "bounded",
++                      beta_mode: str = "absmean", beta_log2=None):
+     """Effective weight = beta * bipolar_sign(w - mean(w)), STE identity backward.
+ 
+     Replicates qkerasModel.AbsMeanQuantizer (binary branch), with two deliberate,
+@@ -64,7 +65,12 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True, ste: str =
+       "clip_identity" canonical BNN backward (card B04): d/dwc = 1{|wc| <= 1}, no beta path;
+       "ede"           IR-Net error-decay estimator (card B07): the identity surrogate ws is
+                       replaced by k*tanh(t*ws), k = max(1/t, 1); t comes from
+-                      ede_temperature(), set once per epoch by set_delta_epoch."""
++                      ede_temperature(), set once per epoch by set_delta_epoch.
++
++    beta_mode (Delta, quant.beta_mode): "absmean" (default); "absmean_pow2" rounds
++    beta to the nearest power of two in log2 (forward exactly 2^n by Sterbenz, gradient as
++    absmean); "learned_pow2" uses beta = 2^round(beta_log2), a per-layer trainable scalar
++    decoupled from the latent magnitude (STE through the rounding)."""
+     w = ops.cast(w, "float32")
+     if center:
+         alpha = ops.mean(w)
+@@ -74,6 +80,10 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True, ste: str =
+     beta = ops.mean(ops.abs(wc)) + eps
+     ws = wc / ops.stop_gradient(beta)               # bounded backward (see docstring)
+     q = ops.where(wc >= 0.0, 1.0, -1.0)             # strict bipolar, never 0
++    if beta_mode == "absmean_pow2":
++        beta = beta + ops.stop_gradient(_pow2(ops.round(ops.log2(beta))) - beta)
++    elif beta_mode == "learned_pow2":
++        beta = _pow2(beta_log2 + ops.stop_gradient(ops.round(beta_log2) - beta_log2))
+     if ste == "clip_identity":
+         wg = ops.clip(wc, -1.0, 1.0)
+         # forward exactly q*beta (wg - wg == 0 exactly); `wg + sg(q*beta - wg)` left ulp residue
+@@ -85,6 +95,10 @@ def bitnet_binary_ste(w, eps: float = EPS_BETA, center: bool = True, ste: str =
+     return wq * beta                                 # in {-beta, +beta}
+ 
+ 
++def _pow2(e):
++    return ops.power(2.0, e)
++
++
+ _EDE_T = []   # one non-trainable, never-saved temperature shared by every EDE layer
+ EDE_T_MIN, EDE_T_MAX = 0.1, 10.0   # IR-Net (arXiv:1909.10788) T_min = 1e-1, T_max = 1e1
+ 
+@@ -126,6 +140,10 @@ class BitQEinsumDense(QEinsumDense):
+         if self.binary.get("ste") == "ede":
+             ede_temperature()
+ 
++    def build(self, input_shape):
++        super().build(input_shape)
++        _delta_build(self)
++
+     def get_config(self):
+         config = super().get_config()
+         if self.binary:
+@@ -159,6 +177,10 @@ class BitQDense(QDense):
+         if self.binary.get("ste") == "ede":
+             ede_temperature()
+ 
++    def build(self, input_shape):
++        super().build(input_shape)
++        _delta_build(self)
++
+     def get_config(self):
+         config = super().get_config()
+         if self.binary:
+@@ -185,7 +207,32 @@ def _delta_binarize(layer, w):
+     opts = layer.binary
+     if not opts:
+         return bitnet_binary_ste(w)
+-    return bitnet_binary_ste(w, center=opts.get("center", True), ste=opts.get("ste", "bounded"))
++    return bitnet_binary_ste(w, center=opts.get("center", True), ste=opts.get("ste", "bounded"),
++                             beta_mode=_beta_mode_now(layer), beta_log2=getattr(layer, "beta_log2", None))
++
++
++def _beta_mode_now(layer):
++    """hgq2's build wrapper reads qkernel before _delta_build adds beta_log2; until then the
++    learned scale reads as absmean_pow2 (its init value), which only feeds hgq2's collapse warning."""
++    mode = layer.binary.get("beta_mode", "absmean")
++    return "absmean_pow2" if mode == "learned_pow2" and not hasattr(layer, "beta_log2") else mode
++
++
++def _delta_build(layer):
++    """Extra per-layer variables of opt-in Delta options (none for bundle configs)."""
++    if layer.binary.get("beta_mode") == "learned_pow2":
++        layer.beta_log2 = layer.add_weight(name="beta_log2", shape=(), initializer="zeros",
++                                           trainable=True)
++
++
++def init_delta_scales(model):
++    """learned_pow2: start beta_log2 at log2 of the absmean beta of the current latents, so
++    the initial forward equals absmean_pow2. Call after the latents are final at init."""
++    for ly in model.layers:
++        if getattr(ly, "binary", {}).get("beta_mode") == "learned_pow2":
++            w = np.asarray(ops.convert_to_numpy(ly._kernel), np.float64)
++            wc = w - w.mean() if ly.binary.get("center", True) else w
++            ly.beta_log2.assign(np.float32(np.log2(np.abs(wc).mean() + EPS_BETA)))
+ 
+ 
+ def delta_binary_options(cfg: dict, layer_name: str) -> dict:
+@@ -196,6 +243,8 @@ def delta_binary_options(cfg: dict, layer_name: str) -> dict:
+         opts["center"] = False
+     if q.get("ste", "bounded") != "bounded":
+         opts["ste"] = q["ste"]
++    if q.get("beta_mode", "absmean") != "absmean":
++        opts["beta_mode"] = q["beta_mode"]
+     return opts
+ 
+ 
+diff --git a/code/convert_binary.py b/code/convert_binary.py
+index f9abe73..28f2fc6 100644
+--- a/code/convert_binary.py
++++ b/code/convert_binary.py
+@@ -256,6 +256,8 @@ def extract_qat_layers(model, names):
+         out[n] = {"kernel": _read_kernel(ly), "bias": _read_bias(ly)}
+         if getattr(ly, "binary", None):
+             out[n]["binary"] = dict(ly.binary)  # Delta binarizer options
++            if hasattr(ly, "beta_log2"):
++                out[n]["beta_log2"] = float(_to_np(ly.beta_log2))
+     return out
+ 
+ 
+-- 
+2.50.1 (Apple Git-155)
+

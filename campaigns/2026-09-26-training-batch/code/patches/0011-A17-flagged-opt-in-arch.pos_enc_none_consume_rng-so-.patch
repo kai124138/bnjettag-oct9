@@ -1,0 +1,225 @@
+From 08314821a91a40c03e0a8056cc0ec38c1d54e3e7 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:08 -0700
+Subject: [PATCH 11/14] A17 (flagged): opt-in arch.pos_enc_none_consume_rng so
+ a no-PE build draws the same kernels as the learned-PE build at the same
+ seed; F arms use it (check: PAIRED at seeds 1,2)
+
+---
+ bnhgq2/qat.py                                    |  5 +++++
+ .../chang0926/configs/chang0926-f-n64-s1.json    |  1 +
+ .../chang0926/configs/chang0926-f-n64-s2.json    |  1 +
+ .../chang0926/configs/chang0926-f-n64-s3.json    |  1 +
+ .../chang0926/configs/chang0926-f-n64-s4.json    |  1 +
+ .../chang0926/configs/chang0926-f-n64-s5.json    |  1 +
+ .../chang0926/configs/chang0926-f-n64-s6.json    |  1 +
+ .../chang0926/configs/chang0926-f-n64-s7.json    |  1 +
+ .../chang0926/configs/chang0926-f-n64-s8.json    |  1 +
+ campaigns/chang0926/generate.py                  |  2 +-
+ campaigns/chang0926/index.json                   | 16 ++++++++--------
+ 11 files changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/bnhgq2/qat.py b/bnhgq2/qat.py
+index 084e532..f7d1e92 100644
+--- a/bnhgq2/qat.py
++++ b/bnhgq2/qat.py
+@@ -528,6 +528,11 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         h = dense_einsum("input_proj", "btf,fd->btd", (T, D), h, bias_axes="td")
+         if with_pos_enc and A["pos_enc"] == "learned":
+             h = AddPositional(name="pos_enc")(h)
++        elif A["pos_enc"] == "none" and A.get("pos_enc_none_consume_rng", False):
++            # [A17] opt-in: draw (and discard) the glorot_uniform values the learned table
++            # would have taken, so every later initializer draw -- and hence every kernel --
++            # equals the learned-PE build at the same seed. No layer, no weight, no cost.
++            keras.initializers.GlorotUniform()(shape=(1, T, D))
+ 
+         # ---- pairwise-invariant attention-logit bias (shared across blocks) ----
+         pair_bias_tensor = None
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s1.json b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+index be9222b..21fc98d 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s1.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s1.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s2.json b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+index 77e87f8..cd5a970 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s2.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s2.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s3.json b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+index f17feb2..aab822d 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s3.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s3.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s4.json b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+index 29f29be..eb6b2b5 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s4.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s4.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s5.json b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+index 4e0c382..705ddfc 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s5.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s5.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s6.json b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+index 191fb9b..69a8b8f 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s6.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s6.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s7.json b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+index 917e5c9..4005717 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s7.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s7.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/configs/chang0926-f-n64-s8.json b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+index f035478..f08cef0 100644
+--- a/campaigns/chang0926/configs/chang0926-f-n64-s8.json
++++ b/campaigns/chang0926/configs/chang0926-f-n64-s8.json
+@@ -21,6 +21,7 @@
+     "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+diff --git a/campaigns/chang0926/generate.py b/campaigns/chang0926/generate.py
+index 4f2de30..7ab5aa6 100644
+--- a/campaigns/chang0926/generate.py
++++ b/campaigns/chang0926/generate.py
+@@ -42,7 +42,7 @@ OUR_OPT = {'optimizer': 'adam_ours', 'beta2': 0.98, 'weight_decay': 0.01, 'clipv
+ 
+ A07 = {}
+ E_ARCH = {'d_model': 24, 'n_heads': 2, 'pos_enc': 'none'}   # [D18]; ffn 32, 1 block as A07
+-F_ARCH = {'pos_enc': 'none'}
++F_ARCH = {'pos_enc': 'none', 'pos_enc_none_consume_rng': True}   # [A17] same kernels as A at seed s
+ 
+ # arm: (optimizer, schedule, target, arch delta, question)
+ ARMS = {
+diff --git a/campaigns/chang0926/index.json b/campaigns/chang0926/index.json
+index d149baa..b471c80 100644
+--- a/campaigns/chang0926/index.json
++++ b/campaigns/chang0926/index.json
+@@ -408,7 +408,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s1.json",
+       "target_ebops": 350000,
+-      "config_sha256": "a28dea290dd860533fa355ad9380410860653958220ccf6562cf70899a68b078"
++      "config_sha256": "18eda4252c8f1a54a0455608bf50e8e8c093e8d8ba18d8d855ba07369b2077df"
+     },
+     {
+       "index": 41,
+@@ -418,7 +418,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s2.json",
+       "target_ebops": 350000,
+-      "config_sha256": "827735d95b8fcd07c14acf7921182c5e3cd4fce5d6eab78b4a1c8f5b43d94958"
++      "config_sha256": "3aef280f4e9cfc336a807e2e91315e5a076e1688583f5f921168ddd479a8cee3"
+     },
+     {
+       "index": 42,
+@@ -428,7 +428,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s3.json",
+       "target_ebops": 350000,
+-      "config_sha256": "cbe7ec6ec81367ddd6a211bf2a615a4fa94f2d8e0b1c1bcce8a46796aeae99e7"
++      "config_sha256": "8421455c0078283b06b2e351ca0774a3c1b4f9fdf9ec915772e664ceb5228780"
+     },
+     {
+       "index": 43,
+@@ -438,7 +438,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s4.json",
+       "target_ebops": 350000,
+-      "config_sha256": "bcac81fd7f93607d27fc0e4ce399eef2fdda50d44e4b341af4af2b3c1a413b19"
++      "config_sha256": "0daf5253475fd843dc334f2254e0457c0801c1017d74182cb59fc02c72e3ca19"
+     },
+     {
+       "index": 44,
+@@ -448,7 +448,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s5.json",
+       "target_ebops": 350000,
+-      "config_sha256": "e0d47f9e484237ee9f9df76a59e618809a8180f4a5f975dad4e296fe190ee64b"
++      "config_sha256": "b9d84134fb485dacd5870ff7f27055c7c3d43c957a52d221c8d89fa7d12fbd94"
+     },
+     {
+       "index": 45,
+@@ -458,7 +458,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s6.json",
+       "target_ebops": 350000,
+-      "config_sha256": "0fe5d916188f28f192f2d9f2ff5305e71d415796529981a29e3ff23f5950679d"
++      "config_sha256": "08f1e4ef709facf63e069cbce23fe9961e9038ea90119c2aa50d90339c66732c"
+     },
+     {
+       "index": 46,
+@@ -468,7 +468,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s7.json",
+       "target_ebops": 350000,
+-      "config_sha256": "23ee21fbf5904fa28dd4c9e22e3652c70f844639d138cb8a17317cd709c64184"
++      "config_sha256": "8dd859d9790309625008e9c533e1bc5cd7e0a95b4968ee98844629fca37ff2c7"
+     },
+     {
+       "index": 47,
+@@ -478,7 +478,7 @@
+       "n_part": 64,
+       "file": "chang0926-f-n64-s8.json",
+       "target_ebops": 350000,
+-      "config_sha256": "f0724ee08d1e5b98e230b6ee99c73e31d65161797a1f71a9ac020a2ded34c8a1"
++      "config_sha256": "124a6f9a524007c90a27fd7e1c468bc0c6baae61eec301cffe0fff31769d08cd"
+     },
+     {
+       "index": 48,
+-- 
+2.50.1 (Apple Git-155)
+

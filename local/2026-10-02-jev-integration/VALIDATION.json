@@ -1,0 +1,32 @@
+{
+  "status": "passed",
+  "scope": "local engineering integration; synthetic API examples, not physics validation",
+  "unit_and_mcp_tests": {
+    "command": "local/jev-runtime/bin/python -m unittest discover -s tests -p 'test_jev_lab.py'",
+    "count": 34,
+    "exit_code": 0
+  },
+  "live_mcp_smoke": {
+    "command": "python3 tools/jev_smoke.py --live",
+    "report": "local/2026-10-02-jev-integration/SMOKE.json",
+    "loop_id": "lp-241cdbb46f39420680de0f55fd1c1044",
+    "model": "jev-1.13.0",
+    "api_calls": 8,
+    "exit_code": 0
+  },
+  "client_configuration": {
+    "claude_code": "Connected; project-specific local registration and shared .mcp.json",
+    "codex": "Enabled project stdio configuration",
+    "regular_browser_chatgpt": "not configured"
+  },
+  "skill_validation": "passed",
+  "prose_lint": "passed; score 4",
+  "training_launched": false,
+  "scientific_gate": "not evaluated",
+  "known_limits": [
+    "Synthetic smoke does not establish calibration on research tasks",
+    "Loops are cooperative foreground state machines, not independent model runners",
+    "Protocol snapshots cannot certify executed code, data bytes, metrics, or scientific approval",
+    "Guards are local workflows, not OS or cluster admission enforcement"
+  ]
+}

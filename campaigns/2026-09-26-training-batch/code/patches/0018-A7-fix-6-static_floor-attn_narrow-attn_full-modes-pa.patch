@@ -1,0 +1,136 @@
+From 6f04c114ee1b079358d95a5cffb43194bee867ea Mon Sep 17 00:00:00 2001
+From: Kai <kayamaguchi@ucsd.edu>
+Date: Sun, 27 Sep 2026 08:41:39 -0700
+Subject: [PATCH 18/22] A7 fix 6: static_floor attn_narrow / attn_full modes
+ (paper's >= 1-bit attention rule read as a datalane constraint), weights-only
+ reading recorded, headroom at target, 350k and 250k
+
+---
+ static_floor.py | 55 +++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 46 insertions(+), 9 deletions(-)
+
+diff --git a/static_floor.py b/static_floor.py
+index f2e48b2..08fbcf5 100644
+--- a/static_floor.py
++++ b/static_floor.py
+@@ -12,6 +12,14 @@ standard-normal sample (256 jets):
+   one   "1-bit-alive": every learnable magnitude width at 1 bit. WRAP: f = 1 - i, iterated
+         with tracing until i is stable; SAT KIF at relu(i+f) = 0 (1 bit with k); tables at
+         bc.min. Every learnable width is asserted after the final trace, not assumed.
++  attn_narrow / attn_full  the paper's ">= 1 bit for attention" rule read as a datalane
++        constraint (arbiter v3 #3, fix 6): every width at the zero floor except the named
++        attention datalane quantizers, which are held at 1 bit (WRAP f = 1 - i, iterated as
++        in "one"). narrow: the Q.K and A.V streams (`*_attn_scores__in0/1`,
++        `*_attn_ctx__in0/1`, the latter is the softmax output into A.V); full: narrow plus the
++        inputs of Wq, Wk, Wv. The "weights only" reading adds nothing here: the kernels are
++        binary, fixed at 1 bit, and a dense with a 0-bit input costs 0 EBOPs, so that floor
++        is the zero floor (recorded as `weights_only_rule`).
+ Fixed-width quantizers (trainable=False) stay at their configured widths.
+ 
+ Weights are binary (1 bit, fixed) and not touched. The floor depends on widths only, not
+@@ -43,8 +51,28 @@ def _full(var, value):
+     var.assign(np.full(var.shape, value, dtype='float32'))
+ 
+ 
++ATTN_NARROW = ('_attn_scores__in0', '_attn_scores__in1', '_attn_ctx__in0', '_attn_ctx__in1')
++ATTN_FULL = ATTN_NARROW + ('_attn_Wq', '_attn_Wk', '_attn_Wv')
++
++
++def one_bit_names(model, mode):
++    """Names of the learnable quantizers held at 1 bit in `mode` (None = all of them)."""
++    if mode == 'one':
++        return None
++    if mode == 'zero':
++        return set()
++    suffixes = {'attn_narrow': ATTN_NARROW, 'attn_full': ATTN_FULL}[mode]
++    names = {name for name, _ in _learnable(model) if name.endswith(suffixes)}
++    assert names, (mode, 'no attention quantizer matched')
++    return names
++
++
+ def set_floor(model, mode, sample, max_iter=48):
+     from bnhgq2.ebops_calc import compute_ebops
++    held = one_bit_names(model, mode)
++
++    def at_one(name, q):
++        return (held is None or name in held) and hasattr(q, '_f')
+     for _, q in _learnable(model):
+         if hasattr(q, '_f'):
+             fmin = q.f_constraint.min_value
+@@ -56,11 +84,11 @@ def set_floor(model, mode, sample, max_iter=48):
+         else:
+             _full(q._b, q.b_constraint.min_value)
+     cost = compute_ebops(model, sample)
+-    if mode == 'one':
++    if mode != 'zero':
+         for _ in range(max_iter):
+             changed = False
+-            for _, q in _learnable(model):
+-                if hasattr(q, '_f') and q.overflow_mode == 'WRAP':
++            for name, q in _learnable(model):
++                if at_one(name, q) and q.overflow_mode == 'WRAP':
+                     want = 1.0 - np.asarray(q.i)
+                     if not np.array_equal(np.asarray(q._f), want):
+                         q._f.assign(want.astype('float32'))
+@@ -72,16 +100,17 @@ def set_floor(model, mode, sample, max_iter=48):
+     for name, q in _learnable(model):
+         bits = np.asarray(q.bits).ravel()
+         if hasattr(q, '_f'):
+-            expect = (0 if mode == 'zero' else 1) if q.overflow_mode == 'WRAP' else np.asarray(q.k).ravel()
++            expect = (1 if at_one(name, q) and mode != 'zero' else 0) if q.overflow_mode == 'WRAP' else np.asarray(q.k).ravel()
+         else:
+             expect = q.b_constraint.min_value
+         ok = bool(np.all(bits == expect))
+-        check[name] = {'bits_min': float(bits.min()), 'bits_max': float(bits.max()), 'ok': ok}
++        check[name] = {'bits_min': float(bits.min()), 'bits_max': float(bits.max()), 'ok': ok,
++                       'held_at_one_bit': bool(at_one(name, q) and mode != 'zero')}
+         assert ok, (name, mode, bits.min(), bits.max())
+     return cost, check
+ 
+ 
+-def floors(cfg, n_sample=256, seed=0):
++def floors(cfg, n_sample=256, seed=0, with_attn_rule=True):
+     import keras
+     from bnhgq2.compat import apply_keras_compat
+     from bnhgq2 import qat
+@@ -94,7 +123,7 @@ def floors(cfg, n_sample=256, seed=0):
+                                                       'softmax_out_i', 'act_granularity', 'act_bits')},
+            'arch': {k: A[k] for k in ('n_part', 'd_model', 'n_heads', 'n_layers', 'ffn_dim', 'pos_enc')},
+            'sample': f'synthetic standard normal, n={n_sample}, seed={seed}'}
+-    for mode in ('init', 'zero', 'one'):
++    for mode in ('init', 'zero', 'one') + (('attn_narrow', 'attn_full') if with_attn_rule else ()):
+         keras.backend.clear_session()
+         model, taps = qat.build_qat_model(cfg, seed=1)
+         if mode == 'init':
+@@ -104,10 +133,16 @@ def floors(cfg, n_sample=256, seed=0):
+             cost, check = set_floor(model, mode, sample)
+         out[mode] = {'total': cost['total'], 'per_layer': cost['per_layer']}
+         if check is not None:
+-            out[mode]['width_check'] = {'n_quantizers': len(check), 'all_ok': all(v['ok'] for v in check.values())}
++            out[mode]['width_check'] = {'n_quantizers': len(check), 'all_ok': all(v['ok'] for v in check.values()),
++                                        'held_at_one_bit': sorted(k for k, v in check.items() if v['held_at_one_bit'])}
+         out['parameters'] = int(model.count_params())
+         del model
+     target = out['target_ebops']
++    out['weights_only_rule'] = {'total': out['zero']['total'],
++                                'why': 'binary kernels are fixed at 1 bit; a 0-bit input costs 0 EBOPs'}
++    out['headroom'] = {str(budget): {mode: budget - out[mode]['total']
++                                     for mode in ('zero', 'one', 'attn_narrow', 'attn_full') if mode in out}
++                       for budget in sorted({target, 350000, 250000})}
+     out['zero_floor_over_target'] = out['zero']['total'] / target
+     out['one_bit_alive_over_target'] = out['one']['total'] / target
+     out['headroom_at_zero_floor'] = target - out['zero']['total']
+@@ -125,7 +160,9 @@ def main():
+         r = floors(json.loads(path.read_text()))
+         results.append(r)
+         print('STATIC_FLOOR', r['name'], 'init', r['init']['total'], 'zero', r['zero']['total'],
+-              'one_bit_alive', r['one']['total'], 'target', r['target_ebops'], r['status'], flush=True)
++              'one_bit_alive', r['one']['total'],
++              'attn_narrow', r.get('attn_narrow', {}).get('total'), 'attn_full', r.get('attn_full', {}).get('total'),
++              'target', r['target_ebops'], r['status'], flush=True)
+     if args.out:
+         args.out.write_text(json.dumps(results, indent=2) + '\n')
+ 
+-- 
+2.50.1 (Apple Git-155)
+

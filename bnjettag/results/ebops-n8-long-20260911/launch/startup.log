@@ -1,0 +1,111 @@
+[code] Fri Sep 11 22:26:44 UTC 2026 unpack code from ConfigMap kai-ebops-n8-code-8ceec939f7 (PVC-free)
+[code] configmap tar md5: a71db8996c88a850c5ad730308b7b4a8
+[gate] configs/ebops-n8-20260911-e1000-b350k-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-8ceec939f7 is fresh)
+/cmcode/hgq2.tar.gz: OK
+[setup] Fri Sep 11 22:26:44 UTC 2026 pinned deps (mirror .venv-hgq2)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+[gpu] Fri Sep 11 22:28:12 UTC 2026 nvidia-smi + TF backend assertion
+NVIDIA A10, 23028 MiB
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789165692.748516      69 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[gpu] TF sees [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+wandb: [wandb.Api()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+[wandb] authentication OK
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789165699.336157      87 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 1 files, 400 jets (320 train / 80 val), class counts [80, 80, 80, 80, 80]
+[train] input_std ON: per-feature z-score from train split (|mu|max=0.03412, sigma_max=0.9966) -> input_std.json
+W0000 00:00:1789165703.030571      87 gpu_bfc_allocator.cc:47] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was false.
+I0000 00:00:1789165703.032283      87 gpu_device.cc:2043] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 20817 MB memory:  -> device: 0, name: NVIDIA A10, pci bus id: 0000:41:00.0, compute capability: 8.6
+I0000 00:00:1789165708.357547     100 service.cc:153] XLA service 0x7e5c74041f50 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1789165708.357584     100 service.cc:161]   StreamExecutor [0]: NVIDIA A10, Compute Capability 8.6 (Driver: 13.2.0; Runtime: 12.9.0; Toolkit: 12.5.0; DNN: 9.26.0)
+I0000 00:00:1789165708.485200     100 dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1789165708.724353     100 cuda_dnn.cc:461] Loaded cuDNN version 92600
+I0000 00:00:1789165709.025761     100 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789165711.905093     100 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789165714.816453     100 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789165717.251079     100 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789165722.436119     100 device_compiler.h:208] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+[budget] initial=1739182 target=1000000000.0
+[train] ebops-n8-20260911-e1000-b350k-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=free
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+[train] EBOPs pressure ON: beta_schedule=None threshold=1000000000.0 front -> /tmp/tmp50tmmvcf/front
+Epoch 1/2
+  [epoch 0] val_macro_auc=0.51920 per_class=[0.5058, 0.5364, 0.5247, 0.5316, 0.4974]
+  [epoch 0] new best -> saved /tmp/tmp50tmmvcf/model_unconstrained.keras
+[budget] epoch=0 ebops=1739182 target=1000000000.0 width_sites_changed=0
+2/2 - 31s - 15s/step - categorical_accuracy: 0.1688 - loss: 1.8194 - val_macro_auc: 0.5192 - learning_rate: 2.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1000000000.0000 - budget_met: 1.0000 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 1.0000e-07
+Epoch 2/2
+  [epoch 1] val_macro_auc=0.51895 per_class=[0.5033, 0.5344, 0.5303, 0.5293, 0.4974]
+[budget] epoch=1 ebops=1739182 target=1000000000.0 width_sites_changed=0
+2/2 - 1s - 308ms/step - categorical_accuracy: 0.1688 - loss: 1.8194 - val_macro_auc: 0.5190 - learning_rate: 2.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1000000000.0000 - budget_met: 1.0000 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 1.0000e-07
+[train] pareto front: 1 admitted point(s); selected={'epoch': 0, 'val_macro_auc': 0.5192, 'ebops': 1739182, 'file': 'epoch=0_auc=0.51920_ebops=1739182.keras'}
+[train] DONE best_epoch=0 best_val_macro_auc=0.51920 in 31s
+[train] wrote /tmp/tmp50tmmvcf/model_best.keras + /tmp/tmp50tmmvcf/train_meta.json
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 1 files, 400 jets (320 train / 80 val), class counts [80, 80, 80, 80, 80]
+[train] input_std ON: per-feature z-score from train split (|mu|max=0.03412, sigma_max=0.9966) -> input_std.json
+[budget] initial=1739182 target=1.0
+[train] ebops-n8-20260911-e1000-b350k-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=free
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+[train] EBOPs pressure ON: beta_schedule=None threshold=1.0 front -> /tmp/tmpdos85tjy/front
+Epoch 1/2
+  [epoch 0] val_macro_auc=0.51920 per_class=[0.5058, 0.5364, 0.5247, 0.5316, 0.4974]
+  [epoch 0] new best -> saved /tmp/tmpdos85tjy/model_unconstrained.keras
+[budget] epoch=0 ebops=1739182 target=1.0 width_sites_changed=0
+2/2 - 24s - 12s/step - categorical_accuracy: 0.1688 - loss: 1.8194 - val_macro_auc: 0.5192 - learning_rate: 2.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1.0000 - budget_met: 0.0000e+00 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 1.0000e-07
+Epoch 2/2
+  [epoch 1] val_macro_auc=0.51895 per_class=[0.5033, 0.5344, 0.5303, 0.5293, 0.4974]
+[budget] epoch=1 ebops=1739182 target=1.0 width_sites_changed=0
+2/2 - 1s - 304ms/step - categorical_accuracy: 0.1688 - loss: 1.8194 - val_macro_auc: 0.5190 - learning_rate: 2.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 1.0000 - budget_met: 0.0000e+00 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 1.0000e-07
+[train] pareto front: 0 admitted point(s); selected=None
+[train] DONE best_epoch=0 best_val_macro_auc=0.51920 in 24s
+[train] wrote /tmp/tmpdos85tjy/model_unconstrained.keras + /tmp/tmpdos85tjy/train_meta.json
+EBOPS_LONG_ALL_PASS
+[data] Fri Sep 11 22:29:52 UTC 2026 fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)
+[data] tarball bytes: 2725115104
+[data] DATA=/work/data/train (62 files)
+[train] Fri Sep 11 22:42:12 UTC 2026 ebops-n8-20260911-e1000-b350k-w1a8-s1  config=ebops-n8-20260911-e1000-b350k-w1a8.json seed=1
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789166532.984479     443 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+=== ebops-n8-20260911-e1000-b350k-w1a8 [7044e68d] ===
+[train] L1-realistic feature subset: ['pt', 'etarel', 'phirel']
+[train] data: 62 files, 620000 jets (496000 train / 124000 val), class counts [124848, 120211, 124937, 124654, 125350]
+[train] input_std ON: per-feature z-score from train split (|mu|max=89.5, sigma_max=84.39) -> input_std.json
+W0000 00:00:1789166590.850939     443 gpu_bfc_allocator.cc:47] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was false.
+I0000 00:00:1789166590.852695     443 gpu_device.cc:2043] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 20817 MB memory:  -> device: 0, name: NVIDIA A10, pci bus id: 0000:41:00.0, compute capability: 8.6
+I0000 00:00:1789166596.021015     457 service.cc:153] XLA service 0x7b165c0421f0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1789166596.021050     457 service.cc:161]   StreamExecutor [0]: NVIDIA A10, Compute Capability 8.6 (Driver: 13.2.0; Runtime: 12.9.0; Toolkit: 12.5.0; DNN: 9.26.0)
+I0000 00:00:1789166596.163778     457 dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1789166596.469338     457 cuda_dnn.cc:461] Loaded cuDNN version 92600
+I0000 00:00:1789166596.767472     457 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789166599.561689     457 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789166602.363547     457 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789166604.673093     457 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789166609.679566     457 device_compiler.h:208] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+[budget] initial=1739182 target=350000.0
+[train] ebops-n8-20260911-e1000-b350k-w1a8 params=18,657 trainable=18,511 act_sites=19 act_calib=free
+[train] binary gate OK (15 bit-layers exactly +/-beta)
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: kayamaguchi (kayamaguchi-uc-san-diego) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run zkcixa5z
+wandb: Tracking run with wandb version 0.28.0
+wandb: Run data is saved locally in /work/code/wandb/run-20260911_224338-zkcixa5z
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ebops-n8-20260911-e1000-b350k-w1a8-s1
+wandb: ⭐️ View project at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8
+wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/zkcixa5z
+[train] EBOPs pressure ON: beta_schedule=None threshold=350000.0 front -> /work/outputs/ebops-n8-20260911-e1000-b350k-w1a8-s1/front
+Epoch 1/1000
+  [epoch 0] val_macro_auc=0.74743 per_class=[0.7084, 0.7846, 0.6757, 0.6804, 0.8882]
+  [epoch 0] new best -> saved /work/outputs/ebops-n8-20260911-e1000-b350k-w1a8-s1/model_unconstrained.keras
+[budget] epoch=0 ebops=1739182 target=350000.0 width_sites_changed=0
+1938/1938 - 112s - 58ms/step - categorical_accuracy: 0.3764 - loss: 1.6612 - val_macro_auc: 0.7474 - learning_rate: 2.0000e-05 - ebops: 1739182.0000 - ebops_fraction_initial: 1.0000 - activation_bits_mean: 8.0000 - activation_width_sites_changed: 0.0000e+00 - target_ebops: 350000.0000 - budget_met: 0.0000e+00 - activation_bits/input_proj: 8.0000 - activation_bits/bit_block_0_attn_Wq: 8.0000 - activation_bits/bit_block_0_attn_Wk: 8.0000 - activation_bits/bit_block_0_attn_scores__in0: 8.0000 - activation_bits/bit_block_0_attn_scores__in1: 8.0000 - activation_bits/bit_block_0_attn_Wv: 8.0000 - activation_bits/bit_block_0_attn_ctx__in0: 10.0000 - activation_bits/bit_block_0_attn_ctx__in1: 8.0000 - activation_bits/bit_block_0_attn_Wo: 8.0000 - activation_bits/bit_block_0_ffn_fc1: 8.0000 - activation_bits/bit_block_0_ffn_fc2: 8.0000 - activation_bits/bit_block_1_attn_Wq: 8.0000 - activation_bits/bit_block_1_attn_Wk: 8.0000 - activation_bits/bit_block_1_attn_scores__in0: 8.0000 - activation_bits/bit_block_1_attn_scores__in1: 8.0000 - activation_bits/bit_block_1_attn_Wv: 8.0000 - activation_bits/bit_block_1_attn_ctx__in0: 10.0000 - activation_bits/bit_block_1_attn_ctx__in1: 8.0000 - activation_bits/bit_block_1_attn_Wo: 8.0000 - activation_bits/bit_block_1_ffn_fc1: 8.0000 - activation_bits/bit_block_1_ffn_fc2: 8.0000 - activation_bits/head_fc1: 8.0000 - activation_bits/head_fc2: 8.0000 - beta: 1.0000e-07
+Epoch 2/1000

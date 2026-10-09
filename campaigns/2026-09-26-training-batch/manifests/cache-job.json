@@ -1,0 +1,118 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-chang0926-cache-77f1ca",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "chang-n64-20260926",
+      "app": "kai-chang0926-cache"
+    }
+  },
+  "spec": {
+    "backoffLimit": 0,
+    "activeDeadlineSeconds": 7200,
+    "ttlSecondsAfterFinished": 604800,
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "chang-n64-20260926",
+          "app": "kai-chang0926-cache"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "containers": [
+          {
+            "name": "prepare",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '77f1ca4e9fe3f67ef276ec9b7c401c174812fcb2e88b7ef572040ad2e26f2a94  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=/data/chang-n64-20260926/pilot BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nexport BNJ_STAGE=pilot\nexport CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled\npip install -q --no-cache-dir -r /work/code/requirements-cpu.txt\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"f7d4003f49584c701aec1cfefb4c0c9a3591c41d7d2fda94dd5a293d00eaaa36\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\ntest \"$(ls /data/hls4ml_lhc_jet/train/train/*.h5 | wc -l)\" = 62\npython -u /work/code/prepare_cache.py --configs /work/code/campaigns/chang0926/cache_configs --root /data/chang-n64-20260926 --raw /data/hls4ml_lhc_jet/train/train --n-parts 64\npython -c \"import json; d = json.load(open('/data/chang-n64-20260926/n64/data/data_info.json')); print('DATA_INFO', json.dumps({k: d.get(k) for k in ('n_train', 'n_val', 'pt_gate_gev', 'validation_split', 'split_seed', 'order_seed', 'pt_gate_stats', 'sort_stats', 'y_class_counts', 'code_sha256', 'array_sha256')}, sort_keys=True))\"\npython -u /work/code/campaigns/chang0926/nondegenerate_threshold.py --cache /data/chang-n64-20260926/n64/data --out /data/chang-n64-20260926/n64/nondegenerate_threshold.json\ndf -h /data\necho CACHE_JOB_DONE\n"
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "4",
+                "memory": "16Gi",
+                "ephemeral-storage": "12Gi"
+              },
+              "limits": {
+                "cpu": "4",
+                "memory": "16Gi",
+                "ephemeral-storage": "12Gi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-chang0926-code-77f1ca4e9f",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

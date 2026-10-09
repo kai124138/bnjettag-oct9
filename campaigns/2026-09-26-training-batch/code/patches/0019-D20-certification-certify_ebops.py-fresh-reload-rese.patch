@@ -1,0 +1,360 @@
+From a8fcacfa288388644800d11bdddf7712f27c2ce7 Mon Sep 17 00:00:00 2001
+From: Kai <kayamaguchi@ucsd.edu>
+Date: Sun, 27 Sep 2026 08:43:39 -0700
+Subject: [PATCH 19/22] D20 certification: certify_ebops.py (fresh reload,
+ reset retrace on the full training split, EBOPs equal to the logged value rel
+ <= 1e-6 and <= target, stored per-layer sum recorded and required equal);
+ evaluate_roc refuses uncertified files, records per-quantizer WRAP overflow
+ on validation and ROC-test, labelled train+val retrace sensitivity, skips
+ pilot-only rows
+
+---
+ campaigns/chang0926/certify_ebops.py | 179 +++++++++++++++++++++++++++
+ campaigns/chang0926/evaluate_roc.py  |  53 +++++++-
+ tests/test_certify.py                |  49 ++++++++
+ 3 files changed, 277 insertions(+), 4 deletions(-)
+ create mode 100644 campaigns/chang0926/certify_ebops.py
+ create mode 100644 tests/test_certify.py
+
+diff --git a/campaigns/chang0926/certify_ebops.py b/campaigns/chang0926/certify_ebops.py
+new file mode 100644
+index 0000000..4fcb256
+--- /dev/null
++++ b/campaigns/chang0926/certify_ebops.py
+@@ -0,0 +1,179 @@
++#!/usr/bin/env python3
++"""[D20] EBOPs certification of every checkpoint that will be evaluated, before ROC-test.
++
++python campaigns/chang0926/certify_ebops.py --run-root /data/chang-n64-20260926/runs \
++    --cache /data/chang-n64-20260926/n64/data --out cert.json [--snapshot 500] \
++    [--trainval-dir DIR]
++
++Terminal mode (default): the checkpoints `evaluate_roc.targets` lists (primary
++`model_best.keras`, [A19] `model_best_auc_feasible.keras`, and for A and D the epoch-1,000
++snapshot). `--snapshot E`: the best-feasible-as-of-E snapshot files (pilot rule at 500).
++Each file is loaded fresh and retraced with `trace_minmax(reset=True)` on the full training
++split of the run's cache (the [D20] sample) at the run's `train.ebops_trace_batch`. It is
++CERTIFIED if the retraced EBOPs equals the EBOPs logged when it was selected (relative
++difference <= 1e-6) and is <= the run's target. The retrace lives in memory only: no file
++is rewritten, and `predict` later runs on the ranges as saved. A mismatch is a pipeline
++defect reported at VERIFY, never a reason to reselect.
++
++`--trainval-dir`: the labelled sensitivity (Chang's `trace_and_save` convention). A second
++fresh copy is retraced on train + validation and saved to DIR/<run>__<which>__trainval.keras
++with its EBOPs; never used for selection or feasibility, never written into the run dir.
++
++Why a retrace and not only the stored widths: the saved file carries every width and each
++layer's stored `ebops` (written by the per-epoch trace), and their sum is recorded here as
++`stored_ebops`. Comparing it with the log proves the file is the one that was logged; it
++cannot prove the logged number came from a full-split trace (a run traced on 256 rows
++would pass it). The reset retrace on the full training split is the independent check, so
++it is the certification; the stored sum is recorded beside it and must agree too.
++
++Run it where training ran (same GPU class, TF32 off): the min/max trace is exact
++arithmetic on the activations, but a CPU/GPU rounding difference at a power-of-two boundary
++would move one integer bit. The device is recorded.
++"""
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++import os
++from pathlib import Path
++import sys
++import time
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++HERE = Path(__file__).resolve().parent
++sys.path.insert(0, str(HERE.parents[1]))
++sys.path.insert(0, str(HERE))
++import numpy as np
++
++REL_TOL = 1e-6
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def run_state(run):
++    latest = json.loads((run / 'latest.json').read_text())['checkpoint']
++    return json.loads((run / 'checkpoints' / latest / 'state.json').read_text())
++
++
++def snapshot_targets(run, epoch):
++    snap = run / 'snapshots' / f'epoch-{epoch:04d}'
++    if not (snap / 'state.json').exists():
++        return []
++    state = json.loads((snap / 'state.json').read_text())
++    items = []
++    if state.get('best_feasible'):
++        items.append((f'snapshot{epoch}_primary', snap / 'model_best.keras', state['best_feasible']))
++    if state.get('best_feasible_auc'):
++        items.append((f'snapshot{epoch}_auc_sensitivity', snap / 'model_best_auc_feasible.keras',
++                      state['best_feasible_auc']))
++    return items
++
++
++def certify_checkpoint(path, point, cfg, x_train):
++    """Retrace one saved checkpoint on the [D20] rows; return the certification record."""
++    import keras
++    from bnhgq2 import ablation
++    keras.backend.clear_session()
++    model = keras.models.load_model(path, compile=False)
++    stored = int(sum(int(layer.ebops) for layer in model.layers if getattr(layer, 'enable_ebops', False)))
++    batch = ablation.ebops_trace_batch(cfg)
++    start = time.monotonic()
++    retraced = ablation.compute_ebops(model, x_train, batch_size=batch)['total']
++    logged = int(point['ebops'])
++    target = float(cfg['train']['ebops']['pid']['target_ebops'])
++    rel = abs(retraced - logged) / max(abs(logged), 1)
++    equal = rel <= REL_TOL
++    stored_equal = abs(stored - logged) / max(abs(logged), 1) <= REL_TOL
++    status = 'CERTIFIED' if equal and stored_equal and retraced <= target else (
++        'EBOPS_MISMATCH' if not equal else 'STORED_MISMATCH' if not stored_equal else 'ABOVE_TARGET')
++    floor = cfg.get('experiment', {}).get('nondegenerate', {}).get('zero_floor_ebops')
++    del model
++    return {'checkpoint': str(path), 'checkpoint_sha256': sha(path), 'logged_ebops': logged,
++            'retraced_ebops': int(retraced), 'stored_ebops': stored, 'relative_difference': rel, 'tolerance': REL_TOL,
++            'zero_floor_ebops': floor, 'ebops_above_floor': (int(retraced) - int(floor)) if floor is not None else None,
++            'target_ebops': target, 'epoch': point.get('epoch'), 'trace_rows': int(len(x_train)),
++            'trace_batch': batch, 'trace_seconds': time.monotonic() - start, 'status': status}
++
++
++def trainval_sensitivity(path, cfg, x_train, x_val, out_path):
++    import keras
++    from bnhgq2 import ablation
++    keras.backend.clear_session()
++    model = keras.models.load_model(path, compile=False)
++    rows = np.concatenate([np.asarray(x_train), np.asarray(x_val)])
++    ebops = ablation.compute_ebops(model, rows, batch_size=ablation.ebops_trace_batch(cfg))['total']
++    model.save(out_path)
++    del model
++    return {'label': 'train+val retrace sensitivity (Chang trace_and_save convention); '
++                     'never used for selection or feasibility',
++            'file': str(out_path), 'file_sha256': sha(out_path), 'ebops_trainval': int(ebops),
++            'trace_rows': int(len(rows))}
++
++
++def main():
++    import tensorflow as tf
++    import run_engram
++    from bnhgq2.compat import apply_keras_compat
++    from evaluate_roc import targets
++    tf.config.experimental.enable_tensor_float_32_execution(False)
++    apply_keras_compat()
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--run-root', type=Path, required=True)
++    parser.add_argument('--cache', type=Path, required=True)
++    parser.add_argument('--out', type=Path, required=True)
++    parser.add_argument('--snapshot', type=int, help='certify the best-as-of-E snapshot (e.g. 500)')
++    parser.add_argument('--only', default='', help='comma-separated run names')
++    parser.add_argument('--trainval-dir', type=Path)
++    args = parser.parse_args()
++    if args.trainval_dir:
++        args.trainval_dir.mkdir(parents=True, exist_ok=False)
++    rows = json.loads((HERE / 'index.json').read_text())['runs']
++    only = {n for n in args.only.split(',') if n}
++    report = {'mode': f'snapshot-{args.snapshot}' if args.snapshot else 'terminal',
++              'devices': [d.name for d in tf.config.list_physical_devices()],
++              'gpu_details': [tf.config.experimental.get_device_details(d)
++                              for d in tf.config.list_physical_devices('GPU')],
++              'tf32': bool(tf.config.experimental.tensor_float_32_execution_enabled()),
++              'runs': []}
++    cache = None
++    for row in rows:
++        run = args.run_root / row['name']
++        if (only and row['name'] not in only) or not run.exists():
++            continue
++        cfg = json.loads((run / 'config.json').read_text())
++        entry = {'name': row['name'], 'arm': row['arm'], 'seed': row['seed'], 'checkpoints': []}
++        if cfg['train'].get('ebops_trace_sample') != 'train_full':
++            entry['status'] = 'not a [D20] run (train.ebops_trace_sample != train_full)'
++        elif args.snapshot is None and (run / 'DIVERGED.json').exists():
++            entry['status'] = 'diverged: no accuracy number, nothing to certify'
++        else:
++            if cache is None:
++                cache = run_engram.load_cache(args.cache, cfg)
++            (x_train, _, x_val, _), info = cache
++            run_info = json.loads((run / 'data_info.json').read_text())
++            assert run_info['train_sha256'] == info['train_sha256'], (row['name'], 'train split differs from cache')
++            items = snapshot_targets(run, args.snapshot) if args.snapshot else targets(run, cfg, run_state(run))
++            entry['status'] = 'checked' if items else 'no feasible checkpoint'
++            for which, path, point in items:
++                record = {'which': which, **certify_checkpoint(path, point, cfg, x_train)}
++                if args.trainval_dir:
++                    record['trainval_sensitivity'] = trainval_sensitivity(
++                        path, cfg, x_train, x_val, args.trainval_dir / f"{row['name']}__{which}__trainval.keras")
++                entry['checkpoints'].append(record)
++                print(record['status'], row['name'], which, record['logged_ebops'], record['retraced_ebops'], flush=True)
++        report['runs'].append(entry)
++        args.out.write_text(json.dumps(report, indent=2) + '\n')
++    bad = [(r['name'], c['which'], c['status']) for r in report['runs'] for c in r['checkpoints']
++           if c['status'] != 'CERTIFIED']
++    n = sum(len(r['checkpoints']) for r in report['runs'])
++    report['summary'] = {'checkpoints': n, 'not_certified': bad}
++    args.out.write_text(json.dumps(report, indent=2) + '\n')
++    print('CERTIFICATION_ALL_PASS' if not bad else 'CERTIFICATION_FAIL', n, len(bad), flush=True)
++    raise SystemExit(0 if not bad else 4)
++
++
++if __name__ == '__main__':
++    main()
+diff --git a/campaigns/chang0926/evaluate_roc.py b/campaigns/chang0926/evaluate_roc.py
+index 5b4a752..f60c850 100644
+--- a/campaigns/chang0926/evaluate_roc.py
++++ b/campaigns/chang0926/evaluate_roc.py
+@@ -18,6 +18,14 @@ loaded twice; logits must agree within 1e-7, and the validation replay must repr
+ recorded selection metrics within 1e-7. Writes <out>/<run>__<which>.npz with keys y, score
+ (softmax), logits, meta (the r14 layout plus logits) and <out>/manifest.json. It computes
+ no summary metric: results-analyst does that at VERIFY.
++
++[D20] (patch 0019): every evaluated checkpoint must carry a CERTIFIED record with the same
++file sha256 in `--certification` (certify_ebops.py output); an uncertified checkpoint is
++refused. Beside every evaluation the per-quantizer WRAP overflow fraction on validation and
++ROC-test is recorded ([L8], diagnostic, `bnhgq2.wrap_overflow`). `--trainval-dir` also
++evaluates the train+val retrace copies written by certify_ebops.py, labelled
++`<which>__trainval_retrace` (sensitivity, never primary). Pilot-only rows
++(`production: false`, C') are never evaluated on ROC-test.
+ """
+ from __future__ import annotations
+ 
+@@ -78,6 +86,26 @@ def targets(run, cfg, state):
+     return items
+ 
+ 
++def certified(cert, path):
++    digest = sha(path)
++    for run in cert['runs']:
++        for record in run['checkpoints']:
++            if record['checkpoint_sha256'] == digest and record['status'] == 'CERTIFIED':
++                return record
++    raise RuntimeError(f'{path}: no CERTIFIED EBOPs record for this file; run certify_ebops.py first')
++
++
++def overflow(path, rows):
++    import keras
++    from bnhgq2.wrap_overflow import overflow_fractions
++    model = keras.models.load_model(path, compile=False)
++    result = overflow_fractions(model, rows)
++    del model
++    keras.utils.clear_session()
++    gc.collect()
++    return result
++
++
+ def main():
+     import tensorflow as tf
+     from bnhgq2.compat import apply_keras_compat
+@@ -92,7 +120,11 @@ def main():
+     parser.add_argument('--eval-dir', default='/data/hls4ml_lhc_jet/val/val')
+     parser.add_argument('--out', type=Path, required=True)
+     parser.add_argument('--y-reference', type=Path, help='an r14 n64 .npz for the label/row alignment gate')
++    parser.add_argument('--certification', type=Path, required=True, help='certify_ebops.py terminal-mode output')
++    parser.add_argument('--trainval-dir', type=Path, help='certify_ebops.py --trainval-dir output (sensitivity)')
+     args = parser.parse_args()
++    cert = json.loads(args.certification.read_text())
++    assert cert['mode'] == 'terminal', cert['mode']
+     args.out.mkdir(parents=True, exist_ok=False)
+     rows = json.loads((HERE / 'index.json').read_text())['runs']
+     gate = {json.loads((HERE / 'configs' / r['file']).read_text())['arch']['pt_gate_gev'] for r in rows}
+@@ -109,6 +141,8 @@ def main():
+     manifest = {'y_sha256': array_sha(y), 'n': int(len(y)), 'class_counts': y.sum(0).astype(int).tolist(),
+                 'gate_stats': gate_stats, 'eval_dir': args.eval_dir, 'runs': []}
+     for row in rows:
++        if not row.get('production', True):
++            continue
+         run = args.run_root / row['name']
+         cfg = json.loads((HERE / 'configs' / row['file']).read_text())
+         entry = {'name': row['name'], 'arm': row['arm'], 'seed': row['seed']}
+@@ -123,16 +157,27 @@ def main():
+             x = apply_input_std(x_raw, std['mu'], std['sigma'])
+             entry['status'] = 'evaluated' if state.get('best_feasible') else 'no feasible checkpoint'
+             entry['evaluations'] = []
+-            for which, path, point in targets(run, cfg, state):
++            items = [(which, path, point, False) for which, path, point in targets(run, cfg, state)]
++            if args.trainval_dir:
++                items += [(which + '__trainval_retrace', args.trainval_dir / f"{row['name']}__{which}__trainval.keras",
++                           point, True) for which, _, point, _ in list(items)]
++            for which, path, point, sensitivity in items:
++                certificate = None if sensitivity else certified(cert, path)
+                 val_logits, val_diff = predict_twice(path, x_val)
+                 auc, _, acc = validation_metrics(y_val, val_logits)
+-                assert abs(acc - point['val_categorical_accuracy']) <= 1e-7 and abs(auc - point['val_macro_auc']) <= 1e-7, \
+-                    (row['name'], which, acc, auc, point)
++                if not sensitivity:   # the train+val retrace changes ranges, so no replay check
++                    assert abs(acc - point['val_categorical_accuracy']) <= 1e-7 and abs(auc - point['val_macro_auc']) <= 1e-7, \
++                        (row['name'], which, acc, auc, point)
+                 logits, diff = predict_twice(path, x)
+                 target = args.out / f"{row['name']}__{which}.npz"
+                 meta = {'run': row['name'], 'which': which, 'checkpoint': str(path), 'checkpoint_sha256': sha(path),
+                         'selected': point, 'split': 'ROC-test (held-out)', 'n': int(len(y)),
+-                        'pt_gate_gev': cfg['arch']['pt_gate_gev'], 'reload_max_abs_logit_diff': diff}
++                        'pt_gate_gev': cfg['arch']['pt_gate_gev'], 'reload_max_abs_logit_diff': diff,
++                        'label': ('train+val retrace sensitivity, not primary' if sensitivity else 'as selected'),
++                        'ebops_certificate': certificate,
++                        'wrap_overflow': {'validation': overflow(path, x_val), 'roc_test': overflow(path, x)}}
++                if sensitivity:
++                    meta['validation_after_retrace'] = {'val_categorical_accuracy': acc, 'val_macro_auc': auc}
+                 np.savez_compressed(target, y=y, score=softmax(logits), logits=logits, meta=json.dumps(meta))
+                 entry['evaluations'].append({**meta, 'npz': target.name, 'npz_sha256': sha(target),
+                                              'validation_replay_max_abs_logit_diff': val_diff})
+diff --git a/tests/test_certify.py b/tests/test_certify.py
+new file mode 100644
+index 0000000..248f894
+--- /dev/null
++++ b/tests/test_certify.py
+@@ -0,0 +1,49 @@
++"""[D20] certification: a checkpoint saved by run_training retraces to its logged EBOPs on
++the same rows; a changed log or a lower target is caught; the ROC evaluator refuses an
++uncertified file; the train+val sensitivity copy is written outside the run. CPU, synthetic."""
++import copy
++import json
++import os
++from pathlib import Path
++import sys
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_d20_trace import arrays
++from test_resume_cadence import tiny_cfg
++
++CAMPAIGN = Path(__file__).resolve().parents[1] / 'campaigns' / 'chang0926'
++sys.path.insert(0, str(CAMPAIGN))
++
++
++def test_certify(tmp_path):
++    from bnhgq2 import ablation
++    import certify_ebops
++    import evaluate_roc
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=2, ebops_trace_sample='train_full', ebops_reload_check='stored')
++    (xt, yt, xv, yv), info = arrays()
++    run = tmp_path / 'run'
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, run)
++    state = json.loads((run / 'ebops_budget.json').read_text())
++    point = state['selected']
++    ok = certify_ebops.certify_checkpoint(run / 'model_best.keras', point, cfg, xt)
++    assert ok['status'] == 'CERTIFIED' and ok['retraced_ebops'] == point['ebops'], ok
++    assert ok['stored_ebops'] == point['ebops'], ok
++    # the file is not rewritten by the retrace
++    assert certify_ebops.sha(run / 'model_best.keras') == ok['checkpoint_sha256']
++    bad = certify_ebops.certify_checkpoint(run / 'model_best.keras', {**point, 'ebops': point['ebops'] + 1}, cfg, xt)
++    assert bad['status'] == 'EBOPS_MISMATCH'
++    low = copy.deepcopy(cfg)
++    low['train']['ebops']['pid']['target_ebops'] = point['ebops'] - 1
++    assert certify_ebops.certify_checkpoint(run / 'model_best.keras', point, low, xt)['status'] == 'ABOVE_TARGET'
++    # a 256-row retrace would not certify a full-split selection in general; the rule is same rows
++    cert = {'mode': 'terminal', 'runs': [{'checkpoints': [ok]}]}
++    assert evaluate_roc.certified(cert, run / 'model_best.keras') is ok
++    with pytest.raises(RuntimeError):
++        evaluate_roc.certified({'mode': 'terminal', 'runs': [{'checkpoints': [bad]}]}, run / 'model_best.keras')
++    sens = certify_ebops.trainval_sensitivity(run / 'model_best.keras', cfg, xt, xv, tmp_path / 'tv.keras')
++    assert sens['ebops_trainval'] >= point['ebops'] and (tmp_path / 'tv.keras').exists()
++    assert sens['trace_rows'] == len(xt) + len(xv)
+-- 
+2.50.1 (Apple Git-155)
+

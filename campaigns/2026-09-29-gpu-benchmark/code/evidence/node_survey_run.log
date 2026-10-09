@@ -1,0 +1,150 @@
+NODE_SURVEY /Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-29-gpu-benchmark/code/evidence/node_survey_20260929T065531Z.json source: live kubectl get nodes -o json at 2026-09-29T06:55:31Z; 532 nodes
+NVIDIA-L40                 nodes  17 key nvidia.com/gpu       card_mib [46068] schedulable 6 nodes / 24 GPUs  cpu [20.0] mem_gi [503.3]
+    OK rci-tide-gpu-01.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} 
+    OK rci-tide-gpu-02.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} 
+    OK rci-tide-gpu-03.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} 
+    OK rci-tide-gpu-04.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} 
+    OK rci-tide-gpu-05.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} 
+    OK rci-tide-gpu-06.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} 
+    no rci-tide-gpu-07.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-08.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-09.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-10.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-11.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-12.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-13.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-14.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-15.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-16.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+    no rci-tide-gpu-17.sdsu.edu                     cpu   20.0 mem   503.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/reservation=csu-tide:NoSchedule
+NVIDIA-L40S                nodes   4 key nvidia.com/gpu       card_mib [46068] schedulable 2 nodes / 8 GPUs  cpu [28.0] mem_gi [503.6]
+    no bak-hpc2.csub.edu                            cpu   60.0 mem   125.3Gi gpus {'nvidia.com/gpu': 4} taint nautilus.io/issue=1731:NoSchedule
+    OK hcc-nrp-pki-c1703.unl.edu                    cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 4} 
+    OK hcc-nrp-pki-c1705.unl.edu                    cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 4} 
+    no swan-interlink                               cpu   56.0 mem   250.0Gi gpus {'nvidia.com/gpu': 4} Ready=False; taint virtual-node.interlink/workload=swan:NoExecute, virtual-node.interlink/no-schedule=true:NoSchedule, node.kubernetes.io/network-unavailable=:NoSchedule, node.kubernetes.io/not-ready=:NoExecute, node.kubernetes.io/not-ready=:NoSchedule
+NVIDIA-GeForce-RTX-4090    nodes   4 key nvidia.com/gpu       card_mib [24564] schedulable 3 nodes / 16 GPUs  cpu [28.0] mem_gi [251.5, 755.5]
+    OK hcc-nrp-shor-c5226.unl.edu                   cpu   28.0 mem   251.5Gi gpus {'nvidia.com/gpu': 4} 
+    OK hcc-nrp-shor-c5834.unl.edu                   cpu   28.0 mem   251.5Gi gpus {'nvidia.com/gpu': 4} 
+    no hcc-nrp-shor-c5934.unl.edu                   cpu   28.0 mem   251.5Gi gpus {'nvidia.com/gpu': 4} Ready=Unknown; taint node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute
+    OK k8s-4090-01.calit2.optiputer.net             cpu   28.0 mem   755.5Gi gpus {'nvidia.com/gpu': 8} 
+NVIDIA-GeForce-RTX-3090    nodes  48 key nvidia.com/gpu       card_mib [24576] schedulable 30 nodes / 115 GPUs  cpu [12.0, 20.0, 24.0, 28.0, 60.0] mem_gi [31.2, 62.6, 94.1, 251.4, 251.5, 251.6, 251.7, 503.6]
+    no csusb-sci-103-11.csusb.edu                   cpu   20.0 mem   251.5Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=csusb:NoSchedule
+    OK fiona-1.famu.edu                             cpu   24.0 mem   251.4Gi gpus {'nvidia.com/gpu': 1} 
+    no gpu-02.csusb.edu                             cpu   24.0 mem   251.5Gi gpus {'nvidia.com/gpu': 7} taint nautilus.io/reservation=csusb:NoSchedule
+    no hcc-chase-shor-c4705.unl.edu                 cpu   28.0 mem   251.7Gi gpus {'nvidia.com/gpu': 8} Ready=Unknown; taint node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute
+    no hcc-chase-shor-c4709.unl.edu                 cpu   28.0 mem   251.7Gi gpus {'nvidia.com/gpu': 8} Ready=Unknown; taint node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute
+    OK hcc-chase-shor-c4715.unl.edu                 cpu   28.0 mem   251.7Gi gpus {'nvidia.com/gpu': 8} 
+    OK hpc-nrp-g1.nmsu.edu                          cpu   60.0 mem   251.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK k8s-3090-01.usd.edu                          cpu   20.0 mem   251.5Gi gpus {'nvidia.com/gpu': 1} 
+    OK k8s-3090-02.clemson.edu                      cpu   24.0 mem   251.4Gi gpus {'nvidia.com/gpu': 2} 
+    no k8s-chase-ci-07.calit2.optiputer.net         cpu   68.0 mem   187.4Gi gpus {'nvidia.com/gpu': 6} excluded: training-batch pilot-b exclusion list (freeze.py BAD_NODES)
+    OK nautilus01.hsrn.nyu.edu                      cpu   20.0 mem   251.5Gi gpus {'nvidia.com/gpu': 3} 
+    OK nrp-01.laccd.edu                             cpu   24.0 mem   251.4Gi gpus {'nvidia.com/gpu': 4} 
+    OK nrp-fiona-001.sdmz.amnh.org                  cpu   20.0 mem   251.5Gi gpus {'nvidia.com/gpu': 5} 
+    no prp01.ifa.hawaii.edu                         cpu   15.0 mem   251.6Gi gpus {'nvidia.com/gpu': 2} taint nautilus.io/reservation=osdf:NoSchedule
+    OK ry-gpu-01.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK ry-gpu-02.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK ry-gpu-03.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK ry-gpu-04.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    no ry-gpu-05.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} Ready=Unknown; cordoned; taint nautilus.io/issue=1742:NoSchedule, nautilus.io/reservation=cogrob:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute, node.kubernetes.io/unschedulable=:NoSchedule
+    no ry-gpu-06.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=cogrob:NoSchedule
+    no ry-gpu-07.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=cogrob:NoSchedule
+    no ry-gpu-08.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=cogrob:NoSchedule
+    OK ry-gpu-09.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK ry-gpu-10.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    no ry-gpu-11.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=cogrob:NoSchedule
+    no ry-gpu-12.sdsc.optiputer.net                 cpu   28.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=cogrob:NoSchedule
+    no ry-gpu-13.sdsc.optiputer.net                 cpu   60.0 mem   755.1Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=cogrob:NoSchedule
+    no ry-gpu-14.sdsc.optiputer.net                 cpu   60.0 mem   755.1Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=cogrob:NoSchedule
+    no suncave-0                                    cpu   12.0 mem    94.1Gi gpus {} Ready=Unknown; cordoned; taint node.kubernetes.io/unschedulable=:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute; no nvidia.com/* allocatable
+    OK suncave-1                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-10                                   cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-11                                   cpu   12.0 mem    31.2Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-12                                   cpu   12.0 mem    62.6Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-13                                   cpu   12.0 mem    62.6Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-14                                   cpu   12.0 mem    62.6Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-15                                   cpu   12.0 mem    62.6Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-17                                   cpu   12.0 mem    62.6Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-2                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-3                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-4                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    no suncave-5                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} taint nautilus.io/issue=1641:NoSchedule
+    OK suncave-6                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-7                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-8                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    OK suncave-9                                    cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 2} 
+    no suncave-head                                 cpu   12.0 mem    94.1Gi gpus {'nvidia.com/gpu': 1} taint nautilus.io/reservation=suncave:NoSchedule
+    no uicnrp-fiona.evl.uic.edu                     cpu   20.0 mem   251.5Gi gpus {'nvidia.com/gpu': 4} cordoned; taint nautilus.io/issue=1712:NoSchedule, node.kubernetes.io/unschedulable=:NoSchedule
+    OK uicnrp-fiona2.evl.uic.edu                    cpu   24.0 mem   251.5Gi gpus {'nvidia.com/gpu': 5} 
+NVIDIA-RTX-A6000           nodes   8 key nvidia.com/rtxa6000  card_mib [49140] schedulable 5 nodes / 27 GPUs  cpu [20.0] mem_gi [251.5]
+    no cenic-nrp1.hpc.cpp.edu                       cpu   28.0 mem   125.6Gi gpus {'nvidia.com/rtxa6000': 4} taint nautilus.io/testing=true:NoSchedule
+    no discover-nrp-01.sdccd.edu                    cpu   20.0 mem   251.5Gi gpus {'nvidia.com/rtxa6000': 8} taint nautilus.io/reservation=sdccd:NoSchedule
+    OK gpu00.nrp.hpc.udel.edu                       cpu   20.0 mem   251.5Gi gpus {'nvidia.com/rtxa6000': 4} 
+    no hcc-prp-c5036.unl.edu                        cpu   20.0 mem   251.2Gi gpus {'nvidia.com/rtxa6000': 8} Ready=Unknown; taint nautilus.io/issue=1740:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute
+    OK k8s-a6000-01.csus.edu                        cpu   20.0 mem   251.5Gi gpus {'nvidia.com/rtxa6000': 8} 
+    OK k8s-a6000-01.unm.edu                         cpu   20.0 mem   251.5Gi gpus {'nvidia.com/rtxa6000': 1} 
+    OK nrp-01.csumb.edu                             cpu   20.0 mem   251.5Gi gpus {'nvidia.com/rtxa6000': 8} 
+    OK nrp-a6000-01.csuchico.edu                    cpu   20.0 mem   251.5Gi gpus {'nvidia.com/rtxa6000': 6} 
+NVIDIA-A40                 nodes   3 key nvidia.com/a40       card_mib [46068] schedulable 2 nodes / 4 GPUs  cpu [44.0, 60.0] mem_gi [503.3, 503.6]
+    no bak-hpc1.csub.edu                            cpu   20.0 mem   503.5Gi gpus {'nvidia.com/a40': 8} taint nautilus.io/issue=1731:NoSchedule
+    OK k8s-usra-01.calit2.optiputer.net             cpu   44.0 mem   503.6Gi gpus {'nvidia.com/a40': 2} 
+    OK rci-nautilus01.msu.montana.edu               cpu   60.0 mem   503.3Gi gpus {'nvidia.com/a40': 2} 
+NVIDIA-A100-SXM4-80GB      nodes  22 key nvidia.com/a100      card_mib [81920] schedulable 16 nodes / 77 GPUs  cpu [124.0, 252.0] mem_gi [471.6, 503.6, 881.6, 1007.3]
+    OK gp-engine.beocat.ksu.edu                     cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK gp-engine.hpc.okstate.edu                    cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK gp-engine.usd.edu                            cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK gpengine-uams.areon.net                      cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK gpengine-uark.areon.net                      cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 3} 
+    no gpn-fiona-mizzou-1.rnet.missouri.edu         cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} taint nautilus.io/reservation=mizzou:NoSchedule
+    no gpn-fiona-mizzou-2.rnet.missouri.edu         cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} taint nautilus.io/reservation=mizzou:NoSchedule
+    OK gpn-fiona-mizzou-3.rnet.missouri.edu         cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK gpn-fiona-mizzou-4.rnet.missouri.edu         cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK gpn-fiona-mizzou-5.rnet.missouri.edu         cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK gpn-fiona-mizzou-6.rnet.missouri.edu         cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 3} 
+    OK hcc-gpengine-shor-c5303.unl.edu              cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+    OK node-1-1.sdsc.optiputer.net                  cpu  124.0 mem   471.6Gi gpus {'nvidia.com/a100': 8} 
+    no node-1-2.sdsc.optiputer.net                  cpu  124.0 mem   503.6Gi gpus {'nvidia.com/a100': 8} taint nautilus.io/hardware=large-gpu:NoSchedule
+    OK node-1-3.sdsc.optiputer.net                  cpu  124.0 mem   503.6Gi gpus {'nvidia.com/a100': 8} 
+    no node-1-4.sdsc.optiputer.net                  cpu  124.0 mem   503.6Gi gpus {'nvidia.com/a100': 8} Ready=Unknown; cordoned; taint nautilus.io/upgrading=true:NoSchedule, nautilus.io/issue=1685:NoSchedule, node.kubernetes.io/unreachable=:NoSchedule, node.kubernetes.io/unschedulable=:NoSchedule, node.kubernetes.io/unreachable=:NoExecute
+    OK node-2-2.sdsc.optiputer.net                  cpu  124.0 mem   881.6Gi gpus {'nvidia.com/a100': 8} 
+    OK node-2-3.sdsc.optiputer.net                  cpu  124.0 mem   503.6Gi gpus {'nvidia.com/a100': 8} 
+    no node-2-4.sdsc.optiputer.net                  cpu  124.0 mem   503.6Gi gpus {'nvidia.com/a100': 8} taint nautilus.io/hardware=large-gpu:NoSchedule
+    no pas.macc.net.internet2.edu                   cpu  124.0 mem  1007.6Gi gpus {'nvidia.com/a100': 8} taint nautilus.io/reservation=nrp-llm:NoSchedule
+    OK sphinx.sdstate.edu                           cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 3} 
+    OK tu.gp-engine.greatplains.net                 cpu  252.0 mem  1007.3Gi gpus {'nvidia.com/a100': 4} 
+NVIDIA-A10                 nodes  35 key nvidia.com/gpu       card_mib [23028] schedulable 30 nodes / 237 GPUs  cpu [124.0] mem_gi [503.6]
+    no gpu-01.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/hardware=large-gpu:NoSchedule
+    no gpu-02.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/hardware=large-gpu:NoSchedule
+    no gpu-03.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=nrp-llm-test:NoSchedule
+    OK gpu-04.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-05.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-06.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    no gpu-07.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} taint nautilus.io/reservation=sage:NoSchedule
+    OK gpu-08.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-09.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-11.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-12.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-13.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-14.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 7} 
+    OK gpu-15.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-16.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-17.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK gpu-18.nrp.mghpcc.org                        cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 7} 
+    OK hcc-nrp-shor-c5805.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5809.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5813.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5817.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5821.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5825.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5905.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5909.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5913.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5917.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5921.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c5925.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c6009.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c6013.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 7} 
+    no hcc-nrp-shor-c6017.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} excluded: Delta REGRESSION_TICKET 2026-09-28 (epoch-0 NaN, fingerprint off)
+    OK hcc-nrp-shor-c6021.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c6025.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 
+    OK hcc-nrp-shor-c6029.unl.edu                   cpu  124.0 mem   503.6Gi gpus {'nvidia.com/gpu': 8} 

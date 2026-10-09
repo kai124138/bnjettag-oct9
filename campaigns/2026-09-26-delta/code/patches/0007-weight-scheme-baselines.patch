@@ -1,0 +1,157 @@
+From 45cfa1429f6a8574face2eb1804f73be1aa40bb6 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:37:41 -0700
+Subject: [PATCH 07/24] weight-scheme-baselines: admit quant.weight
+ none/int8_absmax and quant.layer_weight_override (labelled baselines,
+ teachers)
+
+---
+ code/bnhgq2/ablation.py   | 12 ++++++++++--
+ code/bnhgq2/delta_keys.py | 25 +++++++++++++++++++++++++
+ code/bnhgq2/qat.py        | 19 +++++++++++++++----
+ code/run_engram.py        |  2 +-
+ 4 files changed, 51 insertions(+), 7 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index f297ba6..fcf2b97 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -80,7 +80,7 @@ def matching_initialization(cfg, sample, seed):
+     qat.init_delta_scales(model)
+     matched_kernels = sum(v.name == 'kernel' and v.path in expected_copied for v in model.weights)
+     changed_ffn_kernels = 2 * cfg['arch']['n_layers'] if cfg['arch']['ffn_dim'] != baseline['arch']['ffn_dim'] else 0
+-    assert matched_kernels == len(expected_binary_layers(cfg)) - changed_ffn_kernels, 'Unexpected matched projection count'
++    assert matched_kernels == len(projection_layers(cfg)) - changed_ffn_kernels, 'Unexpected matched projection count'
+     equivalent_to_weight_reference = (cfg['arch']['ffn_dim'] == baseline['arch']['ffn_dim']
+                                      and cfg['quant'].get('softmax_out_bits', max(cfg['quant']['act_bits'], 10)) == 10
+                                      and cfg['quant'].get('softmax_out_i', 1) == 1)
+@@ -254,6 +254,14 @@ def restore_checkpoint(out, cfg, dataset_info):
+ 
+ 
+ def expected_binary_layers(cfg):
++    """Binary projections: all of them for binary_absmean, minus labelled per-layer overrides
++    (Delta quant.layer_weight_override); none for a non-binary baseline."""
++    if cfg.get('quant', {}).get('weight', 'binary_absmean') != 'binary_absmean':
++        return set()
++    return projection_layers(cfg) - set(cfg.get('quant', {}).get('layer_weight_override', {}))
++
++
++def projection_layers(cfg):
+     """The configured transformer has 6 projections per block and 3 outside it."""
+     names = {'input_proj', 'head_fc1', 'head_fc2'}
+     for index in range(cfg['arch']['n_layers']):
+@@ -450,7 +458,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                 'beta': pid.beta, 'learning_rate': lr, 'val_macro_auc': auc,
+                 'loss': loss, 'task_loss': ce, 'distillation_loss': kd, 'categorical_accuracy': accuracy,
+                 'train_categorical_accuracy': accuracy, 'val_categorical_accuracy': val_accuracy,
+-                'activation_bits_mean': float(np.mean(np.concatenate(free))),
++                'activation_bits_mean': float(np.mean(np.concatenate(free))) if free else None,
+                 'recovery_frozen': int(state['recovery_frozen']), 'epoch_seconds': elapsed,
+                 **{f'val_auc_{i}': v for i, v in enumerate(per_auc)}}
+         if epoch_observer is not None:
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 90639ab..e596c24 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -130,3 +130,28 @@ def _channel_gain(value, cfg):
+ 
+ 
+ register('quant.channel_gain', 'channel-gain-pow2', _channel_gain)
++
++# weight-scheme-baselines: labelled non-binary baselines and teachers (never the thesis).
++# 'int8_absmax' is the bundle's static fixed<8,3> grid (no absmax scaling; code-surface §4).
++WEIGHT_SCHEMES.update({'none', 'int8_absmax'})
++_PROJECTIONS = ('input_proj', 'head_fc1', 'head_fc2')
++
++
++def _weight(value, cfg):
++    return None if value in WEIGHT_SCHEMES else f'must be one of {sorted(WEIGHT_SCHEMES)}'
++
++
++def _layer_override(value, cfg):
++    if not isinstance(value, dict) or not value:
++        return 'must be a non-empty {layer_name: "none" | "int8_absmax"}'
++    if lookup(cfg, 'quant.weight') != 'binary_absmean':
++        return 'per-layer overrides are defined on a binary_absmean model only'
++    for name, mode in value.items():
++        if mode not in ('none', 'int8_absmax'):
++            return f'{name}: override must be "none" or "int8_absmax"'
++        if not (name in _PROJECTIONS or name.startswith('bit_block_')):
++            return f'{name}: not a projection layer name'
++
++
++register('quant.weight', 'weight-scheme-baselines', _weight, active=lambda v: v != 'binary_absmean')
++register('quant.layer_weight_override', 'weight-scheme-baselines', _layer_override)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 04502c2..197c099 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -542,6 +542,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+     act_calib = str(cfg["quant"].get("act_calib", "frozen")).lower()
+     if act_calib not in ("frozen", "trainable", "recalib", "free"):
+         raise ValueError(f"{cfg['name']}: unsupported quant.act_calib={act_calib!r}")
++    # Delta (weight-scheme-baselines): per-layer weight scheme for labelled baselines
++    layer_modes = dict(cfg["quant"].get("layer_weight_override", {}))
+     act_bw_l1 = float(cfg["quant"].get("act_bw_l1", 1e-8))
+     beta0 = float(cfg["quant"].get("beta0", 0.0))
+     taps: dict = {}
+@@ -583,16 +585,21 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         """One projection: A-bit input quant + (binary|int8|float) weights."""
+         if not fp32:
+             taps[name] = x
++        lmode = layer_modes.get(name, wmode)
+         if fp32:
+             kq, iq = _dummy("weight"), _dummy("datalane")
+             cls = QEinsumDense
+-        elif binv:
++        elif lmode == "binary_absmean":
+             kq, iq = _binary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
+             cls = BitQEinsumDense
++        elif lmode == "none":  # Delta override: float kernel behind the quantized input
++            kq, iq = _dummy("weight"), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            cls = QEinsumDense
+         else:  # w8a8
+             kq, iq = _static_w8(), act_iq()
+             cls = QEinsumDense
+-        extra = {"binary": delta_binary_options(cfg, name)} if binv and delta_binary_options(cfg, name) else {}
++        lbin = not fp32 and lmode == "binary_absmean"
++        extra = {"binary": delta_binary_options(cfg, name)} if lbin and delta_binary_options(cfg, name) else {}
+         return cls(equation, output_shape=out_shape, bias_axes=bias_axes,
+                    iq_conf=iq, kq_conf=kq,
+                    bq_conf=(bias_conf() if bias_axes is not None else None),
+@@ -601,13 +608,17 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+     def dense(name, units, x, use_bias=True):
+         if not fp32:
+             taps[name] = x
++        lmode = layer_modes.get(name, wmode)
+         if fp32:
+             kq, iq, cls = _dummy("weight"), _dummy("datalane"), QDense
+-        elif binv:
++        elif lmode == "binary_absmean":
+             kq, iq, cls = _binary_kq(), act_iq(), BitQDense
++        elif lmode == "none":  # Delta override: float kernel behind the quantized input
++            kq, iq, cls = _dummy("weight"), act_iq(), QDense
+         else:
+             kq, iq, cls = _static_w8(), act_iq(), QDense
+-        extra = {"binary": delta_binary_options(cfg, name)} if binv and delta_binary_options(cfg, name) else {}
++        lbin = not fp32 and lmode == "binary_absmean"
++        extra = {"binary": delta_binary_options(cfg, name)} if lbin and delta_binary_options(cfg, name) else {}
+         return cls(units, use_bias=use_bias, iq_conf=iq, kq_conf=kq,
+                    bq_conf=bias_conf(), name=name, **extra)(x)
+ 
+diff --git a/code/run_engram.py b/code/run_engram.py
+index 4109a25..79fbcaa 100644
+--- a/code/run_engram.py
++++ b/code/run_engram.py
+@@ -112,7 +112,7 @@ def validate_cfg(cfg):
+     from bnhgq2 import delta_keys; delta_keys.validate(cfg)  # Delta opt-in keys
+     if cfg['arch']['features'] != ['pt', 'etarel', 'phirel'] or cfg['arch']['n_feat'] != 3:
+         raise ValueError('Study requires exactly [pt, etarel, phirel] in that order')
+-    if cfg['quant']['weight'] != 'binary_absmean' or cfg['quant']['act_calib'] != 'free':
++    if cfg['quant']['weight'] not in delta_keys.WEIGHT_SCHEMES or cfg['quant']['act_calib'] != 'free':
+         raise ValueError('Study expects binary backbone weights and free activation widths')
+     if cfg['arch'].get('pair_bias', False):
+         raise ValueError('Pair-bias preprocessing has separate unaccounted costs; disable for this screen')
+-- 
+2.50.1 (Apple Git-155)
+

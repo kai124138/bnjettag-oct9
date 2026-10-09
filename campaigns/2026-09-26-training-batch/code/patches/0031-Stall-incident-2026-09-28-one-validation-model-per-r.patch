@@ -1,0 +1,302 @@
+From 8fd8b8b5290a8ff3d42fd16218b7d084622e76e2 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Mon, 28 Sep 2026 00:02:17 -0700
+Subject: [PATCH 31/31] Stall incident 2026-09-28: one validation model per run
+ (ValidationReloader: load_model once, then load_weights of each epoch's
+ candidate; variables and predictions byte-equal to a fresh load, tested);
+ env-set RSS canary gate, projection form: BNJ_RSS_GATE_LIMIT_MB /
+ BNJ_RSS_GATE_WINDOW (least-squares fit over process epochs W..E-1, E-W >=
+ 100; baseline + slope x train.epochs must be <= the limit, else exit 5;
+ host_rss_mb on the epoch line only when set); CPU tests
+
+---
+ bnhgq2/ablation.py            | 101 ++++++++++++++++++++++++-
+ tests/test_memory_leak_fix.py | 136 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 235 insertions(+), 2 deletions(-)
+ create mode 100644 tests/test_memory_leak_fix.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 4c87622..71cbe59 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -586,6 +586,99 @@ def nondegenerate_rule(cfg, yv):
+     return {**majority_rule(yv, spec['se_multiple']), 'zero_floor_ebops': int(floor)}
+ 
+ 
++class ValidationReloader:
++    """Per-epoch reload of the saved validation candidate (incident 2026-09-28,
++    review/INCIDENT_stall_20260928.md: host memory grew ~90 MB/epoch per arm on the GPU pods).
++
++    The first call builds the model from the file (`keras.models.load_model`); every later call
++    loads the file's variables into that same model (`load_weights`), so one model and one
++    predict function live for the whole run instead of a new model, graph and predict function
++    per epoch. What is evaluated is still exactly the serialized artifact: every variable comes
++    from the file, and `stored_state_ebops` / the retrace check compare them with the live model
++    each epoch as before. The architecture never changes within a run (one config)."""
++
++    def __init__(self):
++        self.model = None
++
++    def __call__(self, path):
++        if self.model is None:
++            self.model = keras.models.load_model(path, compile=False)
++        else:
++            self.model.load_weights(path)
++        return self.model
++
++
++RSS_GATE_EXIT = 5
++
++
++def host_rss_mb():
++    """Resident memory of this process in MiB: VmRSS on Linux; phys_footprint on macOS."""
++    try:
++        with open('/proc/self/status') as f:
++            for line in f:
++                if line.startswith('VmRSS:'):
++                    return int(line.split()[1]) / 1024
++    except OSError:
++        pass
++    import sys
++    if sys.platform == 'darwin':
++        import ctypes
++        buf = (ctypes.c_uint64 * 40)()
++        if ctypes.CDLL('/usr/lib/libproc.dylib').proc_pid_rusage(os.getpid(), 2, ctypes.byref(buf)) == 0:
++            return buf[9] / 2 ** 20
++    return None
++
++
++def rss_gate_from_env(total_epochs):
++    """Memory canary gate (incident 2026-09-28, review/INCIDENT_stall_20260928.md), set by the Job
++    env, never by a config, so config_sha256 is unchanged.
++
++    BNJ_RSS_GATE_LIMIT_MB: the per-arm memory limit written in the manifest (MiB).
++    BNJ_RSS_GATE_WINDOW "W:E" (default 5:105): fit host RSS against epoch, by least squares, over
++    this process's epochs W..E-1 (counted from the epoch it started or resumed at; E - W >= 100).
++    At the end of process epoch E the gate projects the run's terminal RSS:
++        projection = baseline + slope * total_epochs,
++    with baseline the fitted RSS at epoch W and total_epochs the config's `train.epochs` (7,000;
++    R 1,000). projection > limit: RSS_GATE FAIL, RSS_GATE_FAIL.json, exit 5. At 6 GiB and a
++    ~2.2 GB baseline this admits a slope of about 0.55 MB/epoch over 7,000 epochs.
++    Unset: no gate and no RSS field on the epoch line."""
++    raw = os.environ.get('BNJ_RSS_GATE_LIMIT_MB')
++    if not raw:
++        return None
++    warm, end = (int(v) for v in os.environ.get('BNJ_RSS_GATE_WINDOW', '5:105').split(':'))
++    if not (0 <= warm and end - warm >= 100):
++        raise ValueError('BNJ_RSS_GATE_WINDOW must be W:E with E - W >= 100')
++    return {'limit_mb': float(raw), 'warm': warm, 'end': end, 'total_epochs': int(total_epochs), 'rss': []}
++
++
++def rss_gate_verdict(gate):
++    """(slope MB/epoch, baseline MB at W, projection MB, PASS/FAIL) over the gate window."""
++    window = np.asarray(gate['rss'][gate['warm']:gate['end']], dtype=float)
++    slope, intercept = (float(v) for v in np.polyfit(np.arange(len(window)), window, 1))
++    projection = intercept + slope * gate['total_epochs']
++    return slope, intercept, projection, 'PASS' if projection <= gate['limit_mb'] else 'FAIL'
++
++
++def rss_gate_step(gate, name, out):
++    """Record this epoch's RSS; at the window end, print the verdict and stop on failure."""
++    rss = host_rss_mb()
++    gate['rss'].append(rss)
++    if len(gate['rss']) == gate['end']:
++        if any(v is None for v in gate['rss'][gate['warm']:gate['end']]):
++            print(f'RSS_GATE {name} unreadable, not evaluated', flush=True)
++            return rss
++        slope, baseline, projection, verdict = rss_gate_verdict(gate)
++        print(f"RSS_GATE {name} {verdict} slope_mb_per_epoch {slope:.3f} baseline_mb {baseline:.0f} "
++              f"projection_mb {projection:.0f} at_epoch {gate['total_epochs']} limit_mb {gate['limit_mb']:.0f} "
++              f"fit_epochs {gate['warm']}-{gate['end'] - 1} of this process", flush=True)
++        if verdict == 'FAIL':
++            (Path(out) / 'RSS_GATE_FAIL.json').write_text(json.dumps(
++                {'slope_mb_per_epoch': slope, 'baseline_mb': baseline, 'projection_mb': projection,
++                 'limit_mb': gate['limit_mb'], 'total_epochs': gate['total_epochs'], 'rss_mb': gate['rss']}) + '\n')
++            raise SystemExit(RSS_GATE_EXIT)
++    return rss
++
++
+ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=False, stop_after=None,
+                  model_builder=None, epoch_observer=None):
+     """Pause at a cumulative epoch for screening/tests without changing config hashes."""
+@@ -668,6 +761,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         return state
+     step = make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits)
+     epochs = cfg['train']['epochs']
++    reload_candidate = ValidationReloader()
++    rss_gate = rss_gate_from_env(epochs)
+     for epoch in range(state['completed_epochs'], epochs):
+         start = time.monotonic()
+         lr = learning_rate(cfg, epoch)
+@@ -699,7 +794,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         # and fresh-load inference can choose different floating-point kernels.
+         candidate = out / 'validation_candidate.keras'
+         model.save(candidate)
+-        validation_model = keras.models.load_model(candidate, compile=False)
++        validation_model = reload_candidate(candidate)
+         check_start = time.monotonic()
+         if cfg['train'].get('ebops_reload_check', 'retrace') == 'stored':
+             verified_cost = stored_state_ebops(model, validation_model)
+@@ -713,7 +808,6 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                               {'loss': loss, 'train_categorical_accuracy': accuracy}, wandb_run)
+             raise Diverged('Nonfinite validation logits')
+         auc, per_auc, val_accuracy = validation_metrics(yv, logits)
+-        del validation_model
+         gc.collect()
+         widths = width_snapshot(model)
+         if state['recovery_frozen']:
+@@ -841,6 +935,9 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         # canary can be read from the arm log without W&B.
+         d20_text = '' if not d20 else (f" ebops_trace_seconds={trace_seconds:.2f}"
+                                        f" ebops_trace_over_epoch={logs['ebops_trace_over_epoch']:.3f} loss={loss:.6f}")
++        if rss_gate is not None:
++            rss = rss_gate_step(rss_gate, cfg['name'], out)
++            d20_text += f" host_rss_mb={rss:.0f}" if rss is not None else ' host_rss_mb=na'
+         print(f"[epoch {epoch + 1}/{epochs}] EBOPs={ebops_text} target={final_target}{floor_text} beta={pid.beta:.3g} val_AUC={auc:.6f} val_accuracy={val_accuracy:.6f} seconds={elapsed:.1f} checkpoint={saved.name if saved else '-'}{d20_text}", flush=True)
+         if wandb_run:
+             import wandb
+diff --git a/tests/test_memory_leak_fix.py b/tests/test_memory_leak_fix.py
+new file mode 100644
+index 0000000..205dbd9
+--- /dev/null
++++ b/tests/test_memory_leak_fix.py
+@@ -0,0 +1,136 @@
++"""Incident 2026-09-28 (review/INCIDENT_stall_20260928.md): per-epoch host-memory growth.
++
++- `ValidationReloader`: one validation model per run; later epochs `load_weights` the saved
++  candidate into it. Its variables and predictions must equal a fresh `load_model` of the same
++  file byte for byte, epoch after epoch, and a whole run must give the same records as the
++  fresh-load path.
++- RSS canary gate (`BNJ_RSS_GATE_LIMIT_MB`, projection form): unset -> no gate and no epoch-line
++  field; baseline + slope x train.epochs <= limit passes; above it the arm stops with exit 5 and
++  RSS_GATE_FAIL.json.
++CPU, tiny model, synthetic data."""
++import json
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_d20_trace import arrays, records
++from test_resume_cadence import tiny_cfg
++
++TIMING = ('epoch_seconds', 'ebops_trace_seconds', 'ebops_reload_check_seconds', 'ebops_trace_over_epoch')
++
++
++def test_reloader_equals_fresh_load_every_epoch(tmp_path):
++    import keras
++    from bnhgq2 import ablation
++    from bnhgq2.compat import apply_keras_compat
++    apply_keras_compat()
++    keras.utils.set_random_seed(1)
++    cfg = tiny_cfg()
++    (xt, yt, xv, yv), _ = arrays()
++    model, _ = ablation.matching_initialization(cfg, xt[:256], 1)
++    ablation.compute_ebops(model, xt)
++    reload = ablation.ValidationReloader()
++    path = tmp_path / 'validation_candidate.keras'
++    rng = np.random.default_rng(1)
++    first = None
++    for epoch in range(3):
++        # move every trainable variable, and the ranges, as training and a trace would
++        for v in model.trainable_variables:
++            v.assign(np.asarray(v) + rng.normal(0, 0.05, v.shape).astype(v.dtype))
++        ablation.compute_ebops(model, xt[: 200 + 100 * epoch])
++        model.save(path)
++        persistent = reload(path)
++        fresh = keras.models.load_model(path, compile=False)
++        if first is None:
++            first = persistent
++        assert persistent is first                               # one model for the run
++        for a, b in zip(persistent.weights, fresh.weights):
++            assert np.asarray(a).tobytes() == np.asarray(b).tobytes(), a.path
++        assert ablation.stored_state_ebops(model, persistent) == ablation.stored_state_ebops(model, fresh)
++        p = np.asarray(persistent.predict(xv, batch_size=64, verbose=0))
++        q = np.asarray(fresh.predict(xv, batch_size=64, verbose=0))
++        assert p.tobytes() == q.tobytes()
++        del fresh
++
++
++def run(tmp_path, monkeypatch, fresh_load):
++    import keras
++    from bnhgq2 import ablation
++    if fresh_load:
++        class Fresh:
++            def __call__(self, path):
++                return keras.models.load_model(path, compile=False)
++        monkeypatch.setattr(ablation, 'ValidationReloader', Fresh)
++    keras.backend.clear_session()
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=4, ebops_trace_sample='train_full', ebops_reload_check='stored')
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    recs = records(tmp_path)
++    for r in recs:
++        for k in TIMING:
++            r.pop(k)
++    return recs
++
++
++def test_run_records_equal_fresh_load_path(tmp_path, monkeypatch):
++    a = run(tmp_path / 'persistent', monkeypatch, fresh_load=False)
++    b = run(tmp_path / 'fresh', monkeypatch, fresh_load=True)
++    assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
++
++
++def test_gate_unset_changes_nothing(monkeypatch):
++    from bnhgq2 import ablation
++    monkeypatch.delenv('BNJ_RSS_GATE_LIMIT_MB', raising=False)
++    assert ablation.rss_gate_from_env(7000) is None
++
++
++def test_gate_window_must_span_100_epochs(monkeypatch):
++    from bnhgq2 import ablation
++    monkeypatch.setenv('BNJ_RSS_GATE_LIMIT_MB', '6144')
++    monkeypatch.setenv('BNJ_RSS_GATE_WINDOW', '5:50')
++    with pytest.raises(ValueError):
++        ablation.rss_gate_from_env(7000)
++
++
++# baseline 2,200 MB, limit 6,144 MiB, 7,000 epochs: the largest passing slope is 0.563 MB/epoch
++@pytest.mark.parametrize('slope,verdict', [(0.0, 'PASS'), (0.5, 'PASS'), (0.6, 'FAIL'), (5.0, 'FAIL'), (90.0, 'FAIL')])
++def test_gate_projection(tmp_path, monkeypatch, capsys, slope, verdict):
++    from bnhgq2 import ablation
++    monkeypatch.setenv('BNJ_RSS_GATE_LIMIT_MB', '6144')
++    monkeypatch.setenv('BNJ_RSS_GATE_WINDOW', '5:105')
++    gate = ablation.rss_gate_from_env(7000)
++    # warm-up jump before W, +-20 MB alternating noise, then the slope under test
++    series = iter([2200.0 + (800.0 if e < 5 else 0.0) + slope * (e - 5) + (20.0 if e % 2 else -20.0)
++                   for e in range(105)])
++    monkeypatch.setattr(ablation, 'host_rss_mb', lambda: next(series))
++    for e in range(104):
++        ablation.rss_gate_step(gate, 'arm', tmp_path)
++    if verdict == 'PASS':
++        ablation.rss_gate_step(gate, 'arm', tmp_path)
++        out = capsys.readouterr().out
++        assert 'RSS_GATE arm PASS' in out and 'projection_mb' in out and 'at_epoch 7000' in out
++        assert not (tmp_path / 'RSS_GATE_FAIL.json').exists()
++    else:
++        with pytest.raises(SystemExit) as stop:
++            ablation.rss_gate_step(gate, 'arm', tmp_path)
++        assert stop.value.code == ablation.RSS_GATE_EXIT == 5
++        assert 'RSS_GATE arm FAIL' in capsys.readouterr().out
++        rec = json.loads((tmp_path / 'RSS_GATE_FAIL.json').read_text())
++        assert rec['limit_mb'] == 6144.0 and rec['projection_mb'] > 6144.0
++    s, b, p, v = ablation.rss_gate_verdict(gate)
++    assert abs(s - slope) < 0.05 and abs(b - 2200.0) < 25 and v == verdict
++
++
++def test_gate_prints_rss_on_epoch_line(tmp_path, monkeypatch, capsys):
++    from bnhgq2 import ablation
++    monkeypatch.setenv('BNJ_RSS_GATE_LIMIT_MB', '1000000')
++    monkeypatch.setenv('BNJ_RSS_GATE_WINDOW', '0:100')
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=2, ebops_trace_sample='train_full', ebops_reload_check='stored')
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    lines = [l for l in capsys.readouterr().out.splitlines() if l.startswith('[epoch ')]
++    assert len(lines) == 2 and all(' host_rss_mb=' in l for l in lines)
+-- 
+2.50.1 (Apple Git-155)
+

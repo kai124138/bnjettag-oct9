@@ -1,0 +1,71 @@
+From f2267b7a50c20dbdbc66fb0981bb04d549ed14c2 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:07 -0700
+Subject: [PATCH 08/14] pos_enc none: export folds a zero PE table instead of
+ failing at convert_binary get_layer('pos_enc'); test
+
+---
+ convert_binary.py          | 11 +++++++++--
+ tests/test_export_no_pe.py | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+), 2 deletions(-)
+ create mode 100644 tests/test_export_no_pe.py
+
+diff --git a/convert_binary.py b/convert_binary.py
+index e1e8b54..9581d57 100644
+--- a/convert_binary.py
++++ b/convert_binary.py
+@@ -402,8 +402,15 @@ def qat_binz_pe(qat_model, cfg):
+     if zeros:
+         raise SystemExit(f"STOP: {zeros} sign-zeros in binarization — binary "
+                          "{-1,+1} claim would be void")
+-    pe = _to_np(qat_model.get_layer("pos_enc").pos).reshape(
+-        cfg["arch"]["n_part"], cfg["arch"]["d_model"])
++    if cfg["arch"].get("pos_enc", "learned") == "none":
++        # arch.pos_enc "none": no AddPositional layer exists. The export folds the PE into
++        # input_proj's (T, D) bias table, so a zero table is the exact no-PE model.
++        if any(layer.name == "pos_enc" for layer in qat_model.layers):
++            raise SystemExit("STOP: pos_enc 'none' config but the checkpoint has a pos_enc layer")
++        pe = np.zeros((cfg["arch"]["n_part"], cfg["arch"]["d_model"]), dtype=np.float32)
++    else:
++        pe = _to_np(qat_model.get_layer("pos_enc").pos).reshape(
++            cfg["arch"]["n_part"], cfg["arch"]["d_model"])
+     return binz, pe, names
+ 
+ 
+diff --git a/tests/test_export_no_pe.py b/tests/test_export_no_pe.py
+new file mode 100644
+index 0000000..77a99ca
+--- /dev/null
++++ b/tests/test_export_no_pe.py
+@@ -0,0 +1,28 @@
++"""pos_enc none: qat_binz_pe returns a zero PE table instead of failing (convert_binary:405)."""
++import copy
++import json
++import os
++from pathlib import Path
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++
++HERE = Path(__file__).resolve().parents[1]
++BASE = json.loads((HERE / 'configs' / 'const0922-a07-n64-s1-fast50-fp32.json').read_text())
++
++
++def test_no_pe_export_table():
++    import convert_binary
++    from bnhgq2 import qat
++    from bnhgq2.compat import apply_keras_compat
++    apply_keras_compat()
++    cfg = copy.deepcopy(BASE)
++    cfg['arch'].update(n_part=8, pos_enc='none')
++    model, _ = qat.build_qat_model(cfg, seed=1)
++    assert not any(layer.name == 'pos_enc' for layer in model.layers)
++    binz, pe, names = convert_binary.qat_binz_pe(model, cfg)
++    assert pe.shape == (8, 32) and not pe.any()
++    cfg['arch']['pos_enc'] = 'learned'
++    model, _ = qat.build_qat_model(cfg, seed=1)
++    _, pe, _ = convert_binary.qat_binz_pe(model, cfg)
++    assert pe.shape == (8, 32) and pe.any()
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,193 @@
+From 4887eae67f76151b94decc0914e611628df01110 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 13:16:47 -0700
+Subject: [PATCH 26/26] PREFLIGHT gate v1 flags 3 and 6: W&B run id and group
+ follow BNJ_STAGE (Job env; pilot/canary -> <group>-canary and a stage-keyed
+ id; production -> config group); tracked runs refuse an unset stage; CPU
+ tests
+
+---
+ bnhgq2/ablation.py        |  7 ++--
+ bnhgq2/wandb_util.py      | 31 +++++++++++++++++
+ run_engram.py             |  9 +++--
+ run_study.py              |  2 ++
+ tests/test_wandb_stage.py | 72 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 115 insertions(+), 6 deletions(-)
+ create mode 100644 tests/test_wandb_stage.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 1e1ea17..14c89ad 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -621,10 +621,11 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+     wandb_run = None
+     if remote:
+         import wandb
+-        from .wandb_util import init_kwargs
+-        run_id = hashlib.sha256(cfg['name'].encode()).hexdigest()[:12]
++        from .wandb_util import init_kwargs, run_stage, stage_group, stage_run_id
++        stage = run_stage(required=True)   # BNJ_STAGE from the Job manifest (never a config key)
++        run_id = stage_run_id(cfg['name'], stage)
+         wandb_run = wandb.init(**init_kwargs(name=seeded_run_name(cfg['name'], seed), job_type='train',
+-                         cfg_project=cfg['train']['wandb_project'], group=cfg['experiment']['group'],
++                         cfg_project=cfg['train']['wandb_project'], group=stage_group(cfg['experiment']['group'], stage),
+                          config={'experiment_config': cfg, 'data': data_info, 'code_sha256': state['code_sha256']}),
+                          id=run_id, resume='allow')
+         wandb_run.summary.update(training_status_summary(state, selection_metric, stop_after))
+diff --git a/bnhgq2/wandb_util.py b/bnhgq2/wandb_util.py
+index 89a9196..456ca9e 100644
+--- a/bnhgq2/wandb_util.py
++++ b/bnhgq2/wandb_util.py
+@@ -55,6 +55,37 @@ def init_kwargs(*, name: str, job_type: str, config: dict | None = None,
+     return kw
+ 
+ 
++# Run stage (PREFLIGHT gate v1, 2026-09-27). The same config names run first in the
++# pilot/canary pod and later in production, so a W&B run id taken from the config name alone
++# makes a production run append to the pilot's run (resume='allow'). BNJ_STAGE (set by the Job
++# manifest, never by a config, so config_sha256 is unchanged) keys the id and the group.
++STAGE_GROUP_SUFFIX = {"canary": "-canary", "pilot": "-canary", "production": ""}
++
++
++def run_stage(required: bool = False) -> str | None:
++    stage = os.environ.get("BNJ_STAGE", "").strip() or None
++    if stage is None and required:
++        raise RuntimeError("BNJ_STAGE must be set (canary, pilot or production) for a tracked run")
++    if stage is not None and stage not in STAGE_GROUP_SUFFIX:
++        raise ValueError(f"BNJ_STAGE={stage!r}; expected one of {sorted(STAGE_GROUP_SUFFIX)}")
++    return stage
++
++
++def stage_run_id(name: str, stage: str | None) -> str:
++    """Deterministic within a stage (a relaunched arm resumes its own run), distinct across
++    stages. stage None: the historical id sha256(name)[:12] (screen runners, no BNJ_STAGE)."""
++    key = name if stage is None else f"{stage}\0{name}"
++    return hashlib.sha256(key.encode()).hexdigest()[:12]
++
++
++def stage_group(group: str | None, stage: str | None) -> str | None:
++    """pilot/canary: '<config group>-canary' (STUDY: canary group chang-n64-20260926-canary;
++    wave 2: chang-n64-20260926-wave2-canary); production or no stage: the config group."""
++    if not group or stage is None:
++        return group
++    return group + STAGE_GROUP_SUFFIX[stage]
++
++
+ def sha256(path: str) -> str:
+     h = hashlib.sha256()
+     with open(path, "rb") as f:
+diff --git a/run_engram.py b/run_engram.py
+index 836c618..9c33954 100644
+--- a/run_engram.py
++++ b/run_engram.py
+@@ -315,10 +315,13 @@ def train(args):
+                 # The epoch trainer has finished its SDK session. Resume the SAME
+                 # remote run only to attach its review artifacts, never create another.
+                 import wandb
+-                from bnhgq2.wandb_util import init_kwargs, log_files_artifact
+-                run_id = hashlib.sha256(cfg['name'].encode()).hexdigest()[:12]
++                from bnhgq2.wandb_util import (init_kwargs, log_files_artifact, run_stage, stage_group,
++                                               stage_run_id)
++                stage = run_stage(required=True)   # the id and group ablation.run_training used
++                run_id = stage_run_id(cfg['name'], stage)
+                 with wandb.init(**init_kwargs(name=cfg['name'], job_type='train',
+-                                cfg_project=cfg['train']['wandb_project'], group=cfg['experiment']['group']),
++                                cfg_project=cfg['train']['wandb_project'],
++                                group=stage_group(cfg['experiment']['group'], stage)),
+                                 id=run_id, resume='must') as review_run:
+                     review_run.summary.update({
+                         'selected_validation_accuracy': accuracy,
+diff --git a/run_study.py b/run_study.py
+index 70a5cec..27dd446 100644
+--- a/run_study.py
++++ b/run_study.py
+@@ -102,6 +102,8 @@ def train(index, stop_after):
+     cfg = json.loads((CAMPAIGN / 'configs' / row['file']).read_text())
+     run_engram.validate_cfg(cfg)
+     run_engram.validate_tracking_destination(cfg)
++    from bnhgq2.wandb_util import run_stage
++    print('RUN_STAGE', run_stage(required=True), flush=True)   # fail before any work, not per retry
+     out = ROOT / 'runs' / row['name']
+     out.mkdir(parents=True, exist_ok=True)
+     if (out / 'DIVERGED.json').exists():
+diff --git a/tests/test_wandb_stage.py b/tests/test_wandb_stage.py
+new file mode 100644
+index 0000000..be034ea
+--- /dev/null
++++ b/tests/test_wandb_stage.py
+@@ -0,0 +1,72 @@
++"""PREFLIGHT gate v1 (2026-09-27): W&B run id and group follow BNJ_STAGE (Job manifest env).
++Deterministic within a stage, distinct across stages; pilot/canary -> '<group>-canary';
++production -> the config group; unset stage refused for a tracked run. Pure functions."""
++import hashlib
++
++import pytest
++
++
++def test_run_id_per_stage():
++    from bnhgq2.wandb_util import stage_run_id
++    name = 'chang0926-a-n64-s1'
++    pilot, prod = stage_run_id(name, 'pilot'), stage_run_id(name, 'production')
++    assert pilot == stage_run_id(name, 'pilot') and prod == stage_run_id(name, 'production')
++    assert pilot != prod and len(pilot) == len(prod) == 12
++    legacy = hashlib.sha256(name.encode()).hexdigest()[:12]
++    assert stage_run_id(name, None) == legacy and legacy not in (pilot, prod)
++    assert stage_run_id('chang0926-a-n64-s2', 'pilot') != pilot
++
++
++def test_group_per_stage():
++    from bnhgq2.wandb_util import stage_group
++    assert stage_group('chang-n64-20260926', 'pilot') == 'chang-n64-20260926-canary'
++    assert stage_group('chang-n64-20260926', 'canary') == 'chang-n64-20260926-canary'
++    assert stage_group('chang-n64-20260926', 'production') == 'chang-n64-20260926'
++    assert stage_group('chang-n64-20260926-wave2', 'canary') == 'chang-n64-20260926-wave2-canary'
++    assert stage_group('chang-n64-20260926', None) == 'chang-n64-20260926'
++
++
++def test_stage_env(monkeypatch):
++    from bnhgq2.wandb_util import run_stage
++    monkeypatch.delenv('BNJ_STAGE', raising=False)
++    assert run_stage() is None
++    with pytest.raises(RuntimeError):
++        run_stage(required=True)
++    monkeypatch.setenv('BNJ_STAGE', 'pilot')
++    assert run_stage(required=True) == 'pilot'
++    monkeypatch.setenv('BNJ_STAGE', 'prod')
++    with pytest.raises(ValueError):
++        run_stage()
++
++
++def test_run_training_passes_stage_id_and_group(monkeypatch, tmp_path):
++    """run_training(remote=True) hands wandb.init the stage id and group (wandb stubbed)."""
++    import sys
++    import types
++    from bnhgq2 import ablation
++    from bnhgq2.wandb_util import stage_group, stage_run_id
++    from test_d20_trace import arrays
++    from test_resume_cadence import tiny_cfg
++    seen = {}
++
++    class Run:
++        summary = types.SimpleNamespace(update=lambda *a, **k: None)
++        def log(self, *a, **k): pass
++        def finish(self, *a, **k): pass
++
++    def init(**kw):
++        seen.update(kw)
++        return Run()
++    monkeypatch.setitem(sys.modules, 'wandb', types.SimpleNamespace(init=init, run=None))
++    cfg = tiny_cfg()
++    cfg['train']['epochs'] = 1
++    cfg['experiment']['remote_every_epochs'] = 10 ** 6
++    (xt, yt, xv, yv), info = arrays(n_train=300)
++    monkeypatch.delenv('BNJ_STAGE', raising=False)
++    with pytest.raises(RuntimeError):
++        ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'none', remote=True)
++    monkeypatch.setenv('BNJ_STAGE', 'pilot')
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'pilot', remote=True, stop_after=1)
++    assert seen['id'] == stage_run_id(cfg['name'], 'pilot') and seen['resume'] == 'allow'
++    assert seen['group'] == stage_group(cfg['experiment']['group'], 'pilot')
++    assert seen['group'].endswith('-canary')
+-- 
+2.50.1 (Apple Git-155)
+

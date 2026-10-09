@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "match": "prefix",
+  "note": "Literal prefixes of the reason strings score.py can emit. A reason matching no prefix, or prefixes of more than one class, is treated as evaluator. A second score attempt (--score-attempt 2) is allowed only for evaluator and infrastructure reasons.",
+  "classes": {
+    "scientific": [
+      "no feasible checkpoint in epochs <"
+    ],
+    "evaluator": [
+      "eval/MANIFEST.json missing",
+      "eval file ",
+      "MANIFEST.json does not cover",
+      "nondegenerate_threshold.py: ",
+      "config target ",
+      "stop epoch ",
+      "run threshold ",
+      "run validation labels sha differs",
+      "run 0-bit floor ",
+      "traced records carry another threshold",
+      "threshold from y_val ",
+      "labels sha from y_val differs",
+      "runner best_feasible ",
+      "run training split differs from the cache",
+      "certify_ebops ",
+      "CPU replay accuracy ",
+      "score not finite",
+      "score file exists with a different primary result",
+      "internal error "
+    ],
+    "infrastructure": [
+      "run directory missing",
+      "config.json missing",
+      "snapshot epoch-",
+      "snapshot completed_epochs ",
+      "activation_widths.jsonl missing",
+      "records not contiguous",
+      "nondegenerate_rule.json missing",
+      "model_best.keras missing from snapshot",
+      "no traced epoch"
+    ],
+    "diverged": [
+      "DIVERGED.json present"
+    ]
+  },
+  "note_2026_10_08": "Orchestrator decisions after PREFLIGHT review v2 (B4): divergence is its own outcome class, not \"does not qualify\"; a run with no traced epoch produced no records (infrastructure)."
+}

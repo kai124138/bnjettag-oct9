@@ -1,0 +1,75 @@
+From b177b4fcfc94267f6c2bb7a6cdae6d22716d25ca Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 08:42:06 -0700
+Subject: [PATCH 19/38] accumulator-ebops-metric: experiment.accumulator_metric
+ logs b_acc = b_act + ceil(log2 fan_in) per binary layer (Q13, Z03)
+
+---
+ code/bnhgq2/ablation.py   |  3 +++
+ code/bnhgq2/delta_keys.py |  5 +++++
+ code/bnhgq2/ebops_calc.py | 25 +++++++++++++++++++++++++
+ 3 files changed, 33 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 710a03f..ea3b253 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -1134,6 +1134,9 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             logs['ebops_traced'] = int(traced)
+             if not traced:
+                 logs.update(ebops=None, budget_met=None, ebops_in_training_over_traced=None)
++        if cfg['experiment'].get('accumulator_metric'):  # Delta: beside native EBOPs, never instead
++            from .ebops_calc import accumulator_bits
++            logs.update({f'accumulator_bits/{name}': v['b_acc'] for name, v in accumulator_bits(model).items()})
+         if epoch_observer is not None:
+             diagnostics = epoch_observer(model, sample, epoch)
+             if set(diagnostics) & set(logs):
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index a2c83f2..dec852b 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -287,3 +287,8 @@ WEIGHT_SCHEMES.add('ternary_absmean')
+ # hgq-learnable-weights: HGQ kbi learnable weight widths, labelled baseline (M049). This is the
+ # branch `kbi_learnable` never had (code-surface §4 trap: that name trains W8A8 silently).
+ WEIGHT_SCHEMES.add('hgq_learnable')
++
++# accumulator-ebops-metric: per-binary-layer b_acc = b_act + ceil(log2 fan_in) in the epoch logs
++# (card Q13, DELTA.md Z03). Key name set here; no Delta entry names it (always-on diagnostic).
++register('experiment.accumulator_metric', 'accumulator-ebops-metric', _is_bool,
++         active=lambda v: v is True, export_ok=True)
+diff --git a/code/bnhgq2/ebops_calc.py b/code/bnhgq2/ebops_calc.py
+index 98d4228..8b69494 100644
+--- a/code/bnhgq2/ebops_calc.py
++++ b/code/bnhgq2/ebops_calc.py
+@@ -24,3 +24,28 @@ def compute_ebops(model, X_calib, batch_size=2048):
+         if getattr(layer, "enable_ebops", False) and getattr(layer, "_ebops", None) is not None:
+             per_layer[layer.name] = int(np.asarray(layer.ebops))
+     return {"total": int(total), "per_layer": per_layer}
++
++
++def accumulator_bits(model):
++    """Delta (accumulator-ebops-metric, card Q13, DELTA.md Z03): closed-form accumulator
++    width b_acc = b_act + ceil(log2(fan_in)) per binary (+-1) layer, reported BESIDE native
++    EBOPs, never in place of it. b_act is the input quantizer's width (k + i + f); with
++    heterogeneous input widths the max gives the overflow-safe bound and the mean is reported
++    beside it. Per layer only: the cards define no accumulator-inclusive total."""
++    from keras import ops
++    from .qat import BitQDense, BitQEinsumDense
++    out = {}
++    for layer in model.layers:
++        if not isinstance(layer, (BitQDense, BitQEinsumDense)) or not getattr(layer, "enable_iq", True):
++            continue
++        shape = tuple(int(d) for d in layer._kernel.shape)
++        if hasattr(layer, "equation"):
++            x_axes, k_axes = layer.equation.split("->")[0].split(",")
++            fan_in = int(np.prod([d for ax, d in zip(k_axes, shape) if ax in x_axes]))
++        else:
++            fan_in = shape[0]
++        bits = np.asarray(ops.convert_to_numpy(layer.iq.quantizer.bits), np.float64)
++        extra = int(np.ceil(np.log2(fan_in)))
++        out[layer.name] = {"fan_in": fan_in, "b_act_max": float(bits.max()), "b_act_mean": float(bits.mean()),
++                           "b_acc": float(bits.max()) + extra, "b_acc_mean_input": float(bits.mean()) + extra}
++    return out
+-- 
+2.50.1 (Apple Git-155)
+

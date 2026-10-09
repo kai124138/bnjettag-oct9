@@ -1,0 +1,36 @@
+From 6cf48beea0c2cfc148e46e4a8531c9c57ea1977e Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:35:19 -0700
+Subject: [PATCH 25/38] pt-gate-threshold: no training code (anchor [A3]
+ arch.pt_gate_gev); validator refuses 0, Delta ungated is null (M038, M075,
+ M076, M078)
+
+---
+ code/bnhgq2/delta_keys.py | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index f5910fe..962e4bc 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -485,3 +485,17 @@ def _bop_param(value, cfg):
+ register('train.binary_optimizer', 'bop-optimizer', _binary_optimizer, export_ok=True)
+ register('train.bop_gamma', 'bop-optimizer', _bop_param, export_ok=True)
+ register('train.bop_tau', 'bop-optimizer', _bop_param, export_ok=True)
++
++# pt-gate-threshold (anchor tree only; M038, M075, M076, M078). No training code: the anchor's
++# [A3] key arch.pt_gate_gev is the knob (null = ungated, x = keep raw pT >= x GeV; a new cache
++# per value). Delta writes 0 for "ungated"; the generator maps 0 -> null, because 0 would build
++# a gated cache (pT >= 0 keeps every slot) with a different identity. This check refuses 0 so an
++# unmapped config cannot slip through.
++def _pt_gate(value, cfg):
++    if value is None:
++        return None
++    if isinstance(value, bool) or not isinstance(value, (int, float)) or not value > 0:
++        return 'must be null (ungated) or a number > 0 in GeV; Delta "0 = ungated" is written as null'
++
++
++register('arch.pt_gate_gev', 'pt-gate-threshold', _pt_gate, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

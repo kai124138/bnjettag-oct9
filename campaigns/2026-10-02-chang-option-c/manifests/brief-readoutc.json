@@ -1,0 +1,81 @@
+{
+  "amendment_ref": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md",
+  "approval_ref": "PENDING launch authorization; design decision local/2026-10-01-execution/chang-option-c-decision.json",
+  "changes": "Same registered certification and [A26] entropy scripts as readout-b; adds monitor_c.py on each frozen snapshots/epoch-0500/pid_telemetry.jsonl. CPU only, TF32 off, no training, new output directory.",
+  "decision_ref": "local/2026-10-01-execution/chang-option-c-decision.json",
+  "expected_metrics": [
+    {
+      "expectation": "registered relative 1e-6 on feasible selections",
+      "name": "traced EBOP certification",
+      "split": "training n=558000"
+    },
+    {
+      "expectation": "reported per head",
+      "name": "[A26] attention entropy and Q/K/V 0-bit",
+      "split": "validation n=62000"
+    },
+    {
+      "expectation": "audit PASS; report only",
+      "name": "controller audit and at-target report",
+      "split": "telemetry epochs 1-500"
+    }
+  ],
+  "limitations": [
+    "Historical 42abed runs, snapshots and readouts are evidence only; no historical checkpoint may initialize or resume these runs (config and code SHA guards).",
+    "Pilot validation values select no arm, alter no primary rule and support no performance claim.",
+    "The epoch-500 pause does not observe the first LR restart after epoch 500."
+  ],
+  "outputs": [
+    "/data/chang-n64-20260926/pilot-c-20261002/readout-epoch-0500-691946-r1"
+  ],
+  "production_gate": {
+    "reference": "K1 triggered; option (c) selected 2026-10-01T06:00:02Z",
+    "status": "pending"
+  },
+  "purpose": "Registered epoch-500 readout of the option-(c) pilot plus the controller audit and at-target accuracy/attention report.",
+  "runs": [
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s1.json",
+      "name": "chang1002c-a-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s2.json",
+      "name": "chang1002c-a-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s1.json",
+      "name": "chang1002c-d-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-e1-n64-s1.json",
+      "name": "chang1002c-e1-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json",
+      "name": "chang1002c-a07-350-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s1.json",
+      "name": "chang1002c-c-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s1.json",
+      "name": "chang1002c-f-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-cprime-n64-s1.json",
+      "name": "chang1002c-cprime-n64-s1"
+    }
+  ],
+  "scientific_gate": {
+    "reference": "campaigns/2026-10-02-chang-option-c/PREFLIGHT.md; amendment design PASS only (campaigns/2026-10-01-chang-traced-pid/REVIEW_DRAFT.md); K1 triggered, production blocked",
+    "status": "pending"
+  },
+  "stop_rules": [
+    {
+      "action": "existing-runner-guard",
+      "approval_ref": "Job script exit status; registered readout bound",
+      "condition": "any script exit nonzero, missing arm or 4 h deadline"
+    }
+  ]
+}

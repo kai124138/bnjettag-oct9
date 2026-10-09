@@ -1,0 +1,72 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-ebops-accuracy-interim-0915
+  namespace: cms-ml
+  labels:
+    app: kai-ebops-accuracy-eval
+spec:
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 86400
+  template:
+    metadata:
+      labels:
+        app: kai-ebops-accuracy-eval
+    spec:
+      restartPolicy: Never
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+        - name: evaluate
+          image: python:3.12
+          command: ["bash", "-c"]
+          args:
+            - |
+              set -euo pipefail
+              export KERAS_BACKEND=tensorflow
+              export CUDA_VISIBLE_DEVICES=-1
+              export TF_CPP_MIN_LOG_LEVEL=2
+              export OMP_NUM_THREADS=4
+              export TF_NUM_INTRAOP_THREADS=4
+              export TF_NUM_INTEROP_THREADS=2
+              export EVAL_ARMS=r3-prob8,r6-distill
+              export MERGE_EXISTING=1
+              mkdir -p /work/code
+              echo '64d7fd909bd71c731f882bc3344e69c055d7abed10087a460c767787882e063c  /cmcode/hgq2.tar.gz' | sha256sum -c -
+              tar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1
+              export PYTHONPATH=/work/code
+              pip install -q --no-cache-dir tensorflow==2.21.0 keras==3.15.0 hgq2==0.1.9 quantizers==1.2.2 h5py==3.14.0 hls4ml==1.3.0 numpy==2.5.0
+              python -u /eval/eval_ebops_accuracy.py
+          resources:
+            requests:
+              cpu: "4"
+              memory: 8Gi
+              ephemeral-storage: 16Gi
+            limits:
+              cpu: "4"
+              memory: 8Gi
+              ephemeral-storage: 16Gi
+          volumeMounts:
+            - name: training-code
+              mountPath: /cmcode
+              readOnly: true
+            - name: evaluation-code
+              mountPath: /eval
+              readOnly: true
+            - name: work
+              mountPath: /work
+            - name: persistent
+              mountPath: /data
+      volumes:
+        - name: training-code
+          configMap:
+            name: kai-ebops-abl-code-64d7fd909b
+        - name: evaluation-code
+          configMap:
+            name: kai-ebops-accuracy-code2-20260915
+        - name: work
+          emptyDir:
+            sizeLimit: 16Gi
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: kai-data

@@ -1,0 +1,51 @@
+{
+  "index": 3,
+  "name": "chang0926-a-n64-s4",
+  "arm": "A",
+  "seed": 4,
+  "n_part": 64,
+  "file": "chang0926-a-n64-s4.json",
+  "production": true,
+  "target_ebops": 350000,
+  "zero_floor_ebops": 171526,
+  "arch": {
+    "d_model": 24,
+    "n_heads": 2,
+    "pos_enc": "none"
+  },
+  "quant_set": "chang",
+  "config_sha256": "fad33c2e84de31375defae7a80b81aa24b07d3c89311f2fb69d2cb1dc01e82c2",
+  "status": "verified_canary",
+  "completed_epochs": 21,
+  "selected": {
+    "epoch": 19,
+    "val_macro_auc": 0.8683678275427067,
+    "val_categorical_accuracy": 0.5972580645161291,
+    "ebops": 1662092,
+    "ebops_above_floor": 1490566
+  },
+  "checkpoint": "model_min_ebops.keras",
+  "checkpoint_sha256": "68841699d2a11d6a7870e5f0e706a4b972e65995e915d144fd5966c8a3ad885a",
+  "budget_met": false,
+  "validation_accuracy": 0.5972580645161291,
+  "validation_macro_auc": 0.8683678275427067,
+  "validation_per_class_auc": [
+    0.8792437578122299,
+    0.8609215419427018,
+    0.836253204371418,
+    0.8376352385925143,
+    0.9277853949946695
+  ],
+  "wall_seconds_this_invocation": 1822.659687999636,
+  "test_set_used": false,
+  "hardware_validated": false,
+  "validation_labels_sha256": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709",
+  "reload_ebops_check": "stored",
+  "source_sha256": "041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42",
+  "selection_cost": 1662092,
+  "selection_cost_convention": "native_hgq2",
+  "native_hgq2_backbone_ebops": 1662092,
+  "custom_estimated_bitops": 0,
+  "modules": {},
+  "warning": "Augmented total is not directly interchangeable with historical native HGQ2 totals."
+}

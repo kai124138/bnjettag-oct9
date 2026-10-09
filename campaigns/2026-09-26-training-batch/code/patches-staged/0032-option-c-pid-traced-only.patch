@@ -1,0 +1,307 @@
+From 920896726c1d359ec247af460b34cbbfde16796c Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Mon, 28 Sep 2026 16:53:53 -0700
+Subject: [PATCH 32/32] Option (c), staged: opt-in train.ebops.pid_input
+ traced_only (PID steps only on traced EBOPs, beta held between traces)
+
+Kai K1 (2026-09-28), STUDY arbiter v10. Staged, not shipped. Absent key: runner unchanged against 42abed4b (records, files, EBOPs identical on regime A and the pilot-b regime-B shape).
+---
+ bnhgq2/ablation.py            | 101 +++++++++++++++++++++++++-
+ tests/test_pid_traced_only.py | 132 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 230 insertions(+), 3 deletions(-)
+ create mode 100644 tests/test_pid_traced_only.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 71cbe59..db20f48 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -9,6 +9,7 @@ import copy
+ import gc
+ import hashlib
+ import json
++import math
+ import os
+ from pathlib import Path
+ import shutil
+@@ -489,6 +490,85 @@ def is_traced_epoch(cfg, epoch):
+     return k is None or epoch == 0 or (epoch + 1) % k == 0 or epoch + 1 == cfg['train']['epochs']
+ 
+ 
++PID_TRACED_INTEGRAL = ('per_epoch', 'per_step')
++
++
++def pid_traced_only(cfg):
++    """Option (c) (Kai K1, 2026-09-28; staged): `train.ebops.pid_input: "traced_only"`. Under
++    regime B the PID reads only the traced full-split EBOPs: it is stepped at the start of epoch
++    e iff epoch e - 1 was traced (or e is inside the BetaPID warmup), and beta is held otherwise.
++    Absent key: None, and the runner is byte-identical to 42abed4b (slot P: the PID steps every
++    epoch and reads the in-training EBOPs on untraced epochs).
++
++    `train.ebops.pid_traced_integral` ("per_epoch", the default, or "per_step") says how the
++    integral is fed when a step covers D epochs: "per_epoch" adds D times the held traced error
++    (the error the per-epoch controller would have integrated had it seen that trace for D
++    epochs; i = 0.05 keeps its per-epoch meaning); "per_step" adds it once (hgq2 `PID.__call__`
++    unchanged, so the integral acts D times slower per epoch). Returns the mode or None."""
++    eb = cfg['train']['ebops']
++    mode = eb.get('pid_input')
++    if mode is None:
++        if eb.get('pid_traced_integral') is not None:
++            raise ValueError('train.ebops.pid_traced_integral needs train.ebops.pid_input "traced_only"')
++        return None
++    if mode != 'traced_only':
++        raise ValueError(f'train.ebops.pid_input must be absent or "traced_only", got {mode!r}')
++    if ebops_trace_every(cfg) is None:
++        raise ValueError('train.ebops.pid_input "traced_only" needs train.ebops_trace_every (regime B)')
++    integral = eb.get('pid_traced_integral', 'per_epoch')
++    if integral not in PID_TRACED_INTEGRAL:
++        raise ValueError(f'train.ebops.pid_traced_integral must be one of {PID_TRACED_INTEGRAL}, got {integral!r}')
++    pid = eb['pid']
++    if float(pid.get('d', 0.0)) != 0.0:
++        raise ValueError('train.ebops.pid_input "traced_only" is defined for d == 0 only (a derivative '
++                         'over a D-epoch step has no per-epoch meaning)')
++    warmup = int(pid.get('warmup', 10))
++    if warmup >= 1 and not is_traced_epoch(cfg, warmup - 1):
++        # BetaPID seeds the integral only at epoch == warmup (beta_pid.py:140-148); a held step
++        # there would skip the seed and jump beta from init_beta to 10 ** (p * err).
++        raise ValueError(f'train.ebops.pid_input "traced_only" needs epoch warmup - 1 = {warmup - 1} traced')
++    return integral
++
++
++def pid_step_epochs(cfg, epoch):
++    """Option (c): (stepped, span). `stepped`: whether BetaPID.on_epoch_begin runs at zero-based
++    `epoch`. `span`: epochs since the previous stepped epoch at or after the warmup (1 for the
++    first such step, where BetaPID seeds the integral). A pure function of (cfg, epoch), so a
++    resume from an untraced checkpoint needs no new state."""
++    warmup = int(cfg['train']['ebops']['pid'].get('warmup', 10))
++    if epoch < warmup:
++        return True, 1    # hgq2 warmup branch: only re-applies init_beta, reads no EBOPs
++    if not is_traced_epoch(cfg, epoch - 1):
++        return False, 0
++    previous = epoch - 1
++    while previous >= warmup and not is_traced_epoch(cfg, previous - 1):
++        previous -= 1
++    return True, (epoch - previous if previous >= warmup else 1)
++
++
++def pid_error(pid):
++    """The error hgq2 0.1.9 `BetaPID.on_epoch_begin` feeds `PID.__call__` (neg=True, so
++    err = pv - sv): log10(E / T) with `log`, else E / T - 1 (beta_pid.py:150-153)."""
++    ratio = pid._ebops / pid.target_ebops
++    return math.log10(ratio) if pid.log else ratio - 1.0
++
++
++def pid_begin_traced_only(pid, cfg, epoch, integral_mode):
++    """Option (c) replacement for `pid.on_epoch_begin(epoch, {})`. Held epoch: not called, beta
++    and the PID state unchanged. Stepped epoch: with "per_epoch", the integral first receives
++    (span - 1) extra copies of the held traced error, then hgq2 adds the last one. hgq2 has no
++    anti-windup (`PID.__call__` integrates unconditionally, beta_pid.py:29; beta is clamped only
++    after, :158), and neither mode adds one. Returns (stepped, span)."""
++    stepped, span = pid_step_epochs(cfg, epoch)
++    if not stepped:
++        return False, 0
++    warmup = int(cfg['train']['ebops']['pid'].get('warmup', 10))
++    if integral_mode == 'per_epoch' and epoch > warmup and span > 1:
++        pid.pid.integral += (span - 1) * pid_error(pid)
++    pid.on_epoch_begin(epoch, {})
++    return True, span
++
++
+ def model_ebops(model):
+     """The EBOPs sum BetaPID reads (`BaseBetaPID.get_ebops`, hgq2 0.1.9): the stored
+     `layer.ebops` of the top-level layers, whatever pass wrote them last."""
+@@ -699,6 +779,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+     trace_rows = ebops_trace_sample(cfg, xt)
+     trace_batch = ebops_trace_batch(cfg)
+     trace_every = ebops_trace_every(cfg)   # [D20] regime B; None => every epoch (regime A)
++    pid_integral_mode = pid_traced_only(cfg)   # option (c); None => slot P as in 42abed4b
+ 
+     def traced_ebops(m):
+         return compute_ebops(m, trace_rows, batch_size=trace_batch)
+@@ -768,7 +849,11 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         lr = learning_rate(cfg, epoch)
+         optimizer.learning_rate.assign(lr)
+         pid.target_ebops = training_target(cfg, epoch)
+-        pid.on_epoch_begin(epoch, {})
++        if pid_integral_mode is None:
++            pid.on_epoch_begin(epoch, {})
++        else:
++            # option (c): step only on the traced EBOPs of epoch - 1; otherwise beta is held
++            pid_stepped, pid_span = pid_begin_traced_only(pid, cfg, epoch, pid_integral_mode)
+         order = np.random.default_rng(np.random.SeedSequence([cfg['train']['order_seed'], epoch])).permutation(len(xt)).astype('int32')
+         loss, ce, kd, accuracy = [float(v) for v in step(order, state['recovery_frozen']).numpy()]
+         if not np.isfinite([loss, ce, kd, accuracy]).all():
+@@ -857,14 +942,21 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         if recovery_after is not None and epoch + 1 >= recovery_after and feasible and not state['recovery_frozen']:
+             state.update(recovery_frozen=True, freeze_epoch=epoch + 1, freeze_widths=raw_widths(model))
+             print(f'[recovery] freeze at end of epoch {epoch + 1}; Adam slots and LR preserved', flush=True)
+-        pid.on_epoch_end(epoch, {})
++        pid_held = pid_integral_mode is not None and not traced
++        if pid_held:
++            # option (c), untraced epoch: on_epoch_end is not called, so the PID never reads the
++            # in-training EBOPs; it keeps the last traced value, the only number it steps on.
++            assert pid._ebops == state['pid']['ebops'], \
++                ('BetaPID EBOPs moved on an untraced epoch', pid._ebops, state['pid']['ebops'])
++        else:
++            pid.on_epoch_end(epoch, {})
+         if d20 and traced:
+             # [D20] BetaPID reads the stored layer.ebops at on_epoch_end, which the trace
+             # above wrote last: the PID is driven by the traced EBOPs, the same number the
+             # feasibility test uses. Enforced here, not left to call order.
+             assert abs(pid._ebops - cost['total']) <= 1e-6 * max(cost['total'], 1), \
+                 ('BetaPID EBOPs differs from the traced EBOPs', pid._ebops, cost['total'])
+-        elif d20:
++        elif d20 and not pid_held:
+             # [D20] regime B, untraced epoch: no trace ran, so the PID reads the in-training
+             # EBOPs of the last training step (the number jsc150's FreeEBOPs logs).
+             assert pid._ebops == in_training_ebops, \
+@@ -897,6 +989,9 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                         # [D20] the trace's share of s_e, measured by every run (canary included)
+                         ebops_trace_seconds=trace_seconds, ebops_reload_check_seconds=reload_check_seconds,
+                         ebops_trace_over_epoch=(trace_seconds + reload_check_seconds) / max(elapsed, 1e-9))
++        if pid_integral_mode is not None:
++            logs.update(pid_stepped=int(pid_stepped), pid_step_span=int(pid_span),
++                        pid_integral=float(pid.pid.integral))
+         if trace_every is not None:
+             # [D20] regime B: `ebops` and `budget_met` are traced quantities; null on an
+             # untraced epoch (the in-training value is `ebops_in_training`).
+diff --git a/tests/test_pid_traced_only.py b/tests/test_pid_traced_only.py
+new file mode 100644
+index 0000000..700b8fa
+--- /dev/null
++++ b/tests/test_pid_traced_only.py
+@@ -0,0 +1,132 @@
++"""Option (c) (Kai K1, 2026-09-28; staged, not shipped): `train.ebops.pid_input: "traced_only"`.
++Under regime B the PID steps only on the traced full-split EBOPs of the previous epoch and holds
++beta on every other epoch; `train.ebops.pid_traced_integral` ("per_epoch" default, "per_step")
++sets how the integral is fed across a D-epoch step. Absent key: slot P, as in 42abed4b
++(test_trace_every.py). CPU, tiny model, synthetic rows."""
++import copy
++import json
++import math
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_d20_trace import arrays, records
++from test_trace_every import TIMING, regime_b
++
++
++def option_c(integral=None, **kw):
++    cfg = regime_b(**kw)
++    cfg['train']['ebops']['pid_input'] = 'traced_only'
++    if integral is not None:
++        cfg['train']['ebops']['pid_traced_integral'] = integral
++    return cfg
++
++
++def test_key_semantics_and_guards():
++    from bnhgq2.ablation import pid_traced_only
++    assert pid_traced_only(regime_b()) is None                       # absent: slot P
++    assert pid_traced_only(option_c()) == 'per_epoch'                # default
++    assert pid_traced_only(option_c('per_step')) == 'per_step'
++    bad = []
++    c = option_c(); c['train']['ebops']['pid_input'] = 'in_training'; bad.append(c)
++    c = option_c('per_time'); bad.append(c)
++    c = option_c(); del c['train']['ebops_trace_every']; bad.append(c)        # regime A
++    c = option_c(); c['train']['ebops']['pid']['d'] = 0.1; bad.append(c)      # derivative
++    c = option_c(); c['train']['ebops']['pid']['warmup'] = 2; bad.append(c)   # seed epoch 1 untraced (k=3)
++    c = regime_b(); c['train']['ebops']['pid_traced_integral'] = 'per_step'; bad.append(c)
++    for c in bad:
++        with pytest.raises(ValueError):
++            pid_traced_only(c)
++
++
++def test_production_step_schedule():
++    """k = 10, 7,000 epochs, warmup 1: steps at 0 (warmup branch), 1 (seed, after the epoch-0
++    trace), then 10, 20, ..., 6,990; spans 1, 1, 9, 10, 10, ...; the last trace (end of epoch
++    7,000) drives no step."""
++    from bnhgq2.ablation import pid_step_epochs, pid_traced_only
++    cfg = option_c(epochs=7000, k=10)
++    cfg['experiment']['snapshot_every_epochs'] = 500
++    cfg['train']['ebops']['pid']['warmup'] = 1
++    assert pid_traced_only(cfg) == 'per_epoch'
++    steps = [(e, span) for e in range(7000) for stepped, span in [pid_step_epochs(cfg, e)] if stepped]
++    assert [e for e, _ in steps] == [0, 1] + list(range(10, 7000, 10))
++    assert [s for _, s in steps[:5]] == [1, 1, 9, 10, 10] and {s for _, s in steps[3:]} == {10}
++    assert len(steps) == 701
++    # per unit time the integral receives one error per epoch, as in the per-epoch controller
++    assert sum(s for e, s in steps if e >= 1) == 6990          # epochs 1..6,990, one error each
++
++
++@pytest.mark.parametrize('integral', ['per_epoch', 'per_step'])
++def test_beta_held_on_untraced_stepped_on_traced(tmp_path, integral):
++    from bnhgq2 import ablation
++    cfg = option_c(integral)                       # epochs 7, k 3: traced 0, 2, 5, 6
++    target = cfg['train']['ebops']['pid']['target_ebops']
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    recs = records(tmp_path)
++    assert [r['ebops_traced'] for r in recs] == [1, 0, 1, 0, 0, 1, 1]
++    # stepped at the start of e iff e - 1 was traced (or e < warmup = 1)
++    assert [r['pid_stepped'] for r in recs] == [1, 1, 0, 1, 0, 0, 1]
++    assert [r['pid_step_span'] for r in recs] == [1, 1, 0, 2, 0, 0, 3]
++    last_traced = None
++    for e, r in enumerate(recs):
++        if e >= 1 and not r['pid_stepped']:
++            # held: beta and integral exactly as at the end of the previous epoch
++            assert r['beta'] == recs[e - 1]['beta'] and r['pid_integral'] == recs[e - 1]['pid_integral']
++        if e >= 2 and r['pid_stepped']:
++            # stepped on the previous (traced) EBOPs; beta moves (target 1e9, never clamped here)
++            assert r['beta'] != recs[e - 1]['beta']
++            err = math.log10(recs[e - 1]['ebops'] / target)
++            span = r['pid_step_span'] if integral == 'per_epoch' else 1
++            assert r['pid_integral'] == pytest.approx(recs[e - 1]['pid_integral'] + span * err, rel=1e-12)
++            p, i = cfg['train']['ebops']['pid']['p'], cfg['train']['ebops']['pid']['i']
++            beta = 10 ** (p * err + i * r['pid_integral'])
++            assert r['beta'] == pytest.approx(min(max(beta, 1e-10), 1e-3), rel=1e-9)
++        if r['ebops_traced']:
++            last_traced = r['ebops']
++            assert r['pid_ebops'] == pytest.approx(r['ebops'], rel=1e-6)
++        else:
++            # the PID never reads the in-training EBOPs: it holds the last traced value
++            assert r['pid_ebops'] == last_traced and r['ebops_in_training'] > 0
++
++
++def test_per_epoch_and_per_step_differ_only_in_integral(tmp_path):
++    from bnhgq2 import ablation
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(option_c('per_epoch'), (xt, yt, xv, yv), info, tmp_path / 'a')
++    ablation.run_training(option_c('per_step'), (xt, yt, xv, yv), info, tmp_path / 'b')
++    a, b = records(tmp_path / 'a'), records(tmp_path / 'b')
++    assert [r['beta'] for r in a[:3]] == [r['beta'] for r in b[:3]]   # before the first span > 1
++    assert a[3]['pid_integral'] != b[3]['pid_integral']
++
++
++def test_resume_across_untraced_pause_replays(tmp_path):
++    """checkpoint_every 2 against k 3 (production: 25 against 10), so the pause at epoch 4 is
++    untraced; resume must replay the uninterrupted run (beta held, span recomputed)."""
++    import keras
++    from bnhgq2 import ablation
++    cfg = option_c()
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'straight')
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'paused', stop_after=4)
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path / 'paused')
++
++    def strip(rs):
++        return [{k: v for k, v in r.items() if k not in TIMING} for r in rs]
++    assert strip(records(tmp_path / 'straight')) == strip(records(tmp_path / 'paused'))
++    for name in ('model_best.keras', 'model_min_ebops.keras'):
++        a = keras.models.load_model(tmp_path / 'straight' / name, compile=False)
++        b = keras.models.load_model(tmp_path / 'paused' / name, compile=False)
++        for va, vb in zip(a.weights, b.weights):
++            assert np.asarray(va).tobytes() == np.asarray(vb).tobytes(), va.path
++
++
++def test_slot_p_run_cannot_resume_as_option_c(tmp_path):
++    """A regime-B (slot P) checkpoint refuses an option-(c) config: the config sha differs."""
++    from bnhgq2 import ablation
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(regime_b(), (xt, yt, xv, yv), info, tmp_path, stop_after=4)
++    with pytest.raises(AssertionError, match='Resume config mismatch'):
++        ablation.run_training(option_c(), (xt, yt, xv, yv), info, tmp_path)
+-- 
+2.50.1 (Apple Git-155)
+

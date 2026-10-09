@@ -1,0 +1,64 @@
+{
+  "approval_ref": "Kai-20261001-confirmation-replay-diagnostic-pending-action-time-record",
+  "changes": "New explicitly diagnostic repack:157files including152byte-identical historical members, embedded unchanged original26f3 archive, exact recovered A02-s3 config and diagnostic helpers. Newoutput/provenance only; no source/checkpoint mutation. Writable handoff mount adaptation requires review.",
+  "config_canonical_sha256": "a55d9853f0034caf3b7007847a6eed7ff39d717ed57ca16d866cf13f4fc54a26",
+  "diagnostic_archive_sha256": "39b5ad07beaf4edc82fa60b79edc96ea95005609742e777936d7a8389428776f",
+  "expected_metrics": [
+    {
+      "expectation": "Original metric functions, batch4096, rtol0 atol1e-7; mismatch is recorded, not tolerated or used for reselection.",
+      "name": "selected-checkpoint historical validation AUC/accuracy replay",
+      "split": "same ordered validation n=124000; training trace n=256 from cache n=496000"
+    },
+    {
+      "expectation": "Record hashes and differences; neither passes nor mismatches authorize resume.",
+      "name": "prediction and variable-state reproducibility",
+      "split": "same124000 validation rows across four predeclared predictions"
+    }
+  ],
+  "historical_archive_sha256": "26f3cc40a8f7c9ff378760c5b0d8ce046508cb4de585f9c4b80ea93653515a45",
+  "limitations": [
+    "terminal-attempt GPU/driver/container digest",
+    "transitive CUDA/cuDNN package versions",
+    "loaded prediction model jit_compile/dtype policy",
+    "runtime TF32 API observation",
+    "op-determinism status",
+    "Trained-process history and concurrent three-arm execution are not recreated.",
+    "New image digest and transitive GPU dependencies cannot be proven identical to failed historical attempt.",
+    "Writable supported handoff PVC; no source writes in diagnostic commands, source inputs and arrays checked before/after.",
+    "Four original-tolerance passes mean not reproduced, not fixed or safe to resume."
+  ],
+  "outputs": [
+    "/data/confirmation-20260923/diagnostics/replay-a02s3-20261001-r2",
+    "/data/run-handoffs/<content-addressed-id>"
+  ],
+  "production_gate": {
+    "reference": "No training resume, optimizer restoration or schedule clearance from this probe",
+    "status": "pending"
+  },
+  "purpose": "Diagnose selected-checkpoint validation replay for A02-s3 through four predictions, three loads and two serial processes; zero optimizer steps.",
+  "repro_spec_sha256": "d7a653f3f124820adf0fa12c07060d681025188eebd56a40fc0692c4df16a370",
+  "runs": [
+    {
+      "config_path": "code/diagnostics/configs/confirm0923-a02-s3-e1000.json",
+      "name": "confirm0923-a02-s3-e1000"
+    }
+  ],
+  "scientific_gate": {
+    "reference": "Diagnostic design/storage adaptation, tests, live resource/lint review and action-time authorization pending",
+    "scope": "single retained A02-s3 diagnostic only",
+    "status": "pending"
+  },
+  "stop_rules": [
+    {
+      "action": "existing-runner-guard",
+      "approval_ref": "confirmation-repro-spec proposed bound; pending reviewed action-time scope",
+      "condition": "30-minute deadline, identity/cost/nonfinite/resource failure"
+    },
+    {
+      "action": "notify-only",
+      "approval_ref": "predeclared diagnostic repeats may complete without tolerance change",
+      "condition": "metric mismatch"
+    }
+  ],
+  "storage_adaptation": "Original proposal read-only PVC cannot use supported handoff. Proposed explicit writable /data only for newprovenance/output; no sourcewrites and before/after input+arrayhashes. Not kernel-enforced read-only; requires review."
+}

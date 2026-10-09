@@ -1,0 +1,281 @@
+{
+  "amendment_ref": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md",
+  "approval_ref": "local/2026-10-05-execution/cpugate-approval.json (Kai, 2026-10-05, CPU gate only; review sha256 c6aa3353)",
+  "changes": "New frozen tree 42abed4b + staged 0032 + amendment 0033; 58 regenerated chang1002c configs. No training data, no GPU, no checkpoint read. Adds pytest (test runner only).",
+  "decision_ref": "local/2026-10-01-execution/chang-option-c-decision.json",
+  "expected_metrics": [
+    {
+      "expectation": "all pass; skips listed",
+      "name": "pytest suite",
+      "split": "synthetic fixtures only"
+    },
+    {
+      "expectation": "PREFLIGHT_ALL_PASS, 58 PID_TRACED_ONLY_OK, floors equal static_floors.json",
+      "name": "cpu_gate.py",
+      "split": "synthetic inputs, n=4096 rows"
+    },
+    {
+      "expectation": "PAIRED except pos_table, else registered Welch fallback",
+      "name": "A/B/D/R vs F pairing",
+      "split": "synthetic sample, 8 seeds"
+    }
+  ],
+  "limitations": [
+    "Historical 42abed runs, snapshots and readouts are evidence only; no historical checkpoint may initialize or resume these runs (config and code SHA guards).",
+    "Pilot validation values select no arm, alter no primary rule and support no performance claim.",
+    "The epoch-500 pause does not observe the first LR restart after epoch 500."
+  ],
+  "outputs": [
+    "/data/chang-n64-20260926/option-c-20261002/cpu-gate-691946-r1"
+  ],
+  "production_gate": {
+    "reference": "K1 triggered; option (c) selected 2026-10-01T06:00:02Z",
+    "status": "pending"
+  },
+  "purpose": "CPU gate for the option-(c) revision before any pilot: full unit suite including the tiny synthetic run_training fixtures, per-config build/reload/floor/trace-cadence gate and shared-kernel pairing.",
+  "runs": [
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s1.json",
+      "name": "chang1002c-a-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s2.json",
+      "name": "chang1002c-a-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s3.json",
+      "name": "chang1002c-a-n64-s3"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s4.json",
+      "name": "chang1002c-a-n64-s4"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s5.json",
+      "name": "chang1002c-a-n64-s5"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s6.json",
+      "name": "chang1002c-a-n64-s6"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s7.json",
+      "name": "chang1002c-a-n64-s7"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a-n64-s8.json",
+      "name": "chang1002c-a-n64-s8"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s1.json",
+      "name": "chang1002c-b-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s2.json",
+      "name": "chang1002c-b-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s3.json",
+      "name": "chang1002c-b-n64-s3"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s4.json",
+      "name": "chang1002c-b-n64-s4"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s5.json",
+      "name": "chang1002c-b-n64-s5"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s6.json",
+      "name": "chang1002c-b-n64-s6"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s7.json",
+      "name": "chang1002c-b-n64-s7"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-b-n64-s8.json",
+      "name": "chang1002c-b-n64-s8"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s1.json",
+      "name": "chang1002c-c-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s2.json",
+      "name": "chang1002c-c-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s3.json",
+      "name": "chang1002c-c-n64-s3"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s4.json",
+      "name": "chang1002c-c-n64-s4"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s5.json",
+      "name": "chang1002c-c-n64-s5"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s6.json",
+      "name": "chang1002c-c-n64-s6"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s7.json",
+      "name": "chang1002c-c-n64-s7"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-c-n64-s8.json",
+      "name": "chang1002c-c-n64-s8"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s1.json",
+      "name": "chang1002c-d-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s2.json",
+      "name": "chang1002c-d-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s3.json",
+      "name": "chang1002c-d-n64-s3"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s4.json",
+      "name": "chang1002c-d-n64-s4"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s5.json",
+      "name": "chang1002c-d-n64-s5"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s6.json",
+      "name": "chang1002c-d-n64-s6"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s7.json",
+      "name": "chang1002c-d-n64-s7"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-d-n64-s8.json",
+      "name": "chang1002c-d-n64-s8"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s1.json",
+      "name": "chang1002c-f-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s2.json",
+      "name": "chang1002c-f-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s3.json",
+      "name": "chang1002c-f-n64-s3"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s4.json",
+      "name": "chang1002c-f-n64-s4"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s5.json",
+      "name": "chang1002c-f-n64-s5"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s6.json",
+      "name": "chang1002c-f-n64-s6"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s7.json",
+      "name": "chang1002c-f-n64-s7"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-f-n64-s8.json",
+      "name": "chang1002c-f-n64-s8"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s1.json",
+      "name": "chang1002c-r-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s2.json",
+      "name": "chang1002c-r-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s3.json",
+      "name": "chang1002c-r-n64-s3"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s4.json",
+      "name": "chang1002c-r-n64-s4"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s5.json",
+      "name": "chang1002c-r-n64-s5"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s6.json",
+      "name": "chang1002c-r-n64-s6"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s7.json",
+      "name": "chang1002c-r-n64-s7"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-r-n64-s8.json",
+      "name": "chang1002c-r-n64-s8"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json",
+      "name": "chang1002c-a07-350-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s2.json",
+      "name": "chang1002c-a07-350-n64-s2"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s3.json",
+      "name": "chang1002c-a07-350-n64-s3"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s4.json",
+      "name": "chang1002c-a07-350-n64-s4"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s5.json",
+      "name": "chang1002c-a07-350-n64-s5"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s6.json",
+      "name": "chang1002c-a07-350-n64-s6"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s7.json",
+      "name": "chang1002c-a07-350-n64-s7"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-a07-350-n64-s8.json",
+      "name": "chang1002c-a07-350-n64-s8"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-cprime-n64-s1.json",
+      "name": "chang1002c-cprime-n64-s1"
+    },
+    {
+      "config_path": "code/campaigns/chang1002c/configs/chang1002c-e1-n64-s1.json",
+      "name": "chang1002c-e1-n64-s1"
+    }
+  ],
+  "scientific_gate": {
+    "reference": "campaigns/2026-10-02-chang-option-c/review/PREFLIGHT_critical_v1.md (PASS for CPU gate only, 2026-10-05)",
+    "status": "cleared"
+  },
+  "stop_rules": [
+    {
+      "action": "existing-runner-guard",
+      "approval_ref": "Job script exit status; activeDeadlineSeconds 14400",
+      "condition": "any gate exit nonzero or 4 h deadline"
+    }
+  ]
+}

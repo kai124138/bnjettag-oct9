@@ -1,0 +1,121 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-ebops-abl-benchmark-de4d06ca
+  namespace: cms-ml
+  labels:
+    app: kai-ebops-ablation
+spec:
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        app: kai-ebops-ablation
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 180
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+      - name: train
+        image: python:3.12
+        command:
+        - bash
+        - -c
+        args:
+        - 'set -euo pipefail
+
+          export KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true
+
+          export OMP_NUM_THREADS=4 TF_NUM_INTRAOP_THREADS=4 TF_NUM_INTEROP_THREADS=2
+
+          mkdir -p /work/code /data/ebops-n8-20260912-ablation
+
+          echo ''de4d06cabea893d6dd563c27170e76c27d7a69a2960d4575512863931b5821ce  /cmcode/hgq2.tar.gz''
+          | sha256sum -c -
+
+          tar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1
+
+          export PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=de4d06cabea893d6dd563c27170e76c27d7a69a2960d4575512863931b5821ce
+
+          export WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-EBOPs-N8
+          WANDB_GROUP=ebops-n8-20260912-ablation
+
+          pip install -q --no-cache-dir ''tensorflow[and-cuda]==2.21.0'' keras==3.15.0
+          hgq2==0.1.9 quantizers==1.2.2 scikit-learn==1.9.0 h5py==3.14.0 wandb==0.28.0
+          hls4ml==1.3.0 numpy==2.5.0
+
+          NVLIBS=$(python -c "import glob; print('':''.join(sorted(glob.glob(''/usr/local/lib/python*/site-packages/nvidia/*/lib''))))")
+
+          export LD_LIBRARY_PATH="$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+          nvidia-smi --query-gpu=name,memory.total --format=csv,noheader
+
+          python -c "import tensorflow as tf; assert tf.config.list_physical_devices(''GPU'');
+          print(''[gpu] TensorFlow GPU gate PASS'')"
+
+          python -c "import wandb; wandb.Api().viewer; print(''[wandb] authentication
+          PASS'')"
+
+          WANDB_MODE=disabled python -u /work/code/check_ebops_ablation.py --integration
+          --gpu
+
+          python -u /work/code/run_ablation.py train --config /work/code/configs/ebops-n8-20260912-ablation-r0-baseline-w1a8.json
+          --root /data/ebops-n8-20260912-ablation --benchmark-epochs 2
+
+          '
+        resources:
+          requests:
+            cpu: '4'
+            memory: 12Gi
+            ephemeral-storage: 24Gi
+            nvidia.com/gpu: '1'
+          limits:
+            cpu: '4'
+            memory: 12Gi
+            ephemeral-storage: 24Gi
+            nvidia.com/gpu: '1'
+        volumeMounts:
+        - name: code
+          mountPath: /cmcode
+          readOnly: true
+        - name: work
+          mountPath: /work
+        - name: persistent
+          mountPath: /data
+        env:
+        - name: WANDB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kai-wandb
+              key: WANDB_API_KEY
+      volumes:
+      - name: code
+        configMap:
+          name: kai-ebops-abl-code-de4d06cabe
+      - name: work
+        emptyDir:
+          sizeLimit: 24Gi
+      - name: persistent
+        persistentVolumeClaim:
+          claimName: kai-data
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-L40S
+                - NVIDIA-L40
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-L40S

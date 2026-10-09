@@ -1,0 +1,134 @@
+From ea2fe37c26a95bcf027ccd62ddd3cfa009ce8fb3 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:25:56 -0700
+Subject: [PATCH 01/24] delta-keys-registry: one registry for Delta opt-in
+ keys; validator and export hooks
+
+---
+ code/bnhgq2/delta_keys.py | 86 +++++++++++++++++++++++++++++++++++++++
+ code/convert_binary.py    |  3 ++
+ code/run_engram.py        |  1 +
+ 3 files changed, 90 insertions(+)
+ create mode 100644 code/bnhgq2/delta_keys.py
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+new file mode 100644
+index 0000000..8f1a1ad
+--- /dev/null
++++ b/code/bnhgq2/delta_keys.py
+@@ -0,0 +1,86 @@
++"""Delta config keys: one registry for every opt-in key (2026-09-26 Delta).
++
++Every Delta patch is opt-in behind a new config key; a config without the key builds and
++trains exactly as the screen bundle (26f3cc40) did. Each patch registers its keys here, in its
++own block at the end of this file, so a rebase of the series onto another tree touches one
++line of the shared validator (`run_engram.validate_cfg` calls `validate`). New modules written
++elsewhere register their own keys with `register` from their own files.
++
++Pure Python (no TensorFlow import), so the validator can import it before any model code.
++"""
++from __future__ import annotations
++
++_MISSING = object()
++
++# key -> {'slug', 'check', 'active', 'export_ok'}
++REGISTRY: dict = {}
++
++# Weight schemes `run_engram.validate_cfg` admits; weight-scheme slugs extend this set.
++WEIGHT_SCHEMES = {'binary_absmean'}
++
++# Set by the kd-unblock-s-runner block; the validator rejects distillation while False.
++FLAGS = {'distillation_admitted': False}
++
++
++def register(key, slug, check, *, active=None, export_ok=False):
++    """check(value, cfg) -> error message or None. active(value) -> bool decides whether a
++    present key changes behaviour (e.g. an existing key at its historical value does not).
++    export_ok: True when HLS export needs nothing new (training-only knobs)."""
++    if key in REGISTRY and REGISTRY[key]['slug'] != slug:
++        raise ValueError(f'{key} already registered by {REGISTRY[key]["slug"]}')
++    REGISTRY[key] = {'slug': slug, 'check': check,
++                     'active': active or (lambda value: True), 'export_ok': export_ok}
++
++
++def lookup(cfg, key, default=None):
++    node = cfg
++    for part in key.split('.'):
++        if not isinstance(node, dict) or part not in node:
++            return default
++        node = node[part]
++    return node
++
++
++def is_active(cfg, key):
++    value = lookup(cfg, key, _MISSING)
++    return value is not _MISSING and bool(REGISTRY[key]['active'](value))
++
++
++def validate(cfg):
++    for key, entry in REGISTRY.items():
++        value = lookup(cfg, key, _MISSING)
++        if value is _MISSING:
++            continue
++        message = entry['check'](value, cfg)
++        if message:
++            raise ValueError(f'{cfg.get("name", "?")}: {key} ({entry["slug"]}): {message}')
++
++
++def active_slugs(cfg):
++    return sorted({e['slug'] for k, e in REGISTRY.items() if is_active(cfg, k)})
++
++
++def export_blockers(cfg):
++    """Active Delta keys with no HLS export path yet (DELTA.md DR-17)."""
++    return [f'{k} ({e["slug"]})' for k, e in REGISTRY.items()
++            if not e['export_ok'] and is_active(cfg, k)]
++
++
++def _is_bool(value, cfg=None):
++    return None if isinstance(value, bool) else 'must be true or false'
++
++
++def _positive_number(value, cfg=None):
++    ok = isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
++    return None if ok else 'must be a positive number'
++
++
++def _one_of(*allowed):
++    def check(value, cfg=None):
++        return None if value in allowed else f'must be one of {list(allowed)}, got {value!r}'
++    return check
++
++
++# --------------------------------------------------------------------------- #
++# Per-slug registrations (one block per patch; append below, never reorder)   #
++# --------------------------------------------------------------------------- #
+diff --git a/code/convert_binary.py b/code/convert_binary.py
+index e1e8b54..9a62f3e 100644
+--- a/code/convert_binary.py
++++ b/code/convert_binary.py
+@@ -577,6 +577,9 @@ def run_convert_binary(variant, seed, *, wandb_run=None, checkpoint=None, tag=No
+     # default keeps the Quantization-aware path byte-identical.
+     cfg_path = config_path or os.path.join(_HERE, "configs", f"pre_conference-n8-{variant}.json")
+     cfg = load_config(cfg_path)
++    from bnhgq2 import delta_keys  # Delta keys with no HLS path yet refuse to export
++    if delta_keys.export_blockers(cfg):
++        raise SystemExit(f"{cfg['name']}: no HLS export for {delta_keys.export_blockers(cfg)}")
+     h = cfg_hash(cfg)
+     A = cfg["arch"]
+     rf = rf or cfg["hls"].get("rf", 256)
+diff --git a/code/run_engram.py b/code/run_engram.py
+index 98ab043..4109a25 100644
+--- a/code/run_engram.py
++++ b/code/run_engram.py
+@@ -109,6 +109,7 @@ def runtime():
+ 
+ 
+ def validate_cfg(cfg):
++    from bnhgq2 import delta_keys; delta_keys.validate(cfg)  # Delta opt-in keys
+     if cfg['arch']['features'] != ['pt', 'etarel', 'phirel'] or cfg['arch']['n_feat'] != 3:
+         raise ValueError('Study requires exactly [pt, etarel, phirel] in that order')
+     if cfg['quant']['weight'] != 'binary_absmean' or cfg['quant']['act_calib'] != 'free':
+-- 
+2.50.1 (Apple Git-155)
+

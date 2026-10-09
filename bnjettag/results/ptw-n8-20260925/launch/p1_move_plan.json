@@ -1,0 +1,47 @@
+{
+  "status": "PENDING - do not move until job kai-ptw-n8-0925-k6-p1 has finished and every run has committed its model artifact",
+  "from": "kayamaguchi-uc-san-diego/BNJetTagAug (group ptw-n8-20260925)",
+  "to": "kayamaguchi-uc-san-diego/BNJetTag-Weights (group ptw-n8-20260925)",
+  "runs": [
+    {
+      "name": "ptw-n8-0925-base-s1",
+      "run_id": "p02fd5f7",
+      "src_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTagAug/runs/p02fd5f7",
+      "artifact": "kayamaguchi-uc-san-diego/BNJetTagAug/model-ptw-n8-0925-base-s1:latest"
+    },
+    {
+      "name": "ptw-n8-0925-base-s2",
+      "run_id": "tv02q49a",
+      "src_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTagAug/runs/tv02q49a",
+      "artifact": "kayamaguchi-uc-san-diego/BNJetTagAug/model-ptw-n8-0925-base-s2:latest"
+    },
+    {
+      "name": "ptw-n8-0925-ptw5-s1",
+      "run_id": "yfkz2s8j",
+      "src_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTagAug/runs/yfkz2s8j",
+      "artifact": "kayamaguchi-uc-san-diego/BNJetTagAug/model-ptw-n8-0925-ptw5-s1:latest"
+    },
+    {
+      "name": "ptw-n8-0925-ptw5-s2",
+      "run_id": "oh4slz8q",
+      "src_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTagAug/runs/oh4slz8q",
+      "artifact": "kayamaguchi-uc-san-diego/BNJetTagAug/model-ptw-n8-0925-ptw5-s2:latest"
+    },
+    {
+      "name": "ptw-n8-0925-ptwnc-s1",
+      "run_id": "jn36pt11",
+      "src_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTagAug/runs/jn36pt11",
+      "artifact": "kayamaguchi-uc-san-diego/BNJetTagAug/model-ptw-n8-0925-ptwnc-s1:latest"
+    },
+    {
+      "name": "ptw-n8-0925-ptwnc-s2",
+      "run_id": "b8ba8ap0",
+      "src_url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTagAug/runs/b8ba8ap0",
+      "artifact": "kayamaguchi-uc-san-diego/BNJetTagAug/model-ptw-n8-0925-ptwnc-s2:latest"
+    }
+  ],
+  "extra_run_files": "best-effort aux upload (pt_weights.json, *.png, train.log, gpu_util.csv) goes to these runs in BNJetTagAug",
+  "method": "W&B UI only: BNJetTagAug -> Runs tab -> select the 6 runs -> Move to project -> BNJetTag-Weights. Docs (docs.wandb.ai/guides/runs/manage-runs, read 2026-09-26): 'You can't move runs with the W&B Python SDK or Public API.' Checked wandb 0.28.0 public Api/Run: no move method; Run.update does not write project.",
+  "artifacts": "NOT moved with the run (docs: 'When you move a run, historical artifacts associated with it are not moved'). Copy each model-<leaf> separately: wandb artifact get kayamaguchi-uc-san-diego/BNJetTagAug/model-<leaf>:latest --root <dir>; wandb artifact put --name kayamaguchi-uc-san-diego/BNJetTag-Weights/model-<leaf> --type model <dir>. Then verify file sha256s against the original manifest before deleting anything in BNJetTagAug.",
+  "consumers_note": "artifact-first fetchers look up model-<leaf> by project; until the copy exists, p1's six models live only in BNJetTagAug"
+}

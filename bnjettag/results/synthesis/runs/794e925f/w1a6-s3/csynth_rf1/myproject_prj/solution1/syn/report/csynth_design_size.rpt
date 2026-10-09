@@ -1,0 +1,353 @@
+================================================================
+== Design Size Report
+================================================================
+
+* Total Instructions per Compilation Phase
++---------------+-----------------------------+--------------+----------------------------------------------------------------------------------------+
+| Phase         | Step                        | Instructions | Description                                                                            |
++---------------+-----------------------------+--------------+----------------------------------------------------------------------------------------+
+| Compile/Link  |                             |    933,201 * | After all functions are compiled and linked into a single design                       |
+|               |                             |              |                                                                                        |
+| Unroll/Inline |                             |              | After user unroll and inline pragmas are applied                                       |
+|               | (1) unroll                  | 10,303,244 * | user unroll pragmas are applied                                                        |
+|               | (2) simplification          |  3,664,103 * | simplification of applied user unroll pragmas                                          |
+|               | (3) inline                  |  2,758,490 * | user inline pragmas are applied                                                        |
+|               | (4) simplification          |  2,665,887 * | simplification of applied user inline pragmas                                          |
+|               |                             |              |                                                                                        |
+| Array/Struct  |                             |              | After user array partition and struct aggregate/disaggregate pragmas are applied       |
+|               | (1) array partition         |  5,191,248 * | user array partition pragmas are applied                                               |
+|               | (2) simplification          |  1,248,551 * | simplification of applied user array partition & struct aggregate/disaggregate pragmas |
+|               | (3) aggregate/disaggregate  |  1,248,551 * | user struct aggregate/disaggregate pragmas are applied                                 |
+|               | (4) array reshape           |  1,248,647 * | apply array reshape pragmas                                                            |
+|               | (5) access patterns         |  1,248,551 * | array access pattern optmizations                                                      |
+|               |                             |              |                                                                                        |
+| Performance   |                             |              | After transformations are applied to meet performance pragma targets                   |
+|               | (1) loop simplification     |  1,219,071 * | loop and instruction simplification                                                    |
+|               | (2) parallelization         |  1,209,057 * | loops are unrolled or pipelined to meet performance targets                            |
+|               | (3) array partition         |  1,207,725 * | arrays are partitioned to meet performance targets                                     |
+|               | (4) simplification          |  1,203,285 * | simplification of design after performance transformations                             |
+|               |                             |              |                                                                                        |
+| HW Transforms |                             |              | After hardware transfomations                                                          |
+|               | (1) lowering                |  1,203,291 * | initial conversion to HW specific instructions                                         |
+|               | (2) optimizations           |  1,202,902 * | high level synthesis optimizations                                                     |
++---------------+-----------------------------+--------------+----------------------------------------------------------------------------------------+
+    * - Exceeded design size warning message threshold
+
+* Instructions per Function for each Compilation Phase
++-----------------------------------------+-------------------------+------------------+---------------------+---------------------+---------------------+---------------------+
+| Function                                | Location                | Compile/Link     | Unroll/Inline       | Array/Struct        | Performance         | HW Transforms       |
++-----------------------------------------+-------------------------+------------------+---------------------+---------------------+---------------------+---------------------+
+| + myproject                             | myproject.cpp:7         | 933,201 *        | 2,665,887 *         | 1,248,551 *         | 1,203,285 *         | 1,202,902 *         |
+|  + einsum_dense<ap_fixed<6, 3, ...      | nnet_einsum_dense.h:40  |    852           |  19,000             |  14,095             |  11,254             |  11,262             |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |     288             |     266             |     265             |     265             |
+|      transfer_idx<config3_tpose_i...    | nnet_transpose.h:18     |     25           |     144 (24 calls)  |     144 (24 calls)  |     144 (24 calls)  |     144 (24 calls)  |
+|   + dense<ap_fixed<6, 3, AP_RND_...     | nnet_dense.h:41         |    693           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    691           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 3,...   | nnet_dense_latency.h:13 |    689           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 3, AP_RND_C...  | nnet_mult.h:110         |    106           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 6, AP...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config3_tpose_o...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense_latency<ap_fixed<6, 3,...     | nnet_dense_latency.h:13 |                  |  14,816 (8 calls)   |  10,176 (8 calls)   |   8,080 (8 calls)   |   8,088 (8 calls)   |
+|      cast<ap_fixed<6, 3, AP_RND_C...    | nnet_mult.h:110         |                  |   4,608 (256 calls) |   4,608 (256 calls) |                     |                     |
+|  + normalize<ap_fixed<11, 6, AP...      | nnet_batchnorm.h:31     |    415           |   2,048             |   1,538             |   1,282             |   1,283             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    bit_block_0_attn_Wq_iq<ap_fi...      | nnet_code_gen.h:27      | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 2, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  48,374             |  47,350             |  47,358             |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config7_tpose_i...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 2, AP_TRN,...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 2,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 2, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 7, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config7_tpose_o...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|     dense_latency<ap_fixed<6, 2,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  40,648 (8 calls)   |  40,392 (8 calls)   |  40,400 (8 calls)   |
+|    bit_block_0_attn_Wk_iq<ap_fi...      | nnet_code_gen.h:289     | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 2, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  48,054             |  47,030             |  47,038             |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config9_tpose_i...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 2, AP_TRN,...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 2,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 2, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 7, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config9_tpose_o...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|     dense_latency<ap_fixed<6, 2,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  40,328 (8 calls)   |  40,072 (8 calls)   |  40,080 (8 calls)   |
+|  + normalize<ap_fixed<11, 7, AP...      | nnet_batchnorm.h:31     |    739           |  15,360             |  14,850             |  14,594             |  14,595             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|  + normalize<ap_fixed<11, 7, AP...      | nnet_batchnorm.h:31     |    739           |  15,360             |  14,850             |  14,594             |  14,595             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|  + einsum<ap_fixed<6, 2, AP_RND...      | nnet_einsum.h:31        |    631           |  31,755             |  30,984             |  28,162             |  28,163             |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config16_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config16_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<15, 7, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config16_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     transfer_idx<config16_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config16_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config16_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|    bit_block_0_attn_Wv_iq<ap_fi...      | nnet_code_gen.h:551     | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 2, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  47,734             |  46,710             |  46,718             |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config18_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 2, AP_TRN,...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 2,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 2, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 7, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config18_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|     dense_latency<ap_fixed<6, 2,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  40,008 (8 calls)   |  39,752 (8 calls)   |  39,760 (8 calls)   |
+|  + softmax_multidim<ap_fixed<15...      | nnet_activation.h:400   |  6,715           |                     |                     |                     |                     |
+|   + softmax<ap_fixed<15, 7, AP_T...     | nnet_activation.h:381   |  6,643           |                     |                     |                     |                     |
+|    + softmax_stable<ap_fixed<15, ...    | nnet_activation.h:220   |  6,641           |                     |                     |                     |                     |
+|     + init_exp_table<ap_fixed<10, ...   | nnet_activation.h:149   |  1,432           |                     |                     |                     |                     |
+|        softmax_real_val_from_idx<ap...  | nnet_activation.h:133   |    666           |                     |                     |                     |                     |
+|        exp_fcn_float                    | nnet_activation.h:131   |      4           |                     |                     |                     |                     |
+|     + init_invert_table<ap_ufixed<...   | nnet_activation.h:165   |  1,418           |                     |                     |                     |                     |
+|        softmax_real_val_from_idx<ap...  | nnet_activation.h:133   |    661           |                     |                     |                     |                     |
+|     + reduce<ap_fixed<15, 7, AP_TR...   | nnet_common.h:37        |    207           |                     |                     |                     |                     |
+|      + reduce<ap_fixed<15, 7, AP_TR...  | nnet_common.h:37        |    178 (2 calls) |                     |                     |                     |                     |
+|       + reduce<ap_fixed<15, 7, AP_TR... | nnet_common.h:37        |    120 (4 calls) |                     |                     |                     |                     |
+|          operator()                     | nnet_common.h:66        |     80 (4 calls) |                     |                     |                     |                     |
+|         operator()                      | nnet_common.h:66        |     40 (2 calls) |                     |                     |                     |                     |
+|        operator()                       | nnet_common.h:66        |     20           |                     |                     |                     |                     |
+|       softmax_idx_from_real_val<ap...   | nnet_activation.h:141   |     97           |                     |                     |                     |                     |
+|     + reduce<ap_ufixed<24, 7, AP_T...   | nnet_common.h:37        |  1,614           |                     |                     |                     |                     |
+|      + reduce<ap_ufixed<24, 7, AP_T...  | nnet_common.h:37        |  1,384 (2 calls) |                     |                     |                     |                     |
+|       + reduce<ap_ufixed<24, 7, AP_T... | nnet_common.h:37        |    924 (4 calls) |                     |                     |                     |                     |
+|          operator()                     | nnet_common.h:51        |    884 (4 calls) |                     |                     |                     |                     |
+|         operator()                      | nnet_common.h:51        |    442 (2 calls) |                     |                     |                     |                     |
+|        operator()                       | nnet_common.h:51        |    221           |                     |                     |                     |                     |
+|       softmax_idx_from_real_val<ap...   | nnet_activation.h:141   |     97           |                     |                     |                     |                     |
+|  + normalize<ap_fixed<11, 7, AP...      | nnet_batchnorm.h:31     |    739           |  15,360             |  14,850             |  14,594             |  14,595             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|  + einsum<ap_ufixed<10, 1, AP_R...      | nnet_einsum.h:31        |  1,013           |  45,067             |  44,296             |  41,474             |  41,475             |
+|   + transpose<ap_ufixed<10, 1, A...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config24_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|   + transpose<ap_fixed<6, 4, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config24_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config24_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     transfer_idx<config24_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config24_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config24_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|  + einsum_dense<ap_fixed<6, 2, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  48,094             |  47,070             |  47,078             |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config26_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|   + dense<ap_fixed<6, 2, AP_RND_...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 2,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 2, AP_RND_C...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 7, AP...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config26_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|     dense_latency<ap_fixed<6, 2,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  40,368 (8 calls)   |  40,112 (8 calls)   |  40,120 (8 calls)   |
+|  + normalize<ap_fixed<11, 7, AP...      | nnet_batchnorm.h:31     |    414           |   4,096             |   3,586             |   3,330             |   3,331             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    add<ap_fixed<18, 5, AP_TRN, ...      | nnet_merge.h:38         |    208           |   3,838             |   3,073             |   2,561             |   2,562             |
+|    bit_block_0_ffn_fc1_iq<ap_fi...      | nnet_code_gen.h:813     | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 2, ...      | nnet_einsum_dense.h:40  |    791           | 261,256             |  86,270             |  80,358             |  80,366             |
+|   + transpose<ap_fixed<6, 2, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config31_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 2, AP_TRN,...     | nnet_dense.h:41         |    632           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    630           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 2,...   | nnet_dense_latency.h:13 |    628           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 2, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 7, AP...     | nnet_transpose.h:29     |     42           |   6,144             |   5,633             |   5,121             |   5,121             |
+|      transfer_idx<config31_tpose_...    | nnet_transpose.h:18     |     25           |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |
+|   + dense_latency<ap_fixed<6, 2,...     | nnet_dense_latency.h:13 |                  | 250,416 (8 calls)   |  75,952 (8 calls)   |  71,576 (8 calls)   |  71,584 (8 calls)   |
+|      cast<ap_fixed<6, 2, AP_TRN, ...    | nnet_mult.h:110         |                  |   1,536 (512 calls) |   1,536 (512 calls) |                     |                     |
+|  + normalize<ap_fixed<11, 7, AP...      | nnet_batchnorm.h:31     |    414           |   8,192             |   7,170             |   6,658             |   6,659             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    thresholded_relu<ap_fixed<21...      | nnet_activation.h:545   |    792           |  26,622             |  27,137             |  26,625             |  26,626             |
+|  + einsum_dense<ap_ufixed<5, 1,...      | nnet_einsum_dense.h:40  |    791           | 259,152             |  91,782             |  90,502             |  90,510             |
+|   + transpose<ap_ufixed<5, 1, AP...     | nnet_transpose.h:29     |     42           |   6,144             |   5,633             |   5,121             |   5,121             |
+|      transfer_idx<config36_tpose_...    | nnet_transpose.h:18     |     25           |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |
+|   + dense<ap_ufixed<5, 1, AP_RND...     | nnet_dense.h:41         |    632           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    630           |                     |                     |                     |                     |
+|     + dense_latency<ap_ufixed<5, 1...   | nnet_dense_latency.h:13 |    628           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_ufixed<5, 1, AP_RND_...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<12, 8, AP...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config36_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|     dense_latency<ap_ufixed<5, 1...     | nnet_dense_latency.h:13 |                  | 249,112 (8 calls)   |  82,008 (8 calls)   |  81,496 (8 calls)   |  81,504 (8 calls)   |
+|  + normalize<ap_fixed<12, 8, AP...      | nnet_batchnorm.h:31     |    414           |   4,096             |   3,586             |   3,330             |   3,331             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    add<ap_fixed<22, 6, AP_TRN, ...      | nnet_merge.h:38         |    194           |   3,070             |   2,305             |   1,793             |   1,794             |
+|    bit_block_1_attn_Wq_iq<ap_fi...      | nnet_code_gen.h:1075    | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 3, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  47,614             |  46,590             |  46,598             |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config41_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 3, AP_TRN,...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 3,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 3, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 8, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config41_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|     dense_latency<ap_fixed<6, 3,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  39,888 (8 calls)   |  39,632 (8 calls)   |  39,640 (8 calls)   |
+|    bit_block_1_attn_Wk_iq<ap_fi...      | nnet_code_gen.h:1337    | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 3, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  48,054             |  47,030             |  47,038             |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config43_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 3, AP_TRN,...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 3,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 3, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 8, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config43_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|     dense_latency<ap_fixed<6, 3,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  40,328 (8 calls)   |  40,072 (8 calls)   |  40,080 (8 calls)   |
+|  + normalize<ap_fixed<11, 8, AP...      | nnet_batchnorm.h:31     |    739           |  15,360             |  14,850             |  14,594             |  14,595             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|  + normalize<ap_fixed<11, 8, AP...      | nnet_batchnorm.h:31     |    739           |  15,360             |  14,850             |  14,594             |  14,595             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|  + einsum<ap_fixed<6, 3, AP_RND...      | nnet_einsum.h:31        |    631           |  31,755             |  30,984             |  28,162             |  28,163             |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config50_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config50_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<15, 9, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config50_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     transfer_idx<config50_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config50_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config50_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|    bit_block_1_attn_Wv_iq<ap_fi...      | nnet_code_gen.h:1599    | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 3, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  47,454             |  46,430             |  46,438             |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config52_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 3, AP_TRN,...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 3,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 3, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 8, AP...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config52_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|     dense_latency<ap_fixed<6, 3,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  39,728 (8 calls)   |  39,472 (8 calls)   |  39,480 (8 calls)   |
+|  + softmax_multidim<ap_fixed<15...      | nnet_activation.h:400   |  6,889           |                     |                     |                     |                     |
+|   + softmax<ap_fixed<15, 9, AP_T...     | nnet_activation.h:381   |  6,817           |                     |                     |                     |                     |
+|    + softmax_stable<ap_fixed<15, ...    | nnet_activation.h:220   |  6,815           |                     |                     |                     |                     |
+|     + init_exp_table<ap_fixed<10, ...   | nnet_activation.h:149   |  1,432           |                     |                     |                     |                     |
+|        softmax_real_val_from_idx<ap...  | nnet_activation.h:133   |    666           |                     |                     |                     |                     |
+|        exp_fcn_float                    | nnet_activation.h:131   |      4           |                     |                     |                     |                     |
+|     + init_invert_table<ap_ufixed<...   | nnet_activation.h:165   |  1,418           |                     |                     |                     |                     |
+|        softmax_real_val_from_idx<ap...  | nnet_activation.h:133   |    661           |                     |                     |                     |                     |
+|     + reduce<ap_fixed<15, 9, AP_TR...   | nnet_common.h:37        |    207           |                     |                     |                     |                     |
+|      + reduce<ap_fixed<15, 9, AP_TR...  | nnet_common.h:37        |    178 (2 calls) |                     |                     |                     |                     |
+|       + reduce<ap_fixed<15, 9, AP_TR... | nnet_common.h:37        |    120 (4 calls) |                     |                     |                     |                     |
+|          operator()                     | nnet_common.h:66        |     80 (4 calls) |                     |                     |                     |                     |
+|         operator()                      | nnet_common.h:66        |     40 (2 calls) |                     |                     |                     |                     |
+|        operator()                       | nnet_common.h:66        |     20           |                     |                     |                     |                     |
+|       softmax_idx_from_real_val<ap...   | nnet_activation.h:141   |     97           |                     |                     |                     |                     |
+|     + reduce<ap_ufixed<24, 7, AP_T...   | nnet_common.h:37        |  1,614           |                     |                     |                     |                     |
+|      + reduce<ap_ufixed<24, 7, AP_T...  | nnet_common.h:37        |  1,384 (2 calls) |                     |                     |                     |                     |
+|       + reduce<ap_ufixed<24, 7, AP_T... | nnet_common.h:37        |    924 (4 calls) |                     |                     |                     |                     |
+|          operator()                     | nnet_common.h:51        |    884 (4 calls) |                     |                     |                     |                     |
+|         operator()                      | nnet_common.h:51        |    442 (2 calls) |                     |                     |                     |                     |
+|        operator()                       | nnet_common.h:51        |    221           |                     |                     |                     |                     |
+|       softmax_idx_from_real_val<ap...   | nnet_activation.h:141   |     97           |                     |                     |                     |                     |
+|  + normalize<ap_fixed<11, 8, AP...      | nnet_batchnorm.h:31     |    739           |  15,360             |  14,850             |  14,594             |  14,595             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|  + einsum<ap_ufixed<10, 1, AP_R...      | nnet_einsum.h:31        |  1,013           |  45,067             |  44,296             |  41,474             |  41,475             |
+|   + transpose<ap_ufixed<10, 1, A...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config58_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|   + transpose<ap_fixed<6, 4, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config58_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |                     |                     |
+|      transfer_idx<config58_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |                     |                     |
+|     transfer_idx<config58_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config58_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|     transfer_idx<config58_tpose_...     | nnet_transpose.h:18     |                  |                     |                     |   2,560 (256 calls) |   2,560 (256 calls) |
+|  + einsum_dense<ap_fixed<6, 3, ...      | nnet_einsum_dense.h:40  |    801           | 133,712             |  48,534             |  47,510             |  47,518             |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   4,096             |   3,841             |   3,585             |   3,585             |
+|      transfer_idx<config60_tpose_...    | nnet_transpose.h:18     |     25           |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |   2,560 (256 calls) |
+|   + dense<ap_fixed<6, 3, AP_RND_...     | nnet_dense.h:41         |    642           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    640           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 3,...   | nnet_dense_latency.h:13 |    638           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 3, AP_RND_C...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 8, AP...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config60_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|     dense_latency<ap_fixed<6, 3,...     | nnet_dense_latency.h:13 |                  | 125,720 (8 calls)   |  40,808 (8 calls)   |  40,552 (8 calls)   |  40,560 (8 calls)   |
+|  + normalize<ap_fixed<11, 8, AP...      | nnet_batchnorm.h:31     |    414           |   4,096             |   3,586             |   3,330             |   3,331             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    add<ap_fixed<23, 7, AP_TRN, ...      | nnet_merge.h:38         |    194           |   3,070             |   2,305             |   1,793             |   1,794             |
+|    bit_block_1_ffn_fc1_iq<ap_fi...      | nnet_code_gen.h:1861    | 111,361          |                     |                     |                     |                     |
+|  + einsum_dense<ap_fixed<6, 3, ...      | nnet_einsum_dense.h:40  |    791           | 261,256             |  86,550             |  80,638             |  80,646             |
+|   + transpose<ap_fixed<6, 3, AP_...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config65_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|   + dense<ap_fixed<6, 3, AP_TRN,...     | nnet_dense.h:41         |    632           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    630           |                     |                     |                     |                     |
+|     + dense_latency<ap_fixed<6, 3,...   | nnet_dense_latency.h:13 |    628           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_fixed<6, 3, AP_TRN, ...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<11, 8, AP...     | nnet_transpose.h:29     |     42           |   6,144             |   5,633             |   5,121             |   5,121             |
+|      transfer_idx<config65_tpose_...    | nnet_transpose.h:18     |     25           |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |
+|   + dense_latency<ap_fixed<6, 3,...     | nnet_dense_latency.h:13 |                  | 250,416 (8 calls)   |  76,232 (8 calls)   |  71,856 (8 calls)   |  71,864 (8 calls)   |
+|      cast<ap_fixed<6, 3, AP_TRN, ...    | nnet_mult.h:110         |                  |   1,536 (512 calls) |   1,536 (512 calls) |                     |                     |
+|  + normalize<ap_fixed<11, 8, AP...      | nnet_batchnorm.h:31     |    414           |   8,192             |   7,170             |   6,658             |   6,659             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    thresholded_relu<ap_fixed<22...      | nnet_activation.h:545   |    792           |  26,622             |  27,137             |  26,625             |  26,626             |
+|  + einsum_dense<ap_ufixed<5, 1,...      | nnet_einsum_dense.h:40  |    791           | 259,152             |  91,862             |  90,582             |  90,590             |
+|   + transpose<ap_ufixed<5, 1, AP...     | nnet_transpose.h:29     |     42           |   6,144             |   5,633             |   5,121             |   5,121             |
+|      transfer_idx<config70_tpose_...    | nnet_transpose.h:18     |     25           |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |   3,072 (512 calls) |
+|   + dense<ap_ufixed<5, 1, AP_RND...     | nnet_dense.h:41         |    632           |                     |                     |                     |                     |
+|    + dense                              | nnet_dense.h:50         |    630           |                     |                     |                     |                     |
+|     + dense_latency<ap_ufixed<5, 1...   | nnet_dense_latency.h:13 |    628           |                     |                     |                     |                     |
+|        product                          | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|        cast<ap_ufixed<5, 1, AP_RND_...  | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|   + transpose<ap_fixed<12, 8, AP...     | nnet_transpose.h:29     |     42           |   3,072             |   2,817             |   2,561             |   2,561             |
+|      transfer_idx<config70_tpose_...    | nnet_transpose.h:18     |     25           |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |   1,536 (256 calls) |
+|     dense_latency<ap_ufixed<5, 1...     | nnet_dense_latency.h:13 |                  | 249,112 (8 calls)   |  82,088 (8 calls)   |  81,576 (8 calls)   |  81,584 (8 calls)   |
+|  + normalize<ap_fixed<12, 8, AP...      | nnet_batchnorm.h:31     |    414           |   4,096             |   3,586             |   3,330             |   3,331             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    add<ap_fixed<24, 8, AP_TRN, ...      | nnet_merge.h:38         |    194           |   3,070             |   2,305             |   1,793             |   1,794             |
+|  + global_pooling1d_cl<ap_fixed...      | nnet_pooling.h:121      |    772           |   4,588             |   4,499             |   2,337             |   2,338             |
+|     pool_op_limit_1d<config74>          | nnet_pooling.h:78       |      1           |                     |                     |                     |                     |
+|   + pool_op<ap_fixed<25, 9, AP_T...     | nnet_pooling.h:41       |    343           |   1,888 (32 calls)  |   1,632 (32 calls)  |                     |                     |
+|    + pool_op<ap_fixed<25, 9, AP_T...    | nnet_pooling.h:31       |    341           |                     |                     |                     |                     |
+|       avg<ap_fixed<25, 9, AP_TRN, ...   | nnet_pooling.h:20       |    339           |                     |                     |                     |                     |
+|  + dense<ap_fixed<6, 2, AP_RND_...      | nnet_dense.h:41         |    632           |                     |                     |                     |                     |
+|   + dense                               | nnet_dense.h:50         |    630           |                     |                     |                     |                     |
+|    + dense_latency<ap_fixed<6, 2,...    | nnet_dense_latency.h:13 |    628           |                     |                     |                     |                     |
+|       product                           | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|       cast<ap_fixed<6, 2, AP_RND_C...   | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|  + normalize<ap_fixed<11, 7, AP...      | nnet_batchnorm.h:31     |    414           |     512             |     450             |     418             |     419             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|    thresholded_relu<ap_fixed<21...      | nnet_activation.h:545   |    792           |   1,662             |   1,697             |   1,665             |   1,666             |
+|  + dense<ap_ufixed<5, 1, AP_RND...      | nnet_dense.h:41         |    632           |                     |                     |                     |                     |
+|   + dense                               | nnet_dense.h:50         |    630           |                     |                     |                     |                     |
+|    + dense_latency<ap_ufixed<5, 1...    | nnet_dense_latency.h:13 |    628           |                     |                     |                     |                     |
+|       product                           | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|       cast<ap_ufixed<5, 1, AP_RND_...   | nnet_mult.h:110         |     45           |                     |                     |                     |                     |
+|  + normalize<ap_fixed<11, 7, AP...      | nnet_batchnorm.h:31     |    414           |      80             |      72             |      67             |      68             |
+|     product                             | nnet_mult.h:70          |    141           |                     |                     |                     |                     |
+|  + softmax_stable<ap_fixed<15, ...      | nnet_activation.h:220   |                  |  33,728 (32 calls)  |  31,392 (32 calls)  |  29,600 (32 calls)  |  29,344 (32 calls)  |
+|     reduce<ap_fixed<15, 7, AP_TR...     | nnet_common.h:37        |                  |   4,128 (32 calls)  |   1,024 (32 calls)  |   1,024 (32 calls)  |   1,024 (32 calls)  |
+|     reduce<ap_ufixed<24, 7, AP_T...     | nnet_common.h:37        |                  |   1,920 (64 calls)  |   2,304 (64 calls)  |   1,792 (64 calls)  |   1,792 (64 calls)  |
+|  + softmax_stable<ap_fixed<15, ...      | nnet_activation.h:220   |                  |  36,032 (32 calls)  |  33,696 (32 calls)  |  31,904 (32 calls)  |  31,648 (32 calls)  |
+|     reduce<ap_fixed<15, 9, AP_TR...     | nnet_common.h:37        |                  |   4,128 (32 calls)  |   1,024 (32 calls)  |   1,024 (32 calls)  |   1,024 (32 calls)  |
+|     reduce<ap_ufixed<24, 7, AP_T...     | nnet_common.h:37        |                  |   1,920 (64 calls)  |   2,304 (64 calls)  |   1,792 (64 calls)  |   1,792 (64 calls)  |
+|    dense_latency<ap_fixed<6, 2,...      | nnet_dense_latency.h:13 |                  |  15,523             |   4,807             |   4,775             |   4,776             |
+|    dense_latency<ap_ufixed<5, 1...      | nnet_dense_latency.h:13 |                  |   2,265             |   1,109             |   1,077             |   1,078             |
++-----------------------------------------+-------------------------+------------------+---------------------+---------------------+---------------------+---------------------+
+    * - Exceeded design size warning message threshold
+
+* Design Size Message Settings
++---------------------------------------------+--------+------------------------------------------------------------------+
+| Message Setting                             | Value  | Description                                                      |
++---------------------------------------------+--------+------------------------------------------------------------------+
+| config_compile -design_size_maximum_warning | 100000 | Show a warning when total design instructions exceeds this value |
++---------------------------------------------+--------+------------------------------------------------------------------+
+
+

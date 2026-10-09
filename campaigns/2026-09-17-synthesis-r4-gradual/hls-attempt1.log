@@ -1,0 +1,96 @@
+
+****** Vitis HLS - High-Level Synthesis from C, C++ and OpenCL v2023.2 (64-bit)
+  **** SW Build 4023990 on Oct 11 2023
+  **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+  **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source /data/software/xilinx/Vitis_HLS/2023.2/scripts/vitis_hls/hls.tcl -notrace
+INFO: [HLS 200-10] Running '/data/software/xilinx/Vitis_HLS/2023.2/bin/unwrapped/lnx64.o/vitis_hls'
+INFO: [HLS 200-10] For user 'kayamaguchi' on host 'mulder.t2.ucsd.edu' (Linux_x86_64 version 4.18.0-553.141.1.el8_10.x86_64) on Thu Sep 17 10:56:27 PDT 2026
+INFO: [HLS 200-10] In directory '/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1'
+INFO: [HLS 200-2053] The vitis_hls executable is being deprecated. Consider using vitis-run --mode hls --tcl
+Sourcing Tcl script 'build_prj.tcl'
+INFO: [HLS 200-1510] Running: open_project myproject_prj 
+INFO: [HLS 200-10] Creating and opening project '/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1/myproject_prj'.
+INFO: [HLS 200-1510] Running: set_top myproject 
+INFO: [HLS 200-1510] Running: add_files firmware/myproject.cpp -cflags -std=c++0x 
+INFO: [HLS 200-10] Adding design file 'firmware/myproject.cpp' to the project
+INFO: [HLS 200-1510] Running: add_files -tb myproject_test.cpp -cflags -std=c++0x 
+INFO: [HLS 200-10] Adding test bench file 'myproject_test.cpp' to the project
+INFO: [HLS 200-1510] Running: add_files -tb firmware/weights 
+INFO: [HLS 200-10] Adding test bench file 'firmware/weights' to the project
+INFO: [HLS 200-1510] Running: add_files -tb tb_data 
+INFO: [HLS 200-10] Adding test bench file 'tb_data' to the project
+INFO: [HLS 200-1510] Running: open_solution solution1 
+INFO: [HLS 200-10] Creating and opening solution '/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1/myproject_prj/solution1'.
+INFO: [HLS 200-1505] Using default flow_target 'vivado'
+Resolution: For help on HLS 200-1505 see docs.xilinx.com/access/sources/dita/topic?Doc_Version=2023.2%20English&url=ug1448-hls-guidance&resourceid=200-1505.html
+INFO: [HLS 200-1510] Running: config_array_partition -maximum_size 4096 
+INFO: [XFORM 203-101] Allowed max sub elements number after partition is 4096.
+ERROR: [HLS 200-642] The 'config_array_partition -maximum_size' command is not supported.
+INFO: [HLS 200-1510] Running: config_compile -name_max_length 80 
+INFO: [XFORM 203-1161] The maximum of name length is set to 80.
+INFO: [HLS 200-1510] Running: set_part xcvu13p-flga2577-2-e 
+INFO: [HLS 200-1611] Setting target device to 'xcvu13p-flga2577-2-e'
+INFO: [XFORM 203-1161] The maximum of name length is set to 80.
+INFO: [HLS 200-1510] Running: config_schedule -enable_dsp_full_reg=false 
+INFO: [HLS 200-1510] Running: create_clock -period 2.5 -name default 
+INFO: [SYN 201-201] Setting up clock 'default' with a period of 2.5ns.
+INFO: [HLS 200-1510] Running: set_clock_uncertainty 27% default 
+INFO: [SYN 201-201] Setting up clock 'default' with an uncertainty of 0.675ns.
+***** C/RTL SYNTHESIS *****
+INFO: [HLS 200-1510] Running: csynth_design 
+INFO: [HLS 200-111] Finished File checks and directory preparation: CPU user time: 0.08 seconds. CPU system time: 0.01 seconds. Elapsed time: 0.09 seconds; current allocated memory: 262.910 MB.
+INFO: [HLS 200-10] Analyzing design file 'firmware/myproject.cpp' ... 
+WARNING: [HLS 207-5566] unexpected pragma argument 'softmax', expects function/operation (firmware/nnet_utils/nnet_activation.h:402:36)
+WARNING: [HLS 207-5536] 'Resource pragma' is deprecated, use 'bind_op/bind_storage pragma' instead (firmware/nnet_utils/nnet_dense_resource.h:33:9)
+WARNING: [HLS 207-5536] 'Resource pragma' is deprecated, use 'bind_op/bind_storage pragma' instead (firmware/nnet_utils/nnet_dense_resource.h:107:9)
+WARNING: [HLS 207-5536] 'Resource pragma' is deprecated, use 'bind_op/bind_storage pragma' instead (firmware/nnet_utils/nnet_dense_resource.h:189:9)
+WARNING: [HLS 207-4899] implicit conversion from 'int' to 'signed __attribute__((bitwidth(1))) ' changes value from 1 to -1 (/data/software/xilinx/Vitis_HLS/2023.2/common/technology/autopilot/etc/ap_fixed_base.h:347:21)
+INFO: [HLS 207-4526] in instantiation of member function 'ap_fixed_base<1, 1, true, AP_RND_CONV, AP_SAT, 0>::overflow_adjust' requested here (/data/software/xilinx/Vitis_HLS/2023.2/common/technology/autopilot/etc/ap_fixed_base.h:905:7)
+INFO: [HLS 207-4235] in instantiation of function template specialization 'ap_fixed_base<1, 1, true, AP_RND_CONV, AP_SAT, 0>::operator=<35, 4, true, AP_TRN, AP_WRAP, 0>' requested here (/data/software/xilinx/Vitis_HLS/2023.2/common/technology/autopilot/etc/ap_fixed_base.h:403:5)
+INFO: [HLS 207-4235] in instantiation of function template specialization 'ap_fixed_base<1, 1, true, AP_RND_CONV, AP_SAT, 0>::ap_fixed_base<35, 4, true, AP_TRN, AP_WRAP, 0>' requested here (/data/software/xilinx/Vitis_HLS/2023.2/common/technology/autopilot/ap_fixed.h:29:9)
+INFO: [HLS 207-4235] in instantiation of function template specialization 'ap_fixed<1, 1, AP_RND_CONV, AP_SAT, 0>::ap_fixed<35, 4, true, AP_TRN, AP_WRAP, 0>' requested here (firmware/nnet_utils/nnet_code_gen.h:30:11)
+INFO: [HLS 207-4235] in instantiation of function template specialization 'nnet::bit_block_0_attn_Wq_iq<ap_fixed<35, 4, AP_TRN, AP_WRAP, 0>, ap_fixed<1, 1, AP_TRN, AP_WRAP, 0> >' requested here (firmware/myproject.cpp:247:11)
+WARNING: [HLS 207-4899] implicit conversion from 'int' to 'signed __attribute__((bitwidth(1))) ' changes value from 1 to -1 (/data/software/xilinx/Vitis_HLS/2023.2/common/technology/autopilot/etc/ap_fixed_base.h:351:21)
+WARNING: [HLS 207-5573] ALLOCATION pragma is ignored, because Instances value is not valid function pointer expression  (firmware/nnet_utils/nnet_pooling.h:129:43)
+INFO: [HLS 207-4235] in instantiation of function template specialization 'nnet::global_pooling1d_cl<ap_fixed<39, 8, AP_TRN, AP_WRAP, 0>, ap_fixed<4, 1, AP_RND_CONV, AP_SAT, 0>, config74>' requested here (firmware/myproject.cpp:335:11)
+WARNING: [HLS 207-5292] unused parameter 'keep' (firmware/nnet_utils/nnet_helpers.h:285:99)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_function_stubs.h:14:36)
+WARNING: [HLS 207-5292] unused parameter 'buffer' (firmware/nnet_utils/nnet_function_stubs.h:15:36)
+WARNING: [HLS 207-5292] unused parameter 'partition' (firmware/nnet_utils/nnet_function_stubs.h:16:44)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_function_stubs.h:24:24)
+WARNING: [HLS 207-5292] unused parameter 'buffer' (firmware/nnet_utils/nnet_function_stubs.h:25:24)
+WARNING: [HLS 207-5292] unused parameter 'partition' (firmware/nnet_utils/nnet_function_stubs.h:26:32)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_function_stubs.h:33:30)
+WARNING: [HLS 207-5292] unused parameter 'res' (firmware/nnet_utils/nnet_function_stubs.h:33:58)
+WARNING: [HLS 207-5292] unused parameter 'weights' (firmware/nnet_utils/nnet_function_stubs.h:34:51)
+WARNING: [HLS 207-5292] unused parameter 'biases' (firmware/nnet_utils/nnet_function_stubs.h:35:49)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_function_stubs.h:42:30)
+WARNING: [HLS 207-5292] unused parameter 'res' (firmware/nnet_utils/nnet_function_stubs.h:42:58)
+WARNING: [HLS 207-5292] unused parameter 'weights' (firmware/nnet_utils/nnet_function_stubs.h:43:51)
+WARNING: [HLS 207-5292] unused parameter 'biases' (firmware/nnet_utils/nnet_function_stubs.h:44:49)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_function_stubs.h:51:29)
+WARNING: [HLS 207-5292] unused parameter 'res' (firmware/nnet_utils/nnet_function_stubs.h:51:80)
+WARNING: [HLS 207-5292] unused parameter 'weights' (firmware/nnet_utils/nnet_function_stubs.h:52:50)
+WARNING: [HLS 207-5292] unused parameter 'biases' (firmware/nnet_utils/nnet_function_stubs.h:53:48)
+WARNING: [HLS 207-5292] unused parameter 'data' (firmware/nnet_utils/nnet_code_gen.h:16:39)
+WARNING: [HLS 207-5292] unused parameter 'res' (firmware/nnet_utils/nnet_code_gen.h:17:38)
+WARNING: [HLS 207-5292] unused parameter 'weights' (firmware/nnet_utils/nnet_code_gen.h:18:60)
+WARNING: [HLS 207-5292] unused parameter 'biases' (firmware/nnet_utils/nnet_code_gen.h:19:58)
+WARNING: [HLS 200-1986] Could not apply TOP directive, invalid function, label, or variable (/home/users/kayamaguchi/bnjet_ebops_r4_20260917/hls_prj_rf1/build_prj.tcl:169)
+INFO: [HLS 200-111] Finished Source Code Analysis and Preprocessing: CPU user time: 23.98 seconds. CPU system time: 1.53 seconds. Elapsed time: 26.44 seconds; current allocated memory: 274.449 MB.
+INFO: [HLS 200-777] Using interface defaults for 'Vivado' flow target.
+ERROR: [HLS 200-1715] Encountered problem during source synthesis
+INFO: [HLS 200-111] Finished Command csynth_design CPU user time: 33.62 seconds. CPU system time: 2.51 seconds. Elapsed time: 42.27 seconds; current allocated memory: 11.918 MB.
+Pre-synthesis failed.
+    while executing
+"source build_prj.tcl"
+    ("uplevel" body line 1)
+    invoked from within
+"uplevel \#0 [list source $tclfile] "
+
+INFO: [HLS 200-112] Total CPU user time: 35.41 seconds. Total CPU system time: 2.82 seconds. Total elapsed time: 44.66 seconds; peak allocated memory: 274.828 MB.
+INFO: [Common 17-206] Exiting vitis_hls at Thu Sep 17 10:57:11 2026...

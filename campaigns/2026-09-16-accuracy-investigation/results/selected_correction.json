@@ -1,0 +1,32 @@
+{
+  "arm": "r2-ffn32",
+  "checkpoint_sha256": "cf3894ba89e0427bcf92d3e6aa16068d82adc7e7f9fceea8e13b2703ac5af86c",
+  "class_order": [
+    "g",
+    "q",
+    "W",
+    "Z",
+    "t"
+  ],
+  "operation": "argmax(logits * scale + bias, axis=-1)",
+  "scale": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "bias": [
+    0.3115234375,
+    0.0908203125,
+    0.322265625,
+    0.0,
+    -0.255859375
+  ],
+  "fit_seed": 20260917,
+  "fit_events": 61999,
+  "selection_events": 62001,
+  "selection": "internal-validation accuracy only",
+  "arithmetic": "staged float32 multiply/add, nearest-even constants with10 fractional bits, no saturation",
+  "test_accuracy": 0.5906
+}

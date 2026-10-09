@@ -1,0 +1,78 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-confirm-active-inspect-0924
+  namespace: cms-ml
+  labels:
+    user: kai
+    campaign: confirmation-20260923
+    app: kai-confirm-active-inspect
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 900
+  ttlSecondsAfterFinished: 604800
+  template:
+    metadata:
+      labels:
+        user: kai
+        campaign: confirmation-20260923
+        app: kai-confirm-active-inspect
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                      - nautilus-ext-gpu01.fullerton.edu
+                      - ren-gp-argo-01.madren.org
+      containers:
+        - name: inspect
+          image: python:3.12
+          command: [python, -u, -c]
+          args:
+            - |
+              import json
+              from pathlib import Path
+              root = Path('/data/confirmation-20260923/architecture')
+              rows = []
+              for run in sorted((root / 'runs').iterdir()):
+                  latest = json.loads((run / 'latest.json').read_text())
+                  generation = run / 'checkpoints' / latest['checkpoint']
+                  state = json.loads((generation / 'state.json').read_text())
+                  logs = sorted((root / 'logs').glob(run.name + '-*.log'), key=lambda p: p.stat().st_mtime)
+                  rows.append({
+                      'run': run.name,
+                      'latest': latest,
+                      'completed_epochs': state['completed_epochs'],
+                      'best_feasible': state.get('best_feasible'),
+                      'lowest': state.get('lowest'),
+                      'latest_mtime': (run / 'latest.json').stat().st_mtime,
+                      'latest_log': logs[-1].name if logs else None,
+                      'latest_log_tail': logs[-1].read_text(errors='replace').splitlines()[-20:] if logs else [],
+                  })
+              print('ACTIVE_INSPECTION=' + json.dumps(rows, sort_keys=True), flush=True)
+              print('PREFLIGHT_ALL_PASS', flush=True)
+          resources:
+            requests:
+              cpu: "1"
+              memory: 2Gi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+              ephemeral-storage: 1Gi
+          volumeMounts:
+            - name: persistent
+              mountPath: /data
+              readOnly: true
+      volumes:
+        - name: persistent
+          persistentVolumeClaim:
+            claimName: kai-data

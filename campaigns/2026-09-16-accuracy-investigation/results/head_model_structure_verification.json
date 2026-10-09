@@ -1,0 +1,67 @@
+{
+  "binary_weight_layers": 14,
+  "mixed_precision_final_head_layers": 1,
+  "final_head_name": "head_fc2_w8_r0p01",
+  "final_head_shape": [
+    32,
+    5
+  ],
+  "kernel_grid_step": 0.03125,
+  "kernel_grid_verified": true,
+  "kernel_min": -3.125,
+  "kernel_max": 2.40625,
+  "quantizer": {
+    "q_type": "kif",
+    "place": "weight",
+    "scaler": null,
+    "qnoise_factor": null,
+    "affine": null,
+    "k0": 1,
+    "i0": 2,
+    "f0": 5,
+    "round_mode": "RND_CONV",
+    "overflow_mode": "SAT",
+    "ic": {
+      "module": "hgq.constraints",
+      "class_name": "MinMax",
+      "config": {
+        "min_value": -23.0,
+        "max_value": 23.0
+      },
+      "registered_name": "hgq>MinMax"
+    },
+    "ir": {
+      "module": "hgq.regularizers",
+      "class_name": "MonoL1",
+      "config": {
+        "l1": 1e-08
+      },
+      "registered_name": "hgq>MonoL1"
+    },
+    "fc": {
+      "module": "hgq.constraints",
+      "class_name": "MinMax",
+      "config": {
+        "min_value": -24.0,
+        "max_value": 24.0
+      },
+      "registered_name": "hgq>MinMax"
+    },
+    "fr": {
+      "module": "hgq.regularizers",
+      "class_name": "MonoL1",
+      "config": {
+        "l1": 1e-08
+      },
+      "registered_name": "hgq>MonoL1"
+    },
+    "i_decay_speed": Infinity,
+    "homogeneous_axis": null,
+    "heterogeneous_axis": [],
+    "bw_mapper": null,
+    "trainable": false,
+    "is_weight": true
+  },
+  "native_ebops_reload_verified_in_remote_run": 322510,
+  "fpga_synthesis_and_hardware_latency": "unmeasured; native EBOPs are not a hardware timing/resource report"
+}

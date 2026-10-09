@@ -1,0 +1,145 @@
+{
+  "updated_at_utc": "2026-09-18T18:35:43.755703+00:00",
+  "namespace": "cms-ml",
+  "job": "kai-engram-screen-e100-a10364ed",
+  "pod": "kai-engram-screen-e100-a10364ed-0-bt22w",
+  "pod_phase": "Running",
+  "node": "rci-tide-gpu-02.sdsu.edu",
+  "training_state": "training; first completed physics epoch and private W&B epoch verified",
+  "first_epoch_observed": true,
+  "project": {
+    "project": "BNJetTag-Engram-Experimental",
+    "entity": "kayamaguchi-uc-san-diego",
+    "access": "PRIVATE",
+    "anonymous_read": "denied",
+    "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental"
+  },
+  "code_bundle_sha256": "a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792",
+  "study_document_sha256": {
+    "study/ENGRAM_HYPOTHESES_AND_ABSTRACT.md": "d62dd8ab5a34bd14db5f6451e108cbf8734817ea04f4aedb5491583fdba7d0d9",
+    "study/ENGRAM_RESEARCH_AND_RUNBOOK.md": "cfa6efd7ca318bcf1067e66496c21ef218e85ee0a3b784784d13984122c7a508"
+  },
+  "cpu_preflight_job": "kai-engram-preflight-a10364ed-r2",
+  "preflight_all_pass": true,
+  "synthetic_checks": 11,
+  "production_arms_passed": 4,
+  "arm_parameters": {
+    "e00": 16875,
+    "e01": 9716,
+    "e02": 26101,
+    "e03": 42485
+  },
+  "arms": [
+    "e00",
+    "e01",
+    "e02",
+    "e03"
+  ],
+  "seed": 1,
+  "parallelism": 4,
+  "gpu_per_pod": 1,
+  "stop_after_epochs": 100,
+  "full_schedule_epochs": 1000,
+  "active_deadline_seconds": 86400,
+  "synthesis": false,
+  "automatic_promotion": false,
+  "durable_root": "/data/engram-study-20260918",
+  "data_cache": "/data/batch20260917/n16/data",
+  "pvc": "kai-data",
+  "recovered_incident": "First CPU node cache read stalled; r2 reran all gates on another node. Both CPU/GPU launcher exclude stalled node.",
+  "alternative_capacity_audit": "Cluster-wide pod listing forbidden; no capacity inferred from quota alone and no class switch made.",
+  "gpu_gate_pass": true,
+  "gpu_model": "NVIDIA GeForce RTX 2080 Ti",
+  "first_epoch_verification": {
+    "checkpoint": {
+      "checkpoint": "epoch-0001"
+    },
+    "state_completed_epochs": 1,
+    "runtime_source_sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc",
+    "checkpoint_source_hash_verified": true,
+    "wandb": {
+      "id": "10dd9f63e913",
+      "state": "running",
+      "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/10dd9f63e913",
+      "project": "BNJetTag-Engram-Experimental",
+      "completed_epochs": 1,
+      "screening_target_epochs": 100,
+      "selection_metric": "val_categorical_accuracy",
+      "phase": "screening"
+    },
+    "model_checkpoint_present": true
+  },
+  "whole_campaign_finished": false,
+  "execution_amendment": "User explicitly removed low-key constraint; in-place parallelism1\u21924",
+  "concurrency_verification": {
+    "updated_at_utc": "2026-09-18T18:35:43.755703+00:00",
+    "parallelism": 4,
+    "all_four_indexes_submitted": true,
+    "existing_e00_uid_preserved": true,
+    "e00_uid": "f7f8b8f8-7226-417c-9e59-1c338da51471",
+    "e00_latest_observed_epoch": 42,
+    "job_uid_preserved": true,
+    "job_start_time_preserved": true,
+    "only_spec_parallelism_changed": true,
+    "pods": [
+      {
+        "name": "kai-engram-screen-e100-a10364ed-0-bt22w",
+        "uid": "f7f8b8f8-7226-417c-9e59-1c338da51471",
+        "index": "0",
+        "phase": "Running",
+        "node": "rci-tide-gpu-02.sdsu.edu",
+        "scheduled_condition": {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-18T18:29:30Z",
+          "status": "True",
+          "type": "PodScheduled"
+        }
+      },
+      {
+        "name": "kai-engram-screen-e100-a10364ed-1-pzjjg",
+        "uid": "1b4e05b6-145b-4a08-9f65-dadf4a1a90a4",
+        "index": "1",
+        "phase": "Pending",
+        "node": null,
+        "scheduled_condition": {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-18T18:35:20Z",
+          "message": "0/532 nodes are available: 1 node(s) had untolerated taint {nautilus.io/issue: 1574}, 1 node(s) had untolerated taint {nautilus.io/issue: 1593-1685}, 1 node(s) had untolerated taint {nautilus.io/issue: 1641}, 1 node(s) had untolerated taint {nautilus.io/issue: 1716}, 1 node(s) had untolerated taint {nautilus.io/issue: 1726}, 1 node(s) had untolerated taint {nautilus.io/issue: slow-network}, 1 node(s) had untolerated taint {nautilus.io/issue: testing}, 1 node(s) had untolerated taint {nautilus.io/reservation: csun-ehuang}, 1 node(s) had untolerated taint {nautilus.io/reservation: internet2}, 1 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm-test}, 1 node(s) had untolerated taint {nautilus.io/reservation: sage}, 1 node(s) had untolerated taint {nautilus.io/reservation: sdccd}, 1 node(s) had untolerated taint {nautilus.io/reservation: suncave}, 1 node(s) had untolerated taint {nautilus.io/reservation: unl-coe-ai-makerspace}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire-pyregence}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire}, 1 node(s) had untolerated taint {nautilus.io/system: gateway}, 1 node(s) had untolerated taint {nautilus.io/system: gitlab}, 1 node(s) had untolerated taint {nautilus.io/upgrading: true}, 1 node(s) had untolerated taint {virtual-node.interlink/workload: swan}, 15 node(s) had untolerated taint {nautilus.io/reservation: csu-tide}, 191 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint {nautilus.io/hardware: arm64}, 2 node(s) had untolerated taint {nautilus.io/issue: 1708}, 2 node(s) had untolerated taint {nautilus.io/issue: 1722}, 2 node(s) had untolerated taint {nautilus.io/reservation: mizzou}, 2 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm}, 2 node(s) had untolerated taint {virtual-kubelet.io/provider: admiralty}, 28 node(s) had untolerated taint {nautilus.io/reservation: osdf}, 3 node(s) had untolerated taint {nautilus.io/reservation: csusb}, 3 node(s) had untolerated taint {nautilus.io/reservation: erl-ucsd}, 3 node(s) had untolerated taint {nautilus.io/reservation: fresno}, 3 node(s) had untolerated taint {nautilus.io/storage-no-run: true}, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 39 Insufficient cpu, 4 node(s) had untolerated taint {remediation.medik8s.io/self-node-remediation: }, 5 node(s) had untolerated taint {nautilus.io/hardware: large-gpu}, 5 node(s) had untolerated taint {nautilus.io/reservation: csuf}, 5 node(s) had untolerated taint {nautilus.io/system: perfsonar}, 54 node(s) had untolerated taint {nautilus.io/system: storage}, 59 node(s) were unschedulable, 6 node(s) had untolerated taint {nautilus.io/reservation: bluefield2}, 6 node(s) had untolerated taint {nautilus.io/reservation: sdsuinstruction}, 7 node(s) had untolerated taint {nautilus.io/reservation: cogrob}, 7 node(s) had untolerated taint {nautilus.io/reservation: sense}, 7 node(s) had untolerated taint {nautilus.io/testing: true}, 83 Insufficient nvidia.com/gpu, 9 Insufficient memory. preemption: 0/532 nodes are available: 1 Insufficient nvidia.com/gpu, 446 Preemption is not helpful for scheduling, 85 No preemption victims found for incoming pod.",
+          "reason": "Unschedulable",
+          "status": "False",
+          "type": "PodScheduled"
+        }
+      },
+      {
+        "name": "kai-engram-screen-e100-a10364ed-2-s79c4",
+        "uid": "c5e70f66-6009-4d39-ad34-a4ddb2a7bfb3",
+        "index": "2",
+        "phase": "Pending",
+        "node": null,
+        "scheduled_condition": {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-18T18:35:20Z",
+          "message": "0/532 nodes are available: 1 node(s) had untolerated taint {nautilus.io/issue: 1574}, 1 node(s) had untolerated taint {nautilus.io/issue: 1593-1685}, 1 node(s) had untolerated taint {nautilus.io/issue: 1641}, 1 node(s) had untolerated taint {nautilus.io/issue: 1716}, 1 node(s) had untolerated taint {nautilus.io/issue: 1726}, 1 node(s) had untolerated taint {nautilus.io/issue: slow-network}, 1 node(s) had untolerated taint {nautilus.io/issue: testing}, 1 node(s) had untolerated taint {nautilus.io/reservation: csun-ehuang}, 1 node(s) had untolerated taint {nautilus.io/reservation: internet2}, 1 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm-test}, 1 node(s) had untolerated taint {nautilus.io/reservation: sage}, 1 node(s) had untolerated taint {nautilus.io/reservation: sdccd}, 1 node(s) had untolerated taint {nautilus.io/reservation: suncave}, 1 node(s) had untolerated taint {nautilus.io/reservation: unl-coe-ai-makerspace}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire-pyregence}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire}, 1 node(s) had untolerated taint {nautilus.io/system: gateway}, 1 node(s) had untolerated taint {nautilus.io/system: gitlab}, 1 node(s) had untolerated taint {nautilus.io/upgrading: true}, 1 node(s) had untolerated taint {virtual-node.interlink/workload: swan}, 15 node(s) had untolerated taint {nautilus.io/reservation: csu-tide}, 191 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint {nautilus.io/hardware: arm64}, 2 node(s) had untolerated taint {nautilus.io/issue: 1708}, 2 node(s) had untolerated taint {nautilus.io/issue: 1722}, 2 node(s) had untolerated taint {nautilus.io/reservation: mizzou}, 2 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm}, 2 node(s) had untolerated taint {virtual-kubelet.io/provider: admiralty}, 28 node(s) had untolerated taint {nautilus.io/reservation: osdf}, 3 node(s) had untolerated taint {nautilus.io/reservation: csusb}, 3 node(s) had untolerated taint {nautilus.io/reservation: erl-ucsd}, 3 node(s) had untolerated taint {nautilus.io/reservation: fresno}, 3 node(s) had untolerated taint {nautilus.io/storage-no-run: true}, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 39 Insufficient cpu, 4 node(s) had untolerated taint {remediation.medik8s.io/self-node-remediation: }, 5 node(s) had untolerated taint {nautilus.io/hardware: large-gpu}, 5 node(s) had untolerated taint {nautilus.io/reservation: csuf}, 5 node(s) had untolerated taint {nautilus.io/system: perfsonar}, 54 node(s) had untolerated taint {nautilus.io/system: storage}, 59 node(s) were unschedulable, 6 node(s) had untolerated taint {nautilus.io/reservation: bluefield2}, 6 node(s) had untolerated taint {nautilus.io/reservation: sdsuinstruction}, 7 node(s) had untolerated taint {nautilus.io/reservation: cogrob}, 7 node(s) had untolerated taint {nautilus.io/reservation: sense}, 7 node(s) had untolerated taint {nautilus.io/testing: true}, 83 Insufficient nvidia.com/gpu, 9 Insufficient memory. preemption: 0/532 nodes are available: 1 Insufficient nvidia.com/gpu, 446 Preemption is not helpful for scheduling, 85 No preemption victims found for incoming pod.",
+          "reason": "Unschedulable",
+          "status": "False",
+          "type": "PodScheduled"
+        }
+      },
+      {
+        "name": "kai-engram-screen-e100-a10364ed-3-rzgjv",
+        "uid": "39c5d2b1-9659-4698-9329-217f84db8d3e",
+        "index": "3",
+        "phase": "Pending",
+        "node": null,
+        "scheduled_condition": {
+          "lastProbeTime": null,
+          "lastTransitionTime": "2026-09-18T18:35:20Z",
+          "message": "0/532 nodes are available: 1 node(s) had untolerated taint {nautilus.io/issue: 1574}, 1 node(s) had untolerated taint {nautilus.io/issue: 1593-1685}, 1 node(s) had untolerated taint {nautilus.io/issue: 1641}, 1 node(s) had untolerated taint {nautilus.io/issue: 1716}, 1 node(s) had untolerated taint {nautilus.io/issue: 1726}, 1 node(s) had untolerated taint {nautilus.io/issue: slow-network}, 1 node(s) had untolerated taint {nautilus.io/issue: testing}, 1 node(s) had untolerated taint {nautilus.io/reservation: csun-ehuang}, 1 node(s) had untolerated taint {nautilus.io/reservation: internet2}, 1 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm-test}, 1 node(s) had untolerated taint {nautilus.io/reservation: sage}, 1 node(s) had untolerated taint {nautilus.io/reservation: sdccd}, 1 node(s) had untolerated taint {nautilus.io/reservation: suncave}, 1 node(s) had untolerated taint {nautilus.io/reservation: unl-coe-ai-makerspace}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire-pyregence}, 1 node(s) had untolerated taint {nautilus.io/reservation: wifire}, 1 node(s) had untolerated taint {nautilus.io/system: gateway}, 1 node(s) had untolerated taint {nautilus.io/system: gitlab}, 1 node(s) had untolerated taint {nautilus.io/upgrading: true}, 1 node(s) had untolerated taint {virtual-node.interlink/workload: swan}, 15 node(s) had untolerated taint {nautilus.io/reservation: csu-tide}, 191 node(s) didn't match Pod's node affinity/selector, 2 node(s) had untolerated taint {nautilus.io/hardware: arm64}, 2 node(s) had untolerated taint {nautilus.io/issue: 1708}, 2 node(s) had untolerated taint {nautilus.io/issue: 1722}, 2 node(s) had untolerated taint {nautilus.io/reservation: mizzou}, 2 node(s) had untolerated taint {nautilus.io/reservation: nrp-llm}, 2 node(s) had untolerated taint {virtual-kubelet.io/provider: admiralty}, 28 node(s) had untolerated taint {nautilus.io/reservation: osdf}, 3 node(s) had untolerated taint {nautilus.io/reservation: csusb}, 3 node(s) had untolerated taint {nautilus.io/reservation: erl-ucsd}, 3 node(s) had untolerated taint {nautilus.io/reservation: fresno}, 3 node(s) had untolerated taint {nautilus.io/storage-no-run: true}, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 39 Insufficient cpu, 4 node(s) had untolerated taint {remediation.medik8s.io/self-node-remediation: }, 5 node(s) had untolerated taint {nautilus.io/hardware: large-gpu}, 5 node(s) had untolerated taint {nautilus.io/reservation: csuf}, 5 node(s) had untolerated taint {nautilus.io/system: perfsonar}, 54 node(s) had untolerated taint {nautilus.io/system: storage}, 59 node(s) were unschedulable, 6 node(s) had untolerated taint {nautilus.io/reservation: bluefield2}, 6 node(s) had untolerated taint {nautilus.io/reservation: sdsuinstruction}, 7 node(s) had untolerated taint {nautilus.io/reservation: cogrob}, 7 node(s) had untolerated taint {nautilus.io/reservation: sense}, 7 node(s) had untolerated taint {nautilus.io/testing: true}, 83 Insufficient nvidia.com/gpu, 9 Insufficient memory. preemption: 0/532 nodes are available: 1 Insufficient nvidia.com/gpu, 446 Preemption is not helpful for scheduling, 85 No preemption victims found for incoming pod.",
+          "reason": "Unschedulable",
+          "status": "False",
+          "type": "PodScheduled"
+        }
+      }
+    ]
+  }
+}

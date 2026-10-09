@@ -1,0 +1,29 @@
+# python3 nrp-lab/nrp_doctor.py lint campaigns/2026-09-29-gpu-benchmark/manifests/kai-gpubench-a10-krule.json campaigns/2026-09-29-gpu-benchmark/manifests/kai-gpubench-a10-klow.json (repo root; 2026-09-29T09:53:31Z; fixer v2, after the C5 pilot-node exclusion)
+
+== campaigns/2026-09-29-gpu-benchmark/manifests/kai-gpubench-a10-krule.json :: kai-gpubench-a10-krule ==
+  note   required pool = 1 products / 35 nodes cluster-wide
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  note   [rule PACK] 4 arms per pod declared.
+  OK
+
+== campaigns/2026-09-29-gpu-benchmark/manifests/kai-gpubench-a10-klow.json :: kai-gpubench-a10-klow ==
+  note   required pool = 1 products / 35 nodes cluster-wide
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  note   [rule PACK] 3 arms per pod declared.
+  OK
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')
+rc=0
+
+# server dry runs, one literal-path command per Job (fixer v2):
+# kubectl -n cms-ml create --dry-run=server -f /Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-29-gpu-benchmark/manifests/kai-gpubench-a10-krule.json   (09:53:39Z)
+job.batch/kai-gpubench-a10-krule created (server dry run)
+rc=0
+# kubectl -n cms-ml create --dry-run=server -f /Users/kaiyamaguchi/Desktop/bnjettag/campaigns/2026-09-29-gpu-benchmark/manifests/kai-gpubench-a10-klow.json   (09:53:45Z)
+job.batch/kai-gpubench-a10-klow created (server dry run)
+rc=0
+# read-only after the dry runs (09:53:50Z): kubectl -n cms-ml get jobs -l campaign=gpu-bench-20260929 lists 7 Jobs (the six non-A10 K_low
+# Jobs and the A100 K_rule, as in RUN.md); no A10 Job exists
+# byte check: gen_bench.py --survey code/evidence/node_survey_20260929T073945Z.json rewrote 18 files; 16 are byte-identical to the
+# pre-fix copies (every applied manifest among them, 3090 K_low sha256 16a600f4f94a59ac...), only kai-gpubench-a10-{krule,klow}.json
+# changed: two NotIn values (gpu-17.nrp.mghpcc.org, hcc-nrp-shor-c5805.unl.edu) and the annotation bnjettag.io/pilot-nodes-excluded

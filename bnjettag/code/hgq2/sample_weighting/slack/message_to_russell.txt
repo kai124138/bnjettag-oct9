@@ -1,0 +1,14 @@
+Hi Russell, I implemented the log(Pt) sample weights. Our dataset has 5 classes (g, q, W, Z, t) with no signal/background label, so I adapted your code per class instead of sig vs bkg. Same 100 bins, same +0.5, same variable names and plot layout.
+
+What it does: each class gets reweighted so its log(Pt) shape matches all 5 classes combined (black dashed line in plot 1). Each jet's weight is (all-class fraction in its bin) / (its own class's fraction in that bin). Each class is then rescaled to average weight 1, so class balance doesn't change. Weights come from the training split only, and validation is unweighted.
+
+One thing I wanted to check with you: when I tried your ratio as written, (sig+0.5)/(bkg+0.5) on signal, it made the sig and bkg Pt shapes more different (top vs rest: shape distance 0.34 → 0.71). The inverse made them match (→ 0.00). So I went with matching the shapes. Was the goal to stop the model from using Pt, or did you want to emphasize the signal-rich Pt regions?
+
+Plots (seed-1 training split, 496k jets):
+1. Counts per class plus the weights, capped at 5 (setting I plan to use)
+2. Histogram of per-jet weights
+3. Same as 1 without a cap. W/Z get weights over 100 at the edges of the Pt range, where they have almost no jets. That leaves them only ~35% effective statistics, so I added a cap at 5. With the cap, the worst class-vs-combined shape difference drops from 0.38 to 0.04, and W/Z keep ~70% effective statistics.
+
+I left out the balanced class_weight since our classes are already balanced (factors 0.99–1.03).
+
+Next I'd run a matched unweighted vs weighted training (same seed and recipe) and compare macro AUC, per-class AUC, and AUC in Pt bins. Does this approach look right to you before I launch?

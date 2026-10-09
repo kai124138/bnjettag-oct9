@@ -1,0 +1,4942 @@
+[
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10",
+  "job_dir": "a10-klow",
+  "shape": "klow",
+  "class": "E",
+  "phase": "p3-E-k3",
+  "k": 3,
+  "stop_after": 21,
+  "arms_parsed": 3,
+  "arms_completed": 3,
+  "all_arms_completed": true,
+  "s_d1": 80.745,
+  "R_d1": 133.75441203789708,
+  "steady_s_slowest_arm": 80.745,
+  "untraced_median_s": 73.6,
+  "traced_median_s": 138.45,
+  "n_untraced": 54,
+  "n_traced": 6,
+  "steady_s_per_epoch": 80.085,
+  "run_epochs_per_gpu_hour": 134.85671474058813,
+  "gpu_hours_per_1000_run_epochs": 7.415277777777778,
+  "per_arm_untraced_median_range_s": [
+   73.5,
+   73.6
+  ],
+  "epoch1_median_s": 149.8,
+  "trace_seconds_median": 71.56,
+  "completed_run_epochs": 63,
+  "host_rss_peak_mb": 2323,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 3,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 31,
+  "n_steady_samples": 26,
+  "gpu_util_mean_all": 95.25806451612904,
+  "gpu_util_mean_steady": 99.73076923076923,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 13069.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.5675264894910543,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4350.0,
+  "cpu_cores_mean_all": 1.7801400183868692,
+  "cpu_cores_mean_steady": 1.7252755938268678,
+  "cpu_cores_per_arm_steady": 0.5750918646089559,
+  "cpu_pinned_cores_expected": 6,
+  "thread_cpus_union": "9,10,11,73,74,75",
+  "thread_mask_rows": 80,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 11042.96875,
+  "proc_rss_peak_mib": 2386.0,
+  "node": "hcc-nrp-shor-c5821.unl.edu",
+  "gpu_info": "NVIDIA A10, 23028 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 2.0,
+  "pod_created_to_running_seconds": 17.0,
+  "job_created_to_running_seconds": 18.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7502 32-Core Processor",
+  "cpu_counts": "node_logical 128 allowed 2 cpus_allowed_list 9-11,73-75 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  128",
+   "LSCPU On-line CPU(s) list:                     0-127",
+   "LSCPU Model name:                              AMD EPYC 7502 32-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      32",
+   "LSCPU Socket(s):                               2",
+   "LSCPU CPU(s) scaling MHz:                      108%",
+   "LSCPU CPU max MHz:                             2500.0000",
+   "LSCPU NUMA node(s):                            2"
+  ],
+  "host_mem": "MemTotal: 528175744 kB cgroup_memory_max 25769803776",
+  "pod_cpus": "allowed_n 6 allowed 9-11,73-75 pod_cpu_request 6 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a10-klow-smvnq.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A10",
+  "phase_wall_s": 1880.3,
+  "outcomes": {
+   "ok": 3
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "9-11,73-75",
+  "cpus_pinned_n": 6,
+  "cpus_allowed_n": 6,
+  "pinned_physical_cores": 3,
+  "pod_cpu_request": 6,
+  "attempt_started_unix": 1790677718.0,
+  "total_elapsed_s_per_run_epoch": 29.846031746031745,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 80.745,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 149.8,
+    "host_rss_peak_mb": 2322,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 6,
+     "requested": "9-11,73-75",
+     "seen": "9-11,73-75",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 80.085,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 152.7,
+    "host_rss_peak_mb": 2323,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 6,
+     "requested": "9-11,73-75",
+     "seen": "9-11,73-75",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 79.865,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 147.9,
+    "host_rss_peak_mb": 2315,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 6,
+     "requested": "9-11,73-75",
+     "seen": "9-11,73-75",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": [],
+  "attempt": "1 of 1",
+  "attempt_counted": true
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10",
+  "job_dir": "a10-klow",
+  "shape": "klow",
+  "class": "A07",
+  "phase": "p4-A07-k1",
+  "k": 1,
+  "stop_after": 21,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": true,
+  "s_d1": 45.735,
+  "R_d1": 78.7143325680551,
+  "steady_s_slowest_arm": 45.735,
+  "untraced_median_s": 40.2,
+  "traced_median_s": 95.55,
+  "n_untraced": 18,
+  "n_traced": 2,
+  "steady_s_per_epoch": 45.735,
+  "run_epochs_per_gpu_hour": 78.7143325680551,
+  "gpu_hours_per_1000_run_epochs": 12.704166666666667,
+  "per_arm_untraced_median_range_s": [
+   40.2,
+   40.2
+  ],
+  "epoch1_median_s": 111.7,
+  "trace_seconds_median": 55.125,
+  "completed_run_epochs": 21,
+  "host_rss_peak_mb": 2415,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 1,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 19,
+  "n_steady_samples": 15,
+  "gpu_util_mean_all": 80.21052631578948,
+  "gpu_util_mean_steady": 91.33333333333333,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 8455.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.36716171617161714,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8446.0,
+  "cpu_cores_mean_all": 0.6215465841620732,
+  "cpu_cores_mean_steady": 0.5875126451103329,
+  "cpu_cores_per_arm_steady": 0.5875126451103329,
+  "cpu_pinned_cores_expected": 2,
+  "thread_cpus_union": "9,10",
+  "thread_mask_rows": 15,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 8825.28515625,
+  "proc_rss_peak_mib": 2415.0,
+  "node": "hcc-nrp-shor-c5821.unl.edu",
+  "gpu_info": "NVIDIA A10, 23028 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 2.0,
+  "pod_created_to_running_seconds": 17.0,
+  "job_created_to_running_seconds": 18.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7502 32-Core Processor",
+  "cpu_counts": "node_logical 128 allowed 2 cpus_allowed_list 9-11,73-75 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  128",
+   "LSCPU On-line CPU(s) list:                     0-127",
+   "LSCPU Model name:                              AMD EPYC 7502 32-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      32",
+   "LSCPU Socket(s):                               2",
+   "LSCPU CPU(s) scaling MHz:                      108%",
+   "LSCPU CPU max MHz:                             2500.0000",
+   "LSCPU NUMA node(s):                            2"
+  ],
+  "host_mem": "MemTotal: 528175744 kB cgroup_memory_max 25769803776",
+  "pod_cpus": "allowed_n 6 allowed 9-11,73-75 pod_cpu_request 6 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a10-klow-smvnq.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A10",
+  "phase_wall_s": 1180.1,
+  "outcomes": {
+   "ok": 1
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "9-10",
+  "cpus_pinned_n": 2,
+  "cpus_allowed_n": 6,
+  "pinned_physical_cores": 2,
+  "pod_cpu_request": 6,
+  "attempt_started_unix": 1790677718.0,
+  "total_elapsed_s_per_run_epoch": 56.19523809523809,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 45.735,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 111.7,
+    "host_rss_peak_mb": 2415,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 2,
+     "requested": "9-10",
+     "seen": "9-10",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": [],
+  "attempt": "1 of 1",
+  "attempt_counted": true
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10",
+  "job_dir": "a10-krule",
+  "shape": "krule",
+  "class": "E",
+  "phase": "p1-E-k4",
+  "k": 4,
+  "stop_after": 21,
+  "arms_parsed": 4,
+  "arms_completed": 4,
+  "all_arms_completed": true,
+  "s_d1": 114.1,
+  "R_d1": 126.205083260298,
+  "steady_s_slowest_arm": 114.1,
+  "untraced_median_s": 104.2,
+  "traced_median_s": 176.2,
+  "n_untraced": 72,
+  "n_traced": 8,
+  "steady_s_per_epoch": 111.4,
+  "run_epochs_per_gpu_hour": 129.26391382405745,
+  "gpu_hours_per_1000_run_epochs": 7.736111111111111,
+  "per_arm_untraced_median_range_s": [
+   103.65,
+   104.3
+  ],
+  "epoch1_median_s": 181.1,
+  "trace_seconds_median": 87.485,
+  "completed_run_epochs": 84,
+  "host_rss_peak_mb": 2368,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 4,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 42,
+  "n_steady_samples": 35,
+  "gpu_util_mean_all": 97.47619047619048,
+  "gpu_util_mean_steady": 99.97142857142858,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 17425.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.7566875108563488,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4350.0,
+  "cpu_cores_mean_all": 2.2579477094325178,
+  "cpu_cores_mean_steady": 2.2243325462455448,
+  "cpu_cores_per_arm_steady": 0.5560831365613862,
+  "cpu_pinned_cores_expected": 8,
+  "thread_cpus_union": "10,11,12,13,74,75,76,77",
+  "thread_mask_rows": 144,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 12223.10546875,
+  "proc_rss_peak_mib": 2368.0,
+  "node": "hcc-nrp-shor-c6009.unl.edu",
+  "gpu_info": "NVIDIA A10, 23028 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 5.0,
+  "pod_created_to_running_seconds": 19.0,
+  "job_created_to_running_seconds": 19.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7502 32-Core Processor",
+  "cpu_counts": "node_logical 128 allowed 2 cpus_allowed_list 10-13,74-77 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  128",
+   "LSCPU On-line CPU(s) list:                     0-127",
+   "LSCPU Model name:                              AMD EPYC 7502 32-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      32",
+   "LSCPU Socket(s):                               2",
+   "LSCPU CPU(s) scaling MHz:                      108%",
+   "LSCPU CPU max MHz:                             2500.0000",
+   "LSCPU NUMA node(s):                            2"
+  ],
+  "host_mem": "MemTotal: 528175716 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 10-13,74-77 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a10-krule-g8b5c.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A10",
+  "phase_wall_s": 2530.5,
+  "outcomes": {
+   "ok": 4
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "10-13,74-77",
+  "cpus_pinned_n": 8,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790677716.0,
+  "total_elapsed_s_per_run_epoch": 30.125,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 114.1,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 180.2,
+    "host_rss_peak_mb": 2366,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "10-13,74-77",
+     "seen": "10-13,74-77",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 111.52000000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 184.9,
+    "host_rss_peak_mb": 2368,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "10-13,74-77",
+     "seen": "10-13,74-77",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 111.01000000000002,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 182.0,
+    "host_rss_peak_mb": 2366,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "10-13,74-77",
+     "seen": "10-13,74-77",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 110.32000000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 175.1,
+    "host_rss_peak_mb": 2352,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "10-13,74-77",
+     "seen": "10-13,74-77",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": [],
+  "attempt": "1 of 1",
+  "attempt_counted": true,
+  "baseline_check": {
+   "delta_canary_slowest_arm_s": 114.455,
+   "limit_s": 125.9005,
+   "a10_s_d1": 114.1,
+   "ratio": 0.9969,
+   "flag": false
+  }
+ },
+ {
+  "product": "NVIDIA-A10",
+  "slug": "a10",
+  "job_dir": "a10-krule",
+  "shape": "krule",
+  "class": "A07",
+  "phase": "p2-A07-k2",
+  "k": 2,
+  "stop_after": 21,
+  "arms_parsed": 2,
+  "arms_completed": 2,
+  "all_arms_completed": true,
+  "s_d1": 96.565,
+  "R_d1": 74.56117640967224,
+  "steady_s_slowest_arm": 96.565,
+  "untraced_median_s": 89.1,
+  "traced_median_s": 161.3,
+  "n_untraced": 36,
+  "n_traced": 4,
+  "steady_s_per_epoch": 96.32000000000001,
+  "run_epochs_per_gpu_hour": 74.75083056478405,
+  "gpu_hours_per_1000_run_epochs": 13.37777777777778,
+  "per_arm_untraced_median_range_s": [
+   89.1,
+   89.35
+  ],
+  "epoch1_median_s": 171.75,
+  "trace_seconds_median": 72.255,
+  "completed_run_epochs": 42,
+  "host_rss_peak_mb": 2441,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 2,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 37,
+  "n_steady_samples": 32,
+  "gpu_util_mean_all": 96.37837837837837,
+  "gpu_util_mean_steady": 99.125,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 16906.0,
+  "gpu_mem_total_mib": 23028.0,
+  "gpu_mem_peak_fraction": 0.73414973076255,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8446.0,
+  "cpu_cores_mean_all": 1.1105574820339765,
+  "cpu_cores_mean_steady": 1.0865516552247871,
+  "cpu_cores_per_arm_steady": 0.5432758276123936,
+  "cpu_pinned_cores_expected": 4,
+  "thread_cpus_union": "10,11,12,13",
+  "thread_mask_rows": 66,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 10299.09375,
+  "proc_rss_peak_mib": 2722.0,
+  "node": "hcc-nrp-shor-c6009.unl.edu",
+  "gpu_info": "NVIDIA A10, 23028 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 5.0,
+  "pod_created_to_running_seconds": 19.0,
+  "job_created_to_running_seconds": 19.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7502 32-Core Processor",
+  "cpu_counts": "node_logical 128 allowed 2 cpus_allowed_list 10-13,74-77 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  128",
+   "LSCPU On-line CPU(s) list:                     0-127",
+   "LSCPU Model name:                              AMD EPYC 7502 32-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      32",
+   "LSCPU Socket(s):                               2",
+   "LSCPU CPU(s) scaling MHz:                      108%",
+   "LSCPU CPU max MHz:                             2500.0000",
+   "LSCPU NUMA node(s):                            2"
+  ],
+  "host_mem": "MemTotal: 528175716 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 10-13,74-77 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a10-krule-g8b5c.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A10",
+  "phase_wall_s": 2235.3,
+  "outcomes": {
+   "ok": 2
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "10-13",
+  "cpus_pinned_n": 4,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790677716.0,
+  "total_elapsed_s_per_run_epoch": 53.221428571428575,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 96.565,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 174.2,
+    "host_rss_peak_mb": 2433,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "10-13",
+     "seen": "10-13",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s2",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 96.13,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 169.3,
+    "host_rss_peak_mb": 2441,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "10-13",
+     "seen": "10-13",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": [],
+  "attempt": "1 of 1",
+  "attempt_counted": true,
+  "baseline_check": {
+   "delta_canary_slowest_arm_s": 90.73,
+   "limit_s": 99.803,
+   "a10_s_d1": 96.565,
+   "ratio": 1.0643,
+   "flag": false
+  }
+ },
+ {
+  "product": "NVIDIA-A100-SXM4-80GB",
+  "slug": "a100-sxm4-80gb",
+  "job_dir": "a100-sxm4-80gb-klow",
+  "shape": "klow",
+  "class": "E",
+  "phase": "p3-E-k4",
+  "k": 4,
+  "stop_after": 21,
+  "arms_parsed": 4,
+  "arms_completed": 4,
+  "all_arms_completed": true,
+  "s_d1": 47.1,
+  "R_d1": 305.73248407643314,
+  "steady_s_slowest_arm": 47.1,
+  "untraced_median_s": 38.7,
+  "traced_median_s": 115.55,
+  "n_untraced": 72,
+  "n_traced": 8,
+  "steady_s_per_epoch": 46.385000000000005,
+  "run_epochs_per_gpu_hour": 310.44518702166647,
+  "gpu_hours_per_1000_run_epochs": 3.221180555555556,
+  "per_arm_untraced_median_range_s": [
+   38.0,
+   40.5
+  ],
+  "epoch1_median_s": 133.1,
+  "trace_seconds_median": 80.84,
+  "completed_run_epochs": 84,
+  "host_rss_peak_mb": 2365,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 4,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 20,
+  "n_steady_samples": 13,
+  "gpu_util_mean_all": 88.1,
+  "gpu_util_mean_steady": 98.53846153846153,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 18181.0,
+  "gpu_mem_total_mib": 81920.0,
+  "gpu_mem_peak_fraction": 0.22193603515625,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4538.0,
+  "cpu_cores_mean_all": 2.8046854904708374,
+  "cpu_cores_mean_steady": 2.6132087224967626,
+  "cpu_cores_per_arm_steady": 0.6533021806241907,
+  "cpu_pinned_cores_expected": 8,
+  "thread_cpus_union": "6,7,14,15,134,135,142,143",
+  "thread_mask_rows": 58,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 12230.86328125,
+  "proc_rss_peak_mib": 2504.0,
+  "node": "gp-engine.usd.edu",
+  "gpu_info": "NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 13735.0,
+  "pod_created_to_running_seconds": 13744.0,
+  "job_created_to_running_seconds": 13744.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.71.05",
+  "cpu_model": "AMD EPYC 7713 64-Core Processor",
+  "cpu_counts": "node_logical 256 allowed 2 cpus_allowed_list 6-7,14-15,134-135,142-143 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  256",
+   "LSCPU On-line CPU(s) list:                     0-255",
+   "LSCPU Model name:                              AMD EPYC 7713 64-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      64",
+   "LSCPU Socket(s):                               2",
+   "LSCPU NUMA node(s):                            8"
+  ],
+  "host_mem": "MemTotal: 1056349768 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 6-7,14-15,134-135,142-143 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a100-sxm4-80gb-klow-dpl8n.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A100-SXM4-80GB",
+  "phase_wall_s": 1220.5,
+  "outcomes": {
+   "ok": 4
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "6-7,14-15,134-135,142-143",
+  "cpus_pinned_n": 8,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790696771.0,
+  "total_elapsed_s_per_run_epoch": 14.529761904761905,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 46.15,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 131.0,
+    "host_rss_peak_mb": 2359,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "6-7,14-15,134-135,142-143",
+     "seen": "6-7,14-15,134-135,142-143",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 45.78,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 114.5,
+    "host_rss_peak_mb": 2365,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "6-7,14-15,134-135,142-143",
+     "seen": "6-7,14-15,134-135,142-143",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 47.045,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 135.2,
+    "host_rss_peak_mb": 2334,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "6-7,14-15,134-135,142-143",
+     "seen": "6-7,14-15,134-135,142-143",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 47.1,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 144.0,
+    "host_rss_peak_mb": 2353,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "6-7,14-15,134-135,142-143",
+     "seen": "6-7,14-15,134-135,142-143",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A100-SXM4-80GB",
+  "slug": "a100-sxm4-80gb",
+  "job_dir": "a100-sxm4-80gb-klow",
+  "shape": "klow",
+  "class": "A07",
+  "phase": "p4-A07-k2",
+  "k": 2,
+  "stop_after": 21,
+  "arms_parsed": 2,
+  "arms_completed": 2,
+  "all_arms_completed": true,
+  "s_d1": 45.05499999999999,
+  "R_d1": 159.80468316502055,
+  "steady_s_slowest_arm": 45.05499999999999,
+  "untraced_median_s": 35.75,
+  "traced_median_s": 110.1,
+  "n_untraced": 36,
+  "n_traced": 4,
+  "steady_s_per_epoch": 43.185,
+  "run_epochs_per_gpu_hour": 166.7245571378951,
+  "gpu_hours_per_1000_run_epochs": 5.997916666666667,
+  "per_arm_untraced_median_range_s": [
+   33.5,
+   37.849999999999994
+  ],
+  "epoch1_median_s": 120.25,
+  "trace_seconds_median": 78.33,
+  "completed_run_epochs": 42,
+  "host_rss_peak_mb": 2473,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 2,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 19,
+  "n_steady_samples": 13,
+  "gpu_util_mean_all": 78.84210526315789,
+  "gpu_util_mean_steady": 95.6923076923077,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 17285.0,
+  "gpu_mem_total_mib": 81920.0,
+  "gpu_mem_peak_fraction": 0.21099853515625,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8634.0,
+  "cpu_cores_mean_all": 1.3954736588858747,
+  "cpu_cores_mean_steady": 1.3086335120138795,
+  "cpu_cores_per_arm_steady": 0.6543167560069397,
+  "cpu_pinned_cores_expected": 4,
+  "thread_cpus_union": "6,7,14,15",
+  "thread_mask_rows": 28,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 10126.34375,
+  "proc_rss_peak_mib": 2480.0,
+  "node": "gp-engine.usd.edu",
+  "gpu_info": "NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 13735.0,
+  "pod_created_to_running_seconds": 13744.0,
+  "job_created_to_running_seconds": 13744.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.71.05",
+  "cpu_model": "AMD EPYC 7713 64-Core Processor",
+  "cpu_counts": "node_logical 256 allowed 2 cpus_allowed_list 6-7,14-15,134-135,142-143 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  256",
+   "LSCPU On-line CPU(s) list:                     0-255",
+   "LSCPU Model name:                              AMD EPYC 7713 64-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      64",
+   "LSCPU Socket(s):                               2",
+   "LSCPU NUMA node(s):                            8"
+  ],
+  "host_mem": "MemTotal: 1056349768 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 6-7,14-15,134-135,142-143 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a100-sxm4-80gb-klow-dpl8n.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A100-SXM4-80GB",
+  "phase_wall_s": 1155.3,
+  "outcomes": {
+   "ok": 2
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "6-7,14-15",
+  "cpus_pinned_n": 4,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790696771.0,
+  "total_elapsed_s_per_run_epoch": 27.507142857142856,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 41.42,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 109.1,
+    "host_rss_peak_mb": 2473,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "6-7,14-15",
+     "seen": "6-7,14-15",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s2",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 45.05499999999999,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 131.4,
+    "host_rss_peak_mb": 2459,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "6-7,14-15",
+     "seen": "6-7,14-15",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A100-SXM4-80GB",
+  "slug": "a100-sxm4-80gb",
+  "job_dir": "a100-sxm4-80gb-krule",
+  "shape": "krule",
+  "class": "E",
+  "phase": "p1-E-k16",
+  "k": 16,
+  "stop_after": 21,
+  "arms_parsed": 16,
+  "arms_completed": 16,
+  "all_arms_completed": true,
+  "s_d1": 177.45999999999998,
+  "R_d1": 324.5801870844134,
+  "steady_s_slowest_arm": 177.45999999999998,
+  "untraced_median_s": 156.4,
+  "traced_median_s": 327.85,
+  "n_untraced": 288,
+  "n_traced": 32,
+  "steady_s_per_epoch": 173.54500000000002,
+  "run_epochs_per_gpu_hour": 331.9023884295139,
+  "gpu_hours_per_1000_run_epochs": 3.0129340277777783,
+  "per_arm_untraced_median_range_s": [
+   142.95,
+   158.35
+  ],
+  "epoch1_median_s": 289.70000000000005,
+  "trace_seconds_median": 192.5,
+  "completed_run_epochs": 336,
+  "host_rss_peak_mb": 2678,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 16,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 64,
+  "n_steady_samples": 46,
+  "gpu_util_mean_all": 99.265625,
+  "gpu_util_mean_steady": 100.0,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 72709.0,
+  "gpu_mem_total_mib": 81920.0,
+  "gpu_mem_peak_fraction": 0.88756103515625,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4538.0,
+  "cpu_cores_mean_all": 8.277903330966716,
+  "cpu_cores_mean_steady": 8.3205073867892,
+  "cpu_cores_per_arm_steady": 0.520031711674325,
+  "cpu_pinned_cores_expected": 32,
+  "thread_cpus_union": "4,5,40,43,44,45,46,47,112,113,114,115,117,118,119,120,132,133,168,171,172,173,174,175,240,241,242,243,245,246,247,248",
+  "thread_mask_rows": 866,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 29255.34765625,
+  "proc_rss_peak_mib": 2887.0,
+  "node": "sphinx.sdstate.edu",
+  "gpu_info": "NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 1016.0,
+  "pod_created_to_running_seconds": 1032.0,
+  "job_created_to_running_seconds": 1032.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.71.05",
+  "cpu_model": "AMD EPYC 7713 64-Core Processor",
+  "cpu_counts": "node_logical 256 allowed 2 cpus_allowed_list 4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  256",
+   "LSCPU On-line CPU(s) list:                     0-255",
+   "LSCPU Model name:                              AMD EPYC 7713 64-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      64",
+   "LSCPU Socket(s):                               2",
+   "LSCPU NUMA node(s):                            8"
+  ],
+  "host_mem": "MemTotal: 1056349764 kB cgroup_memory_max 137438953472",
+  "pod_cpus": "allowed_n 32 allowed 4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248 pod_cpu_request 32 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a100-sxm4-80gb-krule-kqnx5.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A100-SXM4-80GB",
+  "phase_wall_s": 3902.7,
+  "outcomes": {
+   "ok": 16
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+  "cpus_pinned_n": 32,
+  "cpus_allowed_n": 32,
+  "pinned_physical_cores": 16,
+  "pod_cpu_request": 32,
+  "attempt_started_unix": 1790675579.0,
+  "total_elapsed_s_per_run_epoch": 11.61517857142857,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 166.57999999999998,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 139.5,
+    "host_rss_peak_mb": 2598,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 177.45999999999998,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 212.2,
+    "host_rss_peak_mb": 2584,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 173.41,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 213.5,
+    "host_rss_peak_mb": 2631,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 175.425,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 192.6,
+    "host_rss_peak_mb": 2628,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s5",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 173.44,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 258.4,
+    "host_rss_peak_mb": 2601,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s6",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 174.83499999999998,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 213.5,
+    "host_rss_peak_mb": 2609,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s7",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 171.53,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 295.4,
+    "host_rss_peak_mb": 2601,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s8",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 172.77000000000004,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 269.3,
+    "host_rss_peak_mb": 2631,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 171.50500000000002,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 289.3,
+    "host_rss_peak_mb": 2593,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 169.73999999999998,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 290.1,
+    "host_rss_peak_mb": 2580,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 168.94,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 313.2,
+    "host_rss_peak_mb": 2603,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 168.77,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 312.0,
+    "host_rss_peak_mb": 2608,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s5",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 167.51,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 319.0,
+    "host_rss_peak_mb": 2613,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s6",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 168.42999999999998,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 329.7,
+    "host_rss_peak_mb": 2640,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s7",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 166.77,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 348.9,
+    "host_rss_peak_mb": 2569,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-b-n64-s8",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 166.97,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 334.4,
+    "host_rss_peak_mb": 2678,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 32,
+     "requested": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "seen": "4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A100-SXM4-80GB",
+  "slug": "a100-sxm4-80gb",
+  "job_dir": "a100-sxm4-80gb-krule",
+  "shape": "krule",
+  "class": "A07",
+  "phase": "p2-A07-k8",
+  "k": 8,
+  "stop_after": 21,
+  "arms_parsed": 8,
+  "arms_completed": 8,
+  "all_arms_completed": true,
+  "s_d1": 142.23000000000002,
+  "R_d1": 202.4889263868382,
+  "steady_s_slowest_arm": 142.23000000000002,
+  "untraced_median_s": 128.75,
+  "traced_median_s": 230.05,
+  "n_untraced": 144,
+  "n_traced": 16,
+  "steady_s_per_epoch": 138.88,
+  "run_epochs_per_gpu_hour": 207.37327188940094,
+  "gpu_hours_per_1000_run_epochs": 4.822222222222222,
+  "per_arm_untraced_median_range_s": [
+   125.4,
+   131.45
+  ],
+  "epoch1_median_s": 224.3,
+  "trace_seconds_median": 116.485,
+  "completed_run_epochs": 168,
+  "host_rss_peak_mb": 2684,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 8,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 53,
+  "n_steady_samples": 41,
+  "gpu_util_mean_all": 98.0377358490566,
+  "gpu_util_mean_steady": 100.0,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 69125.0,
+  "gpu_mem_total_mib": 81920.0,
+  "gpu_mem_peak_fraction": 0.84381103515625,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8634.0,
+  "cpu_cores_mean_all": 4.395391997364237,
+  "cpu_cores_mean_steady": 4.349071117979841,
+  "cpu_cores_per_arm_steady": 0.5436338897474802,
+  "cpu_pinned_cores_expected": 16,
+  "thread_cpus_union": "4,5,40,43,44,45,46,47,112,113,114,115,117,118,119,120",
+  "thread_mask_rows": 361,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 18516.6015625,
+  "proc_rss_peak_mib": 2880.0,
+  "node": "sphinx.sdstate.edu",
+  "gpu_info": "NVIDIA A100-SXM4-80GB, 81920 MiB, 595.71.05",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 1016.0,
+  "pod_created_to_running_seconds": 1032.0,
+  "job_created_to_running_seconds": 1032.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.71.05",
+  "cpu_model": "AMD EPYC 7713 64-Core Processor",
+  "cpu_counts": "node_logical 256 allowed 2 cpus_allowed_list 4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  256",
+   "LSCPU On-line CPU(s) list:                     0-255",
+   "LSCPU Model name:                              AMD EPYC 7713 64-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      64",
+   "LSCPU Socket(s):                               2",
+   "LSCPU NUMA node(s):                            8"
+  ],
+  "host_mem": "MemTotal: 1056349764 kB cgroup_memory_max 137438953472",
+  "pod_cpus": "allowed_n 32 allowed 4-5,40,43-47,112-115,117-120,132-133,168,171-175,240-243,245-248 pod_cpu_request 32 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-a100-sxm4-80gb-krule-kqnx5.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-A100-SXM4-80GB",
+  "phase_wall_s": 3181.5,
+  "outcomes": {
+   "ok": 8
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4-5,40,43-47,112-115,117-120",
+  "cpus_pinned_n": 16,
+  "cpus_allowed_n": 32,
+  "pinned_physical_cores": 16,
+  "pod_cpu_request": 32,
+  "attempt_started_unix": 1790675579.0,
+  "total_elapsed_s_per_run_epoch": 18.9375,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 142.01500000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 181.0,
+    "host_rss_peak_mb": 2637,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s2",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 142.23000000000002,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 223.5,
+    "host_rss_peak_mb": 2618,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s3",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 142.20999999999998,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 229.7,
+    "host_rss_peak_mb": 2641,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s4",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 141.425,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 223.1,
+    "host_rss_peak_mb": 2625,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s5",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 140.24,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 235.8,
+    "host_rss_peak_mb": 2684,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s6",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 137.01500000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 229.5,
+    "host_rss_peak_mb": 2660,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s7",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 137.76,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 225.1,
+    "host_rss_peak_mb": 2633,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s8",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 134.8,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 222.2,
+    "host_rss_peak_mb": 2642,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 16,
+     "requested": "4-5,40,43-47,112-115,117-120",
+     "seen": "4-5,40,43-47,112-115,117-120",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-3090",
+  "slug": "geforce-rtx-3090",
+  "job_dir": "geforce-rtx-3090-klow",
+  "shape": "klow",
+  "class": "E",
+  "phase": "p3-E-k4",
+  "k": 4,
+  "stop_after": 21,
+  "arms_parsed": 4,
+  "arms_completed": 4,
+  "all_arms_completed": true,
+  "s_d1": 71.08,
+  "R_d1": 202.58863252673044,
+  "steady_s_slowest_arm": 71.08,
+  "untraced_median_s": 62.95,
+  "traced_median_s": 118.2,
+  "n_untraced": 72,
+  "n_traced": 8,
+  "steady_s_per_epoch": 68.47500000000001,
+  "run_epochs_per_gpu_hour": 210.2957283680175,
+  "gpu_hours_per_1000_run_epochs": 4.755208333333334,
+  "per_arm_untraced_median_range_s": [
+   62.8,
+   63.3
+  ],
+  "epoch1_median_s": 112.0,
+  "trace_seconds_median": 68.57,
+  "completed_run_epochs": 84,
+  "host_rss_peak_mb": 2380,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 4,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 26,
+  "n_steady_samples": 20,
+  "gpu_util_mean_all": 94.57692307692308,
+  "gpu_util_mean_steady": 99.95,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 17538.0,
+  "gpu_mem_total_mib": 24576.0,
+  "gpu_mem_peak_fraction": 0.713623046875,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4378.0,
+  "cpu_cores_mean_all": 2.25920714377097,
+  "cpu_cores_mean_steady": 2.173114957016271,
+  "cpu_cores_per_arm_steady": 0.5432787392540678,
+  "cpu_pinned_cores_expected": 8,
+  "thread_cpus_union": "4,5,6,7,8,9,10,11",
+  "thread_mask_rows": 87,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 12306.37109375,
+  "proc_rss_peak_mib": 2596.0,
+  "node": "fiona-1.famu.edu",
+  "gpu_info": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.71.05",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 8811.0,
+  "pod_created_to_running_seconds": 8823.0,
+  "job_created_to_running_seconds": 8829.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.71.05",
+  "cpu_model": "AMD EPYC 7453 28-Core Processor",
+  "cpu_counts": "node_logical 28 allowed 2 cpus_allowed_list 4-11 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  28",
+   "LSCPU On-line CPU(s) list:                     0-27",
+   "LSCPU Model name:                              AMD EPYC 7453 28-Core Processor",
+   "LSCPU Thread(s) per core:                      1",
+   "LSCPU Core(s) per socket:                      28",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      81%",
+   "LSCPU CPU max MHz:                             3489.7930",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263716068 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 4-11 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-3090-klow-nh9qj.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-3090",
+  "phase_wall_s": 1575.4,
+  "outcomes": {
+   "ok": 4
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4-11",
+  "cpus_pinned_n": 8,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 8,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790683056.0,
+  "total_elapsed_s_per_run_epoch": 18.754761904761907,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 71.08,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 110.3,
+    "host_rss_peak_mb": 2352,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4-11",
+     "seen": "4-11",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 68.905,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 110.7,
+    "host_rss_peak_mb": 2355,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4-11",
+     "seen": "4-11",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 68.015,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 113.3,
+    "host_rss_peak_mb": 2380,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4-11",
+     "seen": "4-11",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 67.74999999999999,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 114.1,
+    "host_rss_peak_mb": 2339,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4-11",
+     "seen": "4-11",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-3090",
+  "slug": "geforce-rtx-3090",
+  "job_dir": "geforce-rtx-3090-klow",
+  "shape": "klow",
+  "class": "A07",
+  "phase": "p4-A07-k1",
+  "k": 1,
+  "stop_after": 21,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": true,
+  "s_d1": 30.85,
+  "R_d1": 116.6936790923825,
+  "steady_s_slowest_arm": 30.85,
+  "untraced_median_s": 25.65,
+  "traced_median_s": 77.65,
+  "n_untraced": 18,
+  "n_traced": 2,
+  "steady_s_per_epoch": 30.85,
+  "run_epochs_per_gpu_hour": 116.6936790923825,
+  "gpu_hours_per_1000_run_epochs": 8.569444444444445,
+  "per_arm_untraced_median_range_s": [
+   25.65,
+   25.65
+  ],
+  "epoch1_median_s": 90.4,
+  "trace_seconds_median": 51.045,
+  "completed_run_epochs": 21,
+  "host_rss_peak_mb": 2413,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 1,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 13,
+  "n_steady_samples": 10,
+  "gpu_util_mean_all": 61.61538461538461,
+  "gpu_util_mean_steady": 74.3,
+  "gpu_util_median_steady": 99.5,
+  "gpu_mem_peak_mib": 8484.0,
+  "gpu_mem_total_mib": 24576.0,
+  "gpu_mem_peak_fraction": 0.34521484375,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8474.0,
+  "cpu_cores_mean_all": 0.6531998913444564,
+  "cpu_cores_mean_steady": 0.6228299941297812,
+  "cpu_cores_per_arm_steady": 0.6228299941297812,
+  "cpu_pinned_cores_expected": 2,
+  "thread_cpus_union": "4,5",
+  "thread_mask_rows": 10,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 8767.3984375,
+  "proc_rss_peak_mib": 2413.0,
+  "node": "fiona-1.famu.edu",
+  "gpu_info": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.71.05",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 8811.0,
+  "pod_created_to_running_seconds": 8823.0,
+  "job_created_to_running_seconds": 8829.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.71.05",
+  "cpu_model": "AMD EPYC 7453 28-Core Processor",
+  "cpu_counts": "node_logical 28 allowed 2 cpus_allowed_list 4-11 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  28",
+   "LSCPU On-line CPU(s) list:                     0-27",
+   "LSCPU Model name:                              AMD EPYC 7453 28-Core Processor",
+   "LSCPU Thread(s) per core:                      1",
+   "LSCPU Core(s) per socket:                      28",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      81%",
+   "LSCPU CPU max MHz:                             3489.7930",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263716068 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 4-11 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-3090-klow-nh9qj.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-3090",
+  "phase_wall_s": 815.1,
+  "outcomes": {
+   "ok": 1
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4-5",
+  "cpus_pinned_n": 2,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 2,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790683056.0,
+  "total_elapsed_s_per_run_epoch": 38.81428571428572,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 30.85,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 90.4,
+    "host_rss_peak_mb": 2413,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 2,
+     "requested": "4-5",
+     "seen": "4-5",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-3090",
+  "slug": "geforce-rtx-3090",
+  "job_dir": "geforce-rtx-3090-krule",
+  "shape": "krule",
+  "class": "E",
+  "phase": "p1-E-k5",
+  "k": 5,
+  "stop_after": 21,
+  "arms_parsed": 5,
+  "arms_completed": 5,
+  "all_arms_completed": true,
+  "s_d1": 85.50999999999999,
+  "R_d1": 210.50169570810434,
+  "steady_s_slowest_arm": 85.50999999999999,
+  "untraced_median_s": 77.05,
+  "traced_median_s": 139.45,
+  "n_untraced": 90,
+  "n_traced": 10,
+  "steady_s_per_epoch": 83.28999999999999,
+  "run_epochs_per_gpu_hour": 216.11237843678714,
+  "gpu_hours_per_1000_run_epochs": 4.627222222222222,
+  "per_arm_untraced_median_range_s": [
+   76.75,
+   77.35
+  ],
+  "epoch1_median_s": 129.7,
+  "trace_seconds_median": 77.565,
+  "completed_run_epochs": 105,
+  "host_rss_peak_mb": 2438,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 5,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 31,
+  "n_steady_samples": 25,
+  "gpu_util_mean_all": 99.87096774193549,
+  "gpu_util_mean_steady": 100.0,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 21921.0,
+  "gpu_mem_total_mib": 24576.0,
+  "gpu_mem_peak_fraction": 0.8919677734375,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4378.0,
+  "cpu_cores_mean_all": 2.5960512173966968,
+  "cpu_cores_mean_steady": 2.55414193194432,
+  "cpu_cores_per_arm_steady": 0.510828386388864,
+  "cpu_pinned_cores_expected": 10,
+  "thread_cpus_union": "4,5,6,7,8,9,10,11,12,13",
+  "thread_mask_rows": 134,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 13973.00390625,
+  "proc_rss_peak_mib": 2436.0,
+  "node": "nautilus01.hsrn.nyu.edu",
+  "gpu_info": "NVIDIA GeForce RTX 3090, 24576 MiB, 610.57.04",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 5395.0,
+  "pod_created_to_running_seconds": 5408.0,
+  "job_created_to_running_seconds": 5408.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "610.57.04 [Deprecated; will be removed in CUDA 14.0. Use KMD Version instead]",
+  "cpu_model": "AMD EPYC 7443P 24-Core Processor",
+  "cpu_counts": "node_logical 24 allowed 2 cpus_allowed_list 4-13 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  24",
+   "LSCPU On-line CPU(s) list:                     0-23",
+   "LSCPU Model name:                              AMD EPYC 7443P 24-Core Processor",
+   "LSCPU Thread(s) per core:                      1",
+   "LSCPU Core(s) per socket:                      24",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      88%",
+   "LSCPU CPU max MHz:                             4035.6440",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263784256 kB cgroup_memory_max 42949672960",
+  "pod_cpus": "allowed_n 10 allowed 4-13 pod_cpu_request 10 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-3090-krule-m748v.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-3090",
+  "phase_wall_s": 1885.5,
+  "outcomes": {
+   "ok": 5
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4-13",
+  "cpus_pinned_n": 10,
+  "cpus_allowed_n": 10,
+  "pinned_physical_cores": 10,
+  "pod_cpu_request": 10,
+  "attempt_started_unix": 1790683076.0,
+  "total_elapsed_s_per_run_epoch": 17.957142857142856,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 85.50999999999999,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 117.1,
+    "host_rss_peak_mb": 2428,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4-13",
+     "seen": "4-13",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 84.12,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 126.5,
+    "host_rss_peak_mb": 2434,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4-13",
+     "seen": "4-13",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 83.11500000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 129.7,
+    "host_rss_peak_mb": 2427,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4-13",
+     "seen": "4-13",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 82.65,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 131.5,
+    "host_rss_peak_mb": 2438,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4-13",
+     "seen": "4-13",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s5",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 81.88,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 135.6,
+    "host_rss_peak_mb": 2432,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4-13",
+     "seen": "4-13",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-3090",
+  "slug": "geforce-rtx-3090",
+  "job_dir": "geforce-rtx-3090-krule",
+  "shape": "krule",
+  "class": "A07",
+  "phase": "p2-A07-k2",
+  "k": 2,
+  "stop_after": 21,
+  "arms_parsed": 2,
+  "arms_completed": 2,
+  "all_arms_completed": true,
+  "s_d1": 57.105000000000004,
+  "R_d1": 126.08353033884949,
+  "steady_s_slowest_arm": 57.105000000000004,
+  "untraced_median_s": 51.6,
+  "traced_median_s": 102.15,
+  "n_untraced": 36,
+  "n_traced": 4,
+  "steady_s_per_epoch": 56.65500000000001,
+  "run_epochs_per_gpu_hour": 127.08498808578234,
+  "gpu_hours_per_1000_run_epochs": 7.868750000000001,
+  "per_arm_untraced_median_range_s": [
+   51.55,
+   51.6
+  ],
+  "epoch1_median_s": 105.8,
+  "trace_seconds_median": 54.34,
+  "completed_run_epochs": 42,
+  "host_rss_peak_mb": 2491,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 2,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 22,
+  "n_steady_samples": 19,
+  "gpu_util_mean_all": 96.4090909090909,
+  "gpu_util_mean_steady": 99.26315789473684,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 16963.0,
+  "gpu_mem_total_mib": 24576.0,
+  "gpu_mem_peak_fraction": 0.6902262369791666,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8474.0,
+  "cpu_cores_mean_all": 1.109277929192736,
+  "cpu_cores_mean_steady": 1.0684789508675385,
+  "cpu_cores_per_arm_steady": 0.5342394754337693,
+  "cpu_pinned_cores_expected": 4,
+  "thread_cpus_union": "4,5,6,7",
+  "thread_mask_rows": 38,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 10332.3984375,
+  "proc_rss_peak_mib": 2535.0,
+  "node": "nautilus01.hsrn.nyu.edu",
+  "gpu_info": "NVIDIA GeForce RTX 3090, 24576 MiB, 610.57.04",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 5395.0,
+  "pod_created_to_running_seconds": 5408.0,
+  "job_created_to_running_seconds": 5408.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "610.57.04 [Deprecated; will be removed in CUDA 14.0. Use KMD Version instead]",
+  "cpu_model": "AMD EPYC 7443P 24-Core Processor",
+  "cpu_counts": "node_logical 24 allowed 2 cpus_allowed_list 4-13 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  24",
+   "LSCPU On-line CPU(s) list:                     0-23",
+   "LSCPU Model name:                              AMD EPYC 7443P 24-Core Processor",
+   "LSCPU Thread(s) per core:                      1",
+   "LSCPU Core(s) per socket:                      24",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      88%",
+   "LSCPU CPU max MHz:                             4035.6440",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263784256 kB cgroup_memory_max 42949672960",
+  "pod_cpus": "allowed_n 10 allowed 4-13 pod_cpu_request 10 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-3090-krule-m748v.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-3090",
+  "phase_wall_s": 1330.2,
+  "outcomes": {
+   "ok": 2
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4-7",
+  "cpus_pinned_n": 4,
+  "cpus_allowed_n": 10,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 10,
+  "attempt_started_unix": 1790683076.0,
+  "total_elapsed_s_per_run_epoch": 31.67142857142857,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 57.105000000000004,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 106.8,
+    "host_rss_peak_mb": 2491,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "4-7",
+     "seen": "4-7",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s2",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 56.154999999999994,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 104.8,
+    "host_rss_peak_mb": 2471,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "4-7",
+     "seen": "4-7",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-4090",
+  "slug": "geforce-rtx-4090",
+  "job_dir": "geforce-rtx-4090-klow",
+  "shape": "klow",
+  "class": "E",
+  "phase": "p3-E-k4",
+  "k": 4,
+  "stop_after": 21,
+  "arms_parsed": 4,
+  "arms_completed": 4,
+  "all_arms_completed": true,
+  "s_d1": 55.410000000000004,
+  "R_d1": 259.88088792636705,
+  "steady_s_slowest_arm": 55.410000000000004,
+  "untraced_median_s": 47.1,
+  "traced_median_s": 104.5,
+  "n_untraced": 72,
+  "n_traced": 8,
+  "steady_s_per_epoch": 52.84000000000001,
+  "run_epochs_per_gpu_hour": 272.52081756245263,
+  "gpu_hours_per_1000_run_epochs": 3.6694444444444447,
+  "per_arm_untraced_median_range_s": [
+   46.95,
+   47.150000000000006
+  ],
+  "epoch1_median_s": 105.7,
+  "trace_seconds_median": 72.055,
+  "completed_run_epochs": 84,
+  "host_rss_peak_mb": 2368,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 4,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 20,
+  "n_steady_samples": 15,
+  "gpu_util_mean_all": 97.2,
+  "gpu_util_mean_steady": 99.93333333333334,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 18058.0,
+  "gpu_mem_total_mib": 24564.0,
+  "gpu_mem_peak_fraction": 0.7351408565380231,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4508.0,
+  "cpu_cores_mean_all": 2.584139664602455,
+  "cpu_cores_mean_steady": 2.4238329325136347,
+  "cpu_cores_per_arm_steady": 0.6059582331284087,
+  "cpu_pinned_cores_expected": 8,
+  "thread_cpus_union": "4,6,7,8,20,22,23,24",
+  "thread_mask_rows": 66,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 12396.32421875,
+  "proc_rss_peak_mib": 2366.0,
+  "node": "hcc-nrp-shor-c5226.unl.edu",
+  "gpu_info": "NVIDIA GeForce RTX 4090, 24564 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 14046.0,
+  "pod_created_to_running_seconds": 14060.0,
+  "job_created_to_running_seconds": 14060.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7282 16-Core Processor",
+  "cpu_counts": "node_logical 32 allowed 2 cpus_allowed_list 4,6-8,20,22-24 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  32",
+   "LSCPU On-line CPU(s) list:                     0-31",
+   "LSCPU Model name:                              AMD EPYC 7282 16-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      16",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      110%",
+   "LSCPU CPU max MHz:                             2800.0000",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263787404 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 4,6-8,20,22-24 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-4090-klow-5djmp.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-4090",
+  "phase_wall_s": 1260.4,
+  "outcomes": {
+   "ok": 4
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4,6-8,20,22-24",
+  "cpus_pinned_n": 8,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790688416.0,
+  "total_elapsed_s_per_run_epoch": 15.004761904761907,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 55.410000000000004,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 103.2,
+    "host_rss_peak_mb": 2355,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4,6-8,20,22-24",
+     "seen": "4,6-8,20,22-24",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 53.21,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 106.2,
+    "host_rss_peak_mb": 2365,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4,6-8,20,22-24",
+     "seen": "4,6-8,20,22-24",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 52.645,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 105.2,
+    "host_rss_peak_mb": 2362,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4,6-8,20,22-24",
+     "seen": "4,6-8,20,22-24",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 51.78000000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 111.0,
+    "host_rss_peak_mb": 2368,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "4,6-8,20,22-24",
+     "seen": "4,6-8,20,22-24",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-4090",
+  "slug": "geforce-rtx-4090",
+  "job_dir": "geforce-rtx-4090-klow",
+  "shape": "klow",
+  "class": "A07",
+  "phase": "p4-A07-k1",
+  "k": 1,
+  "stop_after": 21,
+  "arms_parsed": 1,
+  "arms_completed": 1,
+  "all_arms_completed": true,
+  "s_d1": 26.035000000000004,
+  "R_d1": 138.2753985020165,
+  "steady_s_slowest_arm": 26.035000000000004,
+  "untraced_median_s": 21.0,
+  "traced_median_s": 71.35,
+  "n_untraced": 18,
+  "n_traced": 2,
+  "steady_s_per_epoch": 26.035000000000004,
+  "run_epochs_per_gpu_hour": 138.2753985020165,
+  "gpu_hours_per_1000_run_epochs": 7.231944444444445,
+  "per_arm_untraced_median_range_s": [
+   21.0,
+   21.0
+  ],
+  "epoch1_median_s": 88.0,
+  "trace_seconds_median": 50.135000000000005,
+  "completed_run_epochs": 21,
+  "host_rss_peak_mb": 2434,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 1,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 12,
+  "n_steady_samples": 9,
+  "gpu_util_mean_all": 65.41666666666667,
+  "gpu_util_mean_steady": 84.44444444444444,
+  "gpu_util_median_steady": 99.0,
+  "gpu_mem_peak_mib": 8614.0,
+  "gpu_mem_total_mib": 24564.0,
+  "gpu_mem_peak_fraction": 0.3506757857026543,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8604.0,
+  "cpu_cores_mean_all": 0.7270684131153683,
+  "cpu_cores_mean_steady": 0.6673503506721375,
+  "cpu_cores_per_arm_steady": 0.6673503506721375,
+  "cpu_pinned_cores_expected": 2,
+  "thread_cpus_union": "4,6",
+  "thread_mask_rows": 9,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 8824.703125,
+  "proc_rss_peak_mib": 2433.0,
+  "node": "hcc-nrp-shor-c5226.unl.edu",
+  "gpu_info": "NVIDIA GeForce RTX 4090, 24564 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 14046.0,
+  "pod_created_to_running_seconds": 14060.0,
+  "job_created_to_running_seconds": 14060.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7282 16-Core Processor",
+  "cpu_counts": "node_logical 32 allowed 2 cpus_allowed_list 4,6-8,20,22-24 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  32",
+   "LSCPU On-line CPU(s) list:                     0-31",
+   "LSCPU Model name:                              AMD EPYC 7282 16-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      16",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      110%",
+   "LSCPU CPU max MHz:                             2800.0000",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263787404 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 4,6-8,20,22-24 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-4090-klow-5djmp.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-4090",
+  "phase_wall_s": 715.1,
+  "outcomes": {
+   "ok": 1
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4,6",
+  "cpus_pinned_n": 2,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 2,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790688416.0,
+  "total_elapsed_s_per_run_epoch": 34.05238095238095,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 26.035000000000004,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 88.0,
+    "host_rss_peak_mb": 2434,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 2,
+     "requested": "4,6",
+     "seen": "4,6",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-4090",
+  "slug": "geforce-rtx-4090",
+  "job_dir": "geforce-rtx-4090-krule",
+  "shape": "krule",
+  "class": "E",
+  "phase": "p1-E-k5",
+  "k": 5,
+  "stop_after": 21,
+  "arms_parsed": 5,
+  "arms_completed": 5,
+  "all_arms_completed": true,
+  "s_d1": 68.28,
+  "R_d1": 263.62038664323376,
+  "steady_s_slowest_arm": 68.28,
+  "untraced_median_s": 59.0,
+  "traced_median_s": 120.7,
+  "n_untraced": 90,
+  "n_traced": 10,
+  "steady_s_per_epoch": 65.17,
+  "run_epochs_per_gpu_hour": 276.20070584624824,
+  "gpu_hours_per_1000_run_epochs": 3.6205555555555557,
+  "per_arm_untraced_median_range_s": [
+   58.9,
+   59.2
+  ],
+  "epoch1_median_s": 115.3,
+  "trace_seconds_median": 81.49000000000001,
+  "completed_run_epochs": 105,
+  "host_rss_peak_mb": 2418,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 5,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 25,
+  "n_steady_samples": 19,
+  "gpu_util_mean_all": 95.44,
+  "gpu_util_mean_steady": 100.0,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 22571.0,
+  "gpu_mem_total_mib": 24564.0,
+  "gpu_mem_peak_fraction": 0.9188650056993974,
+  "gpu_mem_over_90pct": true,
+  "proc_gpu_mem_peak_mib": 4508.0,
+  "cpu_cores_mean_all": 3.072384550832839,
+  "cpu_cores_mean_steady": 2.929993385475966,
+  "cpu_cores_per_arm_steady": 0.5859986770951932,
+  "cpu_pinned_cores_expected": 10,
+  "thread_cpus_union": "4,6,7,8,9,20,22,23,24,25",
+  "thread_mask_rows": 104,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 13801.828125,
+  "proc_rss_peak_mib": 2503.0,
+  "node": "hcc-nrp-shor-c5834.unl.edu",
+  "gpu_info": "NVIDIA GeForce RTX 4090, 24564 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 5396.0,
+  "pod_created_to_running_seconds": 5405.0,
+  "job_created_to_running_seconds": 5405.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7282 16-Core Processor",
+  "cpu_counts": "node_logical 32 allowed 2 cpus_allowed_list 4,6-9,20,22-25 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  32",
+   "LSCPU On-line CPU(s) list:                     0-31",
+   "LSCPU Model name:                              AMD EPYC 7282 16-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      16",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      111%",
+   "LSCPU CPU max MHz:                             2800.0000",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263787404 kB cgroup_memory_max 42949672960",
+  "pod_cpus": "allowed_n 10 allowed 4,6-9,20,22-25 pod_cpu_request 10 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-4090-krule-9wwlj.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-4090",
+  "phase_wall_s": 1515.4,
+  "outcomes": {
+   "ok": 5
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4,6-9,20,22-25",
+  "cpus_pinned_n": 10,
+  "cpus_allowed_n": 10,
+  "pinned_physical_cores": 5,
+  "pod_cpu_request": 10,
+  "attempt_started_unix": 1790683076.0,
+  "total_elapsed_s_per_run_epoch": 14.432380952380953,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 68.28,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 115.3,
+    "host_rss_peak_mb": 2400,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4,6-9,20,22-25",
+     "seen": "4,6-9,20,22-25",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 66.66000000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 112.6,
+    "host_rss_peak_mb": 2397,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4,6-9,20,22-25",
+     "seen": "4,6-9,20,22-25",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 65.095,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 113.7,
+    "host_rss_peak_mb": 2418,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4,6-9,20,22-25",
+     "seen": "4,6-9,20,22-25",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 64.28999999999999,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 117.6,
+    "host_rss_peak_mb": 2402,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4,6-9,20,22-25",
+     "seen": "4,6-9,20,22-25",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s5",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 63.92,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 121.4,
+    "host_rss_peak_mb": 2404,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 10,
+     "requested": "4,6-9,20,22-25",
+     "seen": "4,6-9,20,22-25",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [
+   "rule 1: pod peak above 90 % of memory.total"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-GeForce-RTX-4090",
+  "slug": "geforce-rtx-4090",
+  "job_dir": "geforce-rtx-4090-krule",
+  "shape": "krule",
+  "class": "A07",
+  "phase": "p2-A07-k2",
+  "k": 2,
+  "stop_after": 21,
+  "arms_parsed": 2,
+  "arms_completed": 2,
+  "all_arms_completed": true,
+  "s_d1": 48.29,
+  "R_d1": 149.0991923793746,
+  "steady_s_slowest_arm": 48.29,
+  "untraced_median_s": 42.5,
+  "traced_median_s": 96.25,
+  "n_untraced": 36,
+  "n_traced": 4,
+  "steady_s_per_epoch": 47.875,
+  "run_epochs_per_gpu_hour": 150.3916449086162,
+  "gpu_hours_per_1000_run_epochs": 6.649305555555555,
+  "per_arm_untraced_median_range_s": [
+   42.5,
+   42.6
+  ],
+  "epoch1_median_s": 115.05,
+  "trace_seconds_median": 57.25,
+  "completed_run_epochs": 42,
+  "host_rss_peak_mb": 2457,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 2,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 19,
+  "n_steady_samples": 16,
+  "gpu_util_mean_all": 96.84210526315789,
+  "gpu_util_mean_steady": 99.9375,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 17223.0,
+  "gpu_mem_total_mib": 24564.0,
+  "gpu_mem_peak_fraction": 0.7011480214948705,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8604.0,
+  "cpu_cores_mean_all": 1.2329723252509077,
+  "cpu_cores_mean_steady": 1.1854602690844585,
+  "cpu_cores_per_arm_steady": 0.5927301345422292,
+  "cpu_pinned_cores_expected": 4,
+  "thread_cpus_union": "4,6,7,8",
+  "thread_mask_rows": 32,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 10197.76953125,
+  "proc_rss_peak_mib": 2457.0,
+  "node": "hcc-nrp-shor-c5834.unl.edu",
+  "gpu_info": "NVIDIA GeForce RTX 4090, 24564 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 5396.0,
+  "pod_created_to_running_seconds": 5405.0,
+  "job_created_to_running_seconds": 5405.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7282 16-Core Processor",
+  "cpu_counts": "node_logical 32 allowed 2 cpus_allowed_list 4,6-9,20,22-25 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  32",
+   "LSCPU On-line CPU(s) list:                     0-31",
+   "LSCPU Model name:                              AMD EPYC 7282 16-Core Processor",
+   "LSCPU Thread(s) per core:                      2",
+   "LSCPU Core(s) per socket:                      16",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      111%",
+   "LSCPU CPU max MHz:                             2800.0000",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263787404 kB cgroup_memory_max 42949672960",
+  "pod_cpus": "allowed_n 10 allowed 4,6-9,20,22-25 pod_cpu_request 10 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-geforce-rtx-4090-krule-9wwlj.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-GeForce-RTX-4090",
+  "phase_wall_s": 1180.2,
+  "outcomes": {
+   "ok": 2
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "4,6-8",
+  "cpus_pinned_n": 4,
+  "cpus_allowed_n": 10,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 10,
+  "attempt_started_unix": 1790683076.0,
+  "total_elapsed_s_per_run_epoch": 28.1,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 48.29,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 116.1,
+    "host_rss_peak_mb": 2447,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "4,6-8",
+     "seen": "4,6-8",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s2",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 47.540000000000006,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 114.0,
+    "host_rss_peak_mb": 2457,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "4,6-8",
+     "seen": "4,6-8",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 2,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-RTX-A6000",
+  "slug": "rtx-a6000",
+  "job_dir": "rtx-a6000-klow",
+  "shape": "klow",
+  "class": "E",
+  "phase": "p3-E-k4",
+  "k": 4,
+  "stop_after": 21,
+  "arms_parsed": 4,
+  "arms_completed": 4,
+  "all_arms_completed": true,
+  "s_d1": 77.32000000000001,
+  "R_d1": 186.23900672529746,
+  "steady_s_slowest_arm": 77.32000000000001,
+  "untraced_median_s": 69.5,
+  "traced_median_s": 125.9,
+  "n_untraced": 72,
+  "n_traced": 8,
+  "steady_s_per_epoch": 75.14,
+  "run_epochs_per_gpu_hour": 191.64226776683523,
+  "gpu_hours_per_1000_run_epochs": 5.218055555555556,
+  "per_arm_untraced_median_range_s": [
+   69.2,
+   69.9
+  ],
+  "epoch1_median_s": 121.15,
+  "trace_seconds_median": 69.84,
+  "completed_run_epochs": 84,
+  "host_rss_peak_mb": 2370,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 4,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 28,
+  "n_steady_samples": 23,
+  "gpu_util_mean_all": 99.96428571428571,
+  "gpu_util_mean_steady": 100.0,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 17562.0,
+  "gpu_mem_total_mib": 49140.0,
+  "gpu_mem_peak_fraction": 0.3573870573870574,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 4384.0,
+  "cpu_cores_mean_all": 2.0933959449276665,
+  "cpu_cores_mean_steady": 2.0491275845254586,
+  "cpu_cores_per_arm_steady": 0.5122818961313647,
+  "cpu_pinned_cores_expected": 8,
+  "thread_cpus_union": "7,9,10,12,13,14,15,16",
+  "thread_mask_rows": 98,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 12336.12890625,
+  "proc_rss_peak_mib": 2382.0,
+  "node": "gpu00.nrp.hpc.udel.edu",
+  "gpu_info": "NVIDIA RTX A6000, 49140 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 15761.0,
+  "pod_created_to_running_seconds": 15770.0,
+  "job_created_to_running_seconds": 15770.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7443P 24-Core Processor",
+  "cpu_counts": "node_logical 24 allowed 2 cpus_allowed_list 7,9-10,12-16 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  24",
+   "LSCPU On-line CPU(s) list:                     0-23",
+   "LSCPU Model name:                              AMD EPYC 7443P 24-Core Processor",
+   "LSCPU Thread(s) per core:                      1",
+   "LSCPU Core(s) per socket:                      24",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      86%",
+   "LSCPU CPU max MHz:                             4035.6440",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263787424 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 7,9-10,12-16 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-rtx-a6000-klow-wt9n5.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-RTX-A6000",
+  "phase_wall_s": 1715.5,
+  "outcomes": {
+   "ok": 4
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "7,9-10,12-16",
+  "cpus_pinned_n": 8,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 8,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790690118.0,
+  "total_elapsed_s_per_run_epoch": 20.422619047619047,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-a-n64-s1",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 77.32000000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 120.0,
+    "host_rss_peak_mb": 2352,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "7,9-10,12-16",
+     "seen": "7,9-10,12-16",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s2",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 75.86500000000001,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 120.8,
+    "host_rss_peak_mb": 2338,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "7,9-10,12-16",
+     "seen": "7,9-10,12-16",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s3",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 74.42,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 122.8,
+    "host_rss_peak_mb": 2345,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "7,9-10,12-16",
+     "seen": "7,9-10,12-16",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-a-n64-s4",
+    "params": 31735,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 74.27,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 121.5,
+    "host_rss_peak_mb": 2370,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 8,
+     "requested": "7,9-10,12-16",
+     "seen": "7,9-10,12-16",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 1,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-RTX-A6000",
+  "slug": "rtx-a6000",
+  "job_dir": "rtx-a6000-klow",
+  "shape": "klow",
+  "class": "A07",
+  "phase": "p4-A07-k2",
+  "k": 2,
+  "stop_after": 21,
+  "arms_parsed": 2,
+  "arms_completed": 2,
+  "all_arms_completed": true,
+  "s_d1": 65.525,
+  "R_d1": 109.88172453262112,
+  "steady_s_slowest_arm": 65.525,
+  "untraced_median_s": 59.7,
+  "traced_median_s": 113.30000000000001,
+  "n_untraced": 36,
+  "n_traced": 4,
+  "steady_s_per_epoch": 65.06000000000002,
+  "run_epochs_per_gpu_hour": 110.66707654472792,
+  "gpu_hours_per_1000_run_epochs": 9.036111111111113,
+  "per_arm_untraced_median_range_s": [
+   59.6,
+   59.7
+  ],
+  "epoch1_median_s": 117.65,
+  "trace_seconds_median": 57.519999999999996,
+  "completed_run_epochs": 42,
+  "host_rss_peak_mb": 2432,
+  "oom": false,
+  "oom_lines_seen": 0,
+  "nan": false,
+  "traced_epochs_as_expected": true,
+  "window_crosses_resume": false,
+  "verification": {
+   "PASS": 2,
+   "SKIPPED": 0,
+   "FAIL": 0,
+   "none": 0
+  },
+  "n_samples": 25,
+  "n_steady_samples": 21,
+  "gpu_util_mean_all": 95.4,
+  "gpu_util_mean_steady": 98.76190476190476,
+  "gpu_util_median_steady": 100.0,
+  "gpu_mem_peak_mib": 16975.0,
+  "gpu_mem_total_mib": 49140.0,
+  "gpu_mem_peak_fraction": 0.3454415954415954,
+  "gpu_mem_over_90pct": false,
+  "proc_gpu_mem_peak_mib": 8480.0,
+  "cpu_cores_mean_all": 1.0863835625073606,
+  "cpu_cores_mean_steady": 1.0493696557182925,
+  "cpu_cores_per_arm_steady": 0.5246848278591463,
+  "cpu_pinned_cores_expected": 4,
+  "thread_cpus_union": "7,9,10,12",
+  "thread_mask_rows": 43,
+  "threads_within_pinned": true,
+  "cgroup_mem_peak_mib": 10186.59765625,
+  "proc_rss_peak_mib": 2551.0,
+  "node": "gpu00.nrp.hpc.udel.edu",
+  "gpu_info": "NVIDIA RTX A6000, 49140 MiB, 595.91.07",
+  "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+  "fingerprint_ok": true,
+  "fingerprints": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "pip_freeze_sha256": "a2cf4c9a70abf11424fca62819a2d6432b7bc6091610086a1b5a8a55f2671775",
+  "queue_seconds": 15761.0,
+  "pod_created_to_running_seconds": 15770.0,
+  "job_created_to_running_seconds": 15770.0,
+  "running_source": "containerStatuses.startedAt",
+  "driver": "595.91.07",
+  "cpu_model": "AMD EPYC 7443P 24-Core Processor",
+  "cpu_counts": "node_logical 24 allowed 2 cpus_allowed_list 7,9-10,12-16 cgroup_cpu_max max 100000",
+  "lscpu": [
+   "LSCPU CPU(s):                                  24",
+   "LSCPU On-line CPU(s) list:                     0-23",
+   "LSCPU Model name:                              AMD EPYC 7443P 24-Core Processor",
+   "LSCPU Thread(s) per core:                      1",
+   "LSCPU Core(s) per socket:                      24",
+   "LSCPU Socket(s):                               1",
+   "LSCPU CPU(s) scaling MHz:                      86%",
+   "LSCPU CPU max MHz:                             4035.6440",
+   "LSCPU NUMA node(s):                            1"
+  ],
+  "host_mem": "MemTotal: 263787424 kB cgroup_memory_max 34359738368",
+  "pod_cpus": "allowed_n 8 allowed 7,9-10,12-16 pod_cpu_request 8 (allowed_n == request: the static CPU manager gave the pod its own CPUs; larger: a shared pool)",
+  "pod_logs": [
+   {
+    "log": "pod-kai-gpubench-rtx-a6000-klow-wt9n5.log",
+    "fingerprint": "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1",
+    "fingerprint_ok": true
+   }
+  ],
+  "bench_product": "NVIDIA-RTX-A6000",
+  "phase_wall_s": 1515.3,
+  "outcomes": {
+   "ok": 2
+  },
+  "cpu_pin": "pinned",
+  "cpu_pin_source": "phase_result.json",
+  "cpus_pinned": "7,9-10,12",
+  "cpus_pinned_n": 4,
+  "cpus_allowed_n": 8,
+  "pinned_physical_cores": 4,
+  "pod_cpu_request": 8,
+  "attempt_started_unix": 1790690118.0,
+  "total_elapsed_s_per_run_epoch": 36.07857142857143,
+  "non_ok_arms": [],
+  "arm_cpus_unconfirmed": [],
+  "verify_interrupted_arms": [],
+  "cache_digest_sets": 1,
+  "cache_matches_anchor": true,
+  "arms": [
+   {
+    "name": "chang0926-c-n64-s1",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 65.525,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 118.4,
+    "host_rss_peak_mb": 2432,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "7,9-10,12",
+     "seen": "7,9-10,12",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   },
+   {
+    "name": "chang0926-c-n64-s2",
+    "params": 61951,
+    "epochs_done": 21,
+    "window": [
+     1,
+     21
+    ],
+    "steady_s": 64.525,
+    "traced_epochs": [
+     1,
+     10,
+     20
+    ],
+    "traced_as_expected": true,
+    "epoch1_s": 116.9,
+    "host_rss_peak_mb": 2432,
+    "oom_lines_seen": 0,
+    "oom": false,
+    "arm_oom": false,
+    "nan": false,
+    "verification": "PASS",
+    "verification_error": null,
+    "cache": {
+     "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+     "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+     "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+     "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+    },
+    "arm_cpus": {
+     "n": 4,
+     "requested": "7,9-10,12",
+     "seen": "7,9-10,12",
+     "status": "OK"
+    },
+    "window_crosses_resume": false
+   }
+  ],
+  "product_pod_logs": 1,
+  "product_fingerprint_mismatch_pods": 0,
+  "product_fingerprint_values": [
+   "FINGERPRINT 11559681 expected 11559681 chang0926-a-n64-s1"
+  ],
+  "product_fingerprint_mismatch_repeats": null,
+  "excluded": [],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-L40",
+  "slug": "l40",
+  "job_dir": "l40-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-L40",
+  "slug": "l40",
+  "job_dir": "l40-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-L40S",
+  "slug": "l40s",
+  "job_dir": "l40s-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40s-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-L40S",
+  "slug": "l40s",
+  "job_dir": "l40s-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-l40s-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-RTX-A6000",
+  "slug": "rtx-a6000",
+  "job_dir": "rtx-a6000-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-rtx-a6000-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A40",
+  "slug": "a40",
+  "job_dir": "a40-krule",
+  "shape": "krule",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a40-krule (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ },
+ {
+  "product": "NVIDIA-A40",
+  "slug": "a40",
+  "job_dir": "a40-klow",
+  "shape": "klow",
+  "class": null,
+  "phase": "none",
+  "excluded": [
+   "rule 3 / [D6]: no data for Job kai-gpubench-a40-klow (this pod shape not Running 6 h after apply, or not run)"
+  ],
+  "findings": []
+ }
+]

@@ -1,0 +1,209 @@
+==== ARM_ATTEMPT 0 2026-09-29T03:18:30Z
+RUN_STAGE canary
+[train] delta0926-w2-rep-c-t5000000-s3 params=61951 resume_epoch=0 initial_ebops=17120970
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Syncing run delta0926-w2-rep-c-t5000000-s3
+wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Delta/runs/93301d761679
+wandb: updating run metadata
+wandb: 🚀 View run delta0926-w2-rep-c-t5000000-s3 at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Delta/runs/93301d761679
+wandb: ⭐️ View project at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Delta
+wandb: Synced 4 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+Traceback (most recent call last):
+  File "/work/code/run_study.py", line 208, in <module>
+    train(args.index, args.stop_after)
+  File "/work/code/run_study.py", line 135, in train
+    state = ablation.run_training(cfg, arrays, info, out, remote=True,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/code/bnhgq2/ablation.py", line 1121, in run_training
+    loss, ce, kd, accuracy = [float(v) for v in step(order, state['recovery_frozen'], *signs).numpy()]
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/site-packages/tensorflow/python/util/traceback_utils.py", line 167, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/usr/local/lib/python3.12/site-packages/tensorflow/python/eager/execute.py", line 59, in quick_execute
+    except TypeError as e:
+tensorflow.python.framework.errors_impl.ResourceExhaustedError: Graph execution error:
+
+Detected at node while/delta0926-w2-rep-c-t5000000-s3_1/bit_block_0_attn_ctx_1/multiple_quantizers_3_1/quantizer_6_1/Round_1 defined at (most recent call last):
+  File "/work/code/run_study.py", line 208, in <module>
+
+  File "/work/code/run_study.py", line 135, in train
+
+  File "/work/code/bnhgq2/ablation.py", line 1121, in run_training
+
+  File "/work/code/bnhgq2/ablation.py", line 488, in epoch_step
+
+  File "/work/code/bnhgq2/ablation.py", line 497, in epoch_step
+
+  File "/work/code/bnhgq2/ablation.py", line 464, in forward
+
+  File "/work/code/bnhgq2/ablation.py", line 468, in forward
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/models/functional.py", line 184, in call
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/function.py", line 210, in _run_through_graph
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/models/functional.py", line 707, in call
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/core/base.py", line 96, in call
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/ops/einsum.py", line 58, in call
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/core/base.py", line 315, in call
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/core/base.py", line 315, in <genexpr>
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/quantizer/quantizer.py", line 53, in call
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/quantizer/internal/fixed_point_quantizer.py", line 405, in call
+
+  File "/usr/local/lib/python3.12/site-packages/quantizers/fixed_point/_fixed_point_ops.py", line 144, in round
+
+  File "/usr/local/lib/python3.12/site-packages/quantizers/fixed_point/_fixed_point_ops.py", line 27, in wrapper
+
+  File "/usr/local/lib/python3.12/site-packages/quantizers/fixed_point/_fixed_point_ops.py", line 50, in round_conv
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/numpy.py", line 7414, in round
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/backend/tensorflow/sparse.py", line 387, in sparse_wrapper
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/backend/tensorflow/numpy.py", line 3225, in round
+
+Detected at node while/delta0926-w2-rep-c-t5000000-s3_1/bit_block_0_attn_ctx_1/multiple_quantizers_3_1/quantizer_6_1/Round_1 defined at (most recent call last):
+  File "/work/code/run_study.py", line 208, in <module>
+
+  File "/work/code/run_study.py", line 135, in train
+
+  File "/work/code/bnhgq2/ablation.py", line 1121, in run_training
+
+  File "/work/code/bnhgq2/ablation.py", line 488, in epoch_step
+
+  File "/work/code/bnhgq2/ablation.py", line 497, in epoch_step
+
+  File "/work/code/bnhgq2/ablation.py", line 464, in forward
+
+  File "/work/code/bnhgq2/ablation.py", line 468, in forward
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/models/functional.py", line 184, in call
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/function.py", line 210, in _run_through_graph
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/models/functional.py", line 707, in call
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/core/base.py", line 96, in call
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/ops/einsum.py", line 58, in call
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/core/base.py", line 315, in call
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/layers/core/base.py", line 315, in <genexpr>
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/layers/layer.py", line 1002, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 117, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/operation.py", line 63, in __call__
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/utils/traceback_utils.py", line 156, in error_handler
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/quantizer/quantizer.py", line 53, in call
+
+  File "/usr/local/lib/python3.12/site-packages/hgq/quantizer/internal/fixed_point_quantizer.py", line 405, in call
+
+  File "/usr/local/lib/python3.12/site-packages/quantizers/fixed_point/_fixed_point_ops.py", line 144, in round
+
+  File "/usr/local/lib/python3.12/site-packages/quantizers/fixed_point/_fixed_point_ops.py", line 27, in wrapper
+
+  File "/usr/local/lib/python3.12/site-packages/quantizers/fixed_point/_fixed_point_ops.py", line 50, in round_conv
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/ops/numpy.py", line 7414, in round
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/backend/tensorflow/sparse.py", line 387, in sparse_wrapper
+
+  File "/usr/local/lib/python3.12/site-packages/keras/src/backend/tensorflow/numpy.py", line 3225, in round
+
+2 root error(s) found.
+  (0) RESOURCE_EXHAUSTED:  failed to allocate memory
+	 [[{{node while/delta0926-w2-rep-c-t5000000-s3_1/bit_block_0_attn_ctx_1/multiple_quantizers_3_1/quantizer_6_1/Round_1}}]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info. This isn't available when running in Eager mode.
+
+	 [[while/LoopCond/_200/_12]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info. This isn't available when running in Eager mode.
+
+  (1) RESOURCE_EXHAUSTED:  failed to allocate memory
+	 [[{{node while/delta0926-w2-rep-c-t5000000-s3_1/bit_block_0_attn_ctx_1/multiple_quantizers_3_1/quantizer_6_1/Round_1}}]]
+Hint: If you want to see a list of allocated tensors when OOM happens, add report_tensor_allocations_upon_oom to RunOptions for current allocation info. This isn't available when running in Eager mode.
+
+0 successful operations.
+0 derived errors ignored. [Op:__inference_epoch_step_617916]

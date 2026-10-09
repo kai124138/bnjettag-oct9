@@ -1,0 +1,178 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-chang0926-pilot-77f1ca",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "chang-n64-20260926",
+      "app": "kai-chang0926-pilot",
+      "bnjettag.io/arms-per-pod": "6"
+    },
+    "annotations": {
+      "bnjettag.io/pack": "pilot_packs.json [[0, 1, 24, 48, 56, 57]]",
+      "bnjettag.io/active-deadline": "unset on purpose (STUDY Resume)"
+    }
+  },
+  "spec": {
+    "completionMode": "Indexed",
+    "completions": 1,
+    "parallelism": 1,
+    "backoffLimitPerIndex": 2,
+    "podReplacementPolicy": "Failed",
+    "ttlSecondsAfterFinished": 604800,
+    "podFailurePolicy": {
+      "rules": [
+        {
+          "action": "Ignore",
+          "onPodConditions": [
+            {
+              "type": "DisruptionTarget"
+            }
+          ]
+        }
+      ]
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "chang-n64-20260926",
+          "app": "kai-chang0926-pilot",
+          "bnjettag.io/arms-per-pod": "6"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-L40",
+                        "NVIDIA-A10",
+                        "NVIDIA-GeForce-RTX-3090",
+                        "Tesla-V100-SXM2-32GB"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "preferredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "weight": 100,
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-L40"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 180,
+        "containers": [
+          {
+            "name": "train",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '77f1ca4e9fe3f67ef276ec9b7c401c174812fcb2e88b7ef572040ad2e26f2a94  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=/data/chang-n64-20260926/pilot BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nexport BNJ_STAGE=pilot\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nunset WANDB_PROJECT\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_MODE=online\nexport WANDB_TAGS=chang0926,pilot,canary,validation-only\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data WANDB_DISABLE_CODE=true WANDB_QUIET=true\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"f7d4003f49584c701aec1cfefb4c0c9a3591c41d7d2fda94dd5a293d00eaaa36\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader || true\ndf -h /data\npython -u /work/code/run_pack.py pilot_packs.json 500\n"
+            ],
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "kai-wandb",
+                    "key": "WANDB_API_KEY"
+                  }
+                }
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "12",
+                "memory": "36Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "limits": {
+                "cpu": "12",
+                "memory": "36Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-chang0926-code-77f1ca4e9f",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

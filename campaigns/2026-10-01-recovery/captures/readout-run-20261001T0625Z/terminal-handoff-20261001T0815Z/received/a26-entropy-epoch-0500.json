@@ -1,0 +1,505 @@
+{
+  "a26": "attention entropy readout",
+  "split": "validation",
+  "test_set_used": false,
+  "script_sha256": "f25fa5679a9c771518f9c3880525971d8f9eaf780c47b5278984bdfae0b94024",
+  "code_manifest_sha256": "041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42",
+  "versions": {
+    "tensorflow": "2.21.0",
+    "keras": "3.15.0",
+    "hgq2": "0.1.9",
+    "quantizers": "1.2.2",
+    "numpy": "2.5.0",
+    "scikit-learn": "1.9.0"
+  },
+  "epoch": 500,
+  "definition": "mean over jets and query rows of -sum p log p / log 64, p = softmax output / row sum; unrenormalized value and row sums beside it",
+  "runs": [
+    {
+      "index": 0,
+      "name": "chang0926-a-n64-s1",
+      "arm": "A",
+      "status": "ok",
+      "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s1/snapshots/epoch-0500/model_min_ebops.keras",
+      "checkpoint_reason": "no feasible checkpoint as of epoch: lowest-EBOPs file",
+      "checkpoint_sha256": "ca83ae28ad8b70c45fb87d39a38aec7f2660e736072aedfef2d5b7f535dc69ea",
+      "n_val_rows": 62000,
+      "x_val_sha256": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+      "y_val_sha256": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709",
+      "entropy": {
+        "bit_block_0": {
+          "layer": "bit_block_0_attn_softmax",
+          "n_keys": 64,
+          "n_jets": 62000,
+          "heads": [
+            {
+              "head": 0,
+              "entropy_over_log_n": 1.0,
+              "entropy_over_log_n_unrenormalized": 0.027892041340902785,
+              "per_jet_std": 0.0,
+              "query_rows": 3968000
+            },
+            {
+              "head": 1,
+              "entropy_over_log_n": 1.0,
+              "entropy_over_log_n_unrenormalized": 0.027892041340902785,
+              "per_jet_std": 0.0,
+              "query_rows": 3968000
+            }
+          ],
+          "row_sum": {
+            "min": 0.01373291015625,
+            "mean": 0.01373291015625,
+            "max": 0.01373291015625
+          },
+          "zero_sum_rows": 0,
+          "negative_entries": 0
+        }
+      },
+      "zero_bit": {
+        "bit_block_0": {
+          "status": "defined",
+          "Q": {
+            "site": "bit_block_0_attn_scores__in0",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              12,
+              12
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "K": {
+            "site": "bit_block_0_attn_scores__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              12,
+              12
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "V": {
+            "site": "bit_block_0_attn_ctx__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              12,
+              12
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "QK_zero_bit_fraction": 1.0,
+          "V_zero_bit_fraction": 1.0,
+          "QK_live_pairs_per_head": [
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "index": 1,
+      "name": "chang0926-a-n64-s2",
+      "arm": "A",
+      "status": "ok",
+      "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s2/snapshots/epoch-0500/model_best.keras",
+      "checkpoint_reason": "best_feasible present (feasible as of epoch)",
+      "checkpoint_sha256": "9c8ea54ef5cf640b7782bc18f3422d9c2304376cbe4f301f25a85f36ba87924d",
+      "n_val_rows": 62000,
+      "x_val_sha256": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+      "y_val_sha256": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709",
+      "entropy": {
+        "bit_block_0": {
+          "layer": "bit_block_0_attn_softmax",
+          "n_keys": 64,
+          "n_jets": 62000,
+          "heads": [
+            {
+              "head": 0,
+              "entropy_over_log_n": 1.0,
+              "entropy_over_log_n_unrenormalized": 2.452862583271294,
+              "per_jet_std": 0.0,
+              "query_rows": 3968000
+            },
+            {
+              "head": 1,
+              "entropy_over_log_n": 1.0,
+              "entropy_over_log_n_unrenormalized": 2.452862583271294,
+              "per_jet_std": 0.0,
+              "query_rows": 3968000
+            }
+          ],
+          "row_sum": {
+            "min": 3.515625,
+            "mean": 3.515625,
+            "max": 3.515625
+          },
+          "zero_sum_rows": 0,
+          "negative_entries": 0
+        }
+      },
+      "zero_bit": {
+        "bit_block_0": {
+          "status": "defined",
+          "Q": {
+            "site": "bit_block_0_attn_scores__in0",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              12,
+              12
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "K": {
+            "site": "bit_block_0_attn_scores__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              12,
+              12
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "V": {
+            "site": "bit_block_0_attn_ctx__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              12,
+              12
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "QK_zero_bit_fraction": 1.0,
+          "V_zero_bit_fraction": 1.0,
+          "QK_live_pairs_per_head": [
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "index": 24,
+      "name": "chang0926-d-n64-s1",
+      "arm": "D",
+      "status": "ok",
+      "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-d-n64-s1/snapshots/epoch-0500/model_best.keras",
+      "checkpoint_reason": "best_feasible present (feasible as of epoch)",
+      "checkpoint_sha256": "7ecfaf96e2a112fd50a47722faf01a44e9e7963e4e425c84041d1f98b4663503",
+      "n_val_rows": 62000,
+      "x_val_sha256": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+      "y_val_sha256": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709",
+      "entropy": {
+        "bit_block_0": {
+          "layer": "bit_block_0_attn_softmax",
+          "n_keys": 64,
+          "n_jets": 62000,
+          "heads": [
+            {
+              "head": 0,
+              "entropy_over_log_n": 1.0,
+              "entropy_over_log_n_unrenormalized": 0.9061843958178247,
+              "per_jet_std": 0.0,
+              "query_rows": 3968000
+            },
+            {
+              "head": 1,
+              "entropy_over_log_n": 1.0,
+              "entropy_over_log_n_unrenormalized": 0.9061843958178247,
+              "per_jet_std": 0.0,
+              "query_rows": 3968000
+            }
+          ],
+          "row_sum": {
+            "min": 0.87890625,
+            "mean": 0.87890625,
+            "max": 0.87890625
+          },
+          "zero_sum_rows": 0,
+          "negative_entries": 0
+        }
+      },
+      "zero_bit": {
+        "bit_block_0": {
+          "status": "defined",
+          "Q": {
+            "site": "bit_block_0_attn_scores__in0",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              12,
+              12
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "K": {
+            "site": "bit_block_0_attn_scores__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 16,
+            "zero_bit_fraction": 0.6666666666666666,
+            "sign_bit_channels": 4,
+            "zero_bit_per_head": [
+              8,
+              8
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "V": {
+            "site": "bit_block_0_attn_ctx__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 0,
+            "zero_bit_fraction": 0.0,
+            "sign_bit_channels": 15,
+            "zero_bit_per_head": [
+              0,
+              0
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "QK_zero_bit_fraction": 0.8333333333333334,
+          "V_zero_bit_fraction": 0.0,
+          "QK_live_pairs_per_head": [
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "index": 56,
+      "name": "chang0926-cprime-n64-s1",
+      "arm": "C-PRIME",
+      "status": "ok",
+      "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-cprime-n64-s1/snapshots/epoch-0500/model_min_ebops.keras",
+      "checkpoint_reason": "no feasible checkpoint as of epoch: lowest-EBOPs file",
+      "checkpoint_sha256": "efd3a81c5a0286412816f09e84ff487bf4d15985bb7443df06967dba967648f0",
+      "n_val_rows": 62000,
+      "x_val_sha256": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+      "y_val_sha256": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709",
+      "entropy": {
+        "bit_block_0": {
+          "layer": "bit_block_0_attn_softmax",
+          "n_keys": 64,
+          "n_jets": 62000,
+          "heads": [
+            {
+              "head": 0,
+              "entropy_over_log_n": 0.5038427267493968,
+              "entropy_over_log_n_unrenormalized": 0.5282527773945395,
+              "per_jet_std": 0.06946682147885201,
+              "query_rows": 3968000
+            },
+            {
+              "head": 1,
+              "entropy_over_log_n": 0.33462140645987637,
+              "entropy_over_log_n_unrenormalized": 0.39736083791257804,
+              "per_jet_std": 0.1465833219400518,
+              "query_rows": 3968000
+            },
+            {
+              "head": 2,
+              "entropy_over_log_n": 0.178705686685748,
+              "entropy_over_log_n_unrenormalized": 0.18107533900065648,
+              "per_jet_std": 0.07086432154722128,
+              "query_rows": 3968000
+            },
+            {
+              "head": 3,
+              "entropy_over_log_n": 0.264958335298732,
+              "entropy_over_log_n_unrenormalized": 0.27780033410666444,
+              "per_jet_std": 0.13045830197550837,
+              "query_rows": 3968000
+            }
+          ],
+          "row_sum": {
+            "min": 0.9961087703704834,
+            "mean": 1.0468630547241549,
+            "max": 4.0
+          },
+          "zero_sum_rows": 0,
+          "negative_entries": 0
+        }
+      },
+      "zero_bit": {
+        "bit_block_0": {
+          "status": "defined",
+          "Q": {
+            "site": "bit_block_0_attn_scores__in0",
+            "overflow_mode": "SAT",
+            "granularity": "channel",
+            "channels": 32,
+            "zero_bit": 30,
+            "zero_bit_fraction": 0.9375,
+            "sign_bit_channels": 32,
+            "zero_bit_per_head": [
+              7,
+              8,
+              8,
+              7
+            ],
+            "label": "silent, billed 1 bit"
+          },
+          "K": {
+            "site": "bit_block_0_attn_scores__in1",
+            "overflow_mode": "SAT",
+            "granularity": "channel",
+            "channels": 32,
+            "zero_bit": 25,
+            "zero_bit_fraction": 0.78125,
+            "sign_bit_channels": 32,
+            "zero_bit_per_head": [
+              6,
+              8,
+              5,
+              6
+            ],
+            "label": "silent, billed 1 bit"
+          },
+          "V": {
+            "site": "bit_block_0_attn_ctx__in1",
+            "overflow_mode": "SAT",
+            "granularity": "channel",
+            "channels": 32,
+            "zero_bit": 24,
+            "zero_bit_fraction": 0.75,
+            "sign_bit_channels": 32,
+            "zero_bit_per_head": [
+              5,
+              7,
+              6,
+              6
+            ],
+            "label": "silent, billed 1 bit"
+          },
+          "QK_zero_bit_fraction": 0.859375,
+          "V_zero_bit_fraction": 0.75,
+          "QK_live_pairs_per_head": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "index": 57,
+      "name": "chang0926-e1-n64-s1",
+      "arm": "E1",
+      "status": "ok",
+      "checkpoint": "/data/chang-n64-20260926/pilot-b/runs/chang0926-e1-n64-s1/snapshots/epoch-0500/model_min_ebops.keras",
+      "checkpoint_reason": "no feasible checkpoint as of epoch: lowest-EBOPs file",
+      "checkpoint_sha256": "5910ab6728a8f2e2b474831bf2acca7712ef91ca0b11a44735c5fa9ff9d4a60b",
+      "n_val_rows": 62000,
+      "x_val_sha256": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+      "y_val_sha256": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709",
+      "entropy": {
+        "bit_block_0": {
+          "layer": "bit_block_0_attn_softmax",
+          "n_keys": 64,
+          "n_jets": 62000,
+          "heads": [
+            {
+              "head": 0,
+              "entropy_over_log_n": 1.0,
+              "entropy_over_log_n_unrenormalized": 0.16820469010222713,
+              "per_jet_std": 0.0,
+              "query_rows": 3968000
+            }
+          ],
+          "row_sum": {
+            "min": 0.10986328125,
+            "mean": 0.10986328125,
+            "max": 0.10986328125
+          },
+          "zero_sum_rows": 0,
+          "negative_entries": 0
+        }
+      },
+      "zero_bit": {
+        "bit_block_0": {
+          "status": "defined",
+          "Q": {
+            "site": "bit_block_0_attn_scores__in0",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              24
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "K": {
+            "site": "bit_block_0_attn_scores__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              24
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "V": {
+            "site": "bit_block_0_attn_ctx__in1",
+            "overflow_mode": "WRAP",
+            "granularity": "channel",
+            "channels": 24,
+            "zero_bit": 24,
+            "zero_bit_fraction": 1.0,
+            "sign_bit_channels": 0,
+            "zero_bit_per_head": [
+              24
+            ],
+            "label": "true zero, 0 EBOPs"
+          },
+          "QK_zero_bit_fraction": 1.0,
+          "V_zero_bit_fraction": 1.0,
+          "QK_live_pairs_per_head": [
+            0
+          ]
+        }
+      }
+    }
+  ]
+}

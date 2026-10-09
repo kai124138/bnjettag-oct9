@@ -1,0 +1,55 @@
+2026-09-21T08:42:30.530824309Z /usr/local/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+2026-09-21T08:42:30.530847899Z Expected: ['engram_input']
+2026-09-21T08:42:30.530851719Z Received: inputs=Tensor(shape=(256, 16, 3))
+2026-09-21T08:42:30.530855309Z   warnings.warn(msg)
+2026-09-21T08:42:42.783431118Z [epoch 996/1000] EBOPs=380179 target=350000 beta=0.000399 val_AUC=0.825599 val_accuracy=0.532750 seconds=29.0 checkpoint=epoch-0996
+2026-09-21T08:43:12.618172763Z /usr/local/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+2026-09-21T08:43:12.618222223Z Expected: ['engram_input']
+2026-09-21T08:43:12.618226263Z Received: inputs=Tensor(shape=(256, 16, 3))
+2026-09-21T08:43:12.618229843Z   warnings.warn(msg)
+2026-09-21T08:43:21.832329069Z [epoch 997/1000] EBOPs=380063 target=350000 beta=0.0004 val_AUC=0.827770 val_accuracy=0.549758 seconds=29.8 checkpoint=epoch-0997
+2026-09-21T08:43:51.883276115Z /usr/local/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+2026-09-21T08:43:51.883329875Z Expected: ['engram_input']
+2026-09-21T08:43:51.883337565Z Received: inputs=Tensor(shape=(256, 16, 3))
+2026-09-21T08:43:51.883342215Z   warnings.warn(msg)
+2026-09-21T08:43:58.581604260Z [epoch 998/1000] EBOPs=380009 target=350000 beta=0.000402 val_AUC=0.829176 val_accuracy=0.544468 seconds=30.0 checkpoint=epoch-0998
+2026-09-21T08:44:27.566757758Z /usr/local/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+2026-09-21T08:44:27.566791489Z Expected: ['engram_input']
+2026-09-21T08:44:27.566797079Z Received: inputs=Tensor(shape=(256, 16, 3))
+2026-09-21T08:44:27.566800999Z   warnings.warn(msg)
+2026-09-21T08:44:34.454812793Z [epoch 999/1000] EBOPs=380009 target=350000 beta=0.000404 val_AUC=0.831917 val_accuracy=0.548468 seconds=29.0 checkpoint=epoch-0999
+2026-09-21T08:45:03.411349362Z /usr/local/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+2026-09-21T08:45:03.411372382Z Expected: ['engram_input']
+2026-09-21T08:45:03.411376662Z Received: inputs=Tensor(shape=(256, 16, 3))
+2026-09-21T08:45:03.411380732Z   warnings.warn(msg)
+2026-09-21T08:45:10.951040078Z [epoch 1000/1000] EBOPs=380009 target=350000 beta=0.000405 val_AUC=0.832166 val_accuracy=0.545476 seconds=29.0 checkpoint=epoch-1000
+2026-09-21T08:45:10.975846602Z wandb: Adding directory to artifact (/data/engram-study-20260918/runs/engram-e02-s1/checkpoints/epoch-1000)... Done. 0.0s
+2026-09-21T08:45:14.281544710Z [wandb] artifact resume-engram-e02-s1:v39 committed (5 files)
+2026-09-21T08:45:18.658152495Z [wandb] artifact model-engram-e02-s1:v0 committed (9 files)
+2026-09-21T08:45:18.760579958Z wandb: updating run metadata
+2026-09-21T08:45:19.161755951Z wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+2026-09-21T08:45:19.383554764Z wandb: 🚀 View run engram-e02-s1 at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental/runs/5142723bdcfe
+2026-09-21T08:45:19.383586794Z wandb: ⭐️ View project at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Engram-Experimental
+2026-09-21T08:45:19.383591684Z wandb: Synced 5 W&B file(s), 0 media file(s), 180 artifact file(s) and 0 other file(s)
+2026-09-21T08:45:27.324454261Z Traceback (most recent call last):
+2026-09-21T08:45:27.324542051Z   File "/work/code/run_engram.py", line 464, in <module>
+2026-09-21T08:45:27.324546881Z     main()
+2026-09-21T08:45:27.324549881Z   File "/work/code/run_engram.py", line 454, in main
+2026-09-21T08:45:27.324553001Z     train(args)
+2026-09-21T08:45:27.324573491Z   File "/work/code/run_engram.py", line 275, in train
+2026-09-21T08:45:27.324603831Z     np.testing.assert_allclose([auc, accuracy],
+2026-09-21T08:45:27.324615011Z   File "/usr/local/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 1780, in assert_allclose
+2026-09-21T08:45:27.324618761Z     assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+2026-09-21T08:45:27.324624521Z   File "/usr/local/lib/python3.12/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+2026-09-21T08:45:27.324627641Z     raise AssertionError(msg)
+2026-09-21T08:45:27.324651171Z AssertionError: 
+2026-09-21T08:45:27.324680112Z Not equal to tolerance rtol=0, atol=1e-07
+2026-09-21T08:45:27.324684412Z 
+2026-09-21T08:45:27.324688262Z Mismatched elements: 2 / 2 (100%)
+2026-09-21T08:45:27.324693192Z Mismatch at indices:
+2026-09-21T08:45:27.324698432Z  [0]: 0.8300269542316079 (ACTUAL), 0.8291755310270068 (DESIRED)
+2026-09-21T08:45:27.324716582Z  [1]: 0.54475 (ACTUAL), 0.5444677419354839 (DESIRED)
+2026-09-21T08:45:27.324718812Z Max absolute difference among violations: 0.00085142
+2026-09-21T08:45:27.324720742Z Max relative difference among violations: 0.00102683
+2026-09-21T08:45:27.324722662Z  ACTUAL: array([0.830027, 0.54475 ])
+2026-09-21T08:45:27.324724632Z  DESIRED: array([0.829176, 0.544468])

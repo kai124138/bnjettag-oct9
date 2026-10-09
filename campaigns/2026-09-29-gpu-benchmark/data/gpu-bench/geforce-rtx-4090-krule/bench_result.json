@@ -1,0 +1,198 @@
+{
+  "plan": {
+    "product": "NVIDIA-GeForce-RTX-4090",
+    "slug": "geforce-rtx-4090-krule",
+    "product_slug": "geforce-rtx-4090",
+    "shape": "krule",
+    "card_mib": 24564,
+    "stop_after": 21,
+    "pod_cpu_request": 10,
+    "phases": [
+      {
+        "phase": "p1-E-k5",
+        "class": "E",
+        "k": 5,
+        "names": [
+          "chang0926-a-n64-s1",
+          "chang0926-a-n64-s2",
+          "chang0926-a-n64-s3",
+          "chang0926-a-n64-s4",
+          "chang0926-a-n64-s5"
+        ]
+      },
+      {
+        "phase": "p2-A07-k2",
+        "class": "A07",
+        "k": 2,
+        "names": [
+          "chang0926-c-n64-s1",
+          "chang0926-c-n64-s2"
+        ]
+      }
+    ]
+  },
+  "phases": [
+    {
+      "phase": "p1-E-k5",
+      "class": "E",
+      "k": 5,
+      "names": [
+        "chang0926-a-n64-s1",
+        "chang0926-a-n64-s2",
+        "chang0926-a-n64-s3",
+        "chang0926-a-n64-s4",
+        "chang0926-a-n64-s5"
+      ],
+      "stop_after": 21,
+      "start_utc": "2026-09-29T12:00:53Z",
+      "end_utc": "2026-09-29T12:26:08Z",
+      "wall_seconds": 1515.4,
+      "cpu_pin": "pinned",
+      "cpus_allowed_n": 10,
+      "cpus_allowed": "4,6-9,20,22-25",
+      "cpus_pinned_n": 10,
+      "cpus_pinned": "4,6-9,20,22-25",
+      "pinned_physical_cores": 5,
+      "steady_cpu_cores": 2.9300558387556763,
+      "steady_cpu_pairs": 18,
+      "steady_cpu_cores_per_arm": 0.5860111677511353,
+      "cgroup_oom_kill_start": 0,
+      "cgroup_oom_kill_end": 0,
+      "arms": [
+        {
+          "name": "chang0926-a-n64-s1",
+          "pid": 468,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T12:00:53Z",
+          "ended_utc": "2026-09-29T12:24:48Z"
+        },
+        {
+          "name": "chang0926-a-n64-s2",
+          "pid": 629,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T12:01:08Z",
+          "ended_utc": "2026-09-29T12:25:13Z"
+        },
+        {
+          "name": "chang0926-a-n64-s3",
+          "pid": 977,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T12:01:23Z",
+          "ended_utc": "2026-09-29T12:25:38Z"
+        },
+        {
+          "name": "chang0926-a-n64-s4",
+          "pid": 1324,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T12:01:38Z",
+          "ended_utc": "2026-09-29T12:25:58Z"
+        },
+        {
+          "name": "chang0926-a-n64-s5",
+          "pid": 1672,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T12:01:53Z",
+          "ended_utc": "2026-09-29T12:26:03Z"
+        }
+      ],
+      "outcomes": {
+        "ok": 5
+      }
+    },
+    {
+      "phase": "p2-A07-k2",
+      "class": "A07",
+      "k": 2,
+      "names": [
+        "chang0926-c-n64-s1",
+        "chang0926-c-n64-s2"
+      ],
+      "stop_after": 21,
+      "start_utc": "2026-09-29T12:26:09Z",
+      "end_utc": "2026-09-29T12:45:49Z",
+      "wall_seconds": 1180.2,
+      "cpu_pin": "pinned",
+      "cpus_allowed_n": 10,
+      "cpus_allowed": "4,6-9,20,22-25",
+      "cpus_pinned_n": 4,
+      "cpus_pinned": "4,6-8",
+      "pinned_physical_cores": 4,
+      "steady_cpu_cores": 1.1855417836136761,
+      "steady_cpu_pairs": 15,
+      "steady_cpu_cores_per_arm": 0.5927708918068381,
+      "cgroup_oom_kill_start": 0,
+      "cgroup_oom_kill_end": 0,
+      "arms": [
+        {
+          "name": "chang0926-c-n64-s1",
+          "pid": 5464,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T12:26:09Z",
+          "ended_utc": "2026-09-29T12:45:29Z"
+        },
+        {
+          "name": "chang0926-c-n64-s2",
+          "pid": 5583,
+          "exit_code": 0,
+          "outcome": "ok",
+          "signal": null,
+          "epochs_done": 21,
+          "verification": "PASS",
+          "verification_error": null,
+          "oom_lines": [],
+          "nan": false,
+          "started_utc": "2026-09-29T12:26:24Z",
+          "ended_utc": "2026-09-29T12:45:44Z"
+        }
+      ],
+      "outcomes": {
+        "ok": 2
+      }
+    }
+  ],
+  "samples": 46,
+  "driver_sha256": "5ede0778f716cb9299ca82c64547fb993c93d775572d33463a0fef4cbf676c45",
+  "end_utc": "2026-09-29T12:45:49Z"
+}

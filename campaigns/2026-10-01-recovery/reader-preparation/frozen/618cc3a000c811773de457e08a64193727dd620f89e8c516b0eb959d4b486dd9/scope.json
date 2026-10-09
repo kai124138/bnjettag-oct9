@@ -1,0 +1,193 @@
+{
+  "b5_readout_dir": "/data/chang-n64-20260926/pilot-b/readout-epoch-0500-42abed-b5",
+  "caches": [
+    {
+      "expected_array_sha256": {
+        "x_train": "fdefd6fd8bc3c8951ca4aedb9047cc41c979647e9229566cdded67098ae82d1a",
+        "x_val": "dcdb76db132fb211f64f5ef7aefd6f09458bc18613a216b9b5e8d2366e7dd62a",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "expected_n_train": 496000,
+      "expected_n_val": 124000,
+      "path": "/data/constituent-study-20260922/n8/data/data_info.json",
+      "source": "confirmation/preflight-result.json"
+    },
+    {
+      "expected_array_sha256": {
+        "x_train": "b58d18330ba7f147ed4262f1bd5509c5056bcc32cb82b8edd13ab2e056f7ecff",
+        "x_val": "5b040d2dd7dcba38dec6985cf0335c0dea17b657888bd7e076414605a139bea4",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "expected_n_train": 496000,
+      "expected_n_val": 124000,
+      "path": "/data/constituent-study-20260922/n64/data/data_info.json",
+      "source": "confirmation/n64-full-preflight-result.json"
+    },
+    {
+      "expected_array_sha256": {
+        "x_train": "420ac79dcece207aca849f6ca56e6426586023c9e02f38e5d3ac596fa74d79bc",
+        "x_val": "7b56c1b25bc0d9231767f891ec52455ecb7c5656735fcf9d404104fd2c264d31",
+        "y_train": "a5269398e2c6e5f1fc0db98e1a99a8befea619bf0c55531293d02a286c0dd378",
+        "y_val": "63049d9bdcfdc83af97c58bc6579e1def1ec2d9e7a6c30007793badd75217709"
+      },
+      "expected_cache_code_sha256": "ac5a5c867c6e06957bf17079b210532ee34989276edc51ffc1f539f195d895b2",
+      "expected_n_train": 558000,
+      "expected_n_val": 62000,
+      "expected_pt_gate_gev": 2.0,
+      "path": "/data/chang-n64-20260926/n64/data/data_info.json",
+      "source": "training-batch/PREFLIGHT.md DATA_INFO; full actual cache export still required"
+    }
+  ],
+  "confirmation_configmap": {
+    "content_digest_status": "matches historical one-gpu-manifest.json",
+    "content_sha256": "e0c0a349bc34406f366f85f5169b8fdef6a273c11ddb233b6cd758630e620ebd",
+    "name": "kai-confirm-onegpu-configs-e0c0a349bc",
+    "note": "digest records stored ConfigMap JSON bytes",
+    "path": "campaigns/2026-09-23-confirmation/one-gpu-configmap.json",
+    "sha256": "e5ec16e100c3b483e3efc548397931cfff54e737a9a7a33a21aba031fa17b56c"
+  },
+  "excluded_evidence": "code/evidence/dry_readout_b5* are synthetic fixtures, never terminal cluster outcomes",
+  "frozen_bundles": [
+    {
+      "bundle_sha256": "26f3cc40a8f7c9ff378760c5b0d8ce046508cb4de585f9c4b80ea93653515a45",
+      "configmap": "kai-n8n64-code-26f3cc40a8",
+      "configmap_file": "campaigns/2026-09-22-constituent-screen/study-configmap.json",
+      "configmap_file_sha256": "12e2af5ef1f814e2548aefaa6d82af044a4814a1be625dcd83d05330f44cd837",
+      "manifest_file": "campaigns/2026-09-22-constituent-screen/bundle-manifest.json",
+      "manifest_file_sha256": "1636d6fb255a7b23c18b357a461782004800ff604cda1b5be16d90fa0465ddf9",
+      "regular_files_verified": 152,
+      "status": "stored_bytes_verified_no_execution"
+    },
+    {
+      "bundle_sha256": "42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0",
+      "configmap": "kai-chang0926-code-42abed4b5d",
+      "configmap_file": "campaigns/2026-09-26-training-batch/manifests/configmap-42abed4b.json",
+      "configmap_file_sha256": "4f8cc9cc7f03804864a90f14001862d16d7897cde9eb739a9b7c20ff13bcec05",
+      "manifest_file": "campaigns/2026-09-26-training-batch/manifests/bundle-manifest-42abed4b.json",
+      "manifest_file_sha256": "50748835acc1ca8edfa56f062123df5cc78fd63041689bcbdd87c7ccd09c8174",
+      "regular_files_verified": 250,
+      "status": "stored_bytes_verified_no_execution"
+    }
+  ],
+  "jobs": [
+    "kai-confirm-onegpu-0924-e0c0a3-r2",
+    "kai-chang0926-pilotb5-42abed",
+    "kai-chang0926-readoutb5-42abed"
+  ],
+  "legacy_handoff_status": "context unavailable unless a valid record and annotation binding are recovered; local legacy manifests alone are not immutable launch records",
+  "log_dirs": [
+    "/data/confirmation-20260923/architecture/logs",
+    "/data/chang-n64-20260926/pilot-b/logs"
+  ],
+  "namespace": "cms-ml",
+  "owner_label": "user=kai",
+  "runs": [
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a00-s2-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a00-s2-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a02-s2-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a02-s2-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a03-s2-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a03-s2-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a00-s3-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a00-s3-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a02-s3-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n8/data",
+      "kind": "confirmation",
+      "name": "confirm0923-a03-s3-e1000",
+      "run_dir": "/data/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-a07-n64-s2-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e02-n64-s2-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e05-n64-s2-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s2-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-a07-n64-s3-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s3-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e02-n64-s3-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s3-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/constituent-study-20260922/n64/data",
+      "kind": "confirmation",
+      "name": "confirm0924-e05-n64-s3-e1000-5m",
+      "run_dir": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e05-n64-s3-e1000-5m"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-a-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s1"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-a-n64-s2",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-a-n64-s2"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-d-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-d-n64-s1"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-cprime-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-cprime-n64-s1"
+    },
+    {
+      "cache_dir": "/data/chang-n64-20260926/n64/data",
+      "kind": "chang_b5",
+      "name": "chang0926-e1-n64-s1",
+      "run_dir": "/data/chang-n64-20260926/pilot-b/runs/chang0926-e1-n64-s1"
+    }
+  ],
+  "schema_version": 1,
+  "scientific_gate": "pending: terminal b5 readout plus Kai (c)/(d); K1 not cleared",
+  "scope": "read-only evidence recovery; no launch authorization"
+}

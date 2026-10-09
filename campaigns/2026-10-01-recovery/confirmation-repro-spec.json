@@ -1,0 +1,368 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-01",
+  "status": "PROPOSED_READ_ONLY_NRP_REPRO_NOT_IMPLEMENTED_OR_AUTHORIZED",
+  "scope": "Diagnostic replay of one existing selected artifact; no optimizer steps, training, resume, model selection, tolerance change or scientific performance claim.",
+  "primary_case": "confirm0923-a02-s3-e1000",
+  "other_cases": "Evidence only; do not automatically execute all four.",
+  "source": {
+    "configmap": {
+      "path": "campaigns/2026-09-22-constituent-screen/study-configmap.json",
+      "byte_sha256": "12e2af5ef1f814e2548aefaa6d82af044a4814a1be625dcd83d05330f44cd837"
+    },
+    "archive_byte_sha256": "26f3cc40a8f7c9ff378760c5b0d8ce046508cb4de585f9c4b80ea93653515a45",
+    "archive_regular_files_verified": 152,
+    "run_manifest_source_files_verified": 22,
+    "members": {
+      "run_engram.py": {
+        "archive_member": "code/run_engram.py",
+        "byte_sha256": "1d6d64832d7d880aac59826590de7b48ba2cd4bfd4772fc81a2f2c8d594587a2"
+      },
+      "bnhgq2/ablation.py": {
+        "archive_member": "code/bnhgq2/ablation.py",
+        "byte_sha256": "059ec886dd293f3f3305aa43b4b9e4ccc516ec77298457c445d7f6de32f0bb48"
+      },
+      "bnhgq2/ebops_calc.py": {
+        "archive_member": "code/bnhgq2/ebops_calc.py",
+        "byte_sha256": "57b48827b4ced02c8c5db927e8cbfaf20310c0797ce8d461c16c669f56d0703e"
+      },
+      "bnhgq2/train.py": {
+        "archive_member": "code/bnhgq2/train.py",
+        "byte_sha256": "154657bb3bb6afa232d78830313583e1c5f74f955084a882dc0da4d90b231118"
+      },
+      "bnhgq2/engram.py": {
+        "archive_member": "code/bnhgq2/engram.py",
+        "byte_sha256": "cceb2a85f233aa8baa35572cf54f4d6727293ee480ec4ced63d7f1edf059a77c"
+      },
+      "bnhgq2/compat.py": {
+        "archive_member": "code/bnhgq2/compat.py",
+        "byte_sha256": "0df1e2949f7c814ca5fa74bcfe84af2f051a1e05482fb165e64542a9b4bf4fce"
+      },
+      "requirements-training.txt": {
+        "archive_member": "code/requirements-training.txt",
+        "byte_sha256": "ceadefd97be5d10525d74a671095956d7168775d7bef7bb2d1df98259578de7c"
+      }
+    }
+  },
+  "historical_runtime": {
+    "source_manifest_versions": {
+      "tensorflow": "2.21.0",
+      "keras": "3.15.0",
+      "hgq2": "0.1.9",
+      "quantizers": "1.2.2",
+      "numpy": "2.5.0",
+      "scikit-learn": "1.9.0"
+    },
+    "job": {
+      "path": "campaigns/2026-09-23-confirmation/one-gpu-job.json",
+      "byte_sha256": "1f93d25a744709b526e2a493028f53a2f421f80fc877e151115078974fb0bb1e"
+    },
+    "observed_launch_status": {
+      "path": "campaigns/2026-09-23-confirmation/full-run-launch-status.json",
+      "byte_sha256": "b19300027ba45e9226faa3643d678edbcc0fce047391e446146b11b0eafb4159"
+    },
+    "known_observed_gpu": "NVIDIA A10 on 2026-09-24T21:41:31Z; final failing attempt GPU not established",
+    "container_tag": "python:3.12; historical image digest unavailable",
+    "environment": {
+      "KERAS_BACKEND": "tensorflow",
+      "MPLBACKEND": "Agg",
+      "TF_FORCE_GPU_ALLOW_GROWTH": "true",
+      "TF_CPP_MIN_LOG_LEVEL": "2",
+      "NVIDIA_TF32_OVERRIDE": "0",
+      "OMP_NUM_THREADS": "4",
+      "TF_NUM_INTRAOP_THREADS": "4",
+      "TF_NUM_INTEROP_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "1"
+    },
+    "not_recorded": [
+      "terminal-attempt GPU/driver/container digest",
+      "transitive CUDA/cuDNN package versions",
+      "loaded prediction model jit_compile/dtype policy",
+      "runtime TF32 API observation",
+      "op-determinism status"
+    ]
+  },
+  "cases": [
+    {
+      "run_name": "confirm0923-a02-s3-e1000",
+      "run_root_on_pvc": "/data/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000",
+      "generation": "epoch-0300",
+      "generation_completed_epochs": 300,
+      "selected_role": "model_best.keras",
+      "selected_model_on_pvc": "/data/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/checkpoints/epoch-0300/model_best.keras",
+      "selected_model_byte_sha256_from_transport_receipt": "21bfcd4faac5bceb8f609945ecfe17f975998560f312d7622fb27daf9ba3bf19",
+      "selected_record_zero_based_epoch": {
+        "epoch": 265,
+        "val_macro_auc": 0.8512762684020153,
+        "val_categorical_accuracy": 0.588508064516129,
+        "ebops": 306826
+      },
+      "config": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/config.json",
+        "byte_sha256": "2d3b61146cd9cf1d2a33bdb7a552a1b542b46e4eb4460f099bd92fb22a676fe0"
+      },
+      "config_canonical_sha256": "a55d9853f0034caf3b7007847a6eed7ff39d717ed57ca16d866cf13f4fc54a26",
+      "run_data_info": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/data_info.json",
+        "byte_sha256": "4ae64ec92138e343aa5b7ab16d26ba7dad8b75faf3c293fea12115cdeff390a1"
+      },
+      "data_info_canonical_sha256": "abedde98cf7fb06438e2c259e1378649217b428df08ee46df5789011c4a37cc9",
+      "state": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/checkpoints/epoch-0300/state.json",
+        "byte_sha256": "f88745ae5a857a923813182507285b4a791f618d0dfd0744f939baea9bea9435"
+      },
+      "source_manifest": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/source_manifest.json",
+        "byte_sha256": "d61c8daec6b3ef7e5b9cf717e65173388e1adab90e929f6e62e2aad894a140c9"
+      },
+      "recorded_source_and_versions_sha256": "345a057a64c55075282910bdbedbb3c8a1761fe74ebc2c5a8bf12e5ebbb3e3c0",
+      "input_std": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a02-s3-e1000/input_std.json",
+        "byte_sha256": "698f4c4e8394493120dbea0385caac40ffadb9d653d7017b77c46cac1fd71c4a"
+      },
+      "validation_batch": 4096,
+      "seed": 3,
+      "cache_root_on_pvc": "/data/constituent-study-20260922/n8/data",
+      "array_hash_metadata": {
+        "x_train": "fdefd6fd8bc3c8951ca4aedb9047cc41c979647e9229566cdded67098ae82d1a",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "x_val": "dcdb76db132fb211f64f5ef7aefd6f09458bc18613a216b9b5e8d2366e7dd62a",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "log": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a02-s3-e1000-kai-confirm-onegpu-0924-e0c0a3-r2-0.log",
+        "sha256": "070823742dbf3299ae2c827ee2153d31ed8d877b301c3475078000129eb51ffe"
+      },
+      "log_line_ranges": {
+        "prior_pass": [
+          547,
+          578
+        ],
+        "final_assertion": [
+          613,
+          633
+        ]
+      },
+      "optimizer_byte_sha256_from_transport_receipt": "7aaab2306ef62aa35dfc642575d8ec5fc774c6b271d59e159203182fae8cbef7",
+      "local_model_or_array_loaded": false
+    },
+    {
+      "run_name": "confirm0923-a03-s3-e1000",
+      "run_root_on_pvc": "/data/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000",
+      "generation": "epoch-0300",
+      "generation_completed_epochs": 300,
+      "selected_role": "model_best.keras",
+      "selected_model_on_pvc": "/data/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/checkpoints/epoch-0300/model_best.keras",
+      "selected_model_byte_sha256_from_transport_receipt": "5e9b766d909f9162fd9acabbf2282f307d9794cb972d5fe1d45a1f6269a3646a",
+      "selected_record_zero_based_epoch": {
+        "epoch": 276,
+        "val_macro_auc": 0.8474543851708887,
+        "val_categorical_accuracy": 0.5843306451612903,
+        "ebops": 334958
+      },
+      "config": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/config.json",
+        "byte_sha256": "b521e437d473fd43ad8af70ea0642fd3c33c024267ffc1ee1d5304dd49cd8130"
+      },
+      "config_canonical_sha256": "dde957a0b8af64c521d1c5463d912f83acbc8454dfc3a5b8792d4ba388a22d90",
+      "run_data_info": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/data_info.json",
+        "byte_sha256": "4ae64ec92138e343aa5b7ab16d26ba7dad8b75faf3c293fea12115cdeff390a1"
+      },
+      "data_info_canonical_sha256": "abedde98cf7fb06438e2c259e1378649217b428df08ee46df5789011c4a37cc9",
+      "state": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/checkpoints/epoch-0300/state.json",
+        "byte_sha256": "bf1779cd3131cd4dee53d92cdd0847edc545b23366cdbf97d448ea97c2526e51"
+      },
+      "source_manifest": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/source_manifest.json",
+        "byte_sha256": "d61c8daec6b3ef7e5b9cf717e65173388e1adab90e929f6e62e2aad894a140c9"
+      },
+      "recorded_source_and_versions_sha256": "345a057a64c55075282910bdbedbb3c8a1761fe74ebc2c5a8bf12e5ebbb3e3c0",
+      "input_std": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/runs/confirm0923-a03-s3-e1000/input_std.json",
+        "byte_sha256": "698f4c4e8394493120dbea0385caac40ffadb9d653d7017b77c46cac1fd71c4a"
+      },
+      "validation_batch": 4096,
+      "seed": 3,
+      "cache_root_on_pvc": "/data/constituent-study-20260922/n8/data",
+      "array_hash_metadata": {
+        "x_train": "fdefd6fd8bc3c8951ca4aedb9047cc41c979647e9229566cdded67098ae82d1a",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "x_val": "dcdb76db132fb211f64f5ef7aefd6f09458bc18613a216b9b5e8d2366e7dd62a",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "log": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0923-a03-s3-e1000-kai-confirm-onegpu-0924-e0c0a3-r2-0.log",
+        "sha256": "9246a99f5ed274ec4266ddb4954f14cf35f7d90fdd9d45ec905d528effa93b02"
+      },
+      "log_line_ranges": {
+        "prior_pass": [
+          572,
+          603
+        ],
+        "final_assertion": [
+          638,
+          658
+        ]
+      },
+      "optimizer_byte_sha256_from_transport_receipt": "585fe8e1de9744bcbb7a6a6088cc371ff3ca5bc78b75409d41f1d3fb4c44c3d4",
+      "local_model_or_array_loaded": false
+    },
+    {
+      "run_name": "confirm0924-a07-n64-s2-e1000-5m",
+      "run_root_on_pvc": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m",
+      "generation": "epoch-0300",
+      "generation_completed_epochs": 300,
+      "selected_role": "model_best.keras",
+      "selected_model_on_pvc": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/checkpoints/epoch-0300/model_best.keras",
+      "selected_model_byte_sha256_from_transport_receipt": "a3d9a66f5591e5c4b91404b206e595ef003b2c8431c26e48f11e0cf7ad4bb0ee",
+      "selected_record_zero_based_epoch": {
+        "epoch": 255,
+        "val_macro_auc": 0.8781772146103102,
+        "val_categorical_accuracy": 0.6152903225806452,
+        "ebops": 4845595
+      },
+      "config": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/config.json",
+        "byte_sha256": "b0261c2106122e3e172b54d6dd624b7e9651743e1ef14909f9285eb9f74523e2"
+      },
+      "config_canonical_sha256": "e0634698e23921c0e0d5fabd68a2b27b1973826cc99d54b43062fbf03dac5110",
+      "run_data_info": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/data_info.json",
+        "byte_sha256": "d16efdc7fc502bfdb08e728eb139f369420978d766d5ead25635486ed4a9cbc0"
+      },
+      "data_info_canonical_sha256": "f18411a6600ee13b56551439e428ddf3258985a41c72f8992b9587d818894953",
+      "state": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/checkpoints/epoch-0300/state.json",
+        "byte_sha256": "0e03c55b0d6eef55e2b3c09d6af5db763a5e58fc2712a011c8e491d7ba92219f"
+      },
+      "source_manifest": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/source_manifest.json",
+        "byte_sha256": "d61c8daec6b3ef7e5b9cf717e65173388e1adab90e929f6e62e2aad894a140c9"
+      },
+      "recorded_source_and_versions_sha256": "345a057a64c55075282910bdbedbb3c8a1761fe74ebc2c5a8bf12e5ebbb3e3c0",
+      "input_std": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-a07-n64-s2-e1000-5m/input_std.json",
+        "byte_sha256": "bf496e36a2d6673053c4190dd5235e5fa8eb62a9d77dcc6dcd0c14032c01e0d4"
+      },
+      "validation_batch": 4096,
+      "seed": 2,
+      "cache_root_on_pvc": "/data/constituent-study-20260922/n64/data",
+      "array_hash_metadata": {
+        "x_train": "b58d18330ba7f147ed4262f1bd5509c5056bcc32cb82b8edd13ab2e056f7ecff",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "x_val": "5b040d2dd7dcba38dec6985cf0335c0dea17b657888bd7e076414605a139bea4",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "log": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-a07-n64-s2-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log",
+        "sha256": "fcd1576e2c253ac697642ac90e0e18a14c89c15debf0c3192b865390b023c0ba"
+      },
+      "log_line_ranges": {
+        "prior_pass": [
+          1019,
+          1050
+        ],
+        "final_assertion": [
+          1090,
+          1111
+        ]
+      },
+      "optimizer_byte_sha256_from_transport_receipt": "0d839eb5b3e52d419d6600ec7ea00f098ce3142b22894b0723a42341da1102cc",
+      "local_model_or_array_loaded": false
+    },
+    {
+      "run_name": "confirm0924-e02-n64-s2-e1000-5m",
+      "run_root_on_pvc": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m",
+      "generation": "epoch-0300",
+      "generation_completed_epochs": 300,
+      "selected_role": "model_best.keras",
+      "selected_model_on_pvc": "/data/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/checkpoints/epoch-0300/model_best.keras",
+      "selected_model_byte_sha256_from_transport_receipt": "377eaf67a885211aa9166ad52705100744a4b6e7d9aa57a282dfda7e00282d8f",
+      "selected_record_zero_based_epoch": {
+        "epoch": 218,
+        "val_macro_auc": 0.9121229959626709,
+        "val_categorical_accuracy": 0.6958064516129032,
+        "ebops": 4914004
+      },
+      "config": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/config.json",
+        "byte_sha256": "60dc2c9abb9ddfb929d1a71d98cec20a4ef7bf4c9baf61711e3e5fecd50fbb79"
+      },
+      "config_canonical_sha256": "df3623aa2ad4ba01f553a869fc65cd326b7b0501d7b98e9b06765b19bdbb7729",
+      "run_data_info": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/data_info.json",
+        "byte_sha256": "d16efdc7fc502bfdb08e728eb139f369420978d766d5ead25635486ed4a9cbc0"
+      },
+      "data_info_canonical_sha256": "f18411a6600ee13b56551439e428ddf3258985a41c72f8992b9587d818894953",
+      "state": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/checkpoints/epoch-0300/state.json",
+        "byte_sha256": "e89d04838d7c8a5279ac549f38504686b342240961f532bbaa2effad09006556"
+      },
+      "source_manifest": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/source_manifest.json",
+        "byte_sha256": "d61c8daec6b3ef7e5b9cf717e65173388e1adab90e929f6e62e2aad894a140c9"
+      },
+      "recorded_source_and_versions_sha256": "345a057a64c55075282910bdbedbb3c8a1761fe74ebc2c5a8bf12e5ebbb3e3c0",
+      "input_std": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/n64-5m-full/runs/confirm0924-e02-n64-s2-e1000-5m/input_std.json",
+        "byte_sha256": "bf496e36a2d6673053c4190dd5235e5fa8eb62a9d77dcc6dcd0c14032c01e0d4"
+      },
+      "validation_batch": 4096,
+      "seed": 2,
+      "cache_root_on_pvc": "/data/constituent-study-20260922/n64/data",
+      "array_hash_metadata": {
+        "x_train": "b58d18330ba7f147ed4262f1bd5509c5056bcc32cb82b8edd13ab2e056f7ecff",
+        "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+        "x_val": "5b040d2dd7dcba38dec6985cf0335c0dea17b657888bd7e076414605a139bea4",
+        "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+      },
+      "log": {
+        "path": "campaigns/2026-10-01-recovery/captures/pvc-20261001T0555Z/confirmation-20260923/architecture/logs/confirm0924-e02-n64-s2-e1000-5m-kai-confirm-onegpu-0924-e0c0a3-r2-0.log",
+        "sha256": "3148e38c0ac84968898ba32cd28c15687dcbb93229701ca3c89d07b01b303336"
+      },
+      "log_line_ranges": {
+        "prior_pass": [
+          2711,
+          2736
+        ],
+        "final_assertion": [
+          2859,
+          2880
+        ]
+      },
+      "optimizer_byte_sha256_from_transport_receipt": "a64d2ae319e194aef42ead3600d79cb8a69cc4aac7f994e1fc648e4b01cd6f0c",
+      "local_model_or_array_loaded": false
+    }
+  ],
+  "proposed_probe": {
+    "allocation": "One NVIDIA A10, serial processes, read-only kai-data mount, new diagnostic output identity; supported reviewed handoff and action-time authorization required.",
+    "preconditions": [
+      "Hash the exact source archive, all manifest files, chosen generation state/config/selected model, root selected file if present and cache arrays; require expected identities before inference.",
+      "Require all recorded package versions. Record full environment, image digest, device/driver/build and prediction execution settings. A missing historical driver/image match remains an explicit fidelity limitation.",
+      "Use unchanged runtime(), load_cache(), compute_ebops(), validation_metrics() from the frozen archive. Never invoke train(), run_training(), restore_checkpoint() or the queue. Disable tracking; use no W&B credentials."
+    ],
+    "sequence": [
+      "P1: fresh-load selected generation model with compile=False, fingerprint weights/state, trace once on float32 x_train[:256] with default trace batch2048; require exact recorded selected EBOPs; fingerprint after trace.",
+      "P1: predict full ordered x_val at batch4096, compute the unchanged validation_metrics against y_val; execute historical assert_allclose rtol0/atol1e-7 as a captured diagnostic verdict. Predict again on the same object and compare logits/state.",
+      "P1: independently reload the identical bytes, trace once identically, predict once; compare with first load.",
+      "P2: repeat one fresh load/trace/predict in a fresh process with the same environment. Total bounded initial probe: four validation predictions, three loads, zero optimizer updates."
+    ],
+    "outputs": [
+      "Input/source/runtime identity receipt and hashes before/after execution",
+      "Per-pass exact cost and historical-assertion verdict; logits hashes/dtypes/shapes and byte/max-absolute/predicted-label comparisons",
+      "Variable/quantizer-state fingerprints around trace and predict; diagnostic values and logit differences, never new selected-performance results",
+      "Read-only source unchanged check, phase completion markers, exit code and explicit limitations"
+    ],
+    "interpretation": [
+      "Any input identity mismatch stops before inference and identifies an association/environment issue requiring review.",
+      "Variable changes or reload differences distinguish state/serialization sensitivity from pure prediction variability.",
+      "Repeated same-instance or same-byte reload prediction differences support inference/runtime sensitivity; they do not alone identify the responsible kernel.",
+      "Reproducible predictions that consistently miss the stored metric isolate historical-context/record disagreement but do not certify a changed tolerance.",
+      "All four original-tolerance passes mean not reproduced in this probe, not fixed or cleared. Historical trained-process/concurrency/GPU context is not recreated."
+    ],
+    "safe_stop": "One bounded attempt, no retries or continuation. Proposed 30-minute active deadline; retain partial diagnostics if it expires. Stop immediately on source/data/model hash mismatch, missing required evidence, nonfinite outputs, cost mismatch or resource failure. A metric assertion is captured without changing its tolerance so the predeclared repeat comparisons can finish. No production gate is cleared.",
+    "further_scope": "Any deterministic-kernel/TF32/batch sensitivity branch, warmed training context, other run or concurrency experiment needs a separately reviewed bounded follow-up; no optimizer step is part of this proposal."
+  }
+}

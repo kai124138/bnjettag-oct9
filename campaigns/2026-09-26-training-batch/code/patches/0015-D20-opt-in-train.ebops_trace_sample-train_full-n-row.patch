@@ -1,0 +1,250 @@
+From bad830c3b5b4267667a405007a2522c1cc257550 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:46:13 -0700
+Subject: [PATCH 15/22] D20: opt-in train.ebops_trace_sample (train_full | n
+ rows) and train.ebops_trace_batch for every compute_ebops in run_training;
+ PID-reads-traced invariant; in-training EBOPs logged beside the traced value
+
+Absent key: xt[:256] and batch 2048, byte-identical to the screen runner.
+Under the key: initial, per-epoch, post-reload and final-delivered traces run on the
+chosen training rows; logs gain ebops_in_training (the stored layer.ebops of the last
+training step, what FreeEBOPs would report), pid_ebops, their ratio and ebops_trace_rows;
+BetaPID's _ebops after on_epoch_end is asserted equal (rel 1e-6) to the traced total.
+compute_ebops no longer copies a float32 sample (np.asarray instead of astype).
+Test: tests/test_d20_trace.py.
+---
+ bnhgq2/ablation.py      | 59 ++++++++++++++++++++++++---
+ bnhgq2/ebops_calc.py    |  4 +-
+ tests/test_d20_trace.py | 88 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 145 insertions(+), 6 deletions(-)
+ create mode 100644 tests/test_d20_trace.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 3a7b9c7..2058595 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -435,6 +435,35 @@ def training_status_summary(state, selection_metric, stop_after=None, paused=Fal
+     return summary
+ 
+ 
++def ebops_trace_sample(cfg, xt):
++    """[D20] Rows every `compute_ebops` trace runs on (WRAP ranges and feasibility EBOPs).
++
++    `train.ebops_trace_sample` absent: the first 256 training rows (the screen runner).
++    "train_full": the whole training split. An int n: the first n training rows.
++    Training rows only; validation never enters the range fit."""
++    spec = cfg['train'].get('ebops_trace_sample')
++    if spec is None:
++        return xt[:256]
++    if spec == 'train_full':
++        return xt
++    if isinstance(spec, bool) or not isinstance(spec, int) or spec <= 0:
++        raise ValueError(f"train.ebops_trace_sample must be 'train_full' or a positive int, got {spec!r}")
++    return xt[:spec]
++
++
++def ebops_trace_batch(cfg):
++    """Forward batch of the trace. The traced min/max is a max over rows, so the batch
++    changes only speed, not the result (up to kernel-selection rounding on GPU); the
++    certification retrace reads the same key."""
++    return int(cfg['train'].get('ebops_trace_batch', 2048))
++
++
++def model_ebops(model):
++    """The EBOPs sum BetaPID reads (`BaseBetaPID.get_ebops`, hgq2 0.1.9): the stored
++    `layer.ebops` of the top-level layers, whatever pass wrote them last."""
++    return float(sum(float(layer.ebops) for layer in model.layers if hasattr(layer, 'ebops')))
++
++
+ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=False, stop_after=None,
+                  model_builder=None, epoch_observer=None):
+     """Pause at a cumulative epoch for screening/tests without changing config hashes."""
+@@ -447,7 +476,14 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+     out = Path(out)
+     out.mkdir(parents=True, exist_ok=True)
+     xt, yt, xv, yv = arrays
+-    sample = xt[:256]
++    sample = xt[:256]   # engram epoch_observer diagnostics (unchanged)
++    # [D20] opt-in: the trace sample of every compute_ebops below. Absent key => xt[:256].
++    d20 = cfg['train'].get('ebops_trace_sample') is not None
++    trace_rows = ebops_trace_sample(cfg, xt)
++    trace_batch = ebops_trace_batch(cfg)
++
++    def traced_ebops(m):
++        return compute_ebops(m, trace_rows, batch_size=trace_batch)
+     resumed = restore_checkpoint(out, cfg, data_info)
+     if resumed:
+         model, optimizer, state = resumed
+@@ -457,7 +493,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         builder = model_builder or matching_initialization
+         model, initialization = builder(cfg, xt[:4096], seed)
+         optimizer = optimizer_for(cfg, model)
+-        initial = compute_ebops(model, sample)
++        initial = traced_ebops(model)
+         state = {'config_sha256': digest_json(cfg), 'data_sha256': digest_json(data_info),
+                  'code_sha256': os.environ.get('BNHGQ2_CODE_SHA256', 'local-check'),
+                  'completed_epochs': 0, 'initial_ebops': initial['total'], 'initial_widths': width_snapshot(model),
+@@ -512,13 +548,16 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             raise Diverged('Nonfinite training metrics')
+         # Cost tracing updates HGQ range state. Validate the traced state that
+         # is actually saved, so checkpoint metrics and reloaded predictions agree.
+-        cost = compute_ebops(model, sample)
++        # [D20] the in-training EBOPs (what HGQ2's FreeEBOPs would log: the stored
++        # layer.ebops of the last training step), read before the trace overwrites it.
++        in_training_ebops = model_ebops(model) if d20 else None
++        cost = traced_ebops(model)
+         # Evaluate exactly the serialized artifact. Live compiled-model inference
+         # and fresh-load inference can choose different floating-point kernels.
+         candidate = out / 'validation_candidate.keras'
+         model.save(candidate)
+         validation_model = keras.models.load_model(candidate, compile=False)
+-        verified_cost = compute_ebops(validation_model, sample)
++        verified_cost = traced_ebops(validation_model)
+         assert verified_cost['total'] == cost['total'], 'Candidate cost changed after reload'
+         logits = np.asarray(validation_model.predict(xv, batch_size=cfg['train']['val_batch'], verbose=0))
+         if not np.isfinite(logits).all():
+@@ -562,6 +601,12 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             state.update(recovery_frozen=True, freeze_epoch=epoch + 1, freeze_widths=raw_widths(model))
+             print(f'[recovery] freeze at end of epoch {epoch + 1}; Adam slots and LR preserved', flush=True)
+         pid.on_epoch_end(epoch, {})
++        if d20:
++            # [D20] BetaPID reads the stored layer.ebops at on_epoch_end, which the trace
++            # above wrote last: the PID is driven by the traced EBOPs, the same number the
++            # feasibility test uses. Enforced here, not left to call order.
++            assert abs(pid._ebops - cost['total']) <= 1e-6 * max(cost['total'], 1), \
++                ('BetaPID EBOPs differs from the traced EBOPs', pid._ebops, cost['total'])
+         state['pid'] = {'beta': pid.beta, 'ebops': pid._ebops,
+                         'integral': pid.pid.integral, 'prev_error': pid.pid.prev_error}
+         elapsed = time.monotonic() - start
+@@ -576,6 +621,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                 'activation_bits_mean': float(np.mean(np.concatenate(free))),
+                 'recovery_frozen': int(state['recovery_frozen']), 'epoch_seconds': elapsed,
+                 **{f'val_auc_{i}': v for i, v in enumerate(per_auc)}}
++        if d20:
++            logs.update(ebops_in_training=in_training_ebops, pid_ebops=float(pid._ebops),
++                        ebops_in_training_over_traced=in_training_ebops / max(cost['total'], 1),
++                        ebops_trace_rows=int(len(trace_rows)))
+         if epoch_observer is not None:
+             diagnostics = epoch_observer(model, sample, epoch)
+             if set(diagnostics) & set(logs):
+@@ -619,7 +668,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+     selected = state['best_feasible'] or state['lowest']
+     filename = 'model_best.keras' if state['best_feasible'] else 'model_min_ebops.keras'
+     delivered = keras.models.load_model(out / filename, compile=False)
+-    measured = compute_ebops(delivered, sample)
++    measured = traced_ebops(delivered)
+     assert measured['total'] == selected['ebops']
+     binary_gate(delivered, cfg)
+     result = {'initial_ebops': state['initial_ebops'], 'target_ebops': final_target,
+diff --git a/bnhgq2/ebops_calc.py b/bnhgq2/ebops_calc.py
+index 45873ae..98d4228 100644
+--- a/bnhgq2/ebops_calc.py
++++ b/bnhgq2/ebops_calc.py
+@@ -15,7 +15,9 @@ import numpy as np
+ def compute_ebops(model, X_calib, batch_size=2048):
+     from hgq.utils import trace_minmax
+ 
+-    total = trace_minmax(model, X_calib.astype(np.float32), batch_size=batch_size,
++    # asarray, not astype: no copy when the sample is already float32 (a full training
++    # split under [D20] is ~430 MB at N=64). Same values either way.
++    total = trace_minmax(model, np.asarray(X_calib, dtype=np.float32), batch_size=batch_size,
+                          verbose=0)
+     per_layer = {}
+     for layer in model.layers:
+diff --git a/tests/test_d20_trace.py b/tests/test_d20_trace.py
+new file mode 100644
+index 0000000..3e4e794
+--- /dev/null
++++ b/tests/test_d20_trace.py
+@@ -0,0 +1,88 @@
++"""[D20] trace sample: key semantics, the PID reads the traced EBOPs, logged EBOPs of a
++saved candidate reproduce on a reset retrace of the same rows. CPU, tiny model, synthetic."""
++import json
++import os
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import numpy as np
++import pytest
++
++from test_resume_cadence import tiny_cfg
++
++
++def arrays(n_train=600, seed=0):
++    rng = np.random.default_rng(seed)
++    # heavy-tailed first feature so a 256-row prefix under-covers the range
++    xt = rng.standard_normal((n_train, 8, 3)).astype('float32')
++    xt[..., 0] = rng.standard_t(2, size=(n_train, 8)).astype('float32')
++    xv = rng.standard_normal((64, 8, 3)).astype('float32')
++    yt = np.eye(5, dtype='float32')[rng.integers(0, 5, n_train)]
++    yv = np.eye(5, dtype='float32')[np.arange(64) % 5]
++    return (xt, yt, xv, yv), {'unit': True, 'input_std': {'mu': [0, 0, 0], 'sigma': [1, 1, 1]}}
++
++
++def test_trace_sample_key():
++    from bnhgq2.ablation import ebops_trace_sample, ebops_trace_batch
++    xt = np.zeros((1000, 2, 3), 'float32')
++    cfg = tiny_cfg()
++    assert 'ebops_trace_sample' not in cfg['train']
++    assert len(ebops_trace_sample(cfg, xt)) == 256 and ebops_trace_batch(cfg) == 2048
++    cfg['train']['ebops_trace_sample'] = 'train_full'
++    assert ebops_trace_sample(cfg, xt) is xt
++    cfg['train']['ebops_trace_sample'] = 700
++    assert len(ebops_trace_sample(cfg, xt)) == 700
++    for bad in (0, -1, True, 'all', 1.5):
++        cfg['train']['ebops_trace_sample'] = bad
++        with pytest.raises(ValueError):
++            ebops_trace_sample(cfg, xt)
++
++
++def records(out):
++    return [json.loads(line) for line in (out / 'activation_widths.jsonl').read_text().splitlines()]
++
++
++def test_full_split_trace_drives_pid_and_reproduces(tmp_path):
++    import keras
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=2, ebops_trace_sample='train_full')
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    recs = records(tmp_path)
++    for r in recs:
++        assert r['ebops_trace_rows'] == len(xt)
++        assert r['pid_ebops'] == pytest.approx(r['ebops'], rel=1e-6)
++        assert r['ebops_in_training'] > 0 and r['ebops_in_training_over_traced'] > 0
++    # the last epoch's candidate is model_min_ebops or model_best; retrace it (reset) on the
++    # same rows: EBOPs equal to the logged value (the certification rule)
++    state = json.loads((tmp_path / 'ebops_budget.json').read_text())
++    best = keras.models.load_model(tmp_path / 'model_best.keras', compile=False)
++    again = ablation.compute_ebops(best, xt)['total']
++    assert again == state['selected']['ebops']
++
++
++def test_absent_key_logs_nothing_new(tmp_path):
++    from bnhgq2 import ablation
++    cfg = tiny_cfg()
++    cfg['train'].update(epochs=1)
++    (xt, yt, xv, yv), info = arrays()
++    ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
++    r = records(tmp_path)[0]
++    assert not {'ebops_in_training', 'pid_ebops', 'ebops_trace_rows'} & set(r)
++
++
++def test_prefix_trace_undercovers_full_split():
++    """Why [D20] exists: after a reset trace on 256 rows, the WRAP i of the input quantizer
++    can sit below what the full split needs (heavy-tailed synthetic pT)."""
++    import keras
++    from bnhgq2 import ablation
++    from bnhgq2.ebops_target import width_snapshot
++    cfg = tiny_cfg()
++    (xt, _, _, _), _ = arrays(n_train=4000)
++    keras.backend.clear_session()
++    model, _ = ablation.matching_initialization(cfg, xt[:512], 1)
++    small = ablation.compute_ebops(model, xt[:256])['total']
++    i_small = np.asarray(width_snapshot(model)['input_proj']['i'])
++    full = ablation.compute_ebops(model, xt)['total']
++    i_full = np.asarray(width_snapshot(model)['input_proj']['i'])
++    assert (i_full >= i_small).all() and (i_full > i_small).any() and full > small
+-- 
+2.50.1 (Apple Git-155)
+

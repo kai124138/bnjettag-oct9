@@ -1,0 +1,495 @@
+{
+ "act-granularity-element": {
+  "A07-350": {
+   "Wq_width_shape": [
+    1,
+    64,
+    32
+   ],
+   "epoch_metrics": [
+    2.824584722518921,
+    1.61164128780365,
+    0.0,
+    0.185546875
+   ],
+   "initial_ebops_synthetic": 11963088,
+   "params": 116950,
+   "q_stream_width_shape": [
+    1,
+    64,
+    4,
+    8
+   ],
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "Wq_width_shape": [
+    1,
+    64,
+    24
+   ],
+   "epoch_metrics": [
+    2.4442405700683594,
+    1.61085045337677,
+    0.0,
+    0.21484375
+   ],
+   "initial_ebops_synthetic": 8171505,
+   "params": 74638,
+   "q_stream_width_shape": [
+    1,
+    64,
+    2,
+    12
+   ],
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "seconds": 10.7,
+  "status": "PASS"
+ },
+ "act-init-f0": {
+  "A07-350": {
+   "epoch_metrics": [
+    3.7465221881866455,
+    1.6123894453048706,
+    0.0,
+    0.17578125
+   ],
+   "initial_ebops_synthetic": 21198974,
+   "params": 61951,
+   "quantizers_f0_7": 15,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    3.108036994934082,
+    1.6107404232025146,
+    0.0,
+    0.21875
+   ],
+   "initial_ebops_synthetic": 14763799,
+   "params": 31735,
+   "quantizers_f0_7": 15,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "seconds": 15.4,
+  "status": "PASS"
+ },
+ "attn-linformer": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.0594358444213867,
+    1.617089033126831,
+    0.0,
+    0.181640625
+   ],
+   "initial_ebops_synthetic": 4390686,
+   "params": 20171,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "scores_last_dim": 8
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    1.9039559364318848,
+    1.614997148513794,
+    0.0,
+    0.1953125
+   ],
+   "initial_ebops_synthetic": 2866279,
+   "params": 11411,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "scores_last_dim": 8
+  },
+  "export_refused": [
+   "arch.attn_kind (attn-linformer / attn-relu-over-n)",
+   "arch.linformer_k (attn-linformer)"
+  ],
+  "seconds": 9.2,
+  "status": "PASS"
+ },
+ "attn-relu-over-n": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.739309310913086,
+    1.6114652156829834,
+    0.0,
+    0.18359375
+   ],
+   "initial_ebops_synthetic": 11153504,
+   "n_is_power_of_two": true,
+   "params": 61932,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.449131965637207,
+    1.61026930809021,
+    0.0,
+    0.2265625
+   ],
+   "initial_ebops_synthetic": 8015624,
+   "n_is_power_of_two": true,
+   "params": 31716,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "fixed_softmax_refused": "former / attn-relu-over-n): needs quant.softmax_quant \"chang\" (the learned WRAP A.V input quantizer)",
+  "seconds": 8.2,
+  "status": "PASS"
+ },
+ "derived-input-features": {
+  "A07-350": {
+   "epoch_metrics": [
+    3.035520553588867,
+    1.611201524734497,
+    0.0,
+    0.19140625
+   ],
+   "initial_ebops_synthetic": 14116205,
+   "params": 62021,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.612229347229004,
+    1.6108909845352173,
+    0.0,
+    0.1875
+   ],
+   "initial_ebops_synthetic": 9923262,
+   "params": 31789,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "hand_example": [
+   4.0,
+   0.30000001192092896,
+   -0.4000000059604645,
+   1.3862943649291992,
+   0.5
+  ],
+  "seconds": 11.6,
+  "status": "PASS"
+ },
+ "ebops-group-weight": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.9365298748016357,
+    1.61164128780365,
+    0.0,
+    0.185546875
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "params": 61951,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.539224624633789,
+    1.61085045337677,
+    0.0,
+    0.21484375
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "params": 31735,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "mini_train_epochs": 2,
+  "seconds": 23.4,
+  "status": "PASS"
+ },
+ "gated-key-mask": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.9365298748016357,
+    1.61164128780365,
+    0.0,
+    0.185546875
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "masked_attention_max": 0.0,
+   "params": 61951,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "unmasked_row_sum_min": 0.9967689514160156
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.539224624633789,
+    1.61085045337677,
+    0.0,
+    0.21484375
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "masked_attention_max": 0.0,
+   "params": 31735,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "unmasked_row_sum_min": 1.9967041015625
+  },
+  "needs_input_std": true,
+  "no_gated_slot_forward_equal": true,
+  "seconds": 16.5,
+  "status": "PASS"
+ },
+ "lr-schedule-variants": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.9349589347839355,
+    1.6101728677749634,
+    0.0,
+    0.205078125
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "params": 61951,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.5323779582977295,
+    1.609635829925537,
+    0.0,
+    0.22265625
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "params": 31735,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "anchor_lr_at": {
+   "0": 0.003,
+   "4": 0.0029995069167619045,
+   "9": 0.0029975043218719607,
+   "10": 0.0029969191164291296,
+   "489": 1.0308192859301122e-06,
+   "490": 1e-06,
+   "499": 1e-06,
+   "500": 0.003
+  },
+  "lr_at": {
+   "0": 0.00030000000000000003,
+   "4": 0.0014997534583809523,
+   "9": 0.0029975043218719607,
+   "10": 0.0029969191164291296,
+   "489": 1.0308192859301122e-06,
+   "490": 1e-06,
+   "499": 1e-06,
+   "500": 0.003
+  },
+  "seconds": 10.4,
+  "status": "PASS"
+ },
+ "pre-quant-shift": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.9376072883605957,
+    1.6127185821533203,
+    0.0,
+    0.19140625
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "params": 62306,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "shift_layers": 12
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.5395069122314453,
+    1.6111326217651367,
+    0.0,
+    0.212890625
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "params": 32010,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "shift_layers": 12
+  },
+  "gradient_reaches_shift": true,
+  "init_forward_equals_unshifted": true,
+  "seconds": 16.3,
+  "status": "PASS"
+ },
+ "pt-gate-threshold": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.9365298748016357,
+    1.61164128780365,
+    0.0,
+    0.185546875
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "params": 61951,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.539224624633789,
+    1.61085045337677,
+    0.0,
+    0.21484375
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "params": 31735,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "seconds": 10.4,
+  "status": "PASS",
+  "zero_refused": "te-threshold): must be null (ungated) or a number > 0 in GeV; Delta \"0 = ungated\" is written as null"
+ },
+ "qk-stream-min-bits": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.9365298748016357,
+    1.61164128780365,
+    0.0,
+    0.185546875
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "params": 61951,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.539224624633789,
+    1.61085045337677,
+    0.0,
+    0.21484375
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "params": 31735,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "seconds": 19.1,
+  "status": "PASS"
+ },
+ "rebase-0012-latent-ema-cadence": {
+  "completed": 3,
+  "leaves": [
+   "epoch-0001",
+   "epoch-0003"
+  ],
+  "seconds": 12.4,
+  "status": "PASS"
+ },
+ "rebase-0014-collapse-cadence": {
+  "collapsed_epoch": 3,
+  "committed_leaf": "epoch-0003",
+  "seconds": 11.5,
+  "status": "PASS",
+  "verify_selected_status": "verified_collapsed"
+ },
+ "rebase-0023-deepsets-wrap": {
+  "i_decay_quantizers": 8,
+  "overflow_modes": [
+   "WRAP"
+  ],
+  "params": 20750,
+  "reload_max_abs_diff": 0.0,
+  "seconds": 1.9,
+  "status": "PASS"
+ },
+ "rebase-0024-bop-adam-default": {
+  "beta_2": 0.999,
+  "epoch_metrics": [
+   3.107043743133545,
+   1.61085045337677,
+   0.0,
+   0.21484375
+  ],
+  "optimizer": "BopAdam(adam_default)",
+  "resumed_to_epoch": 2,
+  "seconds": 19.5,
+  "status": "PASS"
+ },
+ "softmax-table-min-bits": {
+  "A07-350": {
+   "b_floor_after_push": 2,
+   "epoch_metrics": [
+    2.9365298748016357,
+    1.61164128780365,
+    0.0,
+    0.185546875
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "params": 61951,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "tables": 2
+  },
+  "E (arm A)": {
+   "b_floor_after_push": 2,
+   "epoch_metrics": [
+    2.539224624633789,
+    1.61085045337677,
+    0.0,
+    0.21484375
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "params": 31735,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0,
+   "tables": 2
+  },
+  "default_floor_4": 4,
+  "fixed_softmax_refused": "tmax-table-min-bits): needs quant.softmax_quant \"chang\" (the fixed softmax tables are not trainable)",
+  "seconds": 20.4,
+  "status": "PASS"
+ },
+ "std-real-slots": {
+  "A07-350": {
+   "epoch_metrics": [
+    2.9365298748016357,
+    1.61164128780365,
+    0.0,
+    0.185546875
+   ],
+   "initial_ebops_synthetic": 13182317,
+   "params": 61951,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "E (arm A)": {
+   "epoch_metrics": [
+    2.539224624633789,
+    1.61085045337677,
+    0.0,
+    0.21484375
+   ],
+   "initial_ebops_synthetic": 8913043,
+   "params": 31735,
+   "reload_max_abs_diff_after_step": 0.0,
+   "reload_max_abs_diff_init": 0.0
+  },
+  "mu_all": [
+   3.718916416168213,
+   0.02540145441889763,
+   0.05838613212108612
+  ],
+  "mu_real": [
+   5.312737464904785,
+   0.03628779202699661,
+   0.08340875804424286
+  ],
+  "n_real_slots": 560,
+  "n_slots": 800,
+  "seconds": 11.7,
+  "status": "PASS"
+ }
+}

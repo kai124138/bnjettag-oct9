@@ -1,0 +1,78 @@
+{
+ "apiVersion": "v1",
+ "items": [
+  {
+   "apiVersion": "batch/v1",
+   "kind": "Job",
+   "metadata": {
+    "annotations": {},
+    "labels": {
+     "app": "kai-batch0917-screen",
+     "campaign": "batch20260917"
+    },
+    "name": "kai-batch0917-screen-e100",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "activeDeadlineSeconds": 259200,
+    "backoffLimit": 2147483647,
+    "backoffLimitPerIndex": 1,
+    "completionMode": "Indexed",
+    "completions": 12,
+    "maxFailedIndexes": 2,
+    "parallelism": 2,
+    "template": {
+     "spec": {
+      "containers": [
+       {
+        "name": "train",
+        "resources": {
+         "limits": {
+          "cpu": "4",
+          "ephemeral-storage": "24Gi",
+          "memory": "12Gi",
+          "nvidia.com/gpu": "1"
+         }
+        }
+       }
+      ]
+     }
+    }
+   },
+   "status": {
+    "conditions": [
+     {
+      "lastProbeTime": "2026-09-17T16:34:02Z",
+      "lastTransitionTime": "2026-09-17T16:34:02Z",
+      "message": "Job has exceeded the specified maximal number of failed indexes",
+      "reason": "MaxFailedIndexesExceeded",
+      "status": "True",
+      "type": "FailureTarget"
+     },
+     {
+      "lastProbeTime": "2026-09-17T16:34:03Z",
+      "lastTransitionTime": "2026-09-17T16:34:03Z",
+      "message": "Job has exceeded the specified maximal number of failed indexes",
+      "reason": "MaxFailedIndexesExceeded",
+      "status": "True",
+      "type": "Failed"
+     }
+    ],
+    "failed": 7,
+    "failedIndexes": "1-3",
+    "ready": 0,
+    "startTime": "2026-09-17T15:23:12Z",
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+   }
+  }
+ ],
+ "kind": "List",
+ "provenance": {
+  "kind": "captured",
+  "note": "Indexed Job without podFailurePolicy; MaxFailedIndexesExceeded",
+  "sanitized": "status, policy, resource and job metadata only; env, images, volumes, IDs removed",
+  "source": "campaigns/2026-09-20-continuation-packed/cluster-before.json",
+  "source_sha256": "d22cbb87e1b88b2695b989f3e4f0c7a137800d5aee670394c8ba0be61e450409"
+ }
+}

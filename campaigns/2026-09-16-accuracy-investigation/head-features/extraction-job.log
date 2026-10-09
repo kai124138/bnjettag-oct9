@@ -1,0 +1,69 @@
+/cmcode/hgq2.tar.gz: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789625544.320739      15 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789625545.953115      15 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789625546.395525      15 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+[features] train (100000, 32) 16.783581799827516
+[features] validation (124000, 32) 18.840121507644653
+[features] test (260000, 32) 35.38258734438568
+{
+  "checkpoint_sha256": "d76050090655a68546e8bee51b695ef34c42083bcbd52832758b96f0e06f6e4c",
+  "train_sample_seed": 20260917,
+  "data_info": {
+    "n_train": 496000,
+    "n_val": 124000,
+    "n_files": 62,
+    "split_seed": 1,
+    "order_seed": 20260912,
+    "permutation_sha256": "90b091cef669dfeec9b220c85ab7b86d028871817d9ced55b8945134c2fbcc8a",
+    "input_std": {
+      "mu": [
+        89.4967269897461,
+        -2.5604047550586984e-05,
+        -5.3199059948383365e-06
+      ],
+      "sigma": [
+        84.39064025878906,
+        0.0629049688577652,
+        0.06301674991846085
+      ],
+      "computed_from": "train split only"
+    },
+    "train_sha256": "fdefd6fd8bc3c8951ca4aedb9047cc41c979647e9229566cdded67098ae82d1a",
+    "val_sha256": "dcdb76db132fb211f64f5ef7aefd6f09458bc18613a216b9b5e8d2366e7dd62a"
+  },
+  "train_indices_sha256": "b20713eed56e39df3d91be96e8641ef74f981a42d76ae10556c5d70e1a96eee9",
+  "train_validation_disjoint_source_indices_verified": true,
+  "head_name": "head_fc2",
+  "head_class": "BitQDense",
+  "feature_definition": "head_fc2.iq(backbone_output, training=False)",
+  "n_train_subset": 100000,
+  "n_validation": 124000,
+  "n_test": 260000,
+  "reconstruction_rows": 256,
+  "reconstruction_max_abs_error": 4.76837158203125e-07,
+  "reconstruction_argmax_equal": true,
+  "inference_seconds": {
+    "train": 16.783581799827516,
+    "validation": 18.840121507644653,
+    "test": 35.38258734438568
+  },
+  "original_validation_accuracy": 0.5888790322580645,
+  "original_test_accuracy": 0.5874307692307692,
+  "versions": {
+    "numpy": "2.5.0",
+    "tensorflow": "2.21.0",
+    "keras": "3.15.0"
+  },
+  "feature_sha256": "e012651f7c2c9be6de06e842051c3918a612a4c9af777c4a0993a7a5ae174a64",
+  "total_seconds": 264.0531210564077
+}
+Traceback (most recent call last):
+  File "/eval/refit_head.py", line 12, in <module>
+    from scipy.optimize import minimize
+ModuleNotFoundError: No module named 'scipy'

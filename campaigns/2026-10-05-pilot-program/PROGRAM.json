@@ -1,0 +1,1853 @@
+{
+ "program": "2026-10-05-pilot-program",
+ "signed_by_kai": false,
+ "signed_at": null,
+ "mode": "dry-run",
+ "amendments": [
+  {
+   "date": "2026-10-05 JST",
+   "pre_data": true,
+   "by": "orchestrator via experiment-designer",
+   "change": "NB350-C and A350-C-qkv1 (seeds 1,2) added to R1 (23 pods); R2 = bracket + 3 seeds of the most promising 350k variant + other side s3; R3 = NB@r_rec only if needed; caps 138/60/18/960; one bundle (0036+0037) for all pilot rounds."
+  },
+  {
+   "date": "2026-10-05 14:14 JST",
+   "pre_data": true,
+   "by": "experiment-designer [A2]",
+   "change": "B4 entropy-only stop for Kai; B5 w150 inconclusive if time-limited; B6 H2 beyond-ladder reading."
+  },
+  {
+   "date": "2026-10-05 14:35 JST",
+   "pre_data": true,
+   "by": "experiment-designer [A3] (arbiter v1 F6)",
+   "change": "code rule for R2/R3 bundles; matched production pair; fresh seeds; no auto-fire (Kai decides); positive controls; production 6/8 early stop; caps 144/60/18."
+  },
+  {
+   "date": "2026-10-05 JST",
+   "pre_data": true,
+   "by": "Kai K1-K4",
+   "change": "w100 replaces w150; R1 24 pods / 144 GPU-h; production waits for Kai; production ceiling set at the production gate."
+  },
+  {
+   "date": "2026-10-05 JST",
+   "pre_data": true,
+   "by": "orchestrator, F7, edited in the main session under Kai's explicit authorization",
+   "change": "24-row r1_launch (A07-350k-C replaced by A350-C-qkv1-450k, E-unc-C added, w100); bundle_sha -> bundle_sha256 98dd2875; r23_bundle_gate before R1 readout; r*_stops (entropy-only, positive controls, code rule); production qualify-and-stop; caps reconciled."
+  }
+ ],
+ "schema_note": "docs/infrastructure/autopilot.md did not exist at 2026-10-05 10:14 JST; this file uses the fallback schema from the experiment-designer brief. Re-check against autopilot.md once written. Conditions are declarative: all/any/not, field comparisons (==, !=, <, <=, >, >=; filter shorthand lt/le/gt/ge/ne/in/not_in), count over readout rows with a where-filter, all_rows/satisfy, and named derivations (lowest, argmax with a fixed order_by). No code.",
+ "study": "campaigns/2026-10-05-pilot-program/STUDY.md ([A3] 2026-10-05 14:35 JST)",
+ "caps": {
+  "max_pods": 24,
+  "arms_per_gpu": 1,
+  "gpu_product": "NVIDIA-GeForce-RTX-3090",
+  "max_gpu_hours_per_round": {
+   "R1": 144,
+   "R2": 60,
+   "R3": 18,
+   "production": "decided by Kai at the production gate on R1-measured s/epoch (K4)"
+  },
+  "max_gpu_hours_total": "decided by Kai at the production gate (K4); pilots 222",
+  "pod_deadline_s": 20800,
+  "r1_worst_case": "24 x (600 pre-arm retry + 20,800 deadline + 180 grace) s = 143.87 GPU-h <= 144",
+  "retries_count_against_cap": true
+ },
+ "definitions": {
+  "healthy": {
+   "status": "complete",
+   "feasible_any": true,
+   "nondegenerate_best": true,
+   "attn_entropy_norm_mean": {
+    "lt": 0.95
+   }
+  },
+  "readout_fields": [
+   "arm",
+   "hypothesis",
+   "arch",
+   "budget",
+   "option_c",
+   "warmup",
+   "seed",
+   "epochs_done",
+   "feasible_any",
+   "min_traced_ebops",
+   "best_feasible_val_acc",
+   "best_feasible_val_auc",
+   "nondegenerate_best",
+   "attn_entropy_norm_mean",
+   "status"
+  ],
+  "integrity": [
+   {
+    "field": "threshold_c",
+    "op": "==",
+    "value": 0.2109624456315518
+   },
+   {
+    "field": "labels_sha256",
+    "op": "==",
+    "value": "e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617"
+   },
+   {
+    "field": "bundle_sha256",
+    "op": "==",
+    "value": "$program.bundle_sha256"
+   },
+   {
+    "count": {
+     "from": "$readout",
+     "where": {
+      "nondegenerate_best": true,
+      "feasible_any": false
+     }
+    },
+    "op": "==",
+    "value": 0
+   },
+   {
+    "count": {
+     "from": "$readout",
+     "where": {
+      "status": {
+       "ne": "complete"
+      }
+     }
+    },
+    "op": "==",
+    "value": 0
+   }
+  ],
+  "e_rungs": [
+   250000,
+   350000,
+   500000,
+   750000,
+   1000000,
+   2000000,
+   5000000
+  ],
+  "a07_rungs": [
+   500000,
+   1000000,
+   2000000,
+   5000000
+  ],
+  "zero_bit_floor": {
+   "E": 171526,
+   "A07": 343053,
+   "E+qkv1": 269830,
+   "NB": 171526,
+   "E-unc": null
+  },
+  "val_acc_floor_production": 0.5,
+  "variant_order_350k": [
+   "A350-C",
+   "A350-noC",
+   "A350-C-qkv1",
+   "NB350-C",
+   "A350-C-w50",
+   "A350-C-w100"
+  ],
+  "ladder_rows": {
+   "arch": "E",
+   "option_c": true,
+   "warmup": 1,
+   "arm": {
+    "not_in": [
+     "A350-noC",
+     "A350-C-qkv1",
+     "A350-C-qkv1-450k",
+     "NB350-C",
+     "A350-C-w50",
+     "A350-C-w100",
+     "E-unc-C"
+    ]
+   }
+  },
+  "entropy_only_failure": {
+   "status": "complete",
+   "feasible_any": true,
+   "nondegenerate_best": true,
+   "best_feasible_val_acc": {
+    "ge": 0.5
+   },
+   "attn_entropy_norm_mean": {
+    "ge": 0.95
+   }
+  },
+  "positive_controls": [
+   {
+    "arm": "A07-5000k-C",
+    "seed": 1
+   },
+   {
+    "arm": "E-unc-C",
+    "seed": 1
+   }
+  ],
+  "code_rule": {
+   "later_bundles_byte_equal_outside": [
+    "campaigns/pilot1005/configs",
+    "campaigns/pilot1005/packs",
+    "campaigns/pilot1005/index.json",
+    "campaigns/pilot1005/config_map.json",
+    "campaigns/pilot1005/r1_packs.json"
+   ],
+   "r1_bundle_sha256": "98dd2875b7c902bb881562a7acbf00f7cf266a369a74528b6fb8471e0cdc0059"
+  },
+  "production_pair": {
+   "NB_config": "A's (V_bin's) config with only quant.weight = kbi_learnable",
+   "P350_only_if": {
+    "field": "V_bin",
+    "op": "==",
+    "value": "A350-C"
+   },
+   "fresh_seeds_only": "count only seeds not used to select W, V_bin or r1; >=3 healthy per arm, each best_feasible_val_acc >= 0.5"
+  },
+  "val_acc_floor_note": "internal only; external reference Chang/Sun arXiv:2510.24784 Table 1 (test, 350k), never compared with pilot validation numbers"
+ },
+ "steps": [
+  {
+   "id": "gate",
+   "entry": true,
+   "after": [],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "kai-pilot1005-cpugate-98dd28"
+   ],
+   "condition": {
+    "all": [
+     {
+      "log_line": "GATE_RESULT PASS",
+      "job": "kai-pilot1005-cpugate-98dd28"
+     },
+     {
+      "file": "review/PREFLIGHT_critical_v2.md",
+      "field": "verdict_r1",
+      "op": "==",
+      "value": "PASS"
+     },
+     {
+      "file": "review/STUDY_arbiter_v2.md",
+      "field": "verdict",
+      "op": "==",
+      "value": "PASS"
+     }
+    ]
+   },
+   "on_true": "r1_launch",
+   "on_false": "wait"
+  },
+  {
+   "id": "r1_launch",
+   "after": [
+    "gate"
+   ],
+   "kind": "launch",
+   "handoffs": [
+    "filled from PREPARED.json at the 98dd28 freeze (24 single-arm handoffs)"
+   ],
+   "job_names": [
+    "kai-pilot1005-r1-*-98dd28 (24 single-arm Jobs; names in PREPARED.json)"
+   ],
+   "runs": [
+    {
+     "arm": "A350-C",
+     "hypothesis": "H1",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "A350-C",
+     "hypothesis": "H1",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 2
+    },
+    {
+     "arm": "A350-noC",
+     "hypothesis": "H1",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": false,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "A350-noC",
+     "hypothesis": "H1",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": false,
+     "warmup": 1,
+     "seed": 2
+    },
+    {
+     "arm": "E250k-C",
+     "hypothesis": "H2",
+     "arch": "E",
+     "budget": 250000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "E500k-C",
+     "hypothesis": "H2",
+     "arch": "E",
+     "budget": 500000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "E750k-C",
+     "hypothesis": "H2",
+     "arch": "E",
+     "budget": 750000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "E1000k-C",
+     "hypothesis": "H2",
+     "arch": "E",
+     "budget": 1000000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "E2000k-C",
+     "hypothesis": "H2",
+     "arch": "E",
+     "budget": 2000000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "E5000k-C",
+     "hypothesis": "H2",
+     "arch": "E",
+     "budget": 5000000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "A07-500k-C",
+     "hypothesis": "H2",
+     "arch": "A07",
+     "budget": 500000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "A07-1000k-C",
+     "hypothesis": "H2",
+     "arch": "A07",
+     "budget": 1000000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "A07-2000k-C",
+     "hypothesis": "H2",
+     "arch": "A07",
+     "budget": 2000000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "A07-5000k-C",
+     "hypothesis": "H2",
+     "arch": "A07",
+     "budget": 5000000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    },
+    {
+     "arm": "A350-C-w50",
+     "hypothesis": "H4",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 50,
+     "seed": 1
+    },
+    {
+     "arm": "A350-C-w50",
+     "hypothesis": "H4",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 50,
+     "seed": 2
+    },
+    {
+     "arm": "A350-C-w100",
+     "hypothesis": "H4",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 100,
+     "seed": 1
+    },
+    {
+     "arm": "A350-C-w100",
+     "hypothesis": "H4",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 100,
+     "seed": 2
+    },
+    {
+     "arm": "NB350-C",
+     "hypothesis": "H5",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1,
+     "config_extra": {
+      "quant.weight": "kbi_learnable"
+     }
+    },
+    {
+     "arm": "NB350-C",
+     "hypothesis": "H5",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 2,
+     "config_extra": {
+      "quant.weight": "kbi_learnable"
+     }
+    },
+    {
+     "arm": "A350-C-qkv1",
+     "hypothesis": "H3",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1,
+     "config_extra": {
+      "quant.attn_bit_floor": {
+       "bits": 1,
+       "sites": [
+        "q",
+        "k",
+        "v"
+       ]
+      }
+     }
+    },
+    {
+     "arm": "A350-C-qkv1",
+     "hypothesis": "H3",
+     "arch": "E",
+     "budget": 350000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 2,
+     "config_extra": {
+      "quant.attn_bit_floor": {
+       "bits": 1,
+       "sites": [
+        "q",
+        "k",
+        "v"
+       ]
+      }
+     }
+    },
+    {
+     "arm": "A350-C-qkv1-450k",
+     "hypothesis": "H3",
+     "arch": "E",
+     "budget": 450000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1,
+     "config_extra": {
+      "quant.attn_bit_floor": {
+       "bits": 1,
+       "sites": [
+        "q",
+        "k",
+        "v"
+       ]
+      }
+     }
+    },
+    {
+     "arm": "E-unc-C",
+     "hypothesis": "control",
+     "arch": "E",
+     "budget": 100000000,
+     "option_c": true,
+     "warmup": 1,
+     "seed": 1
+    }
+   ],
+   "condition": {
+    "all": [
+     {
+      "pods_requested": 23,
+      "op": "<=",
+      "value": 24
+     },
+     {
+      "field": "handoffs",
+      "op": "none_placeholder"
+     }
+    ]
+   },
+   "on_true": "r1_util",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r23_bundle_gate",
+   "after": [
+    "r1_launch"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [],
+   "condition": {
+    "all": [
+     {
+      "check": "code_rule byte-diff vs definitions.code_rule.r1_bundle_sha256",
+      "op": "==",
+      "value": "PASS"
+     },
+     {
+      "log_line": "GATE_RESULT PASS",
+      "job": "R2/R3 configs-only bundle CPU gate (cpu_gate + pair_nb)"
+     },
+     {
+      "file": "review/PREFLIGHT_R23_critical_v1.md",
+      "field": "verdict",
+      "op": "==",
+      "value": "PASS"
+     }
+    ]
+   },
+   "on_true": "r1_readout",
+   "on_false": "wait",
+   "note": "STUDY §7 [A3]: R2/R3 configs gated and reviewed before the R1 readout exists"
+  },
+  {
+   "id": "r1_util",
+   "after": [
+    "r1_launch"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "$r1_launch.job_names"
+   ],
+   "condition": {
+    "all": [
+     {
+      "minutes_since_launch": 30
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_util_pct": {
+         "lt": 40
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_product": {
+         "ne": "NVIDIA-GeForce-RTX-3090"
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     }
+    ]
+   },
+   "on_true": "r1_wait",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r1_wait",
+   "after": [
+    "r1_util"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "$r1_launch.job_names"
+   ],
+   "condition": {
+    "all": [
+     {
+      "jobs": [
+       "$r1_launch.job_names"
+      ],
+      "state": "Complete"
+     }
+    ]
+   },
+   "timeout_hours": 48,
+   "on_true": "r1_readout",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r1_readout",
+   "after": [
+    "r1_wait",
+    "r23_bundle_gate"
+   ],
+   "kind": "readout",
+   "handoffs": [
+    "PLACEHOLDER:rh-R1-readout"
+   ],
+   "job_names": [
+    "PLACEHOLDER:kai-pilot1005-r1ro-<sha6>"
+   ],
+   "output": "PLACEHOLDER:/data/<run root>/pilot-1005/r1/readout.json",
+   "condition": {
+    "all": [
+     {
+      "field": "threshold_c",
+      "op": "==",
+      "value": 0.2109624456315518
+     },
+     {
+      "field": "labels_sha256",
+      "op": "==",
+      "value": "e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617"
+     },
+     {
+      "field": "bundle_sha256",
+      "op": "==",
+      "value": "$program.bundle_sha256"
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {
+        "nondegenerate_best": true,
+        "feasible_any": false
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {
+        "status": {
+         "ne": "complete"
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {}
+      },
+      "op": "==",
+      "value": 24
+     }
+    ]
+   },
+   "on_true": "r1_stops",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r1_stops",
+   "after": [
+    "r1_readout"
+   ],
+   "kind": "decide",
+   "handoffs": [],
+   "job_names": [],
+   "condition": {
+    "all": [
+     {
+      "count": {
+       "from": "$readout",
+       "where": "definitions.entropy_only_failure"
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "all_rows": {
+       "from": "$readout",
+       "where": {
+        "arm": {
+         "in": [
+          "A07-5000k-C",
+          "E-unc-C"
+         ]
+        },
+        "seed": 1
+       }
+      },
+      "satisfy": "definitions.healthy",
+      "if_present": true
+     },
+     {
+      "check": "code_rule",
+      "op": "==",
+      "value": "PASS"
+     }
+    ]
+   },
+   "on_true": "r1_decide",
+   "on_false": "stop_notify_kai",
+   "note": "STUDY §5/§10 order: integrity (readout step), entropy-only, positive controls, code rule"
+  },
+  {
+   "id": "r1_decide",
+   "after": [
+    "r1_stops"
+   ],
+   "kind": "decide",
+   "handoffs": [],
+   "job_names": [],
+   "derive": {
+    "r1": {
+     "lowest": "budget",
+     "from": "$readout",
+     "where": {
+      "arch": "E",
+      "option_c": true,
+      "warmup": 1,
+      "arm": {
+       "not_in": [
+        "A350-noC",
+        "A350-C-qkv1",
+        "A350-C-qkv1-450k",
+        "NB350-C",
+        "A350-C-w50",
+        "A350-C-w100",
+        "E-unc-C"
+       ]
+      },
+      "seed": 1,
+      "status": "complete",
+      "feasible_any": true,
+      "nondegenerate_best": true,
+      "attn_entropy_norm_mean": {
+       "lt": 0.95
+      }
+     }
+    },
+    "bracket": {
+     "pair_below_and_at": "$r1",
+     "rungs": "definitions.e_rungs",
+     "if_lowest": [
+      250000,
+      350000
+     ]
+    },
+    "bracket_runs": {
+     "rungs": "$bracket",
+     "target_seeds": [
+      1,
+      2,
+      3,
+      4
+     ],
+     "minus_existing": "ladder_rows"
+    },
+    "W": {
+     "argmax": {
+      "group_by": "arm",
+      "from": "$readout",
+      "where": {
+       "arm": {
+        "in": [
+         "A350-C",
+         "A350-noC",
+         "A350-C-qkv1",
+         "NB350-C",
+         "A350-C-w50",
+         "A350-C-w100"
+        ]
+       }
+      },
+      "order_by": [
+       {
+        "count": {
+         "status": "complete",
+         "feasible_any": true,
+         "nondegenerate_best": true,
+         "attn_entropy_norm_mean": {
+          "lt": 0.95
+         }
+        },
+        "dir": "desc"
+       },
+       {
+        "count": {
+         "nondegenerate_best": true
+        },
+        "dir": "desc"
+       },
+       {
+        "count": {
+         "feasible_any": true
+        },
+        "dir": "desc"
+       },
+       {
+        "mean": "attn_entropy_norm_mean",
+        "dir": "asc"
+       },
+       {
+        "fixed_order": [
+         "A350-C",
+         "A350-noC",
+         "A350-C-qkv1",
+         "NB350-C",
+         "A350-C-w50",
+         "A350-C-w100"
+        ]
+       }
+      ]
+     }
+    },
+    "V_bin": {
+     "argmax": {
+      "same_as": "W",
+      "where": {
+       "arm": {
+        "in": [
+         "A350-C",
+         "A350-noC",
+         "A350-C-qkv1",
+         "A350-C-w50",
+         "A350-C-w100"
+        ]
+       }
+      }
+     }
+    },
+    "W_runs": {
+     "arm": "$W",
+     "budget": 350000,
+     "target_seeds": [
+      3,
+      4,
+      5
+     ],
+     "minus": "bracket_runs"
+    },
+    "other_side_run": {
+     "if": [
+      {
+       "field": "W",
+       "op": "==",
+       "value": "NB350-C"
+      },
+      {
+       "arm": "$V_bin",
+       "seed": 3
+      },
+      {
+       "arm": "NB350-C",
+       "seed": 3
+      }
+     ],
+     "minus": "bracket_runs"
+    }
+   },
+   "condition": {
+    "all": [
+     {
+      "exists": "$r1"
+     },
+     {
+      "not": {
+       "all": [
+        {
+         "count": {
+          "from": "$readout",
+          "where": {
+           "arm": "A350-noC",
+           "status": "complete",
+           "feasible_any": true,
+           "nondegenerate_best": true,
+           "attn_entropy_norm_mean": {
+            "lt": 0.95
+           }
+          }
+         },
+         "op": "==",
+         "value": 2
+        },
+        {
+         "count": {
+          "from": "$readout",
+          "where": {
+           "arm": "A350-C",
+           "status": "complete",
+           "feasible_any": true,
+           "nondegenerate_best": true,
+           "attn_entropy_norm_mean": {
+            "lt": 0.95
+           }
+          }
+         },
+         "op": "==",
+         "value": 0
+        }
+       ]
+      }
+     }
+    ]
+   },
+   "on_true": "r2_launch",
+   "on_false": "stop_notify_pivot"
+  },
+  {
+   "id": "r2_launch",
+   "after": [
+    "r1_decide"
+   ],
+   "kind": "launch",
+   "handoffs": [
+    "PLACEHOLDER:rh-R2-E<rung>-s<seed>, seeds 2-4 for every E rung (pre-built; only bracket_runs launch)",
+    "PLACEHOLDER:rh-R2-<variant>-s<seed>, seeds 3-5 for each of the 6 350k variants (only W_runs and other_side_run launch)"
+   ],
+   "job_names": [
+    "PLACEHOLDER:kai-pilot1005-r2-<sha6>"
+   ],
+   "select": [
+    "bracket_runs",
+    "W_runs",
+    "other_side_run"
+   ],
+   "condition": {
+    "all": [
+     {
+      "pods_requested": "len(select)",
+      "op": "<=",
+      "value": 10
+     },
+     {
+      "field": "handoffs[selected]",
+      "op": "none_placeholder"
+     }
+    ]
+   },
+   "on_true": "r2_util",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r2_util",
+   "after": [
+    "r2_launch"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "$r2_launch.job_names"
+   ],
+   "condition": {
+    "all": [
+     {
+      "minutes_since_launch": 30
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_util_pct": {
+         "lt": 40
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_product": {
+         "ne": "NVIDIA-GeForce-RTX-3090"
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     }
+    ]
+   },
+   "on_true": "r2_wait",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r2_wait",
+   "after": [
+    "r2_util"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "$r2_launch.job_names"
+   ],
+   "condition": {
+    "all": [
+     {
+      "jobs": [
+       "$r2_launch.job_names"
+      ],
+      "state": "Complete"
+     }
+    ]
+   },
+   "timeout_hours": 48,
+   "on_true": "r2_readout",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r2_readout",
+   "after": [
+    "r2_wait"
+   ],
+   "kind": "readout",
+   "handoffs": [
+    "PLACEHOLDER:rh-R2-readout"
+   ],
+   "job_names": [
+    "PLACEHOLDER:kai-pilot1005-r2ro-<sha6>"
+   ],
+   "output": "PLACEHOLDER:/data/<run root>/pilot-1005/r2/readout.json",
+   "condition": {
+    "all": [
+     {
+      "field": "threshold_c",
+      "op": "==",
+      "value": 0.2109624456315518
+     },
+     {
+      "field": "labels_sha256",
+      "op": "==",
+      "value": "e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617"
+     },
+     {
+      "field": "bundle_sha256",
+      "op": "==",
+      "value": "$program.bundle_sha256"
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {
+        "nondegenerate_best": true,
+        "feasible_any": false
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {
+        "status": {
+         "ne": "complete"
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {}
+      },
+      "op": "==",
+      "value": "len(r2_launch.select)"
+     }
+    ]
+   },
+   "on_true": "r2_stops",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r2_stops",
+   "after": [
+    "r2_readout"
+   ],
+   "kind": "decide",
+   "handoffs": [],
+   "job_names": [],
+   "condition": {
+    "all": [
+     {
+      "count": {
+       "from": "$readout",
+       "where": "definitions.entropy_only_failure"
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "all_rows": {
+       "from": "$readout",
+       "where": {
+        "arm": {
+         "in": [
+          "A07-5000k-C",
+          "E-unc-C"
+         ]
+        },
+        "seed": 1
+       }
+      },
+      "satisfy": "definitions.healthy",
+      "if_present": true
+     },
+     {
+      "check": "code_rule",
+      "op": "==",
+      "value": "PASS"
+     }
+    ]
+   },
+   "on_true": "r2_decide",
+   "on_false": "stop_notify_kai",
+   "note": "STUDY §5/§10 order: integrity (readout step), entropy-only, positive controls, code rule"
+  },
+  {
+   "id": "r2_decide",
+   "after": [
+    "r2_stops"
+   ],
+   "kind": "decide",
+   "handoffs": [],
+   "job_names": [],
+   "derive": {
+    "readout_all": "r1_readout + r2_readout",
+    "r_rec": {
+     "lowest": "budget",
+     "over": "$bracket",
+     "where_count": {
+      "from": "$readout_all",
+      "where": {
+       "arch": "E",
+       "option_c": true,
+       "warmup": 1,
+       "arm": {
+        "not_in": [
+         "A350-noC",
+         "A350-C-qkv1",
+         "A350-C-qkv1-450k",
+         "NB350-C",
+         "A350-C-w50",
+         "A350-C-w100",
+         "E-unc-C"
+        ]
+       },
+       "seed": {
+        "in": [
+         1,
+         2,
+         3,
+         4
+        ]
+       },
+       "status": "complete",
+       "feasible_any": true,
+       "nondegenerate_best": true,
+       "attn_entropy_norm_mean": {
+        "lt": 0.95
+       }
+      },
+      "op": ">=",
+      "value": 3
+     }
+    }
+   },
+   "rules": [
+    {
+     "choose": "P350",
+     "condition": {
+      "all": [
+       {
+        "count": {
+         "from": "$readout_all",
+         "where": {
+          "arm": "$V_bin",
+          "budget": 350000,
+          "status": {
+           "ne": null
+          }
+         }
+        },
+        "op": ">=",
+        "value": 3
+       },
+       {
+        "all_rows": {
+         "from": "$readout_all",
+         "where": {
+          "arm": "$V_bin",
+          "budget": 350000
+         }
+        },
+        "satisfy": {
+         "status": "complete",
+         "feasible_any": true,
+         "nondegenerate_best": true,
+         "attn_entropy_norm_mean": {
+          "lt": 0.95
+         },
+         "best_feasible_val_acc": {
+          "ge": 0.5
+         }
+        }
+       },
+       {
+        "count": {
+         "from": "$readout_all",
+         "where": {
+          "arm": "NB350-C"
+         }
+        },
+        "op": ">=",
+        "value": 3
+       },
+       {
+        "all_rows": {
+         "from": "$readout_all",
+         "where": {
+          "arm": "NB350-C"
+         }
+        },
+        "satisfy": {
+         "status": "complete",
+         "feasible_any": true,
+         "nondegenerate_best": true,
+         "attn_entropy_norm_mean": {
+          "lt": 0.95
+         },
+         "best_feasible_val_acc": {
+          "ge": 0.5
+         }
+        }
+       }
+      ]
+     },
+     "next": "production_fill",
+     "qualifies_only": true,
+     "also_requires": [
+      "definitions.production_pair.fresh_seeds_only",
+      "definitions.production_pair.P350_only_if"
+     ]
+    },
+    {
+     "choose": "R3",
+     "condition": {
+      "all": [
+       {
+        "exists": "$r_rec"
+       },
+       {
+        "field": "r_rec",
+        "op": ">",
+        "value": 350000
+       },
+       {
+        "count": {
+         "from": "$readout_all",
+         "where": {
+          "arch": "E",
+          "option_c": true,
+          "warmup": 1,
+          "arm": {
+           "not_in": [
+            "A350-noC",
+            "A350-C-qkv1",
+            "A350-C-qkv1-450k",
+            "NB350-C",
+            "A350-C-w50",
+            "A350-C-w100",
+            "E-unc-C"
+           ]
+          },
+          "budget": "$r_rec",
+          "seed": {
+           "in": [
+            1,
+            2,
+            3,
+            4
+           ]
+          },
+          "status": "complete",
+          "feasible_any": true,
+          "nondegenerate_best": true,
+          "attn_entropy_norm_mean": {
+           "lt": 0.95
+          }
+         }
+        },
+        "op": ">=",
+        "value": 3
+       }
+      ]
+     },
+     "next": "r3_launch"
+    }
+   ],
+   "condition": {
+    "any_rule_chosen": true
+   },
+   "on_true": "$chosen.next",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r3_launch",
+   "after": [
+    "r2_decide"
+   ],
+   "kind": "launch",
+   "handoffs": [
+    "PLACEHOLDER:rh-R3-NB-<r_rec>-s{1,2,3} (pre-built for each E rung > 350k)"
+   ],
+   "job_names": [
+    "PLACEHOLDER:kai-pilot1005-r3-<sha6>"
+   ],
+   "condition": {
+    "all": [
+     {
+      "pods_requested": 3,
+      "op": "<=",
+      "value": 3
+     },
+     {
+      "field": "handoffs[selected]",
+      "op": "none_placeholder"
+     }
+    ]
+   },
+   "on_true": "r3_util",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r3_util",
+   "after": [
+    "r3_launch"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "$r3_launch.job_names"
+   ],
+   "condition": {
+    "all": [
+     {
+      "minutes_since_launch": 30
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_util_pct": {
+         "lt": 40
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_product": {
+         "ne": "NVIDIA-GeForce-RTX-3090"
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     }
+    ]
+   },
+   "on_true": "r3_wait",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r3_wait",
+   "after": [
+    "r3_util"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "$r3_launch.job_names"
+   ],
+   "condition": {
+    "all": [
+     {
+      "jobs": [
+       "$r3_launch.job_names"
+      ],
+      "state": "Complete"
+     }
+    ]
+   },
+   "timeout_hours": 48,
+   "on_true": "r3_readout",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r3_readout",
+   "after": [
+    "r3_wait"
+   ],
+   "kind": "readout",
+   "handoffs": [
+    "PLACEHOLDER:rh-R3-readout"
+   ],
+   "job_names": [
+    "PLACEHOLDER:kai-pilot1005-r3ro-<sha6>"
+   ],
+   "output": "PLACEHOLDER:/data/<run root>/pilot-1005/r3/readout.json",
+   "condition": {
+    "all": [
+     {
+      "field": "threshold_c",
+      "op": "==",
+      "value": 0.2109624456315518
+     },
+     {
+      "field": "labels_sha256",
+      "op": "==",
+      "value": "e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617"
+     },
+     {
+      "field": "bundle_sha256",
+      "op": "==",
+      "value": "$program.bundle_sha256"
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {
+        "nondegenerate_best": true,
+        "feasible_any": false
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {
+        "status": {
+         "ne": "complete"
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "$readout",
+       "where": {}
+      },
+      "op": "==",
+      "value": 3
+     }
+    ]
+   },
+   "on_true": "r3_stops",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "r3_stops",
+   "after": [
+    "r3_readout"
+   ],
+   "kind": "decide",
+   "handoffs": [],
+   "job_names": [],
+   "condition": {
+    "all": [
+     {
+      "count": {
+       "from": "$readout",
+       "where": "definitions.entropy_only_failure"
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "all_rows": {
+       "from": "$readout",
+       "where": {
+        "arm": {
+         "in": [
+          "A07-5000k-C",
+          "E-unc-C"
+         ]
+        },
+        "seed": 1
+       }
+      },
+      "satisfy": "definitions.healthy",
+      "if_present": true
+     },
+     {
+      "check": "code_rule",
+      "op": "==",
+      "value": "PASS"
+     }
+    ]
+   },
+   "on_true": "r3_decide",
+   "on_false": "stop_notify_kai",
+   "note": "STUDY §5/§10 order: integrity (readout step), entropy-only, positive controls, code rule"
+  },
+  {
+   "id": "r3_decide",
+   "after": [
+    "r3_stops"
+   ],
+   "kind": "decide",
+   "handoffs": [],
+   "job_names": [],
+   "rules": [
+    {
+     "choose": "Prec",
+     "condition": {
+      "all": [
+       {
+        "count": {
+         "from": "$readout",
+         "where": {
+          "budget": "$r_rec",
+          "status": "complete",
+          "feasible_any": true,
+          "nondegenerate_best": true,
+          "attn_entropy_norm_mean": {
+           "lt": 0.95
+          },
+          "best_feasible_val_acc": {
+           "ge": 0.5
+          }
+         }
+        },
+        "op": "==",
+        "value": 3
+       },
+       {
+        "all_rows": {
+         "from": "$readout_all",
+         "where": {
+          "arch": "E",
+          "option_c": true,
+          "warmup": 1,
+          "arm": {
+           "not_in": [
+            "A350-noC",
+            "A350-C-qkv1",
+            "A350-C-qkv1-450k",
+            "NB350-C",
+            "A350-C-w50",
+            "A350-C-w100",
+            "E-unc-C"
+           ]
+          },
+          "budget": "$r_rec",
+          "status": "complete",
+          "feasible_any": true,
+          "nondegenerate_best": true,
+          "attn_entropy_norm_mean": {
+           "lt": 0.95
+          }
+         }
+        },
+        "satisfy": {
+         "best_feasible_val_acc": {
+          "ge": 0.5
+         }
+        }
+       }
+      ]
+     },
+     "next": "production_fill",
+     "qualifies_only": true,
+     "also_requires": [
+      "definitions.production_pair.fresh_seeds_only"
+     ]
+    }
+   ],
+   "condition": {
+    "any_rule_chosen": true
+   },
+   "on_true": "production_fill",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "production_fill",
+   "after": [
+    "r2_decide",
+    "r3_decide"
+   ],
+   "kind": "notify",
+   "handoffs": [],
+   "job_names": [],
+   "message": "A production candidate (P350 or Prec) QUALIFIES by rule. Nothing launches: Kai decides (K3). ml-engineer builds A and NB production handoffs (NB = A's config with only quant.weight changed).",
+   "condition": {
+    "all": []
+   },
+   "on_true": "production_gate",
+   "on_false": null
+  },
+  {
+   "id": "production_gate",
+   "after": [
+    "production_fill"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [],
+   "condition": {
+    "all": [
+     {
+      "field": "program.production_go_by_kai",
+      "op": "==",
+      "value": true
+     },
+     {
+      "field": "program.production_go_at",
+      "op": ">",
+      "value": "production_fill.completed_at"
+     },
+     {
+      "field": "handoffs[production.<chosen>]",
+      "op": "none_placeholder"
+     },
+     {
+      "file": "review/PREFLIGHT_production_critical_v1.md",
+      "field": "verdict",
+      "op": "==",
+      "value": "PASS"
+     },
+     {
+      "field": "spend.projected_production_gpu_hours (R1-measured s/epoch)",
+      "op": "<=",
+      "value": "program.caps.production (set by Kai at this gate, K4)"
+     },
+     {
+      "count": {
+       "from": "$readout_all",
+       "where": "definitions.entropy_only_failure"
+      },
+      "op": "==",
+      "value": 0
+     }
+    ]
+   },
+   "on_true": "production_launch",
+   "on_false": "wait"
+  },
+  {
+   "id": "production_launch",
+   "after": [
+    "production_gate"
+   ],
+   "kind": "launch",
+   "handoffs": [
+    "PLACEHOLDER:rh-PROD-P350-A",
+    "PLACEHOLDER:rh-PROD-P350-NB",
+    "PLACEHOLDER:rh-PROD-Prec-A",
+    "PLACEHOLDER:rh-PROD-Prec-NB"
+   ],
+   "select": "the two handoffs of the chosen candidate",
+   "job_names": [
+    "PLACEHOLDER:kai-prod-a-<budget>-<sha6>",
+    "PLACEHOLDER:kai-prod-nb-<budget>-<sha6>"
+   ],
+   "spec": {
+    "arms": [
+     "A",
+     "NB"
+    ],
+    "seeds": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6,
+     7,
+     8
+    ],
+    "epochs": 7000,
+    "regime": "B",
+    "pods": 16,
+    "arms_per_gpu": 1,
+    "gpu_product": "NVIDIA-GeForce-RTX-3090",
+    "early_stop": {
+     "at_epoch": 500,
+     "stop_both_jobs_if": "either arm has < 6 of 8 seeds healthy; any entropy-only row stops for Kai"
+    },
+    "nb_config": "A's config with only quant.weight = kbi_learnable"
+   },
+   "condition": {
+    "all": [
+     {
+      "pods_requested": 16,
+      "op": "<=",
+      "value": 24
+     }
+    ]
+   },
+   "on_true": "production_util",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "production_util",
+   "after": [
+    "production_launch"
+   ],
+   "kind": "wait",
+   "handoffs": [],
+   "job_names": [
+    "$production_launch.job_names"
+   ],
+   "condition": {
+    "all": [
+     {
+      "minutes_since_launch": 30
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_util_pct": {
+         "lt": 40
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     },
+     {
+      "count": {
+       "from": "pods",
+       "where": {
+        "gpu_product": {
+         "ne": "NVIDIA-GeForce-RTX-3090"
+        }
+       }
+      },
+      "op": "==",
+      "value": 0
+     }
+    ]
+   },
+   "on_true": "done_notify",
+   "on_false": "stop_notify"
+  },
+  {
+   "id": "done_notify",
+   "after": [
+    "production_util"
+   ],
+   "kind": "notify",
+   "handoffs": [],
+   "job_names": [],
+   "message": "Production launched and above 40 % GPU utilization. Autopilot ends; follow-up in a fresh session (RULES §4).",
+   "condition": {
+    "all": []
+   },
+   "on_true": null,
+   "on_false": null
+  },
+  {
+   "id": "stop_notify_pivot",
+   "after": [],
+   "reached_only_via": "on_true/on_false of another step; never an entry step",
+   "kind": "notify",
+   "handoffs": [],
+   "job_names": [],
+   "message": "R1: no E rung healthy, or (c) harmful (A350-noC 2/2, A350-C 0/2). Program stopped; Kai decides (ROADMAP §4 pivot).",
+   "condition": {
+    "all": []
+   },
+   "on_true": "stop",
+   "on_false": null
+  },
+  {
+   "id": "stop_notify",
+   "after": [],
+   "reached_only_via": "on_true/on_false of another step; never an entry step",
+   "kind": "notify",
+   "handoffs": [],
+   "job_names": [],
+   "message": "A rule did not match or a guard failed; program stopped. Readout attached. Nothing launched.",
+   "condition": {
+    "all": []
+   },
+   "on_true": "stop",
+   "on_false": null
+  },
+  {
+   "id": "stop_notify_kai",
+   "after": [],
+   "reached_only_via": "on_false of r*_stops",
+   "kind": "notify",
+   "handoffs": [],
+   "job_names": [],
+   "message": "Stop for Kai: an entropy-only row, an unhealthy positive control (A07-5000k-C s1 or E-unc-C s1), or a code-rule failure. Nothing launched.",
+   "condition": {
+    "all": []
+   },
+   "on_true": "stop",
+   "on_false": null
+  }
+ ],
+ "bundle_sha256": "98dd2875b7c902bb881562a7acbf00f7cf266a369a74528b6fb8471e0cdc0059",
+ "bundle_note": "R1 bundle (24 arms, w100). R2/R3 bundles must be byte-equal outside STUDY §7 paths (definitions.code_rule).",
+ "production_go_by_kai": false,
+ "production_go_at": null
+}

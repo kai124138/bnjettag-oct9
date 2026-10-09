@@ -1,0 +1,86 @@
+From 81ac8081af643d911d997bf40c34e5d7d69bf433 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:36:01 -0700
+Subject: [PATCH 28/38] act-init-f0: quant.act_f0 sets f on every trainable
+ datalane quantizer after calibration, i as calibrated/tracked (M012)
+
+---
+ code/bnhgq2/ablation.py   |  5 +++++
+ code/bnhgq2/delta_keys.py | 16 ++++++++++++++++
+ code/bnhgq2/qat.py        | 16 ++++++++++++++++
+ 3 files changed, 37 insertions(+)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index ec5fa6e..b16273a 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -168,6 +168,9 @@ def matching_initialization(cfg, sample, seed):
+         np.testing.assert_allclose(model(sample[:8], training=False), reference(sample[:8], training=False), atol=2e-6, rtol=2e-6)
+     else:
+         qat.calibrate_activations(model, taps, sample, cfg['quant']['act_bits'])
++    act_f0 = cfg['quant'].get('act_f0')  # Delta (act-init-f0): fixed initial f, i as calibrated
++    if act_f0 is not None:
++        f0_sites = qat.set_act_f0(model, act_f0)
+     evidence = {'matched_weight_paths': copied,
+                 'matched_projection_count': matched_kernels,
+                 'equivalent_to_weight_reference': equivalent_to_weight_reference,
+@@ -176,6 +179,8 @@ def matching_initialization(cfg, sample, seed):
+                                   if v.name in ('kernel', 'bias', 'pos_table')}}
+     if init_copied is not None:
+         evidence['init_checkpoint'] = {'name': init_from, 'copied_paths': init_copied}
++    if act_f0 is not None:
++        evidence['act_f0'] = {'f0': act_f0, 'sites': f0_sites}
+     del reference
+     return model, evidence
+ 
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 5cae026..718471b 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -530,3 +530,19 @@ def _lr_warmup(value, cfg):
+ 
+ 
+ register('train.lr_warmup_epochs', 'lr-schedule-variants', _lr_warmup, export_ok=True)
++
++# act-init-f0 (anchor tree only; M012, M096, M099, M100, M102): quant.act_f0 sets f of every
++# trainable datalane quantizer after calibration (qat.set_act_f0); i stays as calibrated or
++# data-tracked. The anchor has no f0 key, so this is new. Chang jsc150: f0 = 7.
++UNWIRED.pop('quant.act_f0', None)
++_DEEPSETS_EXCLUSIVE += ('quant.act_f0',)
++
++
++def _act_f0(value, cfg):
++    if isinstance(value, bool) or not isinstance(value, int) or not -8 <= value <= 16:
++        return 'must be an int in [-8, 16] (the SAT fc range; WRAP allows [-24, 24])'
++    if lookup(cfg, 'quant.act_calib') != 'free':
++        return "needs quant.act_calib 'free' (learned widths)"
++
++
++register('quant.act_f0', 'act-init-f0', _act_f0, export_ok=True)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 46a1a5c..b4662c4 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -1000,3 +1000,19 @@ def ternary_weight_values(model):
+     """{layer: sorted unique effective values} of LABELLED ternary layers (Delta)."""
+     return {ly.name: np.unique(np.round(ops.convert_to_numpy(ly.qkernel), 10)) for ly in model.layers
+             if isinstance(ly, (BitQEinsumDense, BitQDense)) and ly.binary.get("scheme") == "ternary_absmean"}
++
++
++def set_act_f0(model, f0) -> list:
++    """Delta (act-init-f0): set the fractional bits of every trainable datalane activation
++    quantizer (the free-width KIF quantizers ablation.matching_initialization calibrates,
++    including the [A20] softmax-internal and softmax-output ones) to `f0`, leaving i as
++    calibrated (SAT) or data-tracked (WRAP). Chang's jsc150 init is f0 = 7. Returns the sites."""
++    from .ebops_target import activation_quantizers
++    sites = []
++    for name, q in activation_quantizers(model):
++        if q.trainable and hasattr(q, "_f") and hasattr(q, "_i"):
++            q._f.assign(np.full(q._f.shape, float(f0), dtype="float32"))
++            sites.append(name)
++    if not sites:
++        raise ValueError(f"{model.name}: quant.act_f0 set but no trainable datalane quantizer")
++    return sites
+-- 
+2.50.1 (Apple Git-155)
+

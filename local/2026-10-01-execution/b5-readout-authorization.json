@@ -1,0 +1,40 @@
+{
+  "status": "authorized_by_existing_explicit_user_instruction",
+  "recorded_at_utc": "2026-10-01T06:21:35.068028+00:00",
+  "approval_ref": "Kai-20261001-execute-finish-readout",
+  "source": "Current conversation: ordered next steps followed by Do that please",
+  "user_instruction_excerpt": "Resolve Chang: finish the readout, choose traced-cost PID (c) or calibrated setpoints (d), then repeat the required freeze and pilot checks.",
+  "user_instruction_timestamp": "not supplied; recorded_at_utc is operator record time",
+  "interpretation": "The explicit request to finish the diagnostic readout authorizes this reviewed missing historical b5 readout. The later one-GPU allowance does not require a GPU; registered CPU procedure is preserved.",
+  "job_name": "kai-chang1001-readoutb5-42abed-r1",
+  "reviewed_pending_handoff": "rh-4a8b192840deadfff570106a",
+  "review_sha256": "045aa99fed4385e69128e068322a067742286c6b8c853b42b67ec3faf58b419e",
+  "historical_bundle_sha256": "42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0",
+  "resources": {
+    "cpu": "8",
+    "memory": "24Gi",
+    "gpu_count": 0,
+    "deadline_seconds": 14400,
+    "backoff_limit": 0
+  },
+  "operations": [
+    "one supported diagnostic Job launch",
+    "new immutable source and handoff ConfigMaps",
+    "new handoff record and exclusive new diagnostic output directory",
+    "unchanged registered CPU cost certification and attention entropy",
+    "bounded preservation/export of five activation histories and JSON diagnostics",
+    "read-only status/log collection and local verified artifact reception"
+  ],
+  "source_nonmutation": "Historical run/cache/checkpoint sources read and hash-checked; /data is writable only as required by supported handoff for new provenance and outputs. No training or source model save.",
+  "allowed_finalization": "Prepare new immutable record differing only in brief references and scoped B3 readout readiness, preserving reviewed Job execution/helper/source/receiver bytes. Final record must receive independent identity-diff review and action-time lint.",
+  "production_gate": "pending",
+  "K1": "triggered_not_cleared",
+  "option_c": "chosen; distinct new revision and pilot still required",
+  "not_authorized_by_this_record": [
+    "training/resume",
+    "new scientific rules or tolerance changes",
+    "automatic retry",
+    "Mulder access",
+    "production advancement"
+  ]
+}

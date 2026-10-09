@@ -1,0 +1,156 @@
+From 4b5d6433c5e52bd717c72bdac3cf64e39384c1ca Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:35:41 -0700
+Subject: [PATCH 06/38] channel-gain-pow2: quant.channel_gain
+ per-output-channel 2^n gain, per-channel binary gate (M024, M025)
+
+---
+ code/bnhgq2/ablation.py   |  4 ++++
+ code/bnhgq2/binarize.py   |  2 ++
+ code/bnhgq2/delta_keys.py | 14 ++++++++++++
+ code/bnhgq2/qat.py        | 45 +++++++++++++++++++++++++++++++++++++--
+ code/convert_binary.py    |  2 ++
+ 5 files changed, 65 insertions(+), 2 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index d522a13..20da1fd 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -347,7 +347,11 @@ def binary_gate(model, cfg=None):
+         cfg = {'arch': {'n_layers': len(blocks), 'pair_bias': any(layer.name == 'pair_fc1' for layer in model.layers)}}
+     values = qat.effective_weight_values(model)
+     assert set(values) == expected_binary_layers(cfg), 'Binary projection names/count do not match configured architecture'
++    channels = qat.channel_weight_values(model)  # Delta: per-channel gain layers, else {}
++    values = {name: v for name, v in values.items() if name not in channels}
+     assert all(len(v) == 2 and not (v == 0).any() and np.isclose(v[0], -v[1]) for v in values.values()), 'Binary gate failed'
++    # per channel: values in {-b_c, +b_c}, never 0 (a fan-in-3 column may carry one sign only)
++    assert all(len(v) in (1, 2) and not (v == 0).any() and np.allclose(np.abs(v), np.abs(v[0])) for c in channels.values() for v in c), 'Per-channel binary gate failed'
+ 
+ 
+ def checkpoint_selection_metric(cfg):
+diff --git a/code/bnhgq2/binarize.py b/code/bnhgq2/binarize.py
+index c7a2790..61b38fe 100644
+--- a/code/bnhgq2/binarize.py
++++ b/code/bnhgq2/binarize.py
+@@ -86,6 +86,8 @@ def binarize_checkpoint(layers: dict, norm: str = "subln") -> dict:
+             "fold": fold_class(name, norm),
+             "shape": tuple(wb["kernel"].shape),
+         }
++        if wb.get("channel_gain_log2") is not None:  # Delta: per-channel 2^n shift
++            out[name]["gain"] = 2.0 ** np.round(np.asarray(wb["channel_gain_log2"], np.float64))
+     out["_summary"] = {
+         "n_layers": len(layers),
+         "total_sign_zeros": total_zeros,  # must be 0 or the binary claim is void
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 1990249..90639ab 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -116,3 +116,17 @@ register('quant.latent_clip', 'latent-clip', _positive_number, export_ok=True)
+ # beta-mode: power-of-two or learned power-of-two binary scale (THEORY M3/M6; M022, M023).
+ register('quant.beta_mode', 'beta-mode', _one_of('absmean', 'absmean_pow2', 'learned_pow2'),
+          active=lambda v: v != 'absmean')
++
++# channel-gain-pow2: per-output-channel power-of-two gain after the +-1 matmul (THEORY M1/M4,
++# card B03 restricted to shifts; M024, M025). The gate becomes two symmetric values per channel.
++def _channel_gain(value, cfg):
++    if not isinstance(value, dict) or set(value) != {'layers', 'mode'}:
++        return 'must be {"layers": "all_binary" | [layer names], "mode": "pow2"}'
++    if value['mode'] != 'pow2':
++        return 'only mode "pow2" (a shift) is implemented'
++    if value['layers'] != 'all_binary' and not (isinstance(value['layers'], list) and value['layers']
++                                                and all(isinstance(n, str) for n in value['layers'])):
++        return 'layers must be "all_binary" or a non-empty list of layer names'
++
++
++register('quant.channel_gain', 'channel-gain-pow2', _channel_gain)
+diff --git a/code/bnhgq2/qat.py b/code/bnhgq2/qat.py
+index 10342df..fdf4c9b 100644
+--- a/code/bnhgq2/qat.py
++++ b/code/bnhgq2/qat.py
+@@ -207,8 +207,13 @@ def _delta_binarize(layer, w):
+     opts = layer.binary
+     if not opts:
+         return bitnet_binary_ste(w)
+-    return bitnet_binary_ste(w, center=opts.get("center", True), ste=opts.get("ste", "bounded"),
+-                             beta_mode=_beta_mode_now(layer), beta_log2=getattr(layer, "beta_log2", None))
++    wq = bitnet_binary_ste(w, center=opts.get("center", True), ste=opts.get("ste", "bounded"),
++                           beta_mode=_beta_mode_now(layer), beta_log2=getattr(layer, "beta_log2", None))
++    if opts.get("channel_gain") == "pow2" and hasattr(layer, "channel_gain_log2"):  # absent only inside build
++        # per-output-channel 2^round(s) after the +-1 matmul (a shift in hardware); STE on round
++        s = layer.channel_gain_log2
++        wq = wq * _pow2(s + ops.stop_gradient(ops.round(s) - s))
++    return wq
+ 
+ 
+ def _beta_mode_now(layer):
+@@ -218,11 +223,44 @@ def _beta_mode_now(layer):
+     return "absmean_pow2" if mode == "learned_pow2" and not hasattr(layer, "beta_log2") else mode
+ 
+ 
++def _out_axes(layer):
++    """Kernel axes that are output channels (not contracted with the input)."""
++    ndim = len(layer._kernel.shape)
++    if not hasattr(layer, "equation"):
++        return list(range(1, ndim))
++    x_axes, k_axes = layer.equation.split("->")[0].split(",")
++    return [i for i, ax in enumerate(k_axes) if ax not in x_axes]
++
++
++def _gain_shape(layer):
++    """Kernel-shaped broadcast of the output-channel axes (1 on contracted axes)."""
++    out = _out_axes(layer)
++    return tuple(int(d) if i in out else 1 for i, d in enumerate(layer._kernel.shape))
++
++
++def channel_weight_values(model):
++    """{layer: [sorted unique effective values per output channel]} for per-channel-gain
++    layers only (empty for bundle models): the per-channel binary gate."""
++    out = {}
++    for ly in model.layers:
++        if getattr(ly, "binary", {}).get("channel_gain") != "pow2":
++            continue
++        w = np.asarray(ops.convert_to_numpy(ly.qkernel))
++        out_axes = _out_axes(ly)
++        red_axes = [i for i in range(w.ndim) if i not in out_axes]
++        cols = np.transpose(w, red_axes + out_axes).reshape(int(np.prod([w.shape[i] for i in red_axes])), -1)
++        out[ly.name] = [np.unique(np.round(c, 10)) for c in cols.T]
++    return out
++
++
+ def _delta_build(layer):
+     """Extra per-layer variables of opt-in Delta options (none for bundle configs)."""
+     if layer.binary.get("beta_mode") == "learned_pow2":
+         layer.beta_log2 = layer.add_weight(name="beta_log2", shape=(), initializer="zeros",
+                                            trainable=True)
++    if layer.binary.get("channel_gain") == "pow2":
++        layer.channel_gain_log2 = layer.add_weight(name="channel_gain_log2", shape=_gain_shape(layer),
++                                                   initializer="zeros", trainable=True)
+ 
+ 
+ def init_delta_scales(model):
+@@ -245,6 +283,9 @@ def delta_binary_options(cfg: dict, layer_name: str) -> dict:
+         opts["ste"] = q["ste"]
+     if q.get("beta_mode", "absmean") != "absmean":
+         opts["beta_mode"] = q["beta_mode"]
++    gain = q.get("channel_gain")
++    if gain and (gain["layers"] == "all_binary" or layer_name in gain["layers"]):
++        opts["channel_gain"] = gain["mode"]
+     return opts
+ 
+ 
+diff --git a/code/convert_binary.py b/code/convert_binary.py
+index 28f2fc6..438a7de 100644
+--- a/code/convert_binary.py
++++ b/code/convert_binary.py
+@@ -258,6 +258,8 @@ def extract_qat_layers(model, names):
+             out[n]["binary"] = dict(ly.binary)  # Delta binarizer options
+             if hasattr(ly, "beta_log2"):
+                 out[n]["beta_log2"] = float(_to_np(ly.beta_log2))
++            if hasattr(ly, "channel_gain_log2"):
++                out[n]["channel_gain_log2"] = _to_np(ly.channel_gain_log2)
+     return out
+ 
+ 
+-- 
+2.50.1 (Apple Git-155)
+

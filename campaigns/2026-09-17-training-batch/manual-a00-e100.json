@@ -1,0 +1,156 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-batch0917-manual-a00-e100-v1",
+    "namespace": "cms-ml",
+    "labels": {
+      "app": "kai-batch0917-manual",
+      "campaign": "batch20260917",
+      "arm": "a00"
+    }
+  },
+  "spec": {
+    "completionMode": "NonIndexed",
+    "completions": 1,
+    "parallelism": 1,
+    "podReplacementPolicy": "Failed",
+    "activeDeadlineSeconds": 86400,
+    "ttlSecondsAfterFinished": 604800,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "kai-batch0917-manual",
+          "campaign": "batch20260917",
+          "arm": "a00"
+        }
+      },
+      "spec": {
+        "restartPolicy": "Never",
+        "automountServiceAccountToken": false,
+        "terminationGracePeriodSeconds": 180,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40",
+                        "NVIDIA-A40",
+                        "NVIDIA-GeForce-RTX-3090",
+                        "NVIDIA-A10",
+                        "NVIDIA-L4",
+                        "NVIDIA-RTX-A5000"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "preferredDuringSchedulingIgnoredDuringExecution": [
+              {
+                "weight": 100,
+                "preference": {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-GeForce-RTX-4090",
+                        "NVIDIA-L40S",
+                        "NVIDIA-L40"
+                      ]
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "containers": [
+          {
+            "name": "train",
+            "image": "python:3.12",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=4 TF_NUM_INTRAOP_THREADS=4 TF_NUM_INTEROP_THREADS=2 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho 'ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d\nexport WANDB_ENTITY=kayamaguchi-uc-san-diego WANDB_PROJECT=BNJetTag-Batch20260917\nexport WANDB_GROUP=batch20260917 WANDB_MODE=online WANDB_TAGS=batch20260917,architecture-screen,l1x3\nexport WANDB_DIR=/work WANDB_CACHE_DIR=/work/wandb-cache WANDB_DATA_DIR=/work/wandb-data\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\nnvidia-smi --query-gpu=name,memory.total --format=csv,noheader\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('[gpu] GPU gate PASS')\"\npython -c \"import wandb; assert wandb.Api().viewer; print('[wandb] authentication PASS')\"\ntimeout --signal=TERM --kill-after=180s 82800s python -u /work/code/run_batch_screen.py --root /data/batch20260917 --index 0 --stop-after 100\n"
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "4",
+                "memory": "12Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "limits": {
+                "cpu": "4",
+                "memory": "12Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "env": [
+              {
+                "name": "WANDB_API_KEY",
+                "valueFrom": {
+                  "secretKeyRef": {
+                    "name": "kai-wandb",
+                    "key": "WANDB_API_KEY"
+                  }
+                }
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "code",
+                "mountPath": "/cmcode",
+                "readOnly": true
+              },
+              {
+                "name": "work",
+                "mountPath": "/work"
+              },
+              {
+                "name": "persistent",
+                "mountPath": "/data"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-batch0917-code-ddd3761d2a"
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          }
+        ]
+      }
+    },
+    "backoffLimit": 0
+  }
+}

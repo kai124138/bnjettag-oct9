@@ -1,0 +1,172 @@
+{
+ "apiVersion": "v1",
+ "items": [
+  {
+   "apiVersion": "batch/v1",
+   "kind": "Job",
+   "metadata": {
+    "annotations": {
+     "bnjettag.io/arms-per-pod": "1",
+     "bnjettag.io/handoff-configmap": "kai-rh-a15040ccc47283093ee9c734",
+     "bnjettag.io/handoff-path": "/data/run-handoffs/rh-a15040ccc47283093ee9c734",
+     "bnjettag.io/handoff-sha256": "a15040ccc47283093ee9c734e1ccb95448fad927f5bb791deb0137608e2aa41d",
+     "bnjettag.io/single-arm-justified": "Bounded four-prediction diagnostic of one retained artifact; concurrency would change the diagnostic question.30min,nooptimizersteps; not a training utilization certificate."
+    },
+    "labels": {
+     "app": "kai-confirm-onegpu",
+     "bnjettag.io/run-id": "rh-a15040ccc47283093ee9c734",
+     "campaign": "confirmation-20260923",
+     "user": "kai"
+    },
+    "name": "kai-confirm1001-replay-a02s3-r1",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "activeDeadlineSeconds": 1800,
+    "backoffLimit": 0,
+    "completionMode": "NonIndexed",
+    "completions": 1,
+    "parallelism": 1,
+    "template": {
+     "spec": {
+      "containers": [
+       {
+        "name": "diagnostic",
+        "resources": {
+         "limits": {
+          "cpu": "4",
+          "ephemeral-storage": "12Gi",
+          "memory": "16Gi",
+          "nvidia.com/gpu": "1"
+         }
+        }
+       }
+      ]
+     }
+    }
+   },
+   "status": {
+    "conditions": [
+     {
+      "lastProbeTime": "2026-10-01T06:48:40Z",
+      "lastTransitionTime": "2026-10-01T06:48:40Z",
+      "message": "Job has reached the specified backoff limit",
+      "reason": "BackoffLimitExceeded",
+      "status": "True",
+      "type": "FailureTarget"
+     },
+     {
+      "lastProbeTime": "2026-10-01T06:48:41Z",
+      "lastTransitionTime": "2026-10-01T06:48:41Z",
+      "message": "Job has reached the specified backoff limit",
+      "reason": "BackoffLimitExceeded",
+      "status": "True",
+      "type": "Failed"
+     }
+    ],
+    "failed": 1,
+    "ready": 0,
+    "startTime": "2026-10-01T06:45:52Z",
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Pod",
+   "metadata": {
+    "annotations": {
+     "bnjettag.io/handoff-configmap": "kai-rh-a15040ccc47283093ee9c734",
+     "bnjettag.io/handoff-path": "/data/run-handoffs/rh-a15040ccc47283093ee9c734",
+     "bnjettag.io/handoff-sha256": "a15040ccc47283093ee9c734e1ccb95448fad927f5bb791deb0137608e2aa41d"
+    },
+    "labels": {
+     "app": "kai-confirm-onegpu",
+     "batch.kubernetes.io/job-name": "kai-confirm1001-replay-a02s3-r1",
+     "bnjettag.io/run-id": "rh-a15040ccc47283093ee9c734",
+     "campaign": "confirmation-20260923",
+     "job-name": "kai-confirm1001-replay-a02s3-r1",
+     "user": "kai"
+    },
+    "name": "kai-confirm1001-replay-a02s3-r1-mjbzz",
+    "namespace": "cms-ml"
+   },
+   "spec": {
+    "containers": [
+     {
+      "name": "diagnostic",
+      "resources": {
+       "limits": {
+        "cpu": "4",
+        "ephemeral-storage": "12Gi",
+        "memory": "16Gi",
+        "nvidia.com/gpu": "1"
+       }
+      }
+     }
+    ]
+   },
+   "status": {
+    "conditions": [
+     {
+      "reason": null,
+      "status": "False",
+      "type": "PodReadyToStartContainers"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "Initialized"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "Ready"
+     },
+     {
+      "reason": "PodFailed",
+      "status": "False",
+      "type": "ContainersReady"
+     },
+     {
+      "reason": null,
+      "status": "True",
+      "type": "PodScheduled"
+     }
+    ],
+    "containerStatuses": [
+     {
+      "lastState": {},
+      "name": "diagnostic",
+      "restartCount": 0,
+      "state": {
+       "terminated": {
+        "exitCode": 1,
+        "finishedAt": "2026-10-01T06:47:50Z",
+        "reason": "Error",
+        "startedAt": "2026-10-01T06:46:31Z"
+       }
+      }
+     }
+    ],
+    "phase": "Failed",
+    "reason": null,
+    "startTime": "2026-10-01T06:45:56Z"
+   }
+  }
+ ],
+ "kind": "List",
+ "provenance": {
+  "kind": "captured",
+  "note": "non-indexed Job, BackoffLimitExceeded after one pod exit 1 (missing output parent directory, per REGRESSION_TICKET)",
+  "sanitized": "status, policy, resource and job metadata only",
+  "source": [
+   "campaigns/2026-10-01-recovery/captures/confirmation-replay-20261001T0645Z/observation-02/job.json",
+   "campaigns/2026-10-01-recovery/captures/confirmation-replay-20261001T0645Z/observation-02/pod.json"
+  ],
+  "source_sha256": [
+   "3567206462285c880238e06c42d1b7cdc81eccfa8bd522f09b3588c01614850d",
+   "ed57d11d02d01d349e97e104989b2c776ceed25fd472e07e5c97bb605265fdc1"
+  ]
+ }
+}

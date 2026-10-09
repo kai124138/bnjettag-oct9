@@ -1,0 +1,160 @@
+2026-09-17T23:31:13.047468758Z I0000 00:00:1789687873.047340      85 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-17T23:31:15.470777105Z W0000 00:00:1789687875.470652      85 gpu_bfc_allocator.cc:47] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was false.
+2026-09-17T23:31:15.470933307Z I0000 00:00:1789687875.470895      85 gpu_device.cc:2043] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 14782 MB memory:  -> device: 0, name: Tesla V100-PCIE-16GB, pci bus id: 0000:3b:00.0, compute capability: 7.0
+2026-09-17T23:31:20.947831332Z I0000 00:00:1789687880.947728      98 service.cc:153] XLA service 0x7c0588055290 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2026-09-17T23:31:20.947850054Z I0000 00:00:1789687880.947752      98 service.cc:161]   StreamExecutor [0]: Tesla V100-PCIE-16GB, Compute Capability 7.0 (Driver: 13.0.0; Runtime: 12.9.0; Toolkit: 12.5.0; DNN: 9.26.0)
+2026-09-17T23:31:21.086119162Z I0000 00:00:1789687881.086034      98 dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+2026-09-17T23:31:21.325639526Z I0000 00:00:1789687881.325320      98 cuda_dnn.cc:461] Loaded cuDNN version 92600
+2026-09-17T23:31:23.868789528Z I0000 00:00:1789687883.868693      98 device_compiler.h:208] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+2026-09-17T23:31:41.795613064Z [train] batch20260917-a04-s1 params=16875 resume_epoch=0 initial_ebops=4295496
+2026-09-17T23:31:42.725125819Z wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+2026-09-17T23:31:43.193688191Z wandb: Currently logged in as: kayamaguchi (kayamaguchi-uc-san-diego) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+2026-09-17T23:31:44.011794449Z wandb: setting up run d8fca5f337d4
+2026-09-17T23:31:44.154089643Z wandb: Tracking run with wandb version 0.28.0
+2026-09-17T23:31:44.154292224Z wandb: Run data is saved locally in /work/wandb/run-20260917_233143-d8fca5f337d4
+2026-09-17T23:31:44.154298876Z wandb: Run `wandb offline` to turn off syncing.
+2026-09-17T23:31:44.154413832Z wandb: Syncing run batch20260917-a04-s1
+2026-09-17T23:31:44.154505500Z wandb: ⭐️ View project at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Batch20260917
+2026-09-17T23:31:44.154592281Z wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Batch20260917/runs/d8fca5f337d4
+2026-09-17T23:34:08.545478365Z [epoch 1/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.714928 val_accuracy=0.370371 seconds=105.5 checkpoint=epoch-0001
+2026-09-17T23:36:27.070901965Z [epoch 2/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.763727 val_accuracy=0.475992 seconds=81.7 checkpoint=epoch-0002
+2026-09-17T23:38:34.658267059Z [epoch 3/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.803724 val_accuracy=0.504710 seconds=83.3 checkpoint=epoch-0003
+2026-09-17T23:41:18.163800099Z [epoch 4/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.822971 val_accuracy=0.544468 seconds=82.7 checkpoint=epoch-0004
+2026-09-17T23:43:31.164513983Z [epoch 5/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.833471 val_accuracy=0.564250 seconds=84.2 checkpoint=epoch-0005
+2026-09-17T23:46:01.716256573Z [epoch 6/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.843154 val_accuracy=0.584250 seconds=84.1 checkpoint=epoch-0006
+2026-09-17T23:48:14.891996280Z [epoch 7/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.847275 val_accuracy=0.584718 seconds=84.0 checkpoint=epoch-0007
+2026-09-17T23:50:26.412407542Z [epoch 8/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.850123 val_accuracy=0.594823 seconds=83.9 checkpoint=epoch-0008
+2026-09-17T23:52:39.662531742Z [epoch 9/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.855387 val_accuracy=0.595613 seconds=84.9 checkpoint=epoch-0009
+2026-09-17T23:55:39.610820466Z [epoch 10/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.860075 val_accuracy=0.607718 seconds=85.0 checkpoint=epoch-0010
+2026-09-17T23:57:43.996290245Z [epoch 11/1000] EBOPs=4295496 target=350000 beta=1e-07 val_AUC=0.857744 val_accuracy=0.590532 seconds=82.6 checkpoint=epoch-0011
+2026-09-17T23:59:54.013218339Z [epoch 12/1000] EBOPs=4295496 target=350000 beta=1.13e-07 val_AUC=0.866557 val_accuracy=0.621831 seconds=85.0 checkpoint=epoch-0012
+2026-09-18T00:02:00.937179893Z [epoch 13/1000] EBOPs=3637064 target=350000 beta=1.28e-07 val_AUC=0.862541 val_accuracy=0.614548 seconds=85.3 checkpoint=epoch-0013
+2026-09-18T00:04:07.882893517Z [epoch 14/1000] EBOPs=3576648 target=350000 beta=1.22e-07 val_AUC=0.870744 val_accuracy=0.621250 seconds=86.5 checkpoint=epoch-0014
+2026-09-18T00:06:21.421348125Z [epoch 15/1000] EBOPs=3537716 target=350000 beta=1.35e-07 val_AUC=0.870883 val_accuracy=0.624669 seconds=85.4 checkpoint=epoch-0015
+2026-09-18T00:08:39.586735099Z [epoch 16/1000] EBOPs=3508999 target=350000 beta=1.5e-07 val_AUC=0.873334 val_accuracy=0.634532 seconds=82.8 checkpoint=epoch-0016
+2026-09-18T00:10:45.834811248Z [epoch 17/1000] EBOPs=3495687 target=350000 beta=1.67e-07 val_AUC=0.875259 val_accuracy=0.637315 seconds=85.2 checkpoint=epoch-0017
+2026-09-18T00:12:52.925367064Z [epoch 18/1000] EBOPs=3477511 target=350000 beta=1.87e-07 val_AUC=0.872778 val_accuracy=0.633323 seconds=81.5 checkpoint=epoch-0018
+2026-09-18T00:15:00.758260180Z [epoch 19/1000] EBOPs=3466247 target=350000 beta=2.08e-07 val_AUC=0.876249 val_accuracy=0.635145 seconds=85.8 checkpoint=epoch-0019
+2026-09-18T00:17:05.143082053Z [epoch 20/1000] EBOPs=3447303 target=350000 beta=2.33e-07 val_AUC=0.876093 val_accuracy=0.634661 seconds=83.7 checkpoint=epoch-0020
+2026-09-18T00:19:24.011575392Z [epoch 21/1000] EBOPs=3437063 target=350000 beta=2.6e-07 val_AUC=0.876436 val_accuracy=0.639742 seconds=88.6 checkpoint=epoch-0021
+2026-09-18T00:21:32.035205093Z [epoch 22/1000] EBOPs=3417863 target=350000 beta=2.9e-07 val_AUC=0.875123 val_accuracy=0.634218 seconds=83.6 checkpoint=epoch-0022
+2026-09-18T00:23:54.877792668Z [epoch 23/1000] EBOPs=3399421 target=350000 beta=3.23e-07 val_AUC=0.876243 val_accuracy=0.592202 seconds=84.3 checkpoint=epoch-0023
+2026-09-18T00:26:15.151532016Z [epoch 24/1000] EBOPs=3387133 target=350000 beta=3.6e-07 val_AUC=0.875863 val_accuracy=0.635250 seconds=84.4 checkpoint=epoch-0024
+2026-09-18T00:28:21.138922017Z [epoch 25/1000] EBOPs=3365629 target=350000 beta=4.02e-07 val_AUC=0.873353 val_accuracy=0.641758 seconds=84.6 checkpoint=epoch-0025
+2026-09-18T00:28:21.214433538Z wandb: Adding directory to artifact (/data/batch20260917/n16/runs/batch20260917-a04-s1/checkpoints/epoch-0025)... Done. 0.1s
+2026-09-18T00:28:25.167424593Z [wandb] artifact resume-batch20260917-a04-s1:v0 committed (5 files)
+2026-09-18T00:30:38.155294125Z [epoch 26/1000] EBOPs=3356157 target=350000 beta=4.47e-07 val_AUC=0.876843 val_accuracy=0.619887 seconds=86.2 checkpoint=epoch-0026
+2026-09-18T00:32:52.448527800Z [epoch 27/1000] EBOPs=3342589 target=350000 beta=5e-07 val_AUC=0.876021 val_accuracy=0.635839 seconds=83.5 checkpoint=epoch-0027
+2026-09-18T00:34:56.240288729Z [epoch 28/1000] EBOPs=3331837 target=350000 beta=5.57e-07 val_AUC=0.873312 val_accuracy=0.628097 seconds=83.2 checkpoint=epoch-0028
+2026-09-18T00:37:12.635069927Z [epoch 29/1000] EBOPs=3320061 target=350000 beta=6.21e-07 val_AUC=0.876771 val_accuracy=0.634976 seconds=83.9 checkpoint=epoch-0029
+2026-09-18T00:39:27.456045901Z [epoch 30/1000] EBOPs=3307773 target=350000 beta=6.93e-07 val_AUC=0.875791 val_accuracy=0.632194 seconds=83.8 checkpoint=epoch-0030
+2026-09-18T00:41:30.801019228Z [epoch 31/1000] EBOPs=3299069 target=350000 beta=7.72e-07 val_AUC=0.874364 val_accuracy=0.631839 seconds=83.8 checkpoint=epoch-0031
+2026-09-18T00:43:42.427267313Z [epoch 32/1000] EBOPs=3280637 target=350000 beta=8.62e-07 val_AUC=0.875735 val_accuracy=0.632605 seconds=83.9 checkpoint=epoch-0032
+2026-09-18T00:45:55.283029790Z [epoch 33/1000] EBOPs=3269885 target=350000 beta=9.58e-07 val_AUC=0.871205 val_accuracy=0.630137 seconds=84.1 checkpoint=epoch-0033
+2026-09-18T00:48:07.534192436Z [epoch 34/1000] EBOPs=3257582 target=350000 beta=1.07e-06 val_AUC=0.878240 val_accuracy=0.637694 seconds=86.2 checkpoint=epoch-0034
+2026-09-18T00:50:21.665876090Z [epoch 35/1000] EBOPs=3243150 target=350000 beta=1.19e-06 val_AUC=0.878808 val_accuracy=0.642315 seconds=86.0 checkpoint=epoch-0035
+2026-09-18T00:52:30.959415765Z [epoch 36/1000] EBOPs=3233294 target=350000 beta=1.32e-06 val_AUC=0.878774 val_accuracy=0.642500 seconds=84.0 checkpoint=epoch-0036
+2026-09-18T00:54:39.563803550Z [epoch 37/1000] EBOPs=3227507 target=350000 beta=1.48e-06 val_AUC=0.880412 val_accuracy=0.643911 seconds=85.9 checkpoint=epoch-0037
+2026-09-18T00:57:07.950855632Z [epoch 38/1000] EBOPs=2872563 target=350000 beta=1.65e-06 val_AUC=0.880398 val_accuracy=0.648194 seconds=83.6 checkpoint=epoch-0038
+2026-09-18T00:59:33.500582770Z [epoch 39/1000] EBOPs=2771603 target=350000 beta=1.63e-06 val_AUC=0.882048 val_accuracy=0.647685 seconds=84.6 checkpoint=epoch-0039
+2026-09-18T01:01:51.833723149Z [epoch 40/1000] EBOPs=2716947 target=350000 beta=1.74e-06 val_AUC=0.875133 val_accuracy=0.626403 seconds=83.7 checkpoint=epoch-0040
+2026-09-18T01:04:21.035116001Z [epoch 41/1000] EBOPs=2687940 target=350000 beta=1.89e-06 val_AUC=0.879802 val_accuracy=0.640484 seconds=84.5 checkpoint=epoch-0041
+2026-09-18T01:06:44.660538807Z [epoch 42/1000] EBOPs=2651588 target=350000 beta=2.07e-06 val_AUC=0.878284 val_accuracy=0.631919 seconds=85.0 checkpoint=epoch-0042
+2026-09-18T01:08:53.487873466Z [epoch 43/1000] EBOPs=2625141 target=350000 beta=2.26e-06 val_AUC=0.880955 val_accuracy=0.644427 seconds=84.2 checkpoint=epoch-0043
+2026-09-18T01:11:05.199116502Z [epoch 44/1000] EBOPs=2606864 target=350000 beta=2.48e-06 val_AUC=0.878771 val_accuracy=0.630855 seconds=84.0 checkpoint=epoch-0044
+2026-09-18T01:13:15.934805524Z [epoch 45/1000] EBOPs=2586123 target=350000 beta=2.72e-06 val_AUC=0.877278 val_accuracy=0.635984 seconds=84.2 checkpoint=epoch-0045
+2026-09-18T01:15:28.084344825Z [epoch 46/1000] EBOPs=2558987 target=350000 beta=2.98e-06 val_AUC=0.881813 val_accuracy=0.647274 seconds=84.8 checkpoint=epoch-0046
+2026-09-18T01:17:53.899808327Z [epoch 47/1000] EBOPs=2543627 target=350000 beta=3.26e-06 val_AUC=0.876977 val_accuracy=0.628629 seconds=83.1 checkpoint=epoch-0047
+2026-09-18T01:20:02.164311815Z [epoch 48/1000] EBOPs=2522849 target=350000 beta=3.58e-06 val_AUC=0.874361 val_accuracy=0.627113 seconds=83.3 checkpoint=epoch-0048
+2026-09-18T01:22:10.077437475Z [epoch 49/1000] EBOPs=2497500 target=350000 beta=3.91e-06 val_AUC=0.877525 val_accuracy=0.636774 seconds=83.3 checkpoint=epoch-0049
+2026-09-18T01:24:24.781981502Z [epoch 50/1000] EBOPs=2482908 target=350000 beta=4.28e-06 val_AUC=0.874885 val_accuracy=0.627589 seconds=82.2 checkpoint=epoch-0050
+2026-09-18T01:24:24.840409019Z wandb: Adding directory to artifact (/data/batch20260917/n16/runs/batch20260917-a04-s1/checkpoints/epoch-0050)... Done. 0.1s
+2026-09-18T01:24:27.853949601Z [wandb] artifact resume-batch20260917-a04-s1:v1 committed (5 files)
+2026-09-18T01:26:30.166969719Z [epoch 51/1000] EBOPs=2448572 target=350000 beta=4.69e-06 val_AUC=0.877300 val_accuracy=0.635605 seconds=82.9 checkpoint=epoch-0051
+2026-09-18T01:28:42.935002973Z [epoch 52/1000] EBOPs=2428850 target=350000 beta=5.1e-06 val_AUC=0.873596 val_accuracy=0.620169 seconds=81.5 checkpoint=epoch-0052
+2026-09-18T01:30:51.158914236Z [epoch 53/1000] EBOPs=2417037 target=350000 beta=5.57e-06 val_AUC=0.865478 val_accuracy=0.605258 seconds=82.0 checkpoint=epoch-0053
+2026-09-18T01:32:52.666773906Z [epoch 54/1000] EBOPs=2400392 target=350000 beta=6.1e-06 val_AUC=0.870584 val_accuracy=0.621976 seconds=84.7 checkpoint=epoch-0054
+2026-09-18T01:35:14.800260235Z [epoch 55/1000] EBOPs=2375560 target=350000 beta=6.67e-06 val_AUC=0.871746 val_accuracy=0.628339 seconds=84.6 checkpoint=epoch-0055
+2026-09-18T01:37:39.473746079Z [epoch 56/1000] EBOPs=2364813 target=350000 beta=7.27e-06 val_AUC=0.873443 val_accuracy=0.630645 seconds=84.7 checkpoint=epoch-0056
+2026-09-18T01:39:54.136868237Z [epoch 57/1000] EBOPs=2346632 target=350000 beta=7.96e-06 val_AUC=0.874193 val_accuracy=0.630815 seconds=85.2 checkpoint=epoch-0057
+2026-09-18T01:42:07.873358205Z [epoch 58/1000] EBOPs=2331486 target=350000 beta=8.69e-06 val_AUC=0.876338 val_accuracy=0.633169 seconds=85.5 checkpoint=epoch-0058
+2026-09-18T01:44:32.983835298Z [epoch 59/1000] EBOPs=2315343 target=350000 beta=9.49e-06 val_AUC=0.875956 val_accuracy=0.633145 seconds=85.5 checkpoint=epoch-0059
+2026-09-18T01:46:42.373593683Z [epoch 60/1000] EBOPs=2294341 target=350000 beta=1.04e-05 val_AUC=0.873139 val_accuracy=0.628331 seconds=86.1 checkpoint=epoch-0060
+2026-09-18T01:48:45.992577385Z [epoch 61/1000] EBOPs=2272325 target=350000 beta=1.13e-05 val_AUC=0.873085 val_accuracy=0.629298 seconds=85.6 checkpoint=epoch-0061
+2026-09-18T01:50:54.636865052Z [epoch 62/1000] EBOPs=2265674 target=350000 beta=1.23e-05 val_AUC=0.871525 val_accuracy=0.626274 seconds=82.6 checkpoint=epoch-0062
+2026-09-18T01:53:15.439905884Z [epoch 63/1000] EBOPs=2256443 target=350000 beta=1.34e-05 val_AUC=0.867999 val_accuracy=0.622218 seconds=82.2 checkpoint=epoch-0063
+2026-09-18T01:55:31.156980814Z [epoch 64/1000] EBOPs=2044310 target=350000 beta=1.47e-05 val_AUC=0.871212 val_accuracy=0.622137 seconds=83.9 checkpoint=epoch-0064
+2026-09-18T01:57:35.861278890Z [epoch 65/1000] EBOPs=1892209 target=350000 beta=1.45e-05 val_AUC=0.875398 val_accuracy=0.633274 seconds=84.1 checkpoint=epoch-0065
+2026-09-18T02:00:07.753854341Z [epoch 66/1000] EBOPs=1841831 target=350000 beta=1.46e-05 val_AUC=0.871760 val_accuracy=0.627177 seconds=84.3 checkpoint=epoch-0066
+2026-09-18T02:02:14.942558138Z [epoch 67/1000] EBOPs=1796376 target=350000 beta=1.55e-05 val_AUC=0.869760 val_accuracy=0.617952 seconds=85.1 checkpoint=epoch-0067
+2026-09-18T02:04:41.876851806Z [epoch 68/1000] EBOPs=1759433 target=350000 beta=1.64e-05 val_AUC=0.870388 val_accuracy=0.622210 seconds=85.3 checkpoint=epoch-0068
+2026-09-18T02:06:48.006657758Z [epoch 69/1000] EBOPs=1723423 target=350000 beta=1.74e-05 val_AUC=0.873366 val_accuracy=0.626903 seconds=86.4 checkpoint=epoch-0069
+2026-09-18T02:08:55.745872499Z [epoch 70/1000] EBOPs=1699066 target=350000 beta=1.84e-05 val_AUC=0.869382 val_accuracy=0.618677 seconds=84.1 checkpoint=epoch-0070
+2026-09-18T02:11:12.834976961Z [epoch 71/1000] EBOPs=1680085 target=350000 beta=1.97e-05 val_AUC=0.869245 val_accuracy=0.620468 seconds=84.1 checkpoint=epoch-0071
+2026-09-18T02:13:20.903546177Z [epoch 72/1000] EBOPs=1658416 target=350000 beta=2.1e-05 val_AUC=0.867551 val_accuracy=0.613355 seconds=83.4 checkpoint=epoch-0072
+2026-09-18T02:15:33.328943007Z [epoch 73/1000] EBOPs=1640966 target=350000 beta=2.25e-05 val_AUC=0.867691 val_accuracy=0.614823 seconds=85.4 checkpoint=epoch-0073
+2026-09-18T02:17:44.816715512Z [epoch 74/1000] EBOPs=1621734 target=350000 beta=2.4e-05 val_AUC=0.868097 val_accuracy=0.619677 seconds=83.8 checkpoint=epoch-0074
+2026-09-18T02:19:54.956542259Z [epoch 75/1000] EBOPs=1607142 target=350000 beta=2.56e-05 val_AUC=0.867378 val_accuracy=0.612056 seconds=84.9 checkpoint=epoch-0075
+2026-09-18T02:19:55.014745696Z wandb: Adding directory to artifact (/data/batch20260917/n16/runs/batch20260917-a04-s1/checkpoints/epoch-0075)... Done. 0.1s
+2026-09-18T02:19:57.930331478Z [wandb] artifact resume-batch20260917-a04-s1:v2 committed (5 files)
+2026-09-18T02:22:12.892890933Z [epoch 76/1000] EBOPs=1586406 target=350000 beta=2.74e-05 val_AUC=0.859411 val_accuracy=0.602597 seconds=84.5 checkpoint=epoch-0076
+2026-09-18T02:24:21.488381833Z [epoch 77/1000] EBOPs=1562785 target=350000 beta=2.92e-05 val_AUC=0.860097 val_accuracy=0.598669 seconds=83.9 checkpoint=epoch-0077
+2026-09-18T02:26:33.113874314Z [epoch 78/1000] EBOPs=1547420 target=350000 beta=3.1e-05 val_AUC=0.860474 val_accuracy=0.602669 seconds=84.1 checkpoint=epoch-0078
+2026-09-18T02:28:36.868959818Z [epoch 79/1000] EBOPs=1521217 target=350000 beta=3.3e-05 val_AUC=0.855423 val_accuracy=0.590766 seconds=83.9 checkpoint=epoch-0079
+2026-09-18T02:30:44.308769302Z [epoch 80/1000] EBOPs=1501692 target=350000 beta=3.49e-05 val_AUC=0.857290 val_accuracy=0.601137 seconds=83.5 checkpoint=epoch-0080
+2026-09-18T02:33:04.987218210Z [epoch 81/1000] EBOPs=1492978 target=350000 beta=3.71e-05 val_AUC=0.849911 val_accuracy=0.576645 seconds=81.9 checkpoint=epoch-0081
+2026-09-18T02:35:20.934260181Z [epoch 82/1000] EBOPs=1470578 target=350000 beta=3.96e-05 val_AUC=0.849533 val_accuracy=0.578492 seconds=81.5 checkpoint=epoch-0082
+2026-09-18T02:37:20.110400282Z [epoch 83/1000] EBOPs=1446701 target=350000 beta=4.2e-05 val_AUC=0.848108 val_accuracy=0.578718 seconds=81.1 checkpoint=epoch-0083
+2026-09-18T02:39:24.783434848Z [epoch 84/1000] EBOPs=1432296 target=350000 beta=4.43e-05 val_AUC=0.843880 val_accuracy=0.574185 seconds=82.3 checkpoint=epoch-0084
+2026-09-18T02:41:31.756476597Z [epoch 85/1000] EBOPs=1420734 target=350000 beta=4.71e-05 val_AUC=0.835788 val_accuracy=0.553839 seconds=83.3 checkpoint=epoch-0085
+2026-09-18T02:43:36.295546496Z [epoch 86/1000] EBOPs=1403065 target=350000 beta=5.01e-05 val_AUC=0.844675 val_accuracy=0.574298 seconds=82.6 checkpoint=epoch-0086
+2026-09-18T02:45:51.431018907Z [epoch 87/1000] EBOPs=1389999 target=350000 beta=5.3e-05 val_AUC=0.838063 val_accuracy=0.552532 seconds=84.5 checkpoint=epoch-0087
+2026-09-18T02:47:54.535538610Z [epoch 88/1000] EBOPs=1373563 target=350000 beta=5.63e-05 val_AUC=0.834216 val_accuracy=0.556073 seconds=84.4 checkpoint=epoch-0088
+2026-09-18T02:49:59.340445945Z [epoch 89/1000] EBOPs=1349969 target=350000 beta=5.95e-05 val_AUC=0.825336 val_accuracy=0.537621 seconds=86.8 checkpoint=epoch-0089
+2026-09-18T02:52:02.779748398Z [epoch 90/1000] EBOPs=1342220 target=350000 beta=6.26e-05 val_AUC=0.833764 val_accuracy=0.556645 seconds=84.4 checkpoint=epoch-0090
+2026-09-18T02:54:11.025347446Z [epoch 91/1000] EBOPs=1151559 target=350000 beta=6.66e-05 val_AUC=0.833803 val_accuracy=0.559242 seconds=81.7 checkpoint=epoch-0091
+2026-09-18T02:56:13.762556133Z [epoch 92/1000] EBOPs=1060600 target=350000 beta=6.06e-05 val_AUC=0.827805 val_accuracy=0.540282 seconds=82.5 checkpoint=epoch-0092
+2026-09-18T02:58:40.572728269Z [epoch 93/1000] EBOPs=1024270 target=350000 beta=5.9e-05 val_AUC=0.823742 val_accuracy=0.537460 seconds=81.7 checkpoint=epoch-0093
+2026-09-18T03:00:46.197104095Z [epoch 94/1000] EBOPs=974660 target=350000 beta=6.01e-05 val_AUC=0.829940 val_accuracy=0.541750 seconds=82.2 checkpoint=epoch-0094
+2026-09-18T03:03:25.962639155Z [epoch 95/1000] EBOPs=949183 target=350000 beta=6.02e-05 val_AUC=0.818863 val_accuracy=0.531056 seconds=82.7 checkpoint=epoch-0095
+2026-09-18T03:05:42.952927612Z [epoch 96/1000] EBOPs=919359 target=350000 beta=6.16e-05 val_AUC=0.824276 val_accuracy=0.541871 seconds=83.5 checkpoint=epoch-0096
+2026-09-18T03:07:50.771018148Z [epoch 97/1000] EBOPs=895366 target=350000 beta=6.27e-05 val_AUC=0.816456 val_accuracy=0.523089 seconds=83.8 checkpoint=epoch-0097
+2026-09-18T03:09:55.603234800Z [epoch 98/1000] EBOPs=870780 target=350000 beta=6.4e-05 val_AUC=0.802679 val_accuracy=0.496266 seconds=82.8 checkpoint=epoch-0098
+2026-09-18T03:11:59.937446460Z [epoch 99/1000] EBOPs=855341 target=350000 beta=6.51e-05 val_AUC=0.810437 val_accuracy=0.513565 seconds=82.7 checkpoint=epoch-0099
+2026-09-18T03:14:05.870993852Z [epoch 100/1000] EBOPs=834733 target=350000 beta=6.69e-05 val_AUC=0.801304 val_accuracy=0.492258 seconds=86.6 checkpoint=epoch-0100
+2026-09-18T03:14:05.929059014Z wandb: Adding directory to artifact (/data/batch20260917/n16/runs/batch20260917-a04-s1/checkpoints/epoch-0100)... Done. 0.1s
+2026-09-18T03:14:08.580146890Z [wandb] artifact resume-batch20260917-a04-s1:v3 committed (5 files)
+2026-09-18T03:14:08.683484736Z wandb: updating run metadata
+2026-09-18T03:14:09.084998299Z wandb: uploading history steps 98-99, summary, console lines 105-107
+2026-09-18T03:14:09.194685339Z wandb: 
+2026-09-18T03:14:09.194695740Z wandb: Run history:
+2026-09-18T03:14:09.194700441Z wandb:          activation_bits/bit_block_0_attn_Wk ███▇▇▇▇▇▇▇▇▇▇▇▇▇▇▆▆▅▅▅▅▅▅▅▅▅▅▄▃▃▃▃▃▃▃▂▂▁
+2026-09-18T03:14:09.194702645Z wandb:          activation_bits/bit_block_0_attn_Wo █████▆▆▆▆▆▆▆▆▆▆▆▅▅▅▅▅▅▅▅▄▄▄▄▃▃▃▃▃▃▃▂▂▂▂▁
+2026-09-18T03:14:09.194704277Z wandb:          activation_bits/bit_block_0_attn_Wq █████▇▇▇▇▇▇▇▇▇▇▇▅▅▅▅▅▅▅▅▅▅▅▅▅▃▃▃▃▃▃▃▃▃▂▁
+2026-09-18T03:14:09.194705871Z wandb:          activation_bits/bit_block_0_attn_Wv ██████▇▇▇▇▇▇▇▇▇▆▆▆▅▅▅▅▅▅▅▄▃▃▃▃▂▂▂▂▂▂▁▁▁▁
+2026-09-18T03:14:09.194707685Z wandb:    activation_bits/bit_block_0_attn_ctx__in0 ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+2026-09-18T03:14:09.194709321Z wandb:    activation_bits/bit_block_0_attn_ctx__in1 ████████▇▇▇▇▇▇▇▇▆▆▅▅▅▅▅▅▅▅▅▅▅▄▃▃▃▃▃▃▂▁▁▁
+2026-09-18T03:14:09.194711189Z wandb: activation_bits/bit_block_0_attn_scores__in0 ██████▆▆▆▆▆▆▆▅▅▅▅▅▄▄▃▃▃▃▃▂▂▂▂▂▂▂▂▂▂▂▂▁▁▁
+2026-09-18T03:14:09.194712638Z wandb: activation_bits/bit_block_0_attn_scores__in1 █████▆▆▆▆▆▆▆▆▆▆▆▅▅▅▅▄▄▄▄▄▃▃▃▃▃▃▂▂▂▂▂▁▁▁▁
+2026-09-18T03:14:09.194714010Z wandb:          activation_bits/bit_block_0_ffn_fc1 ██████████▇▆▆▆▆▆▆▆▆▆▆▅▅▅▅▅▅▄▄▄▂▂▂▂▂▂▂▂▂▁
+2026-09-18T03:14:09.194715605Z wandb:          activation_bits/bit_block_0_ffn_fc2 █████▇▆▆▆▆▆▆▆▆▆▆▅▅▅▅▄▄▄▄▄▄▃▃▃▂▂▂▂▂▂▂▂▂▂▁
+2026-09-18T03:14:09.194717377Z wandb:                                          +35 ...
+2026-09-18T03:14:09.194718773Z wandb: 
+2026-09-18T03:14:09.194720296Z wandb: Run summary:
+2026-09-18T03:14:09.194721796Z wandb:          activation_bits/bit_block_0_attn_Wk 1.25
+2026-09-18T03:14:09.194723268Z wandb:          activation_bits/bit_block_0_attn_Wo 1.09375
+2026-09-18T03:14:09.194724670Z wandb:          activation_bits/bit_block_0_attn_Wq 1.40625
+2026-09-18T03:14:09.194726143Z wandb:          activation_bits/bit_block_0_attn_Wv 1.96875
+2026-09-18T03:14:09.194727665Z wandb:    activation_bits/bit_block_0_attn_ctx__in0 10
+2026-09-18T03:14:09.194729129Z wandb:    activation_bits/bit_block_0_attn_ctx__in1 1
+2026-09-18T03:14:09.194730454Z wandb: activation_bits/bit_block_0_attn_scores__in0 1
+2026-09-18T03:14:09.194731855Z wandb: activation_bits/bit_block_0_attn_scores__in1 1
+2026-09-18T03:14:09.194733363Z wandb:          activation_bits/bit_block_0_ffn_fc1 1.59375
+2026-09-18T03:14:09.194734824Z wandb:          activation_bits/bit_block_0_ffn_fc2 1.8125
+2026-09-18T03:14:09.194736234Z wandb:                                          +39 ...
+2026-09-18T03:14:09.194737828Z wandb: 
+2026-09-18T03:14:09.194901039Z wandb: 🚀 View run batch20260917-a04-s1 at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Batch20260917/runs/d8fca5f337d4
+2026-09-18T03:14:09.194904322Z wandb: ⭐️ View project at: https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-Batch20260917
+2026-09-18T03:14:09.194906250Z wandb: Synced 5 W&B file(s), 0 media file(s), 22 artifact file(s) and 0 other file(s)
+2026-09-18T03:14:09.195078062Z wandb: Find logs at: 
+2026-09-18T03:14:11.342207060Z SCREENING_RUNG_PASS batch20260917-a04-s1 epochs=100

@@ -1,0 +1,37 @@
+{
+  "module": {
+    "convention": "engram_structural_bitops_v1_estimate",
+    "estimated_bitops": 17920,
+    "components": {
+      "encoder_comparisons": 5632,
+      "hash_addressing": 0,
+      "table_reduction_adds": 0,
+      "query_key_dot": 0,
+      "gate_affine_clip": 0,
+      "gate_value_products": 0,
+      "residual_adds": 12288
+    },
+    "logical_table_bits": 131072,
+    "logical_table_bytes": 16384,
+    "table_read_bits_per_jet": 4096,
+    "vector_reads_per_jet": 16,
+    "independent_addresses_per_bank_per_jet": 16,
+    "two_read_port_replicas_for_whole_jet_ii1": 8,
+    "replicated_table_bytes_estimate": 131072,
+    "threshold_storage_bits": 336,
+    "encoder_comparisons_per_jet": 352,
+    "hash_words_per_jet": 0,
+    "exact_tuple_addressing": true,
+    "unpriced_operations": [
+      "round/saturate quantizers",
+      "validity masks and multiplexers",
+      "control and wiring",
+      "physical memory block rounding/routing"
+    ],
+    "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+  },
+  "target": 350000,
+  "convention": "native_hgq2_plus_custom_estimate",
+  "selection": "highest validation accuracy under augmented arithmetic and memory budgets",
+  "hardware_validated": false
+}

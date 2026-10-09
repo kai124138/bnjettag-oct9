@@ -1,0 +1,276 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "cni.projectcalico.org/containerID": "51cd4512e9739367ce2560057db97cdacb67d36a4202349a701c72cf08fbdb52",
+            "cni.projectcalico.org/podIP": "10.244.108.215/32",
+            "cni.projectcalico.org/podIPs": "10.244.108.215/32,fdf0:17b3:c3ec:1f79:10:0:f:7fe9/128",
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-18T16:22:27Z",
+        "finalizers": [
+            "batch.kubernetes.io/job-tracking"
+        ],
+        "generateName": "kai-engram-preflight-a10364ed-",
+        "generation": 1,
+        "labels": {
+            "app": "kai-engram-preflight",
+            "batch.kubernetes.io/controller-uid": "e74cf3d3-d976-4d06-82a1-f90dfe338180",
+            "batch.kubernetes.io/job-name": "kai-engram-preflight-a10364ed",
+            "controller-uid": "e74cf3d3-d976-4d06-82a1-f90dfe338180",
+            "job-name": "kai-engram-preflight-a10364ed"
+        },
+        "name": "kai-engram-preflight-a10364ed-2mn2r",
+        "namespace": "cms-ml",
+        "ownerReferences": [
+            {
+                "apiVersion": "batch/v1",
+                "blockOwnerDeletion": true,
+                "controller": true,
+                "kind": "Job",
+                "name": "kai-engram-preflight-a10364ed",
+                "uid": "e74cf3d3-d976-4d06-82a1-f90dfe338180"
+            }
+        ],
+        "resourceVersion": "14850611648",
+        "uid": "73785487-cdcb-4747-ac76-928bb7ba0cfd"
+    },
+    "spec": {
+        "affinity": {
+            "nodeAffinity": {
+                "requiredDuringSchedulingIgnoredDuringExecution": {
+                    "nodeSelectorTerms": [
+                        {
+                            "matchExpressions": [
+                                {
+                                    "key": "kubernetes.io/hostname",
+                                    "operator": "NotIn",
+                                    "values": [
+                                        "nautilus-ext-gpu01.fullerton.edu",
+                                        "k8s-chase-ci-07.calit2.optiputer.net"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+            {
+                "args": [
+                    "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho 'a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792\n\nexport CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled TF_CPP_MIN_LOG_LEVEL=2\npip install -q --no-cache-dir -r /work/code/requirements-cpu.txt\npython -u /work/code/run_engram.py preflight --out /data/engram-study-20260918/preflight/synthetic-a10364ed\npython -u /work/code/ops/preflight_production.py\n"
+                ],
+                "command": [
+                    "bash",
+                    "-c"
+                ],
+                "env": [
+                    {
+                        "name": "NVIDIA_VISIBLE_DEVICES",
+                        "value": "void"
+                    }
+                ],
+                "image": "python:3.12",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "preflight",
+                "resources": {
+                    "limits": {
+                        "cpu": "2",
+                        "ephemeral-storage": "8Gi",
+                        "memory": "8Gi"
+                    },
+                    "requests": {
+                        "cpu": "2",
+                        "ephemeral-storage": "8Gi",
+                        "memory": "8Gi"
+                    }
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": true,
+        "nodeName": "ren-gp-argo-01.madren.org",
+        "nodeSelector": {
+            "kubernetes.io/arch": "amd64"
+        },
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {},
+        "serviceAccount": "default",
+        "serviceAccountName": "default",
+        "terminationGracePeriodSeconds": 180,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "PreferNoSchedule",
+                "key": "nvidia.com/gpu",
+                "operator": "Exists"
+            }
+        ],
+        "volumes": [
+            {
+                "configMap": {
+                    "defaultMode": 420,
+                    "name": "kai-engram-code-a10364eda9"
+                },
+                "name": "code"
+            },
+            {
+                "emptyDir": {
+                    "sizeLimit": "24Gi"
+                },
+                "name": "work"
+            },
+            {
+                "name": "persistent",
+                "persistentVolumeClaim": {
+                    "claimName": "kai-data"
+                }
+            }
+        ]
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-18T16:22:44Z",
+                "status": "True",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-18T16:22:27Z",
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-18T16:22:44Z",
+                "status": "True",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-18T16:22:44Z",
+                "status": "True",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-09-18T16:22:27Z",
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "2",
+                    "ephemeral-storage": "8Gi",
+                    "memory": "8Gi"
+                },
+                "containerID": "containerd://23a8d5293c05cf37780e7805e7c9ad4ff01b1db6698ab03ff9fa26878742deed",
+                "image": "docker.io/library/python:3.12",
+                "imageID": "docker.io/library/python@sha256:bd55e06128e2743d526738dd5cf5db924e49ead66d4fe2ad15f2aac8ad86aae9",
+                "lastState": {},
+                "name": "preflight",
+                "ready": true,
+                "resources": {
+                    "limits": {
+                        "cpu": "2",
+                        "ephemeral-storage": "8Gi",
+                        "memory": "8Gi"
+                    },
+                    "requests": {
+                        "cpu": "2",
+                        "ephemeral-storage": "8Gi",
+                        "memory": "8Gi"
+                    }
+                },
+                "restartCount": 0,
+                "started": true,
+                "state": {
+                    "running": {
+                        "startedAt": "2026-09-18T16:22:43Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 0,
+                        "supplementalGroups": [
+                            0
+                        ],
+                        "uid": 0
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/cmcode",
+                        "name": "code",
+                        "readOnly": true,
+                        "recursiveReadOnly": "Disabled"
+                    },
+                    {
+                        "mountPath": "/work",
+                        "name": "work"
+                    },
+                    {
+                        "mountPath": "/data",
+                        "name": "persistent"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "138.247.1.251",
+        "hostIPs": [
+            {
+                "ip": "138.247.1.251"
+            }
+        ],
+        "phase": "Running",
+        "podIP": "10.244.108.215",
+        "podIPs": [
+            {
+                "ip": "10.244.108.215"
+            },
+            {
+                "ip": "fdf0:17b3:c3ec:1f79:10:0:f:7fe9"
+            }
+        ],
+        "qosClass": "Guaranteed",
+        "startTime": "2026-09-18T16:22:27Z"
+    }
+}

@@ -1,0 +1,23 @@
+== quota ==
+  requests.nvidia.com/a100             6 / 24   
+  requests.nvidia.com/gh200            0 / 0      <-- BANNED (0)
+  requests.nvidia.com/h100             0 / 0      <-- BANNED (0)
+  requests.nvidia.com/h200             0 / 0      <-- BANNED (0)
+  high-priority-ban                (priority class blocked)
+  low-priority-ban                 (priority class blocked)
+  pods                                47 / 200  
+
+== our jobs ==
+  kai-batch0917-screen-e100                  par=2 comp=12 active=0 succeeded=0 failed=7  [Failed: MaxFailedIndexesExceeded]
+  kai-batch0917-screen-e100-r3               par=12 comp=12 active=0 succeeded=12 failed=0  [Complete: CompletionsReached]
+  kai-batch0918-screen-e400                  par=15 comp=15 active=15 succeeded=0 failed=0
+  kai-ebops-abl-0912-e1000                   par=3 comp=7 active=1 succeeded=6 failed=1
+  kai-engram-preflight-a10364ed-r2           par=1 comp=1 active=0 succeeded=1 failed=0  [Complete: CompletionsReached]
+
+== our pending pods ==
+  (none pending)
+
+== admission errors on our pods ==
+  (none)
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')

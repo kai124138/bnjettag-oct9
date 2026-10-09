@@ -1,0 +1,21 @@
+# raw compute per Job between the two A10 bounds (STUDY Compute budget; Amendment 1 B5): aggregate = K x 21 x A10 cost per run-epoch (E 28 s, A07 44 s; training-batch RUN.md Takeover check); per-process = 21 x 140 s per phase (the A10 per-process upper end); without header or phase start-up (the pod deadline allows 1,800 s header + 900 s per phase); arithmetic from bench_plan.json, not a measurement
+# k_low_rule: K_low = A10 K of the class (E 4, A07 2), or K_run - 1 where K_run <= it (STUDY.md [D2])
+kai-gpubench-l40-krule                   p1-E-k9 p2-A07-k4      agg   8988 s = 2.50 h  per-process  5880 s = 1.63 h  upper+header 3.00 h  run-epochs 273
+kai-gpubench-l40-klow                    p3-E-k4 p4-A07-k2      agg   4200 s = 1.17 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 126
+kai-gpubench-l40s-krule                  p1-E-k9 p2-A07-k4      agg   8988 s = 2.50 h  per-process  5880 s = 1.63 h  upper+header 3.00 h  run-epochs 273
+kai-gpubench-l40s-klow                   p3-E-k4 p4-A07-k2      agg   4200 s = 1.17 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 126
+kai-gpubench-geforce-rtx-4090-krule      p1-E-k5 p2-A07-k2      agg   4788 s = 1.33 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 147
+kai-gpubench-geforce-rtx-4090-klow       p3-E-k4 p4-A07-k1      agg   3276 s = 0.91 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 105
+kai-gpubench-geforce-rtx-3090-krule      p1-E-k5 p2-A07-k2      agg   4788 s = 1.33 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 147
+kai-gpubench-geforce-rtx-3090-klow       p3-E-k4 p4-A07-k1      agg   3276 s = 0.91 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 105
+kai-gpubench-rtx-a6000-krule             p1-E-k9 p2-A07-k5      agg   9912 s = 2.75 h  per-process  5880 s = 1.63 h  upper+header 3.25 h  run-epochs 294  > 3 h NRP window at the upper bound with header
+kai-gpubench-rtx-a6000-klow              p3-E-k4 p4-A07-k2      agg   4200 s = 1.17 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 126
+kai-gpubench-a40-krule                   p1-E-k9 p2-A07-k4      agg   8988 s = 2.50 h  per-process  5880 s = 1.63 h  upper+header 3.00 h  run-epochs 273
+kai-gpubench-a40-klow                    p3-E-k4 p4-A07-k2      agg   4200 s = 1.17 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 126
+kai-gpubench-a100-sxm4-80gb-krule        p1-E-k16 p2-A07-k8     agg  16800 s = 4.67 h  per-process  5880 s = 1.63 h  upper+header 5.17 h  run-epochs 504  > 3 h NRP window at the upper bound with header
+kai-gpubench-a100-sxm4-80gb-klow         p3-E-k4 p4-A07-k2      agg   4200 s = 1.17 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 126
+kai-gpubench-a10-krule                   p1-E-k4 p2-A07-k2      agg   4200 s = 1.17 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs 126
+kai-gpubench-a10-klow                    p3-E-k3 p4-A07-k1      agg   2688 s = 0.75 h  per-process  5880 s = 1.63 h  upper+header 2.13 h  run-epochs  84
+ALL 16 Jobs: aggregate bound 97692 s = 27.14 GPU-h; larger bound per Job 118356 s = 32.88 GPU-h; plus the 1,800 s header allowance per Job 40.88 GPU-h; arm-runs 141
+CHECK the split adds no phase: v1 seven Jobs aggregate 90804 s (code/evidence/v1/runtime_arithmetic.log) + A10 two Jobs 6888 s = 97692 s; this build 97692 s: EQUAL
+OVER_3H_AT_UPPER_BOUND_WITH_HEADER kai-gpubench-rtx-a6000-krule kai-gpubench-a100-sxm4-80gb-krule

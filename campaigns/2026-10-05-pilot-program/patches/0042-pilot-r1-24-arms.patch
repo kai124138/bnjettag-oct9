@@ -1,0 +1,1788 @@
+diff --git a/campaigns/pilot1005/config_map.json b/campaigns/pilot1005/config_map.json
+index 5dddda2..0db52c3 100644
+--- a/campaigns/pilot1005/config_map.json
++++ b/campaigns/pilot1005/config_map.json
+@@ -1,7 +1,7 @@
+ {
+  "schema": 1,
+  "round": "R1",
+- "count": 23,
++ "count": 24,
+  "scientific_keys": [
+   "experiment.nondegenerate.zero_floor_ebops",
+   "quant.attn_bit_floor.bits",
+@@ -11,6 +11,7 @@
+   "train.ebops.pid.warmup"
+  ],
+  "provenance_keys": [
++  "campaign.production",
+   "campaign.revision_of",
+   "campaign.study",
+   "experiment.arm",
+@@ -28,9 +29,13 @@
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "3cb9aea3259398d43b72c7e455c17371de567158742d6a7955c9bcbcab45016b",
++   "sha256": "2d0bff42ff5ca6589e5703f973e32bc9e572d16ec642f738f383286f346c3fc6",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -73,9 +78,13 @@
+     "sha256": "44a10fe030dcd38ee8473caeeef84ee3408f02530a83ae03906cabf1f59dccc1",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s2.json"
+    },
+-   "sha256": "8c3f95610172327f3e6b4b7ca1e5750c2b050b496b622d35fb99beb5872c97db",
++   "sha256": "b4c1d577525b93e6b9609b25e2bf477118f519b4c93450473318417377c90c09",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s2",
+       "chang1002c-a-n64-s2"
+@@ -118,9 +127,13 @@
+     "sha256": "d47d6799702cf67a49baa333aa2204b17a384289f32b106eb30433db8b2dec94",
+     "file": "campaigns/chang0926/configs/chang0926-a-n64-s1.json"
+    },
+-   "sha256": "1b4680b27126d363ff8b991075eb399d33795ff9255aa9adefa4e5a8f557d79e",
++   "sha256": "591a68817ee4d1395e28d0c75fa9e5c190134bfb7e190eebb4efbc490f7ef4d7",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.study": [
+       "campaigns/2026-09-26-training-batch",
+       "campaigns/2026-10-05-pilot-program"
+@@ -160,9 +173,13 @@
+     "sha256": "06af8973e0148fa86e42783d6a581acadd503423a6127b67c74a52bb100a1156",
+     "file": "campaigns/chang0926/configs/chang0926-a-n64-s2.json"
+    },
+-   "sha256": "7c8a66ce098a3f02a2f772b4e0b00cd5a9dd53ba4678febf6f63297f4698b877",
++   "sha256": "c6eacc62dc364252a4676a65b1beaaa7eb9346f5b6040cd4016aa4e1b0dc4492",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.study": [
+       "campaigns/2026-09-26-training-batch",
+       "campaigns/2026-10-05-pilot-program"
+@@ -202,9 +219,13 @@
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "bd0ab0c35a0a12d18245301fdf3f3af522ab95a112bce1f8e79adb9dab4b9a6b",
++   "sha256": "6762318b293bbd96bea48cac3924e29a3cf9a7ab38da8d4b7efc6363b572b7bc",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -251,9 +272,13 @@
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "d1868c8f761f221132fd6cb50be6e74a9f11d537110690ebe5f2a3ef7b9616d6",
++   "sha256": "7624aae29c8b57f0511e6df770a5859526c7d8a109aaf94e00856ca8ab96818e",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -300,9 +325,13 @@
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "1fae7ff8a14db309ae79ac4e6677c073ed346441d20ffc536546239477809e6a",
++   "sha256": "b9bbb5f5ced2ab601205f15258983f08ea79d13acfbfad3a5db9bdaba0e13c12",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -349,9 +378,13 @@
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "b704ffede44f23db0f11cf843b4008b3714513a4688d8c2e85eaece0dc3af5a9",
++   "sha256": "6d3a52a6c85ae85426caeb2ffa71bead27e9c9b0a18f2b7f4f439ce8bd0b9d52",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -398,9 +431,13 @@
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "65c9155f544a5f2c8830313980546b7fb7b9569d3bd0e96c32130c4ae543fb7b",
++   "sha256": "e1edd44d03f33c9dc1b357afe2fb91d2b4d8f1c5f53c9c27e009678317a69248",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -447,9 +484,13 @@
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "624de7c1c4c422f80db2082e968a1f8af4c7cf7886d901008b04265a62305129",
++   "sha256": "bd39cdcc89faf022b8e4e39798a1c09ad8d979ba1699c90914db6a2bbbec8f2b",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -490,60 +531,19 @@
+   },
+   {
+    "index": 10,
+-   "name": "pilot1005-h2-a07-350k-c-s1",
+-   "base": {
+-    "name": "chang1002c-a07-350-n64-s1",
+-    "sha256": "75d17583ba7009376b6a4e96b63e874818a053dc658fe580fbed85d2988ac463",
+-    "file": "campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json"
+-   },
+-   "sha256": "48593d1717ad0fcc09e6275fc5592c3dfafd98f73e392d6ee11dcebc67c8c0f1",
+-   "exhaustive_flat_diff": {
+-    "changed": {
+-     "campaign.revision_of": [
+-      "chang0926-a07-350-n64-s1",
+-      "chang1002c-a07-350-n64-s1"
+-     ],
+-     "campaign.study": [
+-      "campaigns/2026-10-02-chang-option-c",
+-      "campaigns/2026-10-05-pilot-program"
+-     ],
+-     "experiment.arm": [
+-      "chang1002c-a07-350-n64-s1",
+-      "pilot1005-h2-a07-350k-c-s1"
+-     ],
+-     "experiment.group": [
+-      "chang-n64-20261002-c",
+-      "chang-n64-20261005"
+-     ],
+-     "name": [
+-      "chang1002c-a07-350-n64-s1",
+-      "pilot1005-h2-a07-350k-c-s1"
+-     ]
+-    },
+-    "removed": {},
+-    "added": {
+-     "campaign.pilot.arch": "A07",
+-     "campaign.pilot.arm": "A07-350k-C",
+-     "campaign.pilot.budget": 350000,
+-     "campaign.pilot.hypothesis": "H2",
+-     "campaign.pilot.option_c": true,
+-     "campaign.pilot.round": "R1",
+-     "campaign.pilot.variant": null,
+-     "campaign.pilot.warmup": 1
+-    }
+-   }
+-  },
+-  {
+-   "index": 11,
+    "name": "pilot1005-h2-a07-500k-c-s1",
+    "base": {
+     "name": "chang1002c-a07-350-n64-s1",
+     "sha256": "75d17583ba7009376b6a4e96b63e874818a053dc658fe580fbed85d2988ac463",
+     "file": "campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json"
+    },
+-   "sha256": "2fb1293a5d6ab55b6c7e86b1e568de83a890371abd59281514b697570ec1a5cc",
++   "sha256": "908c44389f0008b4f957d7184c62fa3bd1a95aba8c18de374c8556d700ce7158",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a07-350-n64-s1",
+       "chang1002c-a07-350-n64-s1"
+@@ -583,16 +583,20 @@
+    }
+   },
+   {
+-   "index": 12,
++   "index": 11,
+    "name": "pilot1005-h2-a07-1m-c-s1",
+    "base": {
+     "name": "chang1002c-a07-350-n64-s1",
+     "sha256": "75d17583ba7009376b6a4e96b63e874818a053dc658fe580fbed85d2988ac463",
+     "file": "campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json"
+    },
+-   "sha256": "3df825782a12f48cf1a96e286e652ccf2d5307b568eebb676fa548c38e09e032",
++   "sha256": "e2a50f7775736a1687a33074c4b19a7f1afad65a879d29464eb76f72c1fa4022",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a07-350-n64-s1",
+       "chang1002c-a07-350-n64-s1"
+@@ -632,16 +636,20 @@
+    }
+   },
+   {
+-   "index": 13,
++   "index": 12,
+    "name": "pilot1005-h2-a07-2m-c-s1",
+    "base": {
+     "name": "chang1002c-a07-350-n64-s1",
+     "sha256": "75d17583ba7009376b6a4e96b63e874818a053dc658fe580fbed85d2988ac463",
+     "file": "campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json"
+    },
+-   "sha256": "b25cfffc44aea380432c642a63324e4e316eeccf4386e598765448a9441d2c77",
++   "sha256": "caa802ec8912ff224d5bdbd0e794df3cbe5979c6170baf195b7f99bc5124a369",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a07-350-n64-s1",
+       "chang1002c-a07-350-n64-s1"
+@@ -681,16 +689,20 @@
+    }
+   },
+   {
+-   "index": 14,
++   "index": 13,
+    "name": "pilot1005-h2-a07-5m-c-s1",
+    "base": {
+     "name": "chang1002c-a07-350-n64-s1",
+     "sha256": "75d17583ba7009376b6a4e96b63e874818a053dc658fe580fbed85d2988ac463",
+     "file": "campaigns/chang1002c/configs/chang1002c-a07-350-n64-s1.json"
+    },
+-   "sha256": "81ae0ce719fd3a57fd4c259374b15397070b1781f5f135d691f2664f121eec53",
++   "sha256": "fedf753e5f7dd8c4dae1fc8562451423957cffddfffed49068b09b8df9127c61",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a07-350-n64-s1",
+       "chang1002c-a07-350-n64-s1"
+@@ -730,16 +742,20 @@
+    }
+   },
+   {
+-   "index": 15,
++   "index": 14,
+    "name": "pilot1005-h4-e-350k-c-w50-s1",
+    "base": {
+     "name": "chang1002c-a-n64-s1",
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "1609f51d76b6ba0e4e58a3d9075d76ea90f1b7864caebc530ac6dbefb7a6d322",
++   "sha256": "0841dd3d7ad1bf2d4696a7b4939903cc8f6b3cb8e084bce2caca398b84791612",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -779,16 +795,20 @@
+    }
+   },
+   {
+-   "index": 16,
++   "index": 15,
+    "name": "pilot1005-h4-e-350k-c-w50-s2",
+    "base": {
+     "name": "chang1002c-a-n64-s2",
+     "sha256": "44a10fe030dcd38ee8473caeeef84ee3408f02530a83ae03906cabf1f59dccc1",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s2.json"
+    },
+-   "sha256": "b3172adb5c0420058164ee6a7ed6fd3fa8a55bd7f209c8a927b6f6e1a61bf808",
++   "sha256": "56f207260905d8306902ffc39e548f2fa6332efc55556bc6f508dd9629c88893",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s2",
+       "chang1002c-a-n64-s2"
+@@ -828,16 +848,20 @@
+    }
+   },
+   {
+-   "index": 17,
++   "index": 16,
+    "name": "pilot1005-h4-e-350k-c-w150-s1",
+    "base": {
+     "name": "chang1002c-a-n64-s1",
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "813be18d1b886ec27d043eb547dc1bf20519fda8f0b480ab2419ccecbb061190",
++   "sha256": "4309784eda0a4cb3f766cbafdd332c1481de4e4c88324df4e19e5605826cd5da",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -877,16 +901,20 @@
+    }
+   },
+   {
+-   "index": 18,
++   "index": 17,
+    "name": "pilot1005-h4-e-350k-c-w150-s2",
+    "base": {
+     "name": "chang1002c-a-n64-s2",
+     "sha256": "44a10fe030dcd38ee8473caeeef84ee3408f02530a83ae03906cabf1f59dccc1",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s2.json"
+    },
+-   "sha256": "745b1bfceee24361745a7bf67c14be2b9174c0b20fe8750a79b6d6f592f91230",
++   "sha256": "8167315e3e6f0864215a038735f98b7abfef5f4e67f3953f95deafff5ca13f27",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s2",
+       "chang1002c-a-n64-s2"
+@@ -926,16 +954,20 @@
+    }
+   },
+   {
+-   "index": 19,
++   "index": 18,
+    "name": "pilot1005-h5-e-350k-c-nb-s1",
+    "base": {
+     "name": "chang1002c-a-n64-s1",
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "d9b0a2860548dfcd5997d6f714fe8cb1d3afba43eb293fe69e83ff9305a1cec2",
++   "sha256": "ef85d29b303da93ce32f46961b8cb3754fcd149fb3751e40221edb92c4ca32d7",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -975,16 +1007,20 @@
+    }
+   },
+   {
+-   "index": 20,
++   "index": 19,
+    "name": "pilot1005-h5-e-350k-c-nb-s2",
+    "base": {
+     "name": "chang1002c-a-n64-s2",
+     "sha256": "44a10fe030dcd38ee8473caeeef84ee3408f02530a83ae03906cabf1f59dccc1",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s2.json"
+    },
+-   "sha256": "a21a43ecff19abf561db4c38c84519b66e70b0a5f41adf005d0a61db92cd4d55",
++   "sha256": "9cf442d20b8c1660cb4c348891d9e5121e7df5c95250e31c65f36098adc24475",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s2",
+       "chang1002c-a-n64-s2"
+@@ -1024,16 +1060,20 @@
+    }
+   },
+   {
+-   "index": 21,
++   "index": 20,
+    "name": "pilot1005-h3-e-350k-c-qkv1-s1",
+    "base": {
+     "name": "chang1002c-a-n64-s1",
+     "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
+    },
+-   "sha256": "67b5356a55f34227d77f822c58a79e44f8d0eb9b1c291990f388ca15bbb131f2",
++   "sha256": "583bc4c3e6d5f75102706bd2131eef0751a41331d441ecc9bc63b983ba33f7a3",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s1",
+       "chang1002c-a-n64-s1"
+@@ -1079,16 +1119,20 @@
+    }
+   },
+   {
+-   "index": 22,
++   "index": 21,
+    "name": "pilot1005-h3-e-350k-c-qkv1-s2",
+    "base": {
+     "name": "chang1002c-a-n64-s2",
+     "sha256": "44a10fe030dcd38ee8473caeeef84ee3408f02530a83ae03906cabf1f59dccc1",
+     "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s2.json"
+    },
+-   "sha256": "e3de45db8e505168cb9b322cbb78c72c9f15a9bb604e9ffd1f90fe2facb244bc",
++   "sha256": "f0bdfd073642be129ab9b8ebbb315f7d6585a297a9966ddf7618aafdd27bcfda",
+    "exhaustive_flat_diff": {
+     "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
+      "campaign.revision_of": [
+       "chang0926-a-n64-s2",
+       "chang1002c-a-n64-s2"
+@@ -1132,6 +1176,122 @@
+      ]
+     }
+    }
++  },
++  {
++   "index": 22,
++   "name": "pilot1005-h3-e-450k-c-qkv1-s1",
++   "base": {
++    "name": "chang1002c-a-n64-s1",
++    "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
++    "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
++   },
++   "sha256": "d1259edf118e2a04fc65b49f513e57a08c1db55bdd937db20f975aed07bccfa9",
++   "exhaustive_flat_diff": {
++    "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
++     "campaign.revision_of": [
++      "chang0926-a-n64-s1",
++      "chang1002c-a-n64-s1"
++     ],
++     "campaign.study": [
++      "campaigns/2026-10-02-chang-option-c",
++      "campaigns/2026-10-05-pilot-program"
++     ],
++     "experiment.arm": [
++      "chang1002c-a-n64-s1",
++      "pilot1005-h3-e-450k-c-qkv1-s1"
++     ],
++     "experiment.group": [
++      "chang-n64-20261002-c",
++      "chang-n64-20261005"
++     ],
++     "experiment.nondegenerate.zero_floor_ebops": [
++      171526,
++      269830
++     ],
++     "name": [
++      "chang1002c-a-n64-s1",
++      "pilot1005-h3-e-450k-c-qkv1-s1"
++     ],
++     "train.ebops.pid.target_ebops": [
++      350000,
++      450000
++     ]
++    },
++    "removed": {},
++    "added": {
++     "campaign.pilot.arch": "E",
++     "campaign.pilot.arm": "A350-C-qkv1-450k",
++     "campaign.pilot.budget": 450000,
++     "campaign.pilot.hypothesis": "H3",
++     "campaign.pilot.option_c": true,
++     "campaign.pilot.round": "R1",
++     "campaign.pilot.variant": "qkv1",
++     "campaign.pilot.warmup": 1,
++     "quant.attn_bit_floor.bits": 1,
++     "quant.attn_bit_floor.sites": [
++      "q",
++      "k",
++      "v"
++     ]
++    }
++   }
++  },
++  {
++   "index": 23,
++   "name": "pilot1005-ctl-e-unc-c-s1",
++   "base": {
++    "name": "chang1002c-a-n64-s1",
++    "sha256": "20e8e68f9ee5ae1e6b08b013f3887e4477a35b05867eaed7c581842d020de819",
++    "file": "campaigns/chang1002c/configs/chang1002c-a-n64-s1.json"
++   },
++   "sha256": "2f61ccc749a41c54f5daae8143c6f6a1fbb22673e4223846cb9159ef44935ef9",
++   "exhaustive_flat_diff": {
++    "changed": {
++     "campaign.production": [
++      true,
++      false
++     ],
++     "campaign.revision_of": [
++      "chang0926-a-n64-s1",
++      "chang1002c-a-n64-s1"
++     ],
++     "campaign.study": [
++      "campaigns/2026-10-02-chang-option-c",
++      "campaigns/2026-10-05-pilot-program"
++     ],
++     "experiment.arm": [
++      "chang1002c-a-n64-s1",
++      "pilot1005-ctl-e-unc-c-s1"
++     ],
++     "experiment.group": [
++      "chang-n64-20261002-c",
++      "chang-n64-20261005"
++     ],
++     "name": [
++      "chang1002c-a-n64-s1",
++      "pilot1005-ctl-e-unc-c-s1"
++     ],
++     "train.ebops.pid.target_ebops": [
++      350000,
++      100000000
++     ]
++    },
++    "removed": {},
++    "added": {
++     "campaign.pilot.arch": "E",
++     "campaign.pilot.arm": "E-unc-C",
++     "campaign.pilot.budget": 100000000,
++     "campaign.pilot.hypothesis": "control",
++     "campaign.pilot.option_c": true,
++     "campaign.pilot.round": "R1",
++     "campaign.pilot.variant": "unc",
++     "campaign.pilot.warmup": 1
++    }
++   }
+   }
+  ]
+ }
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-a07-350k-c-s1.json b/campaigns/pilot1005/configs/pilot1005-ctl-e-unc-c-s1.json
+similarity index 86%
+rename from campaigns/pilot1005/configs/pilot1005-h2-a07-350k-c-s1.json
+rename to campaigns/pilot1005/configs/pilot1005-ctl-e-unc-c-s1.json
+index c2f477c..65f114c 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-a07-350k-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-ctl-e-unc-c-s1.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "pilot1005-h2-a07-350k-c-s1",
++  "name": "pilot1005-ctl-e-unc-c-s1",
+   "era": 2,
+   "arch": {
+     "n_part": 64,
+@@ -9,8 +9,8 @@
+       "etarel",
+       "phirel"
+     ],
+-    "d_model": 32,
+-    "n_heads": 4,
++    "d_model": 24,
++    "n_heads": 2,
+     "n_layers": 1,
+     "ffn_dim": 32,
+     "n_classes": 5,
+@@ -18,9 +18,10 @@
+     "ffn_act": "relu",
+     "norm": "none",
+     "norm_placement": "per_linear",
+-    "pos_enc": "learned",
++    "pos_enc": "none",
+     "softmax_free": false,
+     "input_std": true,
++    "pos_enc_none_consume_rng": true,
+     "pt_gate_gev": 2.0
+   },
+   "quant": {
+@@ -72,7 +73,7 @@
+         "min_beta": 1e-10,
+         "max_beta": 0.001,
+         "damp_beta_on_target": 0.0,
+-        "target_ebops": 350000
++        "target_ebops": 100000000
+       },
+       "selection": "max_accuracy",
+       "stop_on_target": false,
+@@ -103,7 +104,7 @@
+     "io": "io_parallel"
+   },
+   "experiment": {
+-    "arm": "pilot1005-h2-a07-350k-c-s1",
++    "arm": "pilot1005-ctl-e-unc-c-s1",
+     "group": "chang-n64-20261005",
+     "seed": 1,
+     "selection_metric": "val_categorical_accuracy",
+@@ -113,13 +114,13 @@
+     "snapshot_every_epochs": 500,
+     "remote_every_epochs": 500,
+     "nondegenerate": {
+-      "zero_floor_ebops": 343053,
++      "zero_floor_ebops": 171526,
+       "se_multiple": 5
+     }
+   },
+   "engram_study": {
+     "module": null,
+-    "question": "chang0926 arm A07-350: descriptive: our A07 at the paper budget; attention data-independent by construction",
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
+     "memory_lr_multiplier": 5.0,
+     "memory_weight_decay": 0.0,
+     "wandb_entity": "kayamaguchi-uc-san-diego",
+@@ -131,24 +132,24 @@
+   },
+   "campaign": {
+     "study": "campaigns/2026-10-05-pilot-program",
+-    "arm": "A07-350",
++    "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+     "tf32_enabled": false,
+-    "revision_of": "chang1002c-a07-350-n64-s1",
++    "revision_of": "chang1002c-a-n64-s1",
+     "amendment": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md",
+     "pilot": {
+       "round": "R1",
+-      "arm": "A07-350k-C",
+-      "hypothesis": "H2",
+-      "arch": "A07",
+-      "budget": 350000,
++      "arm": "E-unc-C",
++      "hypothesis": "control",
++      "arch": "E",
++      "budget": 100000000,
+       "option_c": true,
+       "warmup": 1,
+-      "variant": null
++      "variant": "unc"
+     }
+   }
+ }
+diff --git a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json
+index 18cacfc..7f208fd 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s2.json b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s2.json
+index acf6fdd..4bebc21 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s2.json
++++ b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s2.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 2,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s1.json b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s1.json
+index edc266f..ee2da7b 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s1.json
+@@ -132,7 +132,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s2.json b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s2.json
+index 5eb317e..1b0765d 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s2.json
++++ b/campaigns/pilot1005/configs/pilot1005-h1-e-350k-noc-s2.json
+@@ -132,7 +132,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 2,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-a07-1m-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-a07-1m-c-s1.json
+index cc29e0e..6c83849 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-a07-1m-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-a07-1m-c-s1.json
+@@ -133,7 +133,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A07-350",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-a07-2m-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-a07-2m-c-s1.json
+index 7715ece..727dddf 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-a07-2m-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-a07-2m-c-s1.json
+@@ -133,7 +133,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A07-350",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-a07-500k-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-a07-500k-c-s1.json
+index c5b2a23..4967135 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-a07-500k-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-a07-500k-c-s1.json
+@@ -133,7 +133,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A07-350",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-a07-5m-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-a07-5m-c-s1.json
+index 51a7b47..96e42bb 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-a07-5m-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-a07-5m-c-s1.json
+@@ -133,7 +133,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A07-350",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-e-1m-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-e-1m-c-s1.json
+index 32e80e6..8bab5a2 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-e-1m-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-e-1m-c-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-e-250k-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-e-250k-c-s1.json
+index eb0b2cf..22cf740 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-e-250k-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-e-250k-c-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-e-2m-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-e-2m-c-s1.json
+index 97d3c2a..b12f6b8 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-e-2m-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-e-2m-c-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-e-500k-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-e-500k-c-s1.json
+index 3b723ea..6e866b4 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-e-500k-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-e-500k-c-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-e-5m-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-e-5m-c-s1.json
+index bbaaac3..f678a32 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-e-5m-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-e-5m-c-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h2-e-750k-c-s1.json b/campaigns/pilot1005/configs/pilot1005-h2-e-750k-c-s1.json
+index 75e1212..f84a13a 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h2-e-750k-c-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h2-e-750k-c-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s1.json b/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s1.json
+index 1a0f2bd..06f5f7b 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s1.json
+@@ -142,7 +142,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s2.json b/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s2.json
+index 012f04e..8637824 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s2.json
++++ b/campaigns/pilot1005/configs/pilot1005-h3-e-350k-c-qkv1-s2.json
+@@ -142,7 +142,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 2,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h3-e-450k-c-qkv1-s1.json b/campaigns/pilot1005/configs/pilot1005-h3-e-450k-c-qkv1-s1.json
+new file mode 100644
+index 0000000..5cba0ef
+--- /dev/null
++++ b/campaigns/pilot1005/configs/pilot1005-h3-e-450k-c-qkv1-s1.json
+@@ -0,0 +1,163 @@
++{
++  "name": "pilot1005-h3-e-450k-c-qkv1-s1",
++  "era": 2,
++  "arch": {
++    "n_part": 64,
++    "n_feat": 3,
++    "features": [
++      "pt",
++      "etarel",
++      "phirel"
++    ],
++    "d_model": 24,
++    "n_heads": 2,
++    "n_layers": 1,
++    "ffn_dim": 32,
++    "n_classes": 5,
++    "pool": "gap",
++    "ffn_act": "relu",
++    "norm": "none",
++    "norm_placement": "per_linear",
++    "pos_enc": "none",
++    "softmax_free": false,
++    "input_std": true,
++    "pos_enc_none_consume_rng": true,
++    "pt_gate_gev": 2.0
++  },
++  "quant": {
++    "weight": "binary_absmean",
++    "act_bits": 8,
++    "act_policy": "learned_per_tensor_width",
++    "calib_n": 8192,
++    "act_calib": "free",
++    "act_bw_l1": 1e-08,
++    "beta0": 1e-07,
++    "act_granularity": "channel",
++    "softmax_out_bits": 10,
++    "softmax_out_i": 1,
++    "act_overflow": "WRAP",
++    "softmax_quant": "chang",
++    "i_decay_speed": 0.001,
++    "attn_bit_floor": {
++      "bits": 1,
++      "sites": [
++        "q",
++        "k",
++        "v"
++      ]
++    }
++  },
++  "train": {
++    "data": "data/train",
++    "validation_split": 0.1,
++    "epochs": 7000,
++    "batch": 2790,
++    "lr": 0.003,
++    "clip_mode": "value",
++    "clipnorm": 1.0,
++    "es_patience": 0,
++    "wandb_project": "BNJetTag-ChangRecipe",
++    "ebops": {
++      "enable": true,
++      "monitor_widths": true,
++      "controller": "pid",
++      "beta_schedule": null,
++      "front_dir": "front",
++      "metrics": [
++        "val_macro_auc",
++        "ebops"
++      ],
++      "sides": [
++        1,
++        -1
++      ],
++      "pid": {
++        "init_beta": 1e-07,
++        "p": 1.0,
++        "i": 0.05,
++        "d": 0.0,
++        "warmup": 1,
++        "log": true,
++        "min_beta": 1e-10,
++        "max_beta": 0.001,
++        "damp_beta_on_target": 0.0,
++        "target_ebops": 450000
++      },
++      "selection": "max_accuracy",
++      "stop_on_target": false,
++      "pid_input": "traced_only",
++      "pid_traced_integral": "per_epoch"
++    },
++    "jit_compile": false,
++    "split_seed": 1,
++    "order_seed": 2026092601,
++    "val_batch": 1024,
++    "lr_schedule": "chang_cosine_restarts",
++    "lr_cycle_epochs": 500,
++    "lr_t_mul": 1.0,
++    "lr_m_mul": 1.0,
++    "lr_alpha": 1e-06,
++    "lr_alpha_epochs": 10,
++    "optimizer": "adam_default",
++    "ebops_trace_sample": "train_full",
++    "ebops_trace_batch": 2048,
++    "ebops_reload_check": "stored",
++    "ebops_trace_every": 10
++  },
++  "hls": {
++    "backend": "Vitis",
++    "part": "xcvu13p-flga2577-2-e",
++    "clock_ns": 2.5,
++    "rf": 1,
++    "io": "io_parallel"
++  },
++  "experiment": {
++    "arm": "pilot1005-h3-e-450k-c-qkv1-s1",
++    "group": "chang-n64-20261005",
++    "seed": 1,
++    "selection_metric": "val_categorical_accuracy",
++    "cost_before_auc": false,
++    "keep_auc_selected_feasible": true,
++    "checkpoint_every_epochs": 25,
++    "snapshot_every_epochs": 500,
++    "remote_every_epochs": 500,
++    "nondegenerate": {
++      "zero_floor_ebops": 269830,
++      "se_multiple": 5
++    }
++  },
++  "engram_study": {
++    "module": null,
++    "question": "chang0926 arm A: primary: Sun et al. recipe on E at 350k",
++    "memory_lr_multiplier": 5.0,
++    "memory_weight_decay": 0.0,
++    "wandb_entity": "kayamaguchi-uc-san-diego",
++    "wandb_project_access": "PRIVATE",
++    "max_logical_table_bytes": 65536,
++    "max_replicated_table_bytes": 2097152,
++    "cost_convention": "native_hgq2_plus_custom_estimate",
++    "status": "experimental; training ready, HLS unsupported"
++  },
++  "campaign": {
++    "study": "campaigns/2026-10-05-pilot-program",
++    "arm": "A",
++    "seed": 1,
++    "production": false,
++    "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
++    "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
++    "test_set_used_for_selection": false,
++    "tf32_enabled": false,
++    "revision_of": "chang1002c-a-n64-s1",
++    "amendment": "campaigns/2026-10-01-chang-traced-pid/AMENDMENT_DRAFT.md",
++    "pilot": {
++      "round": "R1",
++      "arm": "A350-C-qkv1-450k",
++      "hypothesis": "H3",
++      "arch": "E",
++      "budget": 450000,
++      "option_c": true,
++      "warmup": 1,
++      "variant": "qkv1"
++    }
++  }
++}
+diff --git a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json
+index 01d858d..628e699 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json
+index a0f6ec7..688d2ab 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json
++++ b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w150-s2.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 2,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s1.json b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s1.json
+index 54b0c64..51635ce 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s2.json b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s2.json
+index f0749a7..4032f02 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s2.json
++++ b/campaigns/pilot1005/configs/pilot1005-h4-e-350k-c-w50-s2.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 2,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s1.json b/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s1.json
+index 1f47504..f42c99c 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s1.json
++++ b/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s1.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 1,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s2.json b/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s2.json
+index bc3fe26..00bd656 100644
+--- a/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s2.json
++++ b/campaigns/pilot1005/configs/pilot1005-h5-e-350k-c-nb-s2.json
+@@ -134,7 +134,7 @@
+     "study": "campaigns/2026-10-05-pilot-program",
+     "arm": "A",
+     "seed": 2,
+-    "production": true,
++    "production": false,
+     "source_config": "const0922-a07-n64-s1-fast50-fp32.json",
+     "source_config_sha256": "5d802cddeebe96df39712cda55332004329e7f2697654d312a8660e0d188aae8",
+     "test_set_used_for_selection": false,
+diff --git a/campaigns/pilot1005/gate_check.py b/campaigns/pilot1005/gate_check.py
+index f72b67b..a815398 100644
+--- a/campaigns/pilot1005/gate_check.py
++++ b/campaigns/pilot1005/gate_check.py
+@@ -36,7 +36,7 @@ REQUIRED = ('tests/test_run_pack.py', 'tests/test_pid_traced_only.py', 'tests/te
+             'tests/test_pilot1005.py', 'tests/test_pilot_stage.py', 'tests/test_readout_pilot.py',
+             'tests/test_gate_check.py', 'tests/test_nb_arm.py', 'tests/test_attn_bit_floor.py',
+             'tests/test_pilot_variants_runner.py')
+-N_CONFIGS = 23
++N_CONFIGS = 24
+ NB_SEEDS = tuple(range(1, 9))
+ THRESHOLD_C = 0.2109624456315518
+ LABELS_SHA256 = 'e593f51fad6a19e14c1df783ab762ffd5dfd566b6b1df13ba251a41fa1ad7617'
+diff --git a/campaigns/pilot1005/generate.py b/campaigns/pilot1005/generate.py
+index ae8fe97..d595de2 100644
+--- a/campaigns/pilot1005/generate.py
++++ b/campaigns/pilot1005/generate.py
+@@ -49,8 +49,15 @@ VARIANTS = {
+     'nb': {'hyp': 'H5', 'arm': 'NB350-C', 'quant': {'weight': 'kbi_learnable'}, 'zero_floor': 171_526},
+     'qkv1': {'hyp': 'H3', 'arm': 'A350-C-qkv1', 'quant': {'attn_bit_floor': {'bits': 1, 'sites': ['q', 'k', 'v']}},
+               'zero_floor': 269_830},
++    # [A3] (STUDY_arbiter_v1 F2 ii): E positive control with no binding budget. Expressed as config alone:
++    # PID target_ebops UNC_TARGET, above E's initial EBOPs (about 9.4M at s1, synthetic init, dev/README.md),
++    # so the controller drives beta to its min_beta (1e-10) and the budget never binds. Arch and quant are
++    # unchanged, so its floor is E's (171,526).
++    'unc': {'hyp': 'control', 'arm': 'E-unc-C', 'quant': {}, 'zero_floor': None},
+ }
+-PROVENANCE = {'name', 'experiment.arm', 'experiment.group', 'campaign.study', 'campaign.revision_of'}
++UNC_TARGET = 100_000_000
++PROVENANCE = {'name', 'experiment.arm', 'experiment.group', 'campaign.study', 'campaign.revision_of',
++              'campaign.production'}      # [A3] F2 iv: pilot configs carry campaign.production false
+ 
+ 
+ def k(target):
+@@ -62,17 +69,20 @@ def k(target):
+ R1 = ([('H1', 'E', 350_000, True, 1, s) for s in (1, 2)]
+       + [('H1', 'E', 350_000, False, 1, s) for s in (1, 2)]
+       + [('H2', 'E', t, True, 1, 1) for t in (250_000, 500_000, 750_000, 1_000_000, 2_000_000, 5_000_000)]
+-      + [('H2', 'A07', t, True, 1, 1) for t in (350_000, 500_000, 1_000_000, 2_000_000, 5_000_000)]
++      + [('H2', 'A07', t, True, 1, 1) for t in (500_000, 1_000_000, 2_000_000, 5_000_000)]   # [A3] no A07 350k
+       + [('H4', 'E', 350_000, True, w, s) for w in (50, 150) for s in (1, 2)]
+-      + [(VARIANTS[v]['hyp'], 'E', 350_000, True, 1, s, v) for v in ('nb', 'qkv1') for s in (1, 2)])
+-N_ARMS = 23
++      + [(VARIANTS[v]['hyp'], 'E', 350_000, True, 1, s, v) for v in ('nb', 'qkv1') for s in (1, 2)]
++      + [('H3', 'E', 450_000, True, 1, 1, 'qkv1'),          # [A3] matched-headroom H3 arm, A350-C-qkv1-450k
++         ('control', 'E', UNC_TARGET, True, 1, 1, 'unc')])  # [A3] E-unc-C positive control
++N_ARMS = 24
+ 
+ 
+ def program_arm(hyp, arch, target, option_c, warmup, seed, variant=None):
+     """The arm id of STUDY.md §4 / PROGRAM.json (A350-noC, A350-C, A350-C-w50, E500k-C, A07-1000k-C, ...);
+     NB350-C and A350-C-qkv1 for the two added variants (STUDY.md §4 rows 7-8)."""
+     if variant is not None:
+-        return VARIANTS[variant]['arm']
++        arm = VARIANTS[variant]['arm']
++        return arm if target == 350_000 or variant == 'unc' else f'{arm}-{k(target)}'
+     if arch == 'E' and target == 350_000:
+         return f"A350-{'C' if option_c else 'noC'}" + (f'-w{warmup}' if warmup != 1 else '')
+     assert option_c and warmup == 1
+@@ -80,6 +90,8 @@ def program_arm(hyp, arch, target, option_c, warmup, seed, variant=None):
+ 
+ 
+ def name_of(hyp, arch, target, option_c, warmup, seed, variant=None):
++    if variant == 'unc':
++        return f'{PREFIX}-ctl-{arch.lower()}-unc-c-s{seed}'
+     tag = f"{hyp.lower()}-{arch.lower()}-{k(target)}-{'c' if option_c else 'noc'}"
+     if warmup != 1:
+         tag += f'-w{warmup}'
+@@ -150,7 +162,8 @@ def build_all():
+         cfg['experiment']['group'] = GROUP
+         cfg['campaign']['study'] = STUDY
+         cfg['campaign']['revision_of'] = base['name']
+-        if variant is not None:
++        cfg['campaign']['production'] = False
++        if variant is not None and VARIANTS[variant]['quant']:
+             assert option_c and warmup == 1 and arch == 'E'
+             for key, value in VARIANTS[variant]['quant'].items():
+                 assert key not in cfg['quant'] or key == 'weight', (name, key)
+@@ -166,14 +179,14 @@ def build_all():
+         assert ('train.ebops.pid.target_ebops' in changed) == (target != base['train']['ebops']['pid']['target_ebops'])
+         assert ('train.ebops.pid.warmup' in changed) == (warmup != 1)
+         assert (changed & {'quant.weight', 'quant.attn_bit_floor.bits', 'quant.attn_bit_floor.sites'} != set()) \
+-            == (variant is not None), name
++            == (variant is not None and bool(VARIANTS[variant]['quant'])), name
+         # floor: arch/quant unchanged -> same signature, same 0-bit floor; a variant carries its own
+         # traced floor (re-traced by cpu_gate.py)
+         probe = copy.deepcopy(cfg)
+         probe['experiment'].pop('nondegenerate', None)
+         entry = floors[ARCH_BASE[arch]]
+         floor = cfg['experiment']['nondegenerate']['zero_floor_ebops']
+-        if variant is None:
++        if variant is None or not VARIANTS[variant]['quant']:
+             assert gen.floor_signature(probe) == entry['floor_signature'], name
+             assert floor == entry['zero'], name
+         else:
+diff --git a/campaigns/pilot1005/index.json b/campaigns/pilot1005/index.json
+index 197bc4b..24221cf 100644
+--- a/campaigns/pilot1005/index.json
++++ b/campaigns/pilot1005/index.json
+@@ -27,7 +27,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h1-e-350k-c-s1.json",
+-      "config_sha256": "3cb9aea3259398d43b72c7e455c17371de567158742d6a7955c9bcbcab45016b"
++      "config_sha256": "2d0bff42ff5ca6589e5703f973e32bc9e572d16ec642f738f383286f346c3fc6"
+     },
+     {
+       "index": 1,
+@@ -56,7 +56,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h1-e-350k-c-s2.json",
+-      "config_sha256": "8c3f95610172327f3e6b4b7ca1e5750c2b050b496b622d35fb99beb5872c97db"
++      "config_sha256": "b4c1d577525b93e6b9609b25e2bf477118f519b4c93450473318417377c90c09"
+     },
+     {
+       "index": 2,
+@@ -85,7 +85,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h1-e-350k-noc-s1.json",
+-      "config_sha256": "1b4680b27126d363ff8b991075eb399d33795ff9255aa9adefa4e5a8f557d79e"
++      "config_sha256": "591a68817ee4d1395e28d0c75fa9e5c190134bfb7e190eebb4efbc490f7ef4d7"
+     },
+     {
+       "index": 3,
+@@ -114,7 +114,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h1-e-350k-noc-s2.json",
+-      "config_sha256": "7c8a66ce098a3f02a2f772b4e0b00cd5a9dd53ba4678febf6f63297f4698b877"
++      "config_sha256": "c6eacc62dc364252a4676a65b1beaaa7eb9346f5b6040cd4016aa4e1b0dc4492"
+     },
+     {
+       "index": 4,
+@@ -143,7 +143,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-e-250k-c-s1.json",
+-      "config_sha256": "bd0ab0c35a0a12d18245301fdf3f3af522ab95a112bce1f8e79adb9dab4b9a6b"
++      "config_sha256": "6762318b293bbd96bea48cac3924e29a3cf9a7ab38da8d4b7efc6363b572b7bc"
+     },
+     {
+       "index": 5,
+@@ -172,7 +172,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-e-500k-c-s1.json",
+-      "config_sha256": "d1868c8f761f221132fd6cb50be6e74a9f11d537110690ebe5f2a3ef7b9616d6"
++      "config_sha256": "7624aae29c8b57f0511e6df770a5859526c7d8a109aaf94e00856ca8ab96818e"
+     },
+     {
+       "index": 6,
+@@ -201,7 +201,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-e-750k-c-s1.json",
+-      "config_sha256": "1fae7ff8a14db309ae79ac4e6677c073ed346441d20ffc536546239477809e6a"
++      "config_sha256": "b9bbb5f5ced2ab601205f15258983f08ea79d13acfbfad3a5db9bdaba0e13c12"
+     },
+     {
+       "index": 7,
+@@ -230,7 +230,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-e-1m-c-s1.json",
+-      "config_sha256": "b704ffede44f23db0f11cf843b4008b3714513a4688d8c2e85eaece0dc3af5a9"
++      "config_sha256": "6d3a52a6c85ae85426caeb2ffa71bead27e9c9b0a18f2b7f4f439ce8bd0b9d52"
+     },
+     {
+       "index": 8,
+@@ -259,7 +259,7 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-e-2m-c-s1.json",
+-      "config_sha256": "65c9155f544a5f2c8830313980546b7fb7b9569d3bd0e96c32130c4ae543fb7b"
++      "config_sha256": "e1edd44d03f33c9dc1b357afe2fb91d2b4d8f1c5f53c9c27e009678317a69248"
+     },
+     {
+       "index": 9,
+@@ -288,39 +288,10 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-e-5m-c-s1.json",
+-      "config_sha256": "624de7c1c4c422f80db2082e968a1f8af4c7cf7886d901008b04265a62305129"
++      "config_sha256": "bd39cdcc89faf022b8e4e39798a1c09ad8d979ba1699c90914db6a2bbbec8f2b"
+     },
+     {
+       "index": 10,
+-      "name": "pilot1005-h2-a07-350k-c-s1",
+-      "arm": "A07-350",
+-      "seed": 1,
+-      "n_part": 64,
+-      "file": "pilot1005-h2-a07-350k-c-s1.json",
+-      "production": false,
+-      "target_ebops": 350000,
+-      "zero_floor_ebops": 343053,
+-      "headroom_zero": 6947,
+-      "headroom_flag": true,
+-      "arch": {
+-        "d_model": 32,
+-        "n_heads": 4,
+-        "pos_enc": "learned"
+-      },
+-      "quant_set": "chang",
+-      "round": "R1",
+-      "program_arm": "A07-350k-C",
+-      "hypothesis": "H2",
+-      "arch_name": "A07",
+-      "budget": 350000,
+-      "option_c": true,
+-      "warmup": 1,
+-      "variant": null,
+-      "pack": "packs/pilot1005-h2-a07-350k-c-s1.json",
+-      "config_sha256": "48593d1717ad0fcc09e6275fc5592c3dfafd98f73e392d6ee11dcebc67c8c0f1"
+-    },
+-    {
+-      "index": 11,
+       "name": "pilot1005-h2-a07-500k-c-s1",
+       "arm": "A07-350",
+       "seed": 1,
+@@ -346,10 +317,10 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-a07-500k-c-s1.json",
+-      "config_sha256": "2fb1293a5d6ab55b6c7e86b1e568de83a890371abd59281514b697570ec1a5cc"
++      "config_sha256": "908c44389f0008b4f957d7184c62fa3bd1a95aba8c18de374c8556d700ce7158"
+     },
+     {
+-      "index": 12,
++      "index": 11,
+       "name": "pilot1005-h2-a07-1m-c-s1",
+       "arm": "A07-350",
+       "seed": 1,
+@@ -375,10 +346,10 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-a07-1m-c-s1.json",
+-      "config_sha256": "3df825782a12f48cf1a96e286e652ccf2d5307b568eebb676fa548c38e09e032"
++      "config_sha256": "e2a50f7775736a1687a33074c4b19a7f1afad65a879d29464eb76f72c1fa4022"
+     },
+     {
+-      "index": 13,
++      "index": 12,
+       "name": "pilot1005-h2-a07-2m-c-s1",
+       "arm": "A07-350",
+       "seed": 1,
+@@ -404,10 +375,10 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-a07-2m-c-s1.json",
+-      "config_sha256": "b25cfffc44aea380432c642a63324e4e316eeccf4386e598765448a9441d2c77"
++      "config_sha256": "caa802ec8912ff224d5bdbd0e794df3cbe5979c6170baf195b7f99bc5124a369"
+     },
+     {
+-      "index": 14,
++      "index": 13,
+       "name": "pilot1005-h2-a07-5m-c-s1",
+       "arm": "A07-350",
+       "seed": 1,
+@@ -433,10 +404,10 @@
+       "warmup": 1,
+       "variant": null,
+       "pack": "packs/pilot1005-h2-a07-5m-c-s1.json",
+-      "config_sha256": "81ae0ce719fd3a57fd4c259374b15397070b1781f5f135d691f2664f121eec53"
++      "config_sha256": "fedf753e5f7dd8c4dae1fc8562451423957cffddfffed49068b09b8df9127c61"
+     },
+     {
+-      "index": 15,
++      "index": 14,
+       "name": "pilot1005-h4-e-350k-c-w50-s1",
+       "arm": "A",
+       "seed": 1,
+@@ -462,10 +433,10 @@
+       "warmup": 50,
+       "variant": null,
+       "pack": "packs/pilot1005-h4-e-350k-c-w50-s1.json",
+-      "config_sha256": "1609f51d76b6ba0e4e58a3d9075d76ea90f1b7864caebc530ac6dbefb7a6d322"
++      "config_sha256": "0841dd3d7ad1bf2d4696a7b4939903cc8f6b3cb8e084bce2caca398b84791612"
+     },
+     {
+-      "index": 16,
++      "index": 15,
+       "name": "pilot1005-h4-e-350k-c-w50-s2",
+       "arm": "A",
+       "seed": 2,
+@@ -491,10 +462,10 @@
+       "warmup": 50,
+       "variant": null,
+       "pack": "packs/pilot1005-h4-e-350k-c-w50-s2.json",
+-      "config_sha256": "b3172adb5c0420058164ee6a7ed6fd3fa8a55bd7f209c8a927b6f6e1a61bf808"
++      "config_sha256": "56f207260905d8306902ffc39e548f2fa6332efc55556bc6f508dd9629c88893"
+     },
+     {
+-      "index": 17,
++      "index": 16,
+       "name": "pilot1005-h4-e-350k-c-w150-s1",
+       "arm": "A",
+       "seed": 1,
+@@ -520,10 +491,10 @@
+       "warmup": 150,
+       "variant": null,
+       "pack": "packs/pilot1005-h4-e-350k-c-w150-s1.json",
+-      "config_sha256": "813be18d1b886ec27d043eb547dc1bf20519fda8f0b480ab2419ccecbb061190"
++      "config_sha256": "4309784eda0a4cb3f766cbafdd332c1481de4e4c88324df4e19e5605826cd5da"
+     },
+     {
+-      "index": 18,
++      "index": 17,
+       "name": "pilot1005-h4-e-350k-c-w150-s2",
+       "arm": "A",
+       "seed": 2,
+@@ -549,10 +520,10 @@
+       "warmup": 150,
+       "variant": null,
+       "pack": "packs/pilot1005-h4-e-350k-c-w150-s2.json",
+-      "config_sha256": "745b1bfceee24361745a7bf67c14be2b9174c0b20fe8750a79b6d6f592f91230"
++      "config_sha256": "8167315e3e6f0864215a038735f98b7abfef5f4e67f3953f95deafff5ca13f27"
+     },
+     {
+-      "index": 19,
++      "index": 18,
+       "name": "pilot1005-h5-e-350k-c-nb-s1",
+       "arm": "A",
+       "seed": 1,
+@@ -578,10 +549,10 @@
+       "warmup": 1,
+       "variant": "nb",
+       "pack": "packs/pilot1005-h5-e-350k-c-nb-s1.json",
+-      "config_sha256": "d9b0a2860548dfcd5997d6f714fe8cb1d3afba43eb293fe69e83ff9305a1cec2"
++      "config_sha256": "ef85d29b303da93ce32f46961b8cb3754fcd149fb3751e40221edb92c4ca32d7"
+     },
+     {
+-      "index": 20,
++      "index": 19,
+       "name": "pilot1005-h5-e-350k-c-nb-s2",
+       "arm": "A",
+       "seed": 2,
+@@ -607,10 +578,10 @@
+       "warmup": 1,
+       "variant": "nb",
+       "pack": "packs/pilot1005-h5-e-350k-c-nb-s2.json",
+-      "config_sha256": "a21a43ecff19abf561db4c38c84519b66e70b0a5f41adf005d0a61db92cd4d55"
++      "config_sha256": "9cf442d20b8c1660cb4c348891d9e5121e7df5c95250e31c65f36098adc24475"
+     },
+     {
+-      "index": 21,
++      "index": 20,
+       "name": "pilot1005-h3-e-350k-c-qkv1-s1",
+       "arm": "A",
+       "seed": 1,
+@@ -636,10 +607,10 @@
+       "warmup": 1,
+       "variant": "qkv1",
+       "pack": "packs/pilot1005-h3-e-350k-c-qkv1-s1.json",
+-      "config_sha256": "67b5356a55f34227d77f822c58a79e44f8d0eb9b1c291990f388ca15bbb131f2"
++      "config_sha256": "583bc4c3e6d5f75102706bd2131eef0751a41331d441ecc9bc63b983ba33f7a3"
+     },
+     {
+-      "index": 22,
++      "index": 21,
+       "name": "pilot1005-h3-e-350k-c-qkv1-s2",
+       "arm": "A",
+       "seed": 2,
+@@ -665,10 +636,68 @@
+       "warmup": 1,
+       "variant": "qkv1",
+       "pack": "packs/pilot1005-h3-e-350k-c-qkv1-s2.json",
+-      "config_sha256": "e3de45db8e505168cb9b322cbb78c72c9f15a9bb604e9ffd1f90fe2facb244bc"
++      "config_sha256": "f0bdfd073642be129ab9b8ebbb315f7d6585a297a9966ddf7618aafdd27bcfda"
++    },
++    {
++      "index": 22,
++      "name": "pilot1005-h3-e-450k-c-qkv1-s1",
++      "arm": "A",
++      "seed": 1,
++      "n_part": 64,
++      "file": "pilot1005-h3-e-450k-c-qkv1-s1.json",
++      "production": false,
++      "target_ebops": 450000,
++      "zero_floor_ebops": 269830,
++      "headroom_zero": 180170,
++      "headroom_flag": false,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "round": "R1",
++      "program_arm": "A350-C-qkv1-450k",
++      "hypothesis": "H3",
++      "arch_name": "E",
++      "budget": 450000,
++      "option_c": true,
++      "warmup": 1,
++      "variant": "qkv1",
++      "pack": "packs/pilot1005-h3-e-450k-c-qkv1-s1.json",
++      "config_sha256": "d1259edf118e2a04fc65b49f513e57a08c1db55bdd937db20f975aed07bccfa9"
++    },
++    {
++      "index": 23,
++      "name": "pilot1005-ctl-e-unc-c-s1",
++      "arm": "A",
++      "seed": 1,
++      "n_part": 64,
++      "file": "pilot1005-ctl-e-unc-c-s1.json",
++      "production": false,
++      "target_ebops": 100000000,
++      "zero_floor_ebops": 171526,
++      "headroom_zero": 99828474,
++      "headroom_flag": false,
++      "arch": {
++        "d_model": 24,
++        "n_heads": 2,
++        "pos_enc": "none"
++      },
++      "quant_set": "chang",
++      "round": "R1",
++      "program_arm": "E-unc-C",
++      "hypothesis": "control",
++      "arch_name": "E",
++      "budget": 100000000,
++      "option_c": true,
++      "warmup": 1,
++      "variant": "unc",
++      "pack": "packs/pilot1005-ctl-e-unc-c-s1.json",
++      "config_sha256": "2f61ccc749a41c54f5daae8143c6f6a1fbb22673e4223846cb9159ef44935ef9"
+     }
+   ],
+-  "count": 23,
++  "count": 24,
+   "production_count": 0,
+   "round": "R1"
+ }
+diff --git a/campaigns/pilot1005/packs/pilot1005-ctl-e-unc-c-s1.json b/campaigns/pilot1005/packs/pilot1005-ctl-e-unc-c-s1.json
+new file mode 100644
+index 0000000..b5e1eb7
+--- /dev/null
++++ b/campaigns/pilot1005/packs/pilot1005-ctl-e-unc-c-s1.json
+@@ -0,0 +1 @@
++[[23]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h2-a07-1m-c-s1.json b/campaigns/pilot1005/packs/pilot1005-h2-a07-1m-c-s1.json
+index e03f28f..80f4486 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h2-a07-1m-c-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h2-a07-1m-c-s1.json
+@@ -1 +1 @@
+-[[12]]
++[[11]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h2-a07-2m-c-s1.json b/campaigns/pilot1005/packs/pilot1005-h2-a07-2m-c-s1.json
+index 1eec8da..e03f28f 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h2-a07-2m-c-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h2-a07-2m-c-s1.json
+@@ -1 +1 @@
+-[[13]]
++[[12]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h2-a07-350k-c-s1.json b/campaigns/pilot1005/packs/pilot1005-h2-a07-350k-c-s1.json
+deleted file mode 100644
+index af29f9c..0000000
+--- a/campaigns/pilot1005/packs/pilot1005-h2-a07-350k-c-s1.json
++++ /dev/null
+@@ -1 +0,0 @@
+-[[10]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h2-a07-500k-c-s1.json b/campaigns/pilot1005/packs/pilot1005-h2-a07-500k-c-s1.json
+index 80f4486..af29f9c 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h2-a07-500k-c-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h2-a07-500k-c-s1.json
+@@ -1 +1 @@
+-[[11]]
++[[10]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h2-a07-5m-c-s1.json b/campaigns/pilot1005/packs/pilot1005-h2-a07-5m-c-s1.json
+index b817a2f..1eec8da 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h2-a07-5m-c-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h2-a07-5m-c-s1.json
+@@ -1 +1 @@
+-[[14]]
++[[13]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s1.json b/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s1.json
+index 1950eb6..2663178 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s1.json
+@@ -1 +1 @@
+-[[21]]
++[[20]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s2.json b/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s2.json
+index af2b833..1950eb6 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s2.json
++++ b/campaigns/pilot1005/packs/pilot1005-h3-e-350k-c-qkv1-s2.json
+@@ -1 +1 @@
+-[[22]]
++[[21]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h3-e-450k-c-qkv1-s1.json b/campaigns/pilot1005/packs/pilot1005-h3-e-450k-c-qkv1-s1.json
+new file mode 100644
+index 0000000..af2b833
+--- /dev/null
++++ b/campaigns/pilot1005/packs/pilot1005-h3-e-450k-c-qkv1-s1.json
+@@ -0,0 +1 @@
++[[22]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s1.json b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s1.json
+index b414c71..f078bcb 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s1.json
+@@ -1 +1 @@
+-[[17]]
++[[16]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s2.json b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s2.json
+index ae18e36..b414c71 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s2.json
++++ b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w150-s2.json
+@@ -1 +1 @@
+-[[18]]
++[[17]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s1.json b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s1.json
+index bcc4376..b817a2f 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s1.json
+@@ -1 +1 @@
+-[[15]]
++[[14]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s2.json b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s2.json
+index f078bcb..bcc4376 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s2.json
++++ b/campaigns/pilot1005/packs/pilot1005-h4-e-350k-c-w50-s2.json
+@@ -1 +1 @@
+-[[16]]
++[[15]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s1.json b/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s1.json
+index 499e598..ae18e36 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s1.json
++++ b/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s1.json
+@@ -1 +1 @@
+-[[19]]
++[[18]]
+diff --git a/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s2.json b/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s2.json
+index 2663178..499e598 100644
+--- a/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s2.json
++++ b/campaigns/pilot1005/packs/pilot1005-h5-e-350k-c-nb-s2.json
+@@ -1 +1 @@
+-[[20]]
++[[19]]
+diff --git a/campaigns/pilot1005/r1_packs.json b/campaigns/pilot1005/r1_packs.json
+index cb2496e..6f73fbb 100644
+--- a/campaigns/pilot1005/r1_packs.json
++++ b/campaigns/pilot1005/r1_packs.json
+@@ -1 +1 @@
+-[[0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22]]
++[[0], [1], [2], [3], [4], [5], [6], [7], [8], [9], [10], [11], [12], [13], [14], [15], [16], [17], [18], [19], [20], [21], [22], [23]]
+diff --git a/tests/test_pilot1005.py b/tests/test_pilot1005.py
+index 7bcbdaf..8de6de8 100644
+--- a/tests/test_pilot1005.py
++++ b/tests/test_pilot1005.py
+@@ -43,8 +43,8 @@ class Generator(unittest.TestCase):
+     def test_idempotent_and_byte_checked(self):
+         built = generate.build_all()          # asserts chang0926 / chang1002c bases byte-exact
+         cmap = json.loads((CAMP / 'config_map.json').read_text())['rows']
+-        self.assertEqual(len(built), 23)
+-        self.assertEqual(len(INDEX), 23)
++        self.assertEqual(len(built), 24)
++        self.assertEqual(len(INDEX), 24)
+         for i, (b, row, m) in enumerate(zip(built, INDEX, cmap)):
+             data = (CAMP / 'configs' / row['file']).read_bytes()
+             self.assertEqual(data, generate.encode(b['cfg']))
+@@ -52,17 +52,18 @@ class Generator(unittest.TestCase):
+             self.assertEqual(m['sha256'], row['config_sha256'])
+             self.assertEqual(row['index'], i)
+             self.assertEqual(json.loads((CAMP / row['pack']).read_text()), [[i]])
+-        self.assertEqual(json.loads((CAMP / 'r1_packs.json').read_text()), [[i] for i in range(23)])
++        self.assertEqual(json.loads((CAMP / 'r1_packs.json').read_text()), [[i] for i in range(24)])
+ 
+     def test_arm_table(self):
+         got = sorted((r['hypothesis'], r['arch_name'], r['budget'], r['option_c'], r['warmup'], r['seed'], str(r['variant']))
+                      for r in INDEX)
+         want = sorted([('H1', 'E', 350000, c, 1, s, 'None') for c in (True, False) for s in (1, 2)]
+                       + [('H2', 'E', t, True, 1, 1, 'None') for t in (250000, 500000, 750000, 1000000, 2000000, 5000000)]
+-                      + [('H2', 'A07', t, True, 1, 1, 'None') for t in (350000, 500000, 1000000, 2000000, 5000000)]
++                      + [('H2', 'A07', t, True, 1, 1, 'None') for t in (500000, 1000000, 2000000, 5000000)]
+                       + [('H4', 'E', 350000, True, w, s, 'None') for w in (50, 150) for s in (1, 2)]
+                       + [('H5', 'E', 350000, True, 1, s, 'nb') for s in (1, 2)]
+-                      + [('H3', 'E', 350000, True, 1, s, 'qkv1') for s in (1, 2)])
++                      + [('H3', 'E', 350000, True, 1, s, 'qkv1') for s in (1, 2)]
++                      + [('H3', 'E', 450000, True, 1, 1, 'qkv1'), ('control', 'E', 100000000, True, 1, 1, 'unc')])
+         self.assertEqual(got, want)
+         for r in INDEX:
+             cfg = cfg_of(r['name'])
+@@ -76,7 +77,8 @@ class Generator(unittest.TestCase):
+                              {'bits': 1, 'sites': ['q', 'k', 'v']} if r['variant'] == 'qkv1' else None)
+             self.assertEqual(cfg['experiment']['nondegenerate']['zero_floor_ebops'], floor)
+             self.assertGreater(r['budget'], floor)
+-            self.assertEqual(r['headroom_flag'], r['name'] == 'pilot1005-h2-a07-350k-c-s1')
++            self.assertFalse(r['headroom_flag'])
++            self.assertIs(cfg['campaign']['production'], False)              # [A3] F2 iv
+ 
+     def test_h1_pair_differs_only_in_pid_input(self):
+         for s in (1, 2):
+diff --git a/tests/test_readout_pilot.py b/tests/test_readout_pilot.py
+index 87e5140..649a0db 100644
+--- a/tests/test_readout_pilot.py
++++ b/tests/test_readout_pilot.py
+@@ -224,13 +224,14 @@ class ReadoutTests(unittest.TestCase):
+         with tempfile.TemporaryDirectory() as tmp:
+             fx = Fixture(tmp)
+             top, _ = fx.run(rows_only=index)
+-        self.assertEqual(top['n_arms'], 23)
++        self.assertEqual(top['n_arms'], 24)
+         self.assertFalse(top['complete'])
+         self.assertTrue(all(a['status'] == 'failed' and a['epochs_done'] == 0 for a in top['arms']))
+         ids = sorted({a['arm'] for a in top['arms']})
+         self.assertEqual(ids, sorted(['A350-noC', 'A350-C', 'A350-C-w50', 'A350-C-w150', 'E250k-C', 'E500k-C',
+-                                      'E750k-C', 'E1000k-C', 'E2000k-C', 'E5000k-C', 'A07-350k-C', 'A07-500k-C',
+-                                      'A07-1000k-C', 'A07-2000k-C', 'A07-5000k-C', 'NB350-C', 'A350-C-qkv1']))
++                                      'E750k-C', 'E1000k-C', 'E2000k-C', 'E5000k-C', 'A07-500k-C',
++                                      'A07-1000k-C', 'A07-2000k-C', 'A07-5000k-C', 'NB350-C', 'A350-C-qkv1',
++                                      'A350-C-qkv1-450k', 'E-unc-C']))
+ 
+ 
+ if __name__ == '__main__':

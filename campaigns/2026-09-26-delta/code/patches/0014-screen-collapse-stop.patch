@@ -1,0 +1,96 @@
+From 6ced835725f64960cca483fc305a14163d80009c Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:50:08 -0700
+Subject: [PATCH 14/24] screen-collapse-stop: experiment.collapse_stop records
+ COLLAPSED.json and stops; resume never trains past it (G1)
+
+---
+ code/bnhgq2/ablation.py   | 12 ++++++++++++
+ code/bnhgq2/delta_keys.py | 12 ++++++++++++
+ code/run_study.py         |  6 ++++--
+ 3 files changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 206b34d..8e37b6e 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -585,6 +585,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                            input_std=data_info['input_std'], latent_ema=latent_ema)
+     epochs = cfg['train']['epochs']
+     for epoch in range(state['completed_epochs'], epochs):
++        if state.get('collapsed'):  # Delta (screen-collapse-stop): never train past a collapse
++            break
+         start = time.monotonic()
+         lr = learning_rate(cfg, epoch)
+         optimizer.learning_rate.assign(lr)
+@@ -637,6 +639,14 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         if recovery_after is not None and epoch + 1 >= recovery_after and feasible and not state['recovery_frozen']:
+             state.update(recovery_frozen=True, freeze_epoch=epoch + 1, freeze_widths=raw_widths(model))
+             print(f'[recovery] freeze at end of epoch {epoch + 1}; Adam slots and LR preserved', flush=True)
++        collapse = cfg['experiment'].get('collapse_stop')
++        if collapse:  # Delta: val accuracy <= threshold for `patience` epochs after `after_epoch`
++            low = epoch + 1 > collapse['after_epoch'] and val_accuracy <= collapse['threshold']
++            state['collapse_run'] = state.get('collapse_run', 0) + 1 if low else 0
++            if state['collapse_run'] >= collapse['patience']:
++                state['collapsed'] = {'epoch': epoch + 1, 'val_categorical_accuracy': val_accuracy, 'rule': collapse}
++                atomic_json(out / 'COLLAPSED.json', state['collapsed'])
++                print(f"[collapse] stop at end of epoch {epoch + 1}: {state['collapsed']}", flush=True)
+         pid.on_epoch_end(epoch, {})
+         state['pid'] = {'beta': pid.beta, 'ebops': pid._ebops,
+                         'integral': pid.pid.integral, 'prev_error': pid.pid.prev_error}
+@@ -702,6 +712,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             'selected_val_categorical_accuracy': selected.get('val_categorical_accuracy'),
+             'train_seconds': state['train_seconds'], 'freeze_epoch': state['freeze_epoch'],
+             'n_train': len(xt), 'n_val': len(xv), 'data_sha256': state['data_sha256'], 'jit_compile': False}
++    if state.get('collapsed'):
++        meta['collapsed'] = state['collapsed']
+     atomic_json(out / 'train_meta.json', meta)
+     if wandb_run:
+         from .wandb_util import log_files_artifact
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index fc25602..d4db2f5 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -255,3 +255,15 @@ register('train.ebops.controller', 'beta-schedule-s-runner', _controller,
+          active=lambda v: v == 'schedule', export_ok=True)
+ register('train.ebops.beta_schedule', 'beta-schedule-s-runner', _beta_schedule,
+          active=lambda v: v is not None, export_ok=True)
++
++# screen-collapse-stop: G1 collapse rule (DELTA.md §5). Key name set here; no Delta entry names it.
++def _collapse(value, cfg):
++    if not isinstance(value, dict) or set(value) != {'threshold', 'patience', 'after_epoch'}:
++        return 'must be {"threshold": 0.25, "patience": 10, "after_epoch": 20}'
++    if not (isinstance(value['threshold'], float) and 0 < value['threshold'] < 1):
++        return 'threshold must be a float in (0, 1)'
++    if not all(isinstance(value[k], int) and value[k] >= 0 for k in ('patience', 'after_epoch')) or value['patience'] < 1:
++        return 'patience >= 1 and after_epoch >= 0 must be integers'
++
++
++register('experiment.collapse_stop', 'screen-collapse-stop', _collapse, export_ok=True)
+diff --git a/code/run_study.py b/code/run_study.py
+index 0332539..ed3324f 100644
+--- a/code/run_study.py
++++ b/code/run_study.py
+@@ -130,7 +130,9 @@ def train(index, stop_after):
+         np.testing.assert_allclose([auc, accuracy],
+             [selected['val_macro_auc'], selected['val_categorical_accuracy']], atol=1e-7, rtol=0)
+         np.savez_compressed(out / 'validation_predictions.npz', labels=np.asarray(arrays[3]), logits=logits)
+-        report = {**row, 'status': 'verified_screen' if state['completed_epochs'] == 50 else 'verified_canary',
++        status = 'verified_screen' if state['completed_epochs'] == 50 else 'verified_canary'
++        status = 'verified_collapsed' if state.get('collapsed') else status  # Delta
++        report = {**row, 'status': status, **({'collapsed': state['collapsed']} if state.get('collapsed') else {}),
+                   'completed_epochs': state['completed_epochs'], 'selected': selected,
+                   'checkpoint': filename, 'checkpoint_sha256': run_engram.file_hash(out / filename),
+                   'budget_met': state['best_feasible'] is not None,
+@@ -140,7 +142,7 @@ def train(index, stop_after):
+                   'validation_labels_sha256': info['array_sha256']['y_val'],
+                   'source_sha256': source['sha256'], **engram.accounting(model, trace)}
+         run_engram.write_json(out / 'screen_result.json', report)
+-        if state['completed_epochs'] == cfg['train']['epochs']:
++        if state['completed_epochs'] == cfg['train']['epochs'] or state.get('collapsed'):
+             run_engram.write_json(out / 'VERIFIED_COMPLETE.json', report)
+         print('CHECKPOINT_VERIFICATION_PASS', json.dumps(report), flush=True)
+ 
+-- 
+2.50.1 (Apple Git-155)
+

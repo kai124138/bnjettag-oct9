@@ -1,0 +1,38 @@
+........................................................................ [ 43%]
+........................................................................ [ 86%]
+..................s..s                                                   [100%]
+=============================== warnings summary ===============================
+tests/test_attn_bit_floor.py: 135 warnings
+tests/test_certify.py: 672 warnings
+tests/test_d20_trace.py: 968 warnings
+tests/test_export_no_pe.py: 31 warnings
+tests/test_i_decay_speed.py: 135 warnings
+tests/test_memory_leak_fix.py: 2960 warnings
+tests/test_nb_arm.py: 135 warnings
+tests/test_nondegenerate.py: 1608 warnings
+tests/test_pid_traced_only.py: 15248 warnings
+tests/test_pilot_variants_runner.py: 1616 warnings
+tests/test_post_pause_check.py: 1512 warnings
+tests/test_reload_check.py: 672 warnings
+tests/test_resume_cadence.py: 1680 warnings
+tests/test_trace_every.py: 7976 warnings
+tests/test_wandb_stage.py: 368 warnings
+tests/test_wrap_overflow.py: 32 warnings
+analysis/test_attn_entropy.py: 440 warnings
+  /home/kaimoe/venv-hgq2/lib/python3.12/site-packages/keras/src/backend/tensorflow/core.py:172: DeprecationWarning: __array__ implementation doesn't accept a copy keyword, so passing copy=False failed. __array__ must implement 'dtype' and 'copy' keyword arguments. To learn more, see the migration guide https://numpy.org/devdocs/numpy_2_0_migration_guide.html#adapting-to-changes-in-the-copy-keyword
+    return np.array(x)
+
+analysis/test_attn_entropy.py::test_uniform_logits_give_one[a]
+analysis/test_attn_entropy.py::test_main_on_snapshot_layout[a]
+analysis/test_attn_entropy.py::test_uniform_logits_give_one[cprime]
+analysis/test_attn_entropy.py::test_uniform_logits_give_one[fp32]
+  /home/kaimoe/venv-hgq2/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+  Expected: ['input_1']
+  Received: inputs=Tensor(shape=(16, 64, 3))
+    warnings.warn(msg)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: /tmp/claude-1000/-home-kaimoe-lab-bnjettag/e92600b4-dce3-4d77-b804-05a4a62d92c5/scratchpad/f2/out/pytest.xml -
+=========================== short test summary info ============================
+SKIPPED [2] analysis/test_attn_entropy.py:142: main() is exercised on the A build (C-prime test cfg differs from its file: pos_enc)
+164 passed, 2 skipped, 36192 warnings in 617.98s (0:10:17)

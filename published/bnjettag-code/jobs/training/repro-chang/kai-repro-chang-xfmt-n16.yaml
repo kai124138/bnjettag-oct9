@@ -1,0 +1,139 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kai-repro-chang-xfmt-n16
+  labels:
+    app: bnjet-repro-chang
+    reprochang: "xfmt-n16"
+spec:
+  backoffLimit: 2
+  # 7000 epochs; wall time unknown -> 48 h ceiling. The EXIT trap uploads whatever
+  # Pareto checkpoints exist even on deadline kill.
+  activeDeadlineSeconds: 172800
+  template:
+    metadata:
+      labels:
+        app: bnjet-repro-chang
+        reprochang: "xfmt-n16"
+    spec:
+      restartPolicy: Never
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                # hcc-chase-shor-c4705.unl.edu: lost GPU, UnexpectedAdmissionError black hole
+                # that ate every retry of the 2026-08-04 launch — excluded.
+                values: [hcc-chase-shor-c4705.unl.edu, k8s-chase-ci-07.calit2.optiputer.net, k8s-chase-ci-10.calit2.optiputer.net, k8s-haosu-22.sdsc.optiputer.net, ry-gpu-08.sdsc.optiputer.net, suncave-1, suncave-2, suncave-3, suncave-4, suncave-5, suncave-6, suncave-7, suncave-8, suncave-9, suncave-10, suncave-11, suncave-12, suncave-13, suncave-14, suncave-15, suncave-16, suncave-17, suncave-18, suncave-19, suncave-20]
+              - key: kubernetes.io/arch
+                operator: In
+                values: [amd64]
+              # hgq Dataset preloads the train split to gpu:0 -> 24 GB+ cards only.
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-A100-SXM4-80GB
+                - NVIDIA-A100-80GB-PCIe
+                - NVIDIA-A100-PCIE-40GB
+                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-L40S
+                - NVIDIA-L40
+                - NVIDIA-RTX-A6000
+                - NVIDIA-A40
+                - NVIDIA-GeForce-RTX-3090
+                - Tesla-V100-SXM2-32GB
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values: [NVIDIA-L40S, NVIDIA-L40, NVIDIA-RTX-A6000, NVIDIA-A40, NVIDIA-GeForce-RTX-4090, NVIDIA-GeForce-RTX-3090]
+          - weight: 20
+            preference:
+              matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values: [NVIDIA-A100-SXM4-80GB, NVIDIA-A100-80GB-PCIe, NVIDIA-A100-PCIE-40GB]
+      containers:
+      - name: train
+        image: python:3.12
+        command: ["bash", "-c"]
+        args:
+        - |
+          set -eo pipefail
+          MODEL=xfmt
+          NCONST=16
+          export KERAS_BACKEND=jax
+          mkdir -p /work/data /work/out
+          echo "[code] $(date) clone HGQ2-examples pinned at 6cdc6e3"
+          git clone https://github.com/calad0i/HGQ2-examples /work/HGQ2-examples
+          git -C /work/HGQ2-examples checkout 6cdc6e3
+          echo "[setup] $(date) pinned deps (mirror local .venv-chang, requirements-repro.txt)"
+          pip install -q --no-cache-dir "jax[cuda12]==0.11.0" "keras==3.14.0" \
+            "git+https://github.com/calad0i/HGQ2@88ddffde25e8f855c9534015863fa07b269d0b60" \
+            "quantizers>=1.2" "h5py==3.15.1" "tqdm==4.70.0" "wandb==0.28.0" "numpy<2.6"
+          nvidia-smi --query-gpu=name,memory.total --format=csv,noheader || { echo "[fatal] no GPU"; exit 1; }
+          python -c "import jax; d=jax.devices(); assert any('cuda' in str(x).lower() or 'gpu' in str(x).lower() for x in d), d; print('[gpu] jax sees', d)"
+          echo "[data] $(date) Zenodo 3602260 150p train+val (upstream prepare_data recipe, curl for aria2c)"
+          cd /work/data
+          curl -sSL -o train.tar.gz "https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_train.tar.gz?download=1"
+          sz=$(stat -c %s train.tar.gz); [ "$sz" -gt 2500000000 ] || { echo "[fatal] train tarball too small ($sz)"; exit 1; }
+          curl -sSL -o val.tar.gz "https://zenodo.org/records/3602260/files/hls4ml_LHCjet_150p_val.tar.gz?download=1"
+          tar -xzf train.tar.gz && rm -f train.tar.gz
+          tar -xzf val.tar.gz && rm -f val.tar.gz
+          python3 /work/HGQ2-examples/jsc150/tools/prepare_data.py -i ./train/ -o 150c-train.h5 -j 4
+          python3 /work/HGQ2-examples/jsc150/tools/prepare_data.py -i ./val/ -o 150c-test.h5 -j 4
+          rm -rf ./train/ ./val/
+          ls -la /work/data
+          export WANDB_PROJECT=bnjettag-bitnet
+          export WANDB_ENTITY=kayamaguchi-uc-san-diego
+          export WANDB_NAME=kai-repro-chang-xfmt-n16
+          export WANDB_RUN_GROUP=repro-chang
+          export WANDB_TAGS=repro-chang,jsc150,xfmt,n16
+          # Durability: the pod is emptyDir-only. Upload the Pareto checkpoint dir as a
+          # W&B artifact on ANY exit (success, failure, or deadline SIGTERM).
+          upload() {
+            echo "[wandb] $(date) uploading checkpoints ($(ls /work/out | wc -l) files)"
+            python3 - <<'EOF'
+          import wandb
+          run = wandb.init(job_type='repro-chang-train')
+          art = wandb.Artifact('kai-repro-chang-xfmt-n16-pareto', type='model')
+          art.add_dir('/work/out')
+          run.log_artifact(art).wait()
+          run.finish()
+          EOF
+          }
+          trap upload EXIT
+          echo "[train] $(date) jsc150 $MODEL n=$NCONST f=3 (paper grid; bsz=2790, lr=3e-3, 7000 ep, seed 42)"
+          cd /work/HGQ2-examples/jsc150
+          python -u run_train.py -i /work/data -o /work/out -n "$NCONST" -m "$MODEL" -f 3 2>&1 | tee /work/out/train.log
+          echo "[done] $(date) $MODEL n=$NCONST"
+        env:
+        - name: WANDB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: kai-wandb
+              key: WANDB_API_KEY
+        resources:
+          # tarballs 2.7+0.8 GB (deleted after extract), extracted h5 dirs ~11 GB transient,
+          # packed 150c h5 ~3.5 GB; prepare_data Pool(4).
+          limits:
+            nvidia.com/gpu: "1"
+            cpu: "4"
+            memory: 24Gi
+            ephemeral-storage: 40Gi
+          requests:
+            nvidia.com/gpu: "1"
+            cpu: "4"
+            memory: 24Gi
+            ephemeral-storage: 40Gi
+        volumeMounts:
+        - name: work
+          mountPath: /work
+      volumes:
+      - name: work
+        emptyDir:
+          sizeLimit: 40Gi

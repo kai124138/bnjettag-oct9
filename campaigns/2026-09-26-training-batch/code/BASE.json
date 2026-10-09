@@ -1,0 +1,27 @@
+{
+  "base_bundle": "campaigns/2026-09-22-constituent-screen/study-code.tar.gz",
+  "base_bundle_sha256": "26f3cc40a8f7c9ff378760c5b0d8ce046508cb4de585f9c4b80ea93653515a45",
+  "base_source_manifest_sha256": "7f9e93075123217af2adc10660cf9cf7dafffb51b9c385c29ee0211b3bff74d7",
+  "base_source_manifest_note": "run_study.manifest() on the extracted bundle reproduces 7f9e9307 with the pins below (checked 2026-09-27, CPU)",
+  "launch_record": "campaigns/2026-09-22-constituent-screen/launch-record.json (source_sha256, bundle_sha256)",
+  "pins": {
+    "tensorflow": "2.21.0",
+    "keras": "3.15.0",
+    "hgq2": "0.1.9",
+    "quantizers": "1.2.2",
+    "numpy": "2.5.0",
+    "scikit-learn": "1.9.0",
+    "h5py": "3.14.0",
+    "wandb": "0.28.0",
+    "hls4ml": "1.3.0"
+  },
+  "upstream_reference": {
+    "HGQ2-examples": "6cdc6e34d4cea0fb0f2e3ac502e2bfea01b2a805 (reference-code/HGQ2-examples; no LICENSE file, so nothing is lifted: the LR schedule in patch 0003 is written from the STUDY [D2] formula)",
+    "HGQ2": "88ddffde25e8f855c9534015863fa07b269d0b60 (v0.1.9-17; read only; the pin is the 0.1.9 wheel)"
+  },
+  "layout": {
+    "tree/": "the bundle with patches/ applied (what a ConfigMap would be built from)",
+    "patches/": "git format-patch series, -p1 against the bundle's code/ root, apply in order",
+    "apply.sh": "re-extract the sha-checked bundle, apply patches/, diff against tree/"
+  }
+}

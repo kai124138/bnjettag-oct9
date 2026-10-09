@@ -1,0 +1,102 @@
+{
+  "generated_unix": 1789501348.537098,
+  "definition": "mean(argmax(model_output, axis=1) == argmax(one_hot_label, axis=1))",
+  "test_split": "/data/hls4ml_lhc_jet/val/val",
+  "n_test": 260000,
+  "n_validation": 124000,
+  "input": {
+    "particles": 8,
+    "features": [
+      "pt",
+      "etarel",
+      "phirel"
+    ]
+  },
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.5.0",
+    "keras": "3.15.0",
+    "tensorflow": "2.21.0"
+  },
+  "runs": [
+    {
+      "run": "R0",
+      "arm": "r0-baseline",
+      "status": "finished",
+      "checkpoint_sha256": "95097bf8e6f5045344f57d6eec02ca0976ec9e90837d5ae76c7255b92b85961f",
+      "selected_epoch_zero_based": 893,
+      "selected_epoch_one_based": 894,
+      "ebops": 348526,
+      "selected_val_macro_auc": 0.8452665068986779,
+      "validation_accuracy": 0.5767096774193549,
+      "test_accuracy": 0.5747576923076924
+    },
+    {
+      "run": "R1",
+      "arm": "r1-channel",
+      "status": "finished",
+      "checkpoint_sha256": "d76050090655a68546e8bee51b695ef34c42083bcbd52832758b96f0e06f6e4c",
+      "selected_epoch_zero_based": 998,
+      "selected_epoch_one_based": 999,
+      "ebops": 317890,
+      "selected_val_macro_auc": 0.851884371427292,
+      "validation_accuracy": 0.5888790322580645,
+      "test_accuracy": 0.5874307692307692
+    },
+    {
+      "run": "R2",
+      "arm": "r2-ffn32",
+      "status": "finished",
+      "checkpoint_sha256": "cf3894ba89e0427bcf92d3e6aa16068d82adc7e7f9fceea8e13b2703ac5af86c",
+      "selected_epoch_zero_based": 725,
+      "selected_epoch_one_based": 726,
+      "ebops": 329838,
+      "selected_val_macro_auc": 0.8544567158464471,
+      "validation_accuracy": 0.5852338709677419,
+      "test_accuracy": 0.5831307692307692
+    },
+    {
+      "run": "R3",
+      "arm": "r3-prob8",
+      "status": "interim checkpoint",
+      "selection_metadata_source": "resumable checkpoint epoch-0812",
+      "checkpoint_sha256": "c86e2322478be7562b4d33228d8663e2187cda4d115d41c713a573239b6ec32c",
+      "selected_epoch_zero_based": 592,
+      "selected_epoch_one_based": 593,
+      "ebops": 340174,
+      "selected_val_macro_auc": 0.8462618106862676,
+      "validation_accuracy": 0.5762258064516129,
+      "test_accuracy": 0.5734346153846154
+    },
+    {
+      "run": "R4",
+      "arm": "r4-gradual",
+      "status": "no <=350k checkpoint yet"
+    },
+    {
+      "run": "R5",
+      "arm": "r5-recovery",
+      "status": "finished",
+      "checkpoint_sha256": "e622ef71f7f4f87ad04170efd4de7b0a24c39aaff3ada7db961b2af662b24e3d",
+      "selected_epoch_zero_based": 204,
+      "selected_epoch_one_based": 205,
+      "ebops": 349390,
+      "selected_val_macro_auc": 0.8410189691382677,
+      "validation_accuracy": 0.5703790322580645,
+      "test_accuracy": 0.5694038461538462
+    },
+    {
+      "run": "R6",
+      "arm": "r6-distill",
+      "status": "interim checkpoint",
+      "selection_metadata_source": "resumable checkpoint epoch-0607",
+      "checkpoint_sha256": "5d4979bfb53d6fc9e2547908f89d01f00f065eca5453d12798fc371f71fa4add",
+      "selected_epoch_zero_based": 183,
+      "selected_epoch_one_based": 184,
+      "ebops": 348366,
+      "selected_val_macro_auc": 0.8419752161356773,
+      "validation_accuracy": 0.5712258064516129,
+      "test_accuracy": 0.569123076923077
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+
+== local/engram-study/ops/preflight-job-r2.json :: kai-engram-preflight-a10364ed-r2 ==
+  note   no required GPU product list — widest possible pool (good)
+  note   single (non-Indexed) Job — per-index limits N/A; backoffLimit/activeDeadlineSeconds is the legacy pattern and is fine here
+  OK
+
+== local/engram-study/ops/gpu-job.json :: kai-engram-screen-e100-a10364ed ==
+  WARN   parallelism=1 but completions=4: at most 1 run at once. This is a self-imposed ceiling, not a cluster limit.
+  note   required pool = 16 products / 154 nodes cluster-wide
+
+(rules: docs/infrastructure/nrp-nautilus-setup.md -> 'Scheduling, GPU pools and job shape')

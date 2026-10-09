@@ -1,0 +1,148 @@
+From af85b811a98fa3cd297574a0939d59c1d3d07876 Mon Sep 17 00:00:00 2001
+From: ml-engineer <none@local>
+Date: Sun, 27 Sep 2026 01:03:07 -0700
+Subject: [PATCH 03/14] A1/A2: cosine-restart LR from the STUDY [D2] formula
+ (train.lr_schedule=chang_cosine_restarts; own implementation, jsc150 has no
+ license) and Adam-default optimizer (train.optimizer=adam_default), tests
+
+---
+ bnhgq2/ablation.py               | 44 +++++++++++++++++++++--
+ tests/test_schedule_optimizer.py | 62 ++++++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+), 2 deletions(-)
+ create mode 100644 tests/test_schedule_optimizer.py
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index f914770..3f26930 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -115,8 +115,35 @@ def matching_initialization(cfg, sample, seed):
+     return model, evidence
+ 
+ 
++def chang_cosine_restarts(eta0, period, t_mul=1.0, m_mul=1.0, alpha=0.0, hold=0):
++    """[A1]/[D2] Cosine decay with warm restarts, evaluated per epoch (zero-based `epoch`),
++    implemented from the STUDY [D2] formula, the schedule of jsc150 run_train.py:21-37,93
++    (HGQ2-examples 6cdc6e3; no code copied, that repository has no license file):
++      cycle c starts at epoch s_c with length L_c = period * t_mul**c,
++      t = min((epoch - s_c) / (L_c - hold), 1),
++      lr = alpha + 0.5 * (eta0 - alpha) * (1 + cos(pi * t)) * m_mul**c.
++    alpha is an absolute floor, held for the last `hold` epochs of each cycle; no warmup."""
++    from math import cos, pi
++
++    def schedule(epoch):
++        cycle, start, length = 0, 0, period
++        while epoch >= start + length:
++            start += length
++            length *= t_mul
++            cycle += 1
++        t = min((epoch - start) / (length - hold), 1.0)
++        return alpha + 0.5 * (eta0 - alpha) * (1.0 + cos(pi * t)) * m_mul ** cycle
++    return schedule
++
++
+ def learning_rate(cfg, epoch):
+     tr = cfg['train']
++    if tr.get('lr_schedule') == 'chang_cosine_restarts':
++        return float(chang_cosine_restarts(tr['lr'], tr['lr_cycle_epochs'], tr.get('lr_t_mul', 1.0),
++                                           tr.get('lr_m_mul', 1.0), tr['lr_alpha'],
++                                           tr['lr_alpha_epochs'])(epoch))
++    if tr.get('lr_schedule', 'poly') != 'poly':
++        raise ValueError(f"Unsupported train.lr_schedule in the ablation runner: {tr['lr_schedule']!r}")
+     warmup, decay = tr['warmup_epochs'], tr['decay_epochs']
+     if epoch < warmup:
+         return tr['lr'] * (epoch + 1) / warmup
+@@ -139,8 +166,21 @@ def optimizer_for(cfg, model):
+         from .engram import MemoryAdam
+         optimizer_class = MemoryAdam
+         extra['memory_lr_multiplier'] = study.get('memory_lr_multiplier', 5.)
+-    optimizer = optimizer_class(**extra, learning_rate=tr['lr'], beta_1=.9, beta_2=tr['beta2'],
+-                                     weight_decay=tr['weight_decay'], clipvalue=tr['clipvalue'])
++    kind = tr.get('optimizer', 'adam_ours')
++    if kind == 'adam_default':
++        # [A2]/[D3] jsc150 run_train.py:97, `keras.optimizers.Adam()`: beta_1 0.9,
++        # beta_2 0.999, epsilon 1e-7, no weight decay, no clipping.
++        if study.get('module') is not None:
++            raise ValueError('adam_default is not defined for the Engram memory optimizer')
++        optimizer = keras.optimizers.Adam(learning_rate=tr['lr'])
++        assert (optimizer.beta_1, optimizer.beta_2, optimizer.epsilon) == (0.9, 0.999, 1e-7)
++        assert optimizer.weight_decay is None and optimizer.clipvalue is None
++        assert optimizer.clipnorm is None and optimizer.global_clipnorm is None
++    elif kind == 'adam_ours':
++        optimizer = optimizer_class(**extra, learning_rate=tr['lr'], beta_1=.9, beta_2=tr['beta2'],
++                                    weight_decay=tr['weight_decay'], clipvalue=tr['clipvalue'])
++    else:
++        raise ValueError(f'Unsupported train.optimizer: {kind!r}')
+     optimizer.build(model.trainable_variables)
+     model.compile(optimizer=optimizer, loss=keras.losses.CategoricalCrossentropy(from_logits=True), jit_compile=False)
+     return optimizer
+diff --git a/tests/test_schedule_optimizer.py b/tests/test_schedule_optimizer.py
+new file mode 100644
+index 0000000..77f5322
+--- /dev/null
++++ b/tests/test_schedule_optimizer.py
+@@ -0,0 +1,62 @@
++"""[A1] Chang LR schedule values and [A2] optimizer paths (CPU)."""
++import copy
++import json
++import os
++from math import isclose
++from pathlib import Path
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++import pytest
++
++HERE = Path(__file__).resolve().parents[1]
++BASE = json.loads((HERE / 'configs' / 'const0922-a07-n64-s1-fast50-fp32.json').read_text())
++
++
++def chang_cfg():
++    cfg = copy.deepcopy(BASE)
++    cfg['train'].update(lr=3e-3, lr_schedule='chang_cosine_restarts', lr_cycle_epochs=500,
++                        lr_t_mul=1.0, lr_m_mul=1.0, lr_alpha=1e-6, lr_alpha_epochs=10)
++    return cfg
++
++
++def reference(e, eta=3e-3, alpha=1e-6, period=500, hold=10):
++    from math import cos, pi
++    t = min((e % period) / (period - hold), 1)
++    return alpha + 0.5 * (eta - alpha) * (1 + cos(pi * t))
++
++
++@pytest.mark.parametrize('epoch', [0, 1, 250, 489, 490, 499, 500, 501, 999, 1000, 6500, 6999])
++def test_chang_schedule(epoch):
++    from bnhgq2.ablation import learning_rate
++    assert isclose(learning_rate(chang_cfg(), epoch), reference(epoch), rel_tol=0, abs_tol=1e-15)
++
++
++def test_chang_schedule_landmarks():
++    from bnhgq2.ablation import learning_rate
++    cfg = chang_cfg()
++    assert learning_rate(cfg, 0) == pytest.approx(3e-3, abs=1e-15)
++    assert learning_rate(cfg, 500) == pytest.approx(3e-3, abs=1e-15)
++    for e in (490, 495, 499, 990, 6999):
++        assert learning_rate(cfg, e) == pytest.approx(1e-6, abs=1e-15)
++    assert learning_rate(cfg, 489) > 1e-6
++    assert all(learning_rate(cfg, e) >= 2.99e-3 for e in range(10))   # canary sits on the peak
++
++
++def test_poly_unchanged():
++    from bnhgq2.ablation import learning_rate
++    tr = BASE['train']
++    assert learning_rate(BASE, 0) == tr['lr'] * 1 / tr['warmup_epochs']
++    assert learning_rate(BASE, 25) == tr['lr'] * (1 - (25 - 1) / 49)
++
++
++def test_optimizers():
++    import keras
++    from bnhgq2 import ablation
++    model = keras.Sequential([keras.Input((3,)), keras.layers.Dense(2)])
++    cfg = chang_cfg()
++    cfg['train']['optimizer'] = 'adam_default'
++    opt = ablation.optimizer_for(cfg, model)
++    assert (opt.beta_1, opt.beta_2, opt.epsilon, opt.weight_decay, opt.clipvalue) == (0.9, 0.999, 1e-7, None, None)
++    cfg['train']['optimizer'] = 'adam_ours'
++    opt = ablation.optimizer_for(cfg, model)
++    assert (opt.beta_2, opt.weight_decay, opt.clipvalue) == (0.98, 0.01, 1.0)
+-- 
+2.50.1 (Apple Git-155)
+

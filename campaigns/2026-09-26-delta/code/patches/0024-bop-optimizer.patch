@@ -1,0 +1,90 @@
+From 6a995b0f22c710495bd34de3c4346b9248b8ae0f Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 09:30:52 -0700
+Subject: [PATCH 24/24] bop-optimizer: wire newmods/bop.py via
+ delta_optimizer_for at the two optimizer call sites, outside optimizer_for
+ ([A2]) (M020, M071)
+
+---
+ code/bnhgq2/ablation.py   | 15 +++++++++++++--
+ code/bnhgq2/delta_keys.py | 27 +++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+), 2 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 7643427..eaad490 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -330,6 +330,17 @@ class DeltaDiagnostics:
+     RATIO_EDGES = (0., 0.25, 0.5, 1., 2., 4., np.inf)
+ 
+ 
++def delta_optimizer_for(cfg, model):
++    """Delta (bop-optimizer): route train.binary_optimizer "bop" to newmods/bop.py; every
++    other config gets optimizer_for unchanged. Kept outside optimizer_for, which the anchor's
++    [A2] hunk rewrites. BopAdam keeps Adam's variable count and order, so checkpoints restore
++    by index unchanged."""
++    if cfg['train'].get('binary_optimizer') == 'bop':
++        from newmods.bop import bop_optimizer_for
++        return bop_optimizer_for(cfg, model)
++    return optimizer_for(cfg, model)
++
++
+ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None, input_std=None,
+                     latent_ema=None):
+     x = tf.convert_to_tensor(xt, dtype=tf.float32)
+@@ -452,7 +463,7 @@ def restore_checkpoint(out, cfg, dataset_info):
+     assert state['data_sha256'] == digest_json(dataset_info), 'Resume data mismatch'
+     assert state['code_sha256'] == os.environ.get('BNHGQ2_CODE_SHA256', 'local-check'), 'Resume code mismatch'
+     model = keras.models.load_model(directory / 'model.keras', compile=False)
+-    optimizer = optimizer_for(cfg, model)
++    optimizer = delta_optimizer_for(cfg, model)
+     with np.load(directory / 'optimizer.npz') as arrays:
+         assert len(arrays.files) == len(optimizer.variables)
+         for i, v in enumerate(optimizer.variables):
+@@ -591,7 +602,7 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         model, initialization = builder(cfg, xt[:4096], seed)
+         if cfg['experiment'].get('init_checkpoint'):
+             initialization['init_checkpoint_artifact'] = check_artifact_std(cfg['experiment']['init_checkpoint'], data_info)
+-        optimizer = optimizer_for(cfg, model)
++        optimizer = delta_optimizer_for(cfg, model)
+         initial = compute_ebops(model, sample)
+         state = {'config_sha256': digest_json(cfg), 'data_sha256': digest_json(data_info),
+                  'code_sha256': os.environ.get('BNHGQ2_CODE_SHA256', 'local-check'),
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 1f07817..66941da 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -448,3 +448,30 @@ def _deepsets_dims(value, cfg):
+ 
+ register('arch.body', 'body-deepsets', _body)
+ register('arch.deepsets_dims', 'body-deepsets', _deepsets_dims)
++
++# bop-optimizer (wiring of newmods/bop.py, new-files engineer; M020, M071): Bop on the binary
++# latents, Adam on the rest. gamma and tau have no defaults (the wave STUDY sets them).
++for _key in ('train.binary_optimizer', 'train.bop_gamma', 'train.bop_tau'):
++    UNWIRED.pop(_key, None)
++
++
++def _binary_optimizer(value, cfg):
++    if value != 'bop':
++        return 'only "bop" is implemented (Adam is the default when absent)'
++    gamma, tau = lookup(cfg, 'train.bop_gamma'), lookup(cfg, 'train.bop_tau')
++    if not isinstance(gamma, (int, float)) or isinstance(gamma, bool) or not 0 < gamma <= 1:
++        return 'train.bop_gamma must be a number in (0, 1]'
++    if not isinstance(tau, (int, float)) or isinstance(tau, bool) or tau < 0:
++        return 'train.bop_tau must be a number >= 0'
++    if lookup(cfg, 'engram_study.module') is not None:
++        return 'Bop is not combined with the Engram memory optimizer'
++
++
++def _bop_param(value, cfg):
++    if lookup(cfg, 'train.binary_optimizer') != 'bop':
++        return 'read only with train.binary_optimizer "bop"'
++
++
++register('train.binary_optimizer', 'bop-optimizer', _binary_optimizer, export_ok=True)
++register('train.bop_gamma', 'bop-optimizer', _bop_param, export_ok=True)
++register('train.bop_tau', 'bop-optimizer', _bop_param, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

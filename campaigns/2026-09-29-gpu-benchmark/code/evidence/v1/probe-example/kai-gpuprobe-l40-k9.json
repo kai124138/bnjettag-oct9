@@ -1,0 +1,193 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-gpuprobe-l40-k9",
+    "namespace": "cms-ml",
+    "labels": {
+      "user": "kai",
+      "campaign": "gpu-bench-20260929",
+      "app": "kai-gpuprobe-l40-k9",
+      "bnjettag.io/arms-per-pod": "9",
+      "bnjettag.io/probe": "true"
+    },
+    "annotations": {
+      "bnjettag.io/telemetry-only": "STUDY [D4] schedulability probe, campaigns/2026-09-29-gpu-benchmark; no training",
+      "bnjettag.io/probe": "10 pods of the K=9 production shape (18 CPU, 72Gi, 1 nvidia.com/gpu); header + fingerprint gate only; G_obs = pods Running within 30 min of apply, Q_p = their median wait",
+      "bnjettag.io/gpu-product": "NVIDIA-L40 via nvidia.com/gpu",
+      "bnjettag.io/gpu-fingerprint": "kai-chang0926-fp-e9511d1aeb sha256 e9511d1aeb39c7c8: chang0926-a-n64-s1 initial_ebops == 11559681, else exit 9",
+      "bnjettag.io/wandb": "none: no training",
+      "bnjettag.io/retries": "backoffLimitPerIndex 0: a probe pod is never retried; a preempted one is replaced",
+      "bnjettag.io/narrow-pool": "one product on purpose (decisions.md 2026-09-29); ends when the probe Job is deleted",
+      "bnjettag.io/node-survey": "node_survey_20260929T065531Z.json (read 2026-09-29T06:55:31Z)"
+    }
+  },
+  "spec": {
+    "completionMode": "Indexed",
+    "completions": 10,
+    "parallelism": 10,
+    "backoffLimitPerIndex": 0,
+    "maxFailedIndexes": 10,
+    "podFailurePolicy": {
+      "rules": [
+        {
+          "action": "Ignore",
+          "onPodConditions": [
+            {
+              "type": "DisruptionTarget"
+            }
+          ]
+        }
+      ]
+    },
+    "activeDeadlineSeconds": 3600,
+    "ttlSecondsAfterFinished": 604800,
+    "template": {
+      "metadata": {
+        "labels": {
+          "user": "kai",
+          "campaign": "gpu-bench-20260929",
+          "app": "kai-gpuprobe-l40-k9",
+          "bnjettag.io/arms-per-pod": "9",
+          "bnjettag.io/probe": "true"
+        }
+      },
+      "spec": {
+        "activeDeadlineSeconds": 1800,
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "nvidia.com/gpu.product",
+                      "operator": "In",
+                      "values": [
+                        "NVIDIA-L40"
+                      ]
+                    },
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "hcc-nrp-shor-c6017.unl.edu",
+                        "k8s-chase-ci-07.calit2.optiputer.net",
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "restartPolicy": "Never",
+        "terminationGracePeriodSeconds": 60,
+        "containers": [
+          {
+            "name": "probe",
+            "image": "python:3.12",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "bash",
+              "-c"
+            ],
+            "args": [
+              "set -euo pipefail\nBR=/data/chang-n64-20260926/gpu-bench/probe-l40-k9\necho \"PROBE_POD ${POD_NAME:-na} product NVIDIA-L40 K 9 $(date -u +%Y-%m-%dT%H:%M:%SZ)\"\necho \"HOSTNAME_NODE ${NODE_NAME:-na}\"\nmkdir -p \"$BR\"\nexec > >(tee -a \"$BR/${POD_NAME:-pod}.log\") 2>&1\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_CPP_MIN_LOG_LEVEL=2\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho '42abed4b5d2e3e9197d36a5031754cfde342fc7b0d03f7bb0106ce16c2e258c0  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code\nexport BNJ_DATA_ROOT=/data/chang-n64-20260926 BNJ_RUN_ROOT=\"$BR\" BNJ_CAMPAIGN_DIR=/work/code/campaigns/chang0926\nunset BNJ_STAGE WANDB_PROJECT WANDB_ENTITY WANDB_API_KEY WANDB_TAGS\nexport WANDB_MODE=disabled\nexport TF_FORCE_GPU_ALLOW_GROWTH=true NVIDIA_TF32_OVERRIDE=0\nexport BNJ_RSS_GATE_LIMIT_MB=8192 BNJ_RSS_GATE_WINDOW=5:105\npip install -q --no-cache-dir -r /work/code/requirements-training.txt\nNVLIBS=$(python -c \"import glob; print(':'.join(sorted(glob.glob('/usr/local/lib/python*/site-packages/nvidia/*/lib'))))\")\nexport LD_LIBRARY_PATH=\"$NVLIBS${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}\"\ncd /work/code\nMSHA=$(python -c \"import run_study; print(run_study.manifest()['sha256'])\")\ntest \"$MSHA\" = \"041f981a9d5b8c3a7affb175d82de0ca2df9bc6261a172f67cb365c88b4bbd42\" || { echo \"MANIFEST_SHA_MISMATCH $MSHA\"; exit 1; }\necho \"MANIFEST_SHA_OK $MSHA\"\nexport BNHGQ2_CODE_SHA256=\"$MSHA\"\npython -c \"import tensorflow as tf; assert tf.config.list_physical_devices('GPU'); print('GPU_GATE_PASS')\"\ntest -f /data/chang-n64-20260926/n64/data/READY.json || { echo \"CACHE_NOT_READY\"; exit 1; }\necho CACHE_READY\necho \"GPU_INFO $(nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader || echo na)\"\ndf -h /data\necho \"PIP_FREEZE_SHA256 $(python -m pip freeze --all | sha256sum | cut -d' ' -f1)\"\necho 'e9511d1aeb39c7c8e48cc7dbc148ac623f3b2d9844d108da38f1ecfa2bdff1f1  /cmfp/fingerprint_check.py' | sha256sum -c -\nFP=0\npython -u /cmfp/fingerprint_check.py --run chang0926-a-n64-s1 --expect 11559681 --data-root /data/chang-n64-20260926 --campaign-dir /work/code/campaigns/chang0926 --env-report || FP=$?\nif [ \"$FP\" != 0 ]; then echo \"FINGERPRINT_GATE_FAIL exit=$FP node=${NODE_NAME:-na}; no arm started\"; exit \"$FP\"; fi\necho \"PROBE_DONE ${POD_NAME:-na} node ${NODE_NAME:-na} $(date -u +%Y-%m-%dT%H:%M:%SZ)\"\n"
+            ],
+            "env": [
+              {
+                "name": "NODE_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "spec.nodeName"
+                  }
+                }
+              },
+              {
+                "name": "POD_NAME",
+                "valueFrom": {
+                  "fieldRef": {
+                    "fieldPath": "metadata.name"
+                  }
+                }
+              },
+              {
+                "name": "WANDB_MODE",
+                "value": "disabled"
+              }
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "18",
+                "memory": "72Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              },
+              "limits": {
+                "cpu": "18",
+                "memory": "72Gi",
+                "ephemeral-storage": "24Gi",
+                "nvidia.com/gpu": "1"
+              }
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/cmcode",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "work"
+              },
+              {
+                "mountPath": "/data",
+                "name": "persistent"
+              },
+              {
+                "mountPath": "/cmfp",
+                "name": "fingerprint",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "code",
+            "configMap": {
+              "name": "kai-chang0926-code-42abed4b5d",
+              "defaultMode": 420
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "24Gi"
+            }
+          },
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          },
+          {
+            "name": "fingerprint",
+            "configMap": {
+              "name": "kai-chang0926-fp-e9511d1aeb",
+              "defaultMode": 420
+            }
+          }
+        ]
+      }
+    }
+  }
+}

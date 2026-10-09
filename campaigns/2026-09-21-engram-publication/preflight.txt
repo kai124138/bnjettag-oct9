@@ -1,0 +1,41 @@
+PASS address_reference_mask_gradient_serialization_[1]_none_1
+PASS address_reference_mask_gradient_serialization_[1]_hard_1
+PASS address_reference_mask_gradient_serialization_[2, 3]_hard_2
+PASS e00 build/binary/init/cost/reload
+PASS e01 build/binary/init/cost/reload
+WARNING:tensorflow:5 out of the last 5 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x1396507c0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:6 out of the last 6 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x1398fa160> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+/Users/kaiyamaguchi/Desktop/bnjettag-lab/bnjettag-lab 2/research/.venv-hgq2/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['engram_input']
+Received: inputs=Tensor(shape=(20, 4, 3))
+  warnings.warn(msg)
+PASS e02 build/binary/init/cost/reload
+PASS e03 build/binary/init/cost/reload
+PASS e04 build/binary/init/cost/reload
+PASS e05 build/binary/init/cost/reload
+PASS e06 build/binary/init/cost/reload
+PASS e07 build/binary/init/cost/reload
+[train] engram-e03-s1 params=9149 resume_epoch=0 initial_ebops=43622
+/Users/kaiyamaguchi/Desktop/bnjettag-lab/bnjettag-lab 2/research/.venv-hgq2/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['engram_input']
+Received: inputs=Tensor(shape=(20, 4, 3))
+  warnings.warn(msg)
+[epoch 1/2] EBOPs=43622 target=1000000 beta=1e-07 val_AUC=0.521875 val_accuracy=0.150000 seconds=10.1 checkpoint=epoch-0001
+[train] engram-e03-s1 params=9149 resume_epoch=1 initial_ebops=43622
+/Users/kaiyamaguchi/Desktop/bnjettag-lab/bnjettag-lab 2/research/.venv-hgq2/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['engram_input']
+Received: inputs=Tensor(shape=(20, 4, 3))
+  warnings.warn(msg)
+[epoch 2/2] EBOPs=43622 target=1000000 beta=1e-07 val_AUC=0.521875 val_accuracy=0.150000 seconds=2.1 checkpoint=epoch-0002
+[train] engram-e03-s1 params=9149 resume_epoch=0 initial_ebops=43622
+/Users/kaiyamaguchi/Desktop/bnjettag-lab/bnjettag-lab 2/research/.venv-hgq2/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['engram_input']
+Received: inputs=Tensor(shape=(20, 4, 3))
+  warnings.warn(msg)
+[epoch 1/2] EBOPs=43622 target=1000000 beta=1e-07 val_AUC=0.521875 val_accuracy=0.150000 seconds=2.4 checkpoint=epoch-0001
+/Users/kaiyamaguchi/Desktop/bnjettag-lab/bnjettag-lab 2/research/.venv-hgq2/lib/python3.12/site-packages/keras/src/models/functional.py:259: UserWarning: The structure of `inputs` doesn't match the expected structure.
+Expected: ['engram_input']
+Received: inputs=Tensor(shape=(20, 4, 3))
+  warnings.warn(msg)
+[epoch 2/2] EBOPs=43622 target=1000000 beta=1e-07 val_AUC=0.521875 val_accuracy=0.150000 seconds=0.1 checkpoint=epoch-0002
+ENGRAM_PREFLIGHT_PASS: /tmp/bnjettag-engram-publication-preflight/preflight.json

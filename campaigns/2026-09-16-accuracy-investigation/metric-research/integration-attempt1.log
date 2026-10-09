@@ -1,0 +1,26 @@
+/cmcode/hgq2.tar.gz: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789625013.568054       1 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789625015.499414       1 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.
+E0000 00:00:1789625015.974832       1 cuda_platform.cc:52] failed call to cuInit: INTERNAL: CUDA error: Failed call to cuInit: UNKNOWN ERROR (303)
+SMOKE_START accuracy_feasible
+[train] accuracy_feasible params=18657 resume_epoch=0 initial_ebops=1739182
+WARNING:tensorflow:5 out of the last 5 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7dd2b05f9e40> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+Traceback (most recent call last):
+  File "/eval/integration_smoke.py", line 42, in <module>
+    first = run_training(cfg, arrays, info, out, stop_after=1)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/code/bnhgq2/ablation.py", line 314, in run_training
+    auc, per_auc, val_accuracy = validation_metrics(yv, logits)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/code/bnhgq2/ablation.py", line 246, in validation_metrics
+    auc, per_auc = macro_ovr_auc(labels, _softmax(logits))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/code/bnhgq2/train.py", line 76, in macro_ovr_auc
+    from sklearn.metrics import roc_auc_score
+ModuleNotFoundError: No module named 'sklearn'

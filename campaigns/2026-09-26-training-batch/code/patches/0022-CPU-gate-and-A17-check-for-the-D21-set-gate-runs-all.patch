@@ -1,0 +1,169 @@
+From ad878751f2525203912130592186aef714fe6916 Mon Sep 17 00:00:00 2001
+From: Kai <kayamaguchi@ucsd.edu>
+Date: Sun, 27 Sep 2026 09:09:41 -0700
+Subject: [PATCH 22/22] CPU gate and A17 check for the D21 set: gate runs all
+ 58 configs (production and pilot counted apart), traces on the config's D20
+ sample, asserts PID-read EBOPs = traced, stored reload check = traced,
+ re-traces each arm's 0-bit floor against experiment.nondegenerate, records
+ i_decay_speed; check_pairing --arms a,b,d,r pairs each no-PE E-family arm
+ with F
+
+---
+ campaigns/chang0926/check_pairing.py | 36 +++++++++++++++----------
+ campaigns/chang0926/cpu_gate.py      | 39 +++++++++++++++++++++++-----
+ 2 files changed, 55 insertions(+), 20 deletions(-)
+
+diff --git a/campaigns/chang0926/check_pairing.py b/campaigns/chang0926/check_pairing.py
+index 03cca74..8ddef1f 100644
+--- a/campaigns/chang0926/check_pairing.py
++++ b/campaigns/chang0926/check_pairing.py
+@@ -1,7 +1,9 @@
+ #!/usr/bin/env python3
+-"""[A17] A vs F pairing: build A-s{s} and F-s{s} through the production initializer
++"""[A17] pairing with F: build <arm>-s{s} and F-s{s} through the production initializer
+ (ablation.matching_initialization) and compare `kernel_hashes`. Paired by seed only if
+-every differing entry is `pos_table`. CPU; the sample is a fixed synthetic batch (the
++every entry present in one build only is `pos_table` and no shared entry differs
++(`--arms a,b,d,r`, default a; under [D21] F carries the learned PE and the no-PE
++E-family arms draw it with `pos_enc_none_consume_rng`). CPU; the sample is a fixed synthetic batch (the
+ kernel/bias/pos_table hashes do not depend on it; activation calibration does, and is not
+ compared). Prints A_F_PAIRING PAIRED|UNPAIRED and writes the evidence with --out."""
+ import argparse
+@@ -30,21 +32,29 @@ def main():
+     apply_keras_compat()
+     parser = argparse.ArgumentParser()
+     parser.add_argument('--seeds', default='1')
++    parser.add_argument('--arms', default='a')
+     parser.add_argument('--out', type=Path)
+     args = parser.parse_args()
+     sample = np.random.default_rng(0).standard_normal((4096, 64, 3)).astype('float32')
+     report = {}
+-    for seed in [int(s) for s in args.seeds.split(',')]:
+-        a = json.loads((HERE / 'configs' / f'chang0926-a-n64-s{seed}.json').read_text())
+-        f = json.loads((HERE / 'configs' / f'chang0926-f-n64-s{seed}.json').read_text())
+-        ha, hf = hashes(a, sample), hashes(f, sample)
+-        only_a, only_f = sorted(set(ha) - set(hf)), sorted(set(hf) - set(ha))
+-        differ = sorted(k for k in set(ha) & set(hf) if ha[k] != hf[k])
+-        paired = all(k.endswith('pos_table') for k in only_a) and not only_f and not differ
+-        report[seed] = {'paired': paired, 'only_in_a': only_a, 'only_in_f': only_f,
+-                        'differing_shared': differ, 'n_shared': len(set(ha) & set(hf))}
+-        print('A_F_PAIRING', 'seed', seed, 'PAIRED' if paired else 'UNPAIRED',
+-              'only_in_a', only_a, 'differing_shared', len(differ), 'of', len(set(ha) & set(hf)), flush=True)
++    cache = {}
++
++    def arm_hashes(arm, seed):
++        if (arm, seed) not in cache:
++            cfg = json.loads((HERE / 'configs' / f'chang0926-{arm}-n64-s{seed}.json').read_text())
++            cache[arm, seed] = hashes(cfg, sample)
++        return cache[arm, seed]
++    for arm in args.arms.split(','):
++        for seed in [int(s) for s in args.seeds.split(',')]:
++            ha, hf = arm_hashes(arm, seed), arm_hashes('f', seed)
++            only_a, only_f = sorted(set(ha) - set(hf)), sorted(set(hf) - set(ha))
++            differ = sorted(k for k in set(ha) & set(hf) if ha[k] != hf[k])
++            paired = all(k.endswith('pos_table') for k in only_a + only_f) and not differ
++            report[f'{arm}-s{seed}'] = {'paired': paired, 'only_in_arm': only_a, 'only_in_f': only_f,
++                                        'differing_shared': differ, 'n_shared': len(set(ha) & set(hf))}
++            print(f'{arm.upper()}_F_PAIRING', 'seed', seed, 'PAIRED' if paired else 'UNPAIRED',
++                  'only_in_arm', only_a, 'only_in_f', only_f, 'differing_shared', len(differ),
++                  'of', len(set(ha) & set(hf)), flush=True)
+     if args.out:
+         args.out.write_text(json.dumps(report, indent=2) + '\n')
+ 
+diff --git a/campaigns/chang0926/cpu_gate.py b/campaigns/chang0926/cpu_gate.py
+index 9156246..29f94d2 100644
+--- a/campaigns/chang0926/cpu_gate.py
++++ b/campaigns/chang0926/cpu_gate.py
+@@ -10,6 +10,13 @@ batch size (ablation.make_epoch_step, loss finite); save -> reload -> prediction
+ screen preflight tolerance (atol = rtol = 2e-6) and re-traced EBOPs equal. Prints
+ CONFIG_PREFLIGHT_PASS <name> params <n> ... per config and PREFLIGHT_ALL_PASS at the end.
+ Synthetic data: nothing here is a result.
++
++Added for [D20] / arbiter v3 (patch 0022): traces run on the config's
++`train.ebops_trace_sample` rows of the synthetic sample (train_full = all 4,096); the EBOPs
++BetaPID reads (`ablation.model_ebops`) must equal the traced total; the stored-variable
++reload check must equal it too; `i_decay_speed` is read per quantizer; the config's
++`experiment.nondegenerate.zero_floor_ebops` is re-traced with static_floor.py once per arm
++(seed 1) and must be equal. Pilot-only rows run too and are counted apart.
+ """
+ from __future__ import annotations
+ 
+@@ -37,8 +44,10 @@ def main():
+     import run_engram
+     ablation, _ = run_engram.runtime()
+     tf.config.experimental.enable_tensor_float_32_execution(False)
++    from static_floor import floors as static_floors
+     rows = json.loads((HERE / 'index.json').read_text())['runs']
+     only = {a.upper() for a in args.only.split(',') if a}
++    floor_checked = {}
+     rng = np.random.default_rng(0)
+     x = rng.standard_normal((4096, 64, 3)).astype('float32')
+     y = np.eye(5, dtype='float32')[rng.integers(0, 5, 4096)]
+@@ -53,8 +62,10 @@ def main():
+         assert ablation.cost_before_auc(cfg) is False
+         model, evidence = ablation.matching_initialization(cfg, x, cfg['experiment']['seed'])
+         ablation.binary_gate(model, cfg)
+-        sample = x[:256]
+-        cost = ablation.compute_ebops(model, sample)
++        sample = ablation.ebops_trace_sample(cfg, x)
++        cost = ablation.compute_ebops(model, sample, batch_size=ablation.ebops_trace_batch(cfg))
++        assert ablation.model_ebops(model) == cost['total'], ('PID-read EBOPs differ', ablation.model_ebops(model), cost['total'])
++        decay = ablation.i_decay_speeds(model)
+         optimizer = ablation.optimizer_for(cfg, model)
+         tr = cfg['train']
+         lrs = {e: ablation.learning_rate(cfg, e) for e in (0, 489, 490, 499, 500, tr['epochs'] - 1)}
+@@ -63,7 +74,7 @@ def main():
+         optimizer.learning_rate.assign(lrs[0])
+         loss = [float(v) for v in step(np.arange(batch, dtype='int32')).numpy()]
+         assert np.isfinite(loss).all(), loss
+-        cost_after = ablation.compute_ebops(model, sample)
++        cost_after = ablation.compute_ebops(model, sample, batch_size=ablation.ebops_trace_batch(cfg))
+         pred = np.asarray(model(x[:16], training=False))
+         with tempfile.TemporaryDirectory() as tmp:
+             path = Path(tmp) / 'm.keras'
+@@ -71,24 +82,38 @@ def main():
+             loaded = keras.models.load_model(path, compile=False)
+             reload_pred = np.asarray(loaded(x[:16], training=False))
+             np.testing.assert_allclose(reload_pred, pred, atol=2e-6, rtol=2e-6)
+-            traced = ablation.compute_ebops(loaded, sample)
++            stored = ablation.stored_state_ebops(model, loaded)
++            assert stored['total'] == cost_after['total'], ('stored reload check', stored, cost_after['total'])
++            traced = ablation.compute_ebops(loaded, sample, batch_size=ablation.ebops_trace_batch(cfg))
+             assert traced['total'] == cost_after['total']
+             reload_diff = float(np.max(np.abs(reload_pred - pred)))
++        nd = cfg['experiment'].get('nondegenerate')
++        if nd is not None and row['arm'] not in floor_checked:
++            probe = json.loads(json.dumps(cfg))
++            probe['experiment'].pop('nondegenerate')
++            floor_checked[row['arm']] = static_floors(probe, with_attn_rule=False)['zero']['total']
++        if nd is not None:
++            assert floor_checked[row['arm']] == nd['zero_floor_ebops'], (row['name'], floor_checked[row['arm']], nd)
+         weights = int(sum(np.prod(v.shape) for v in model.weights if v.name in ('kernel', 'bias', 'pos_table')))
+         report = {'name': row['name'], 'arm': row['arm'], 'seed': row['seed'],
+                   'params_count_params': int(model.count_params()), 'params_kernel_bias_pos': weights,
+                   'initial_ebops_synthetic': cost['total'], 'ebops_after_one_step': cost_after['total'],
+                   'one_step_loss': loss[0], 'lr': lrs, 'reload_max_abs_diff': reload_diff,
+                   'optimizer': tr.get('optimizer'), 'kernel_hashes': evidence['kernel_hashes'],
+-                  'status': 'PASS'}
++                  'production': row.get('production', True), 'trace_rows': int(len(sample)),
++                  'zero_floor_ebops': None if nd is None else nd['zero_floor_ebops'],
++                  'zero_floor_retraced': floor_checked.get(row['arm']) if nd is not None else None,
++                  'i_decay_speed': decay, 'status': 'PASS'}
+         reports.append(report)
+         print('CONFIG_PREFLIGHT_PASS', row['name'], 'params', report['params_count_params'],
+               'kernel_bias_pos', weights, 'initial_ebops', cost['total'], 'reload_max_abs_diff',
+-              reload_diff, flush=True)
++              reload_diff, 'zero_floor', report['zero_floor_ebops'], 'floor_retraced', report['zero_floor_retraced'],
++              'production', int(report['production']), flush=True)
+         del model, loaded, optimizer, step
+     if args.out:
+         args.out.write_text(json.dumps(reports, indent=2) + '\n')
+-    print('PREFLIGHT_ALL_PASS', len(reports), flush=True)
++    n_prod = sum(r['production'] for r in reports)
++    print('PREFLIGHT_ALL_PASS', len(reports), 'production', n_prod, 'pilot_only', len(reports) - n_prod, flush=True)
+ 
+ 
+ if __name__ == '__main__':
+-- 
+2.50.1 (Apple Git-155)
+

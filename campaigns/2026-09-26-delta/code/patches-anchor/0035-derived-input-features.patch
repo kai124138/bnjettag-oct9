@@ -1,0 +1,170 @@
+From 4ab4dab031aaac349077cde68ff6f7c7e3d674c7 Mon Sep 17 00:00:00 2001
+From: ml-engineer <scratch@localhost>
+Date: Sun, 27 Sep 2026 14:39:54 -0700
+Subject: [PATCH 35/38] derived-input-features: arch.derived_features
+ log_pt/delta_r appended after the pT gate, before standardization, in the
+ cache and load_eval_set; n_feat = 3 + len (M040)
+
+---
+ code/bnhgq2/data.py       | 30 +++++++++++++++++++++++++++++-
+ code/bnhgq2/delta_keys.py | 22 ++++++++++++++++++++++
+ code/prepare_cache.py     | 11 ++++++++++-
+ code/run_engram.py        |  5 ++++-
+ 4 files changed, 65 insertions(+), 3 deletions(-)
+
+diff --git a/code/bnhgq2/data.py b/code/bnhgq2/data.py
+index 260cc1e..f990370 100644
+--- a/code/bnhgq2/data.py
++++ b/code/bnhgq2/data.py
+@@ -58,7 +58,7 @@ def apply_pt_gate(X, features, pt_gate_gev, stats=None):
+ 
+ 
+ def load_eval_set(data_dir: str, n_part: int = 10, features=None, pt_gate_gev=None,
+-                  gate_stats=None):
++                  gate_stats=None, derived_features=None):
+     """features=None keeps all 16 columns (byte-identical pre-pre-conference behaviour);
+     a list of suffixes selects columns AFTER the pT sort and top-N truncation, so
+     the particle ordering is identical regardless of the feature subset.
+@@ -94,6 +94,8 @@ def load_eval_set(data_dir: str, n_part: int = 10, features=None, pt_gate_gev=No
+     X = np.concatenate(Xs)
+     if pt_gate_gev is not None:
+         X = apply_pt_gate(X, features, pt_gate_gev, gate_stats)
++    if derived_features:   # Delta (derived-input-features): same columns as the training cache
++        X = derive_features(X, features, derived_features)
+     return X, np.concatenate(Ys)
+ 
+ 
+@@ -116,6 +118,32 @@ def input_std_stats(X, eps=1e-6):
+     return mu.astype("float32"), sigma.astype("float32")
+ 
+ 
++DERIVED_FEATURES = ('log_pt', 'delta_r')
++
++
++def derive_features(X, features, derived):
++    """Delta (derived-input-features): append columns computed from the RAW L1 features, after
++    the pT gate and before standardization, in the order given: "log_pt" = ln(pT / GeV) on real
++    slots and 0 on padded / gated slots (raw pT == 0, where the log is undefined; rule, recorded
++    in DELTA code/README.md); "delta_r" = sqrt(etarel^2 + phirel^2) (0 on zeroed slots). Both
++    are invariant under the eta/phi reflections of augment-eta-phi-reflect."""
++    features = list(features)
++    cols = []
++    for name in derived:
++        if name == 'log_pt':
++            pt = X[..., features.index('pt')].astype('float64')
++            cols.append(np.where(pt > 0, np.log(np.where(pt > 0, pt, 1.0)), 0.0))
++        elif name == 'delta_r':
++            eta = X[..., features.index('etarel')].astype('float64')
++            phi = X[..., features.index('phirel')].astype('float64')
++            cols.append(np.sqrt(eta * eta + phi * phi))
++        else:
++            raise ValueError(f'unknown derived feature {name!r}; known {DERIVED_FEATURES}')
++    if not cols:
++        return X
++    return np.concatenate([X, np.stack(cols, axis=-1).astype(X.dtype)], axis=-1)
++
++
+ def real_slot_mask(X, features):
+     """Delta (std-real-slots): True on real constituents. Padded and pT-gated slots are all-zero
+     rows in raw space (apply_pt_gate zeroes every feature), so a slot is real iff its RAW pT != 0.
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 082aea7..ee9544c 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -663,3 +663,25 @@ def _std_scope(value, cfg):
+ 
+ 
+ register('data.std_scope', 'std-real-slots', _std_scope, export_ok=True)
++
++# derived-input-features (anchor tree only; M040, M067, M080, M081, M085-M087, M091-M093, M095):
++# arch.derived_features ["log_pt", "delta_r"] appends columns computed from the raw L1 features
++# after the pT gate and before standardization (data.derive_features, in prepare_cache and in
++# data.load_eval_set for ROC-test), and arch.n_feat = 3 + len(derived_features). log pT is 0 on
++# padded / gated slots (rule). The derived list is part of the cache identity.
++UNWIRED.pop('arch.derived_features', None)
++
++
++def _derived(value, cfg):
++    known = ('log_pt', 'delta_r')
++    if not isinstance(value, list) or not value or len(set(value)) != len(value) or set(value) - set(known):
++        return f'must be a non-empty list of distinct names from {list(known)}'
++    if lookup(cfg, 'arch.n_feat') != 3 + len(value):
++        return 'arch.n_feat must be 3 + len(arch.derived_features)'
++    if lookup(cfg, 'arch.pair_bias'):
++        return 'not combined with arch.pair_bias (PairFeatures de-standardizes exactly 3 features)'
++    if lookup(cfg, 'engram_study.module') is not None:
++        return 'the Engram tokenizer reads the 3 L1 features'
++
++
++register('arch.derived_features', 'derived-input-features', _derived)
+diff --git a/code/prepare_cache.py b/code/prepare_cache.py
+index 7083408..f81ef35 100644
+--- a/code/prepare_cache.py
++++ b/code/prepare_cache.py
+@@ -47,9 +47,11 @@ def verify(cache, n_part, config, require_ready=True):
+     assert info['order_seed'] == cache_order_seed(config)
+     assert info.get('pt_gate_gev') == config['arch'].get('pt_gate_gev')
+     assert info.get('std_scope') == config.get('data', {}).get('std_scope')  # Delta (std-real-slots)
++    assert info.get('derived_features') == config['arch'].get('derived_features')  # Delta
++    n_feat = 3 + len(config['arch'].get('derived_features') or [])
+     n_train, n_val = split_sizes(config['train']['validation_split'])
+     arrays = [np.load(cache / (name + '.npy'), mmap_mode='r') for name in NAMES]
+-    assert arrays[0].shape == (n_train, n_part, 3) and arrays[2].shape == (n_val, n_part, 3)
++    assert arrays[0].shape == (n_train, n_part, n_feat) and arrays[2].shape == (n_val, n_part, n_feat)
+     assert arrays[1].shape == (n_train, 5) and arrays[3].shape == (n_val, 5)
+     for name, array in zip(NAMES, arrays):
+         assert array.dtype == np.float32 and np.isfinite(array).all()
+@@ -83,6 +85,7 @@ def main():
+             assert all(ref['train'][k] == cfg['train'][k] for k in ('split_seed', 'validation_split', 'order_seed'))
+             assert ref['arch'].get('pt_gate_gev') == cfg['arch'].get('pt_gate_gev')
+             assert ref.get('data', {}).get('std_scope') == cfg.get('data', {}).get('std_scope')  # Delta
++            assert ref['arch'].get('derived_features') == cfg['arch'].get('derived_features')  # Delta
+         by_n[n] = cfg
+     assert set(requested) <= set(by_n) <= {8, 64}
+     args.root.mkdir(parents=True, exist_ok=True)
+@@ -122,6 +125,10 @@ def main():
+                 # [A3] gate on raw GeV after sort/truncate/subset, before the split
+                 # statistics; per constituent, so it commutes with the permutation.
+                 x = apply_pt_gate(x, cfg['arch']['features'], cfg['arch']['pt_gate_gev'], gate_stats)
++            derived = cfg['arch'].get('derived_features')  # Delta (derived-input-features)
++            if derived:
++                from bnhgq2.data import derive_features
++                x = derive_features(x, cfg['arch']['features'], derived)
+             nv = int(len(x) * cfg['train']['validation_split'])
+             assert nv == split_sizes(cfg['train']['validation_split'])[1]
+             std_scope = cfg.get('data', {}).get('std_scope')  # Delta (std-real-slots)
+@@ -149,6 +156,8 @@ def main():
+                             sort_stats=sort_stats, standardization='after the pT gate, train split only',
+                             y_class_counts={'train': np.asarray(arrays[1]).sum(0).astype(int).tolist(),
+                                             'val': np.asarray(arrays[3]).sum(0).astype(int).tolist()})
++            if derived:
++                info['derived_features'] = list(derived)   # Delta: part of the cache identity
+             if std_scope is not None:
+                 info['std_scope'] = std_scope   # Delta: part of the cache identity (load_cache, verify)
+                 info['input_std']['computed_from'] = 'train split only, real (non-gated, non-padded) slots'
+diff --git a/code/run_engram.py b/code/run_engram.py
+index 80fc27e..ec5cd50 100644
+--- a/code/run_engram.py
++++ b/code/run_engram.py
+@@ -110,7 +110,8 @@ def runtime():
+ 
+ def validate_cfg(cfg):
+     from bnhgq2 import delta_keys; delta_keys.validate(cfg)  # Delta opt-in keys
+-    if cfg['arch']['features'] != ['pt', 'etarel', 'phirel'] or cfg['arch']['n_feat'] != 3:
++    if cfg['arch']['features'] != ['pt', 'etarel', 'phirel'] or \
++            cfg['arch']['n_feat'] != 3 + len(cfg['arch'].get('derived_features') or []):  # Delta: + derived
+         raise ValueError('Study requires exactly [pt, etarel, phirel] in that order')
+     if cfg['quant']['weight'] not in delta_keys.WEIGHT_SCHEMES or cfg['quant']['act_calib'] != 'free':
+         raise ValueError('Study expects binary backbone weights and free activation widths')
+@@ -191,6 +192,8 @@ def load_cache(path, cfg):
+     if 'pt_gate_gev' in info or cfg['arch'].get('pt_gate_gev') is not None:
+         checks += [('pt_gate_gev', cfg['arch'].get('pt_gate_gev')),
+                    ('validation_split', cfg['train']['validation_split'])]
++    if 'derived_features' in info or cfg['arch'].get('derived_features'):   # Delta (derived-input-features)
++        checks.append(('derived_features', cfg['arch'].get('derived_features')))
+     if 'std_scope' in info or cfg.get('data', {}).get('std_scope') is not None:   # Delta (std-real-slots)
+         checks.append(('std_scope', cfg.get('data', {}).get('std_scope')))
+     for key, value in checks:
+-- 
+2.50.1 (Apple Git-155)
+

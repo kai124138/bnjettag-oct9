@@ -1,0 +1,531 @@
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index 4e2fefb..f16d2f5 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -340,7 +340,33 @@ def expected_binary_layers(cfg):
+     return names
+ 
+ 
++def is_nb(cfg):
++    """[D22] arm NB: learned-width kbi weights in place of A's binary kernels."""
++    return cfg is not None and cfg['quant']['weight'] == 'kbi_learnable'
++
++
++def nb_weight_gate(model, cfg):
++    """[D22]/[A22] NB's replacement for the binary gate: exactly A's binarized kernels carry a
++    trainable per-weight kbi quantizer with the jsc150 settings, no binary layer is left, and the
++    per-layer width record (fraction at 0 bits, mean bits) is returned for the run record."""
++    layers = qat.kbi_weight_layers(model)
++    assert set(layers) == expected_binary_layers(cfg), 'NB kbi layer names/count do not match the binary layers of A'
++    assert not qat.effective_weight_values(model), 'NB model still has binary layers'
++    spec = qat.JSC150_XFM_WEIGHT
++    for name, layer in layers.items():
++        q = layer.kq.quantizer
++        assert q.overflow_mode == spec['overflow_mode'] and q.round_mode == spec['round_mode'], name
++        assert q._b.trainable and q._i.trainable, name
++        assert tuple(q._b.shape) == tuple(layer._kernel.shape), (name, 'widths are not per weight')
++        assert q.b_constraint.min_value == spec['bc_min'], (name, 'weights cannot reach 0 bits')
++    return qat.weight_width_record(model)
++
++
+ def binary_gate(model, cfg=None):
++    if is_nb(cfg):
++        # [D22] the binary gate does not apply to NB (STUDY l. 807-810); A configs never get here
++        nb_weight_gate(model, cfg)
++        return
+     # Optional inference retains compatibility with the older standalone checks.
+     if cfg is None:
+         blocks = [layer for layer in model.layers if layer.name.startswith('bit_block_') and layer.name.endswith('_attn_Wq')]
+@@ -1099,6 +1125,12 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         if pid_integral_mode is not None:
+             logs.update(pid_stepped=int(pid_stepped), pid_step_span=int(pid_span),
+                         pid_integral=float(pid.pid.integral))
++        if is_nb(cfg):
++            # [D22] NB only: weight widths are learned; log their mean and 0-bit fraction
++            wrec = qat.weight_width_record(model)
++            nw = sum(r['n'] for r in wrec.values())
++            logs.update(weight_bits_mean=sum(r['mean_bits'] * r['n'] for r in wrec.values()) / nw,
++                        weight_zero_bits_fraction=sum(r['zero_bits_fraction'] * r['n'] for r in wrec.values()) / nw)
+         if trace_every is not None:
+             # [D20] regime B: `ebops` and `budget_met` are traced quantities; null on an
+             # untraced epoch (the in-training value is `ebops_in_training`).
+@@ -1191,6 +1223,9 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+                       first_feasible_degenerate=state['first_feasible_degenerate'])
+     if d20:
+         result['i_decay_speed'] = state.get('i_decay_speed')
++    if is_nb(cfg):
++        # [D22] the replacement for the binary gate: per-layer weight widths at the selected checkpoint
++        result['weight_widths'] = nb_weight_gate(delivered, cfg)
+     if keep_auc_feasible(cfg):
+         result['auc_selected_feasible'] = state.get('best_feasible_auc')
+         result['auc_selected_checkpoint'] = ('model_best_auc_feasible.keras'
+diff --git a/bnhgq2/qat.py b/bnhgq2/qat.py
+index 68a883f..df538fd 100644
+--- a/bnhgq2/qat.py
++++ b/bnhgq2/qat.py
+@@ -351,6 +351,34 @@ def _static_w8(i0: int = 2):
+                            trainable=False, heterogeneous_axis=())
+ 
+ 
++# [D22]/[A22] arm NB: the jsc150 `xfm` weight quantizer, resolved on the pin (hgq2 0.1.9) from the
++# scope stack get_model('xfm', 7, 7, 1e-8, 64, True) + get_transformer (scope0: kbi, i0 0, MonoL1
++# 1e-8 on f/i, i_decay_speed 1e-3; weight scope: SAT_SYM, b0 4; HGQ2 kbi weight defaults for the
++# rest). Dump: campaigns/2026-10-05-pilot-program/dev/evidence/jsc150_weight_quantizer_dump.json.
++# Copied, not paraphrased; tests/test_nb_arm.py asserts the built quantizer equals the dump.
++JSC150_XFM_WEIGHT = dict(k0=1, b0=4, i0=0, round_mode="RND", overflow_mode="SAT_SYM",
++                         bc_min=0.0, bc_max=23.0, l1=1e-8, i_decay_speed=1e-3,
++                         homogeneous_axis=())
++
++
++def _kbi_learnable_kq():
++    """[D22] learned-width weights (HGQ2 kbi, per weight): trainable b (bits, 0..23) and i, so a
++    weight can reach 0 bits (pruned, output exactly 0, 0 EBOPs). Under SAT_SYM HGQ2 prices
++    `bits = b`. Values are jsc150's (JSC150_XFM_WEIGHT); biases stay float as in arm A."""
++    from hgq.constraints import MinMax
++    from hgq.regularizers import MonoL1
++    s = JSC150_XFM_WEIGHT
++    return QuantizerConfig("kbi", "weight", k0=s["k0"], b0=s["b0"], i0=s["i0"],
++                           round_mode=s["round_mode"], overflow_mode=s["overflow_mode"],
++                           bc=MinMax(s["bc_min"], s["bc_max"]), ic=None,
++                           br=MonoL1(s["l1"]), ir=MonoL1(s["l1"]),
++                           i_decay_speed=s["i_decay_speed"],
++                           homogeneous_axis=s["homogeneous_axis"], trainable=True)
++
++
++WEIGHT_BRANCHES = ("binary_absmean", "none", "int8_absmax", "kbi_learnable")
++
++
+ def _dummy(place="datalane"):
+     return QuantizerConfig("dummy", place)
+ 
+@@ -393,8 +421,12 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         raise ValueError(f"unknown arch.pos_enc {A['pos_enc']!r}")
+     wmode = cfg["quant"]["weight"]
+     ab = int(cfg["quant"]["act_bits"])
++    if wmode not in WEIGHT_BRANCHES:
++        # [A22] no silent default: an unknown weight type used to build the w8a8 grid
++        raise ValueError(f"{cfg['name']}: quant.weight={wmode!r} has no builder branch")
+     fp32 = wmode == "none"
+     binv = wmode == "binary_absmean"
++    kbiw = wmode == "kbi_learnable"   # [D22] arm NB: learned-width weights on A's binary kernels
+     # act_calib: "frozen" (default; static first-batch-calibrated grid) | "trainable"
+     # (trainable-scale fixed-bit grid, the drift rescue) | "recalib" (frozen but the
+     # train stage re-runs calibration at act_recalib_epochs). Default reproduces the
+@@ -414,9 +446,9 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         raise ValueError(f"{cfg['name']}: unsupported quant.act_overflow={act_overflow!r}")
+     if softmax_quant not in ("fixed", "chang"):
+         raise ValueError(f"{cfg['name']}: unsupported quant.softmax_quant={softmax_quant!r}")
+-    if (act_overflow != "SAT" or softmax_quant != "fixed") and (act_calib != "free" or not binv):
+-        raise ValueError(f"{cfg['name']}: act_overflow/softmax_quant need binary weights "
+-                         "and act_calib='free'")
++    if (act_overflow != "SAT" or softmax_quant != "fixed") and (act_calib != "free" or not (binv or kbiw)):
++        raise ValueError(f"{cfg['name']}: act_overflow/softmax_quant need binary or kbi_learnable "
++                         "weights and act_calib='free'")
+     # [D25] (2026-09-27, opt-in): quant.i_decay_speed sets HGQ2's per-step decay of a WRAP
+     # quantizer's integer bits (i <- max(i - i_decay_speed, i_batch) in training) on exactly
+     # the quantizers ablation.i_decay_speeds() records. Absent => nothing below runs and the
+@@ -476,6 +508,9 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+         elif binv:
+             kq, iq = _binary_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
+             cls = BitQEinsumDense
++        elif kbiw:  # [D22] NB: same input quantizer as A, learned-width kernel
++            kq, iq = _kbi_learnable_kq(), act_iq(axes=(-2, -1) if len(x.shape) == 4 else (-1,))
++            cls = QEinsumDense
+         else:  # w8a8
+             kq, iq = _static_w8(), act_iq()
+             cls = QEinsumDense
+@@ -491,6 +526,8 @@ def build_qat_model(cfg: dict, seed: int, enable_ebops: bool = True,
+             kq, iq, cls = _dummy("weight"), _dummy("datalane"), QDense
+         elif binv:
+             kq, iq, cls = _binary_kq(), act_iq(), BitQDense
++        elif kbiw:  # [D22] NB
++            kq, iq, cls = _kbi_learnable_kq(), act_iq(), QDense
+         else:
+             kq, iq, cls = _static_w8(), act_iq(), QDense
+         return cls(units, use_bias=use_bias, iq_conf=iq, kq_conf=kq,
+@@ -716,6 +753,44 @@ def act_grid_params(model):
+     return out
+ 
+ 
++def kbi_weight_layers(model):
++    """[D22] {layer_name: layer} of every layer whose kernel quantizer is a trainable HGQ2 kbi
++    weight quantizer (arm NB). Empty for every other weight type."""
++    from hgq.quantizer.internal import FixedPointQuantizerKBI
++    out = {}
++    for ly in model.layers:
++        if isinstance(ly, (BitQEinsumDense, BitQDense)):
++            continue
++        kq = getattr(ly, "kq", None)
++        qz = getattr(kq, "quantizer", None)
++        if isinstance(qz, FixedPointQuantizerKBI) and qz.trainable and getattr(qz, "_is_weight", False):
++            out[ly.name] = ly
++    return out
++
++
++def weight_width_record(model):
++    """[D22] per-layer weight-width distribution of arm NB (the STUDY's replacement for the binary
++    gate): HGQ2 `bits` per weight (= b under SAT_SYM), fraction at 0 bits, mean bits, and the
++    number of distinct effective (inference) kernel values."""
++    out = {}
++    for name, ly in kbi_weight_layers(model).items():
++        bits = np.asarray(ops.convert_to_numpy(ly.kq.quantizer.bits), dtype=float).ravel()
++        values = np.asarray(ops.convert_to_numpy(ly.kq(ly._kernel, training=False))).ravel()
++        out[name] = {"n": int(bits.size), "zero_bits_fraction": float(np.mean(bits == 0)),
++                     "mean_bits": float(bits.mean()), "max_bits": float(bits.max()),
++                     "distinct_values": int(np.unique(np.round(values, 10)).size)}
++    return out
++
++
++def on_static_int8_grid(values, i0: int = 2) -> bool:
++    """True if every value lies on the static int8 weight grid `_static_w8(i0)` builds
++    (fixed<8, 1+i0>: step 2^-(7-i0), range [-2^i0, 2^i0 - step]). [A22]: no NB kernel may."""
++    v = np.asarray(values, dtype=np.float64).ravel()
++    step = 2.0 ** -(7 - int(i0))
++    on_step = np.allclose(v / step, np.round(v / step), atol=1e-6)
++    return bool(on_step and v.min() >= -(2.0 ** i0) and v.max() <= 2.0 ** i0 - step)
++
++
+ def effective_weight_values(model):
+     """Return {layer_name: sorted unique effective forward weight values} for every
+     binary layer — the binary gate (must be exactly two values, symmetric, no zero)."""
+diff --git a/static_floor.py b/static_floor.py
+index 08fbcf5..aa479b8 100644
+--- a/static_floor.py
++++ b/static_floor.py
+@@ -22,7 +22,10 @@ standard-normal sample (256 jets):
+         is the zero floor (recorded as `weights_only_rule`).
+ Fixed-width quantizers (trainable=False) stay at their configured widths.
+ 
+-Weights are binary (1 bit, fixed) and not touched. The floor depends on widths only, not
++Weights are binary (1 bit, fixed) and not touched. [D22] NB (`quant.weight: kbi_learnable`):
++the modes above keep the learned weight widths at init (b0 4); NB adds zero_w0 (zero floor,
++every weight at 0 bits), one_w1 and one_w0 (1-bit-alive with every weight at 1 / 0 bits).
++The floor depends on widths only, not
+ on the sample, because EBOPs are priced from bit widths; the WRAP i that tracing sets is
+ bounded by ic.max and does not enter relu(i + fc.min) = 0. STATIC_INFEASIBLE means the
+ zero floor is at or above the arm's target (STUDY [A7]). Not a result; a structural trace.
+@@ -67,9 +70,22 @@ def one_bit_names(model, mode):
+     return names
+ 
+ 
+-def set_floor(model, mode, sample, max_iter=48):
++def set_weight_bits(model, bits):
++    """[D22] NB only: set every learned-width (kbi) kernel to `bits` per weight (b = bits, i
++    unchanged). Binary kernels are fixed at 1 bit and are never touched."""
++    from bnhgq2 import qat
++    layers = qat.kbi_weight_layers(model)
++    assert layers, 'weight_bits set on a model without learned-width weights'
++    for layer in layers.values():
++        _full(layer.kq.quantizer._b, bits)
++    return len(layers)
++
++
++def set_floor(model, mode, sample, max_iter=48, weight_bits=None):
+     from bnhgq2.ebops_calc import compute_ebops
+     held = one_bit_names(model, mode)
++    if weight_bits is not None:
++        set_weight_bits(model, weight_bits)
+ 
+     def at_one(name, q):
+         return (held is None or name in held) and hasattr(q, '_f')
+@@ -123,14 +139,20 @@ def floors(cfg, n_sample=256, seed=0, with_attn_rule=True):
+                                                       'softmax_out_i', 'act_granularity', 'act_bits')},
+            'arch': {k: A[k] for k in ('n_part', 'd_model', 'n_heads', 'n_layers', 'ffn_dim', 'pos_enc')},
+            'sample': f'synthetic standard normal, n={n_sample}, seed={seed}'}
+-    for mode in ('init', 'zero', 'one') + (('attn_narrow', 'attn_full') if with_attn_rule else ()):
++    nb = cfg['quant']['weight'] == 'kbi_learnable'
++    # [D22] NB: learned weight widths also move, so the activation floors are traced with the
++    # weights at their init width (b0 4, the modes above) and at 0 and 1 bit per weight.
++    nb_modes = (('zero_w0', 'zero', 0), ('one_w1', 'one', 1), ('one_w0', 'one', 0)) if nb else ()
++    modes = [(m, m, None) for m in ('init', 'zero', 'one') + (('attn_narrow', 'attn_full') if with_attn_rule else ())]
++    for key, mode, weight_bits in modes + list(nb_modes):
+         keras.backend.clear_session()
+         model, taps = qat.build_qat_model(cfg, seed=1)
+         if mode == 'init':
+             qat.calibrate_activations(model, taps, sample, cfg['quant']['act_bits'])
+             cost, check = compute_ebops(model, sample), None
+         else:
+-            cost, check = set_floor(model, mode, sample)
++            cost, check = set_floor(model, mode, sample, weight_bits=weight_bits)
++        mode = key
+         out[mode] = {'total': cost['total'], 'per_layer': cost['per_layer']}
+         if check is not None:
+             out[mode]['width_check'] = {'n_quantizers': len(check), 'all_ok': all(v['ok'] for v in check.values()),
+@@ -139,7 +161,8 @@ def floors(cfg, n_sample=256, seed=0, with_attn_rule=True):
+         del model
+     target = out['target_ebops']
+     out['weights_only_rule'] = {'total': out['zero']['total'],
+-                                'why': 'binary kernels are fixed at 1 bit; a 0-bit input costs 0 EBOPs'}
++                                'why': ('learned-width kernels (NB); a 0-bit input costs 0 EBOPs whatever the weight width'
++                                        if nb else 'binary kernels are fixed at 1 bit; a 0-bit input costs 0 EBOPs')}
+     out['headroom'] = {str(budget): {mode: budget - out[mode]['total']
+                                      for mode in ('zero', 'one', 'attn_narrow', 'attn_full') if mode in out}
+                        for budget in sorted({target, 350000, 250000})}
+@@ -159,6 +182,9 @@ def main():
+     for path in args.configs:
+         r = floors(json.loads(path.read_text()))
+         results.append(r)
++        if 'zero_w0' in r:
++            print('STATIC_FLOOR_NB', r['name'], 'zero_w0', r['zero_w0']['total'],
++                  'one_w1', r['one_w1']['total'], 'one_w0', r['one_w0']['total'], flush=True)
+         print('STATIC_FLOOR', r['name'], 'init', r['init']['total'], 'zero', r['zero']['total'],
+               'one_bit_alive', r['one']['total'],
+               'attn_narrow', r.get('attn_narrow', {}).get('total'), 'attn_full', r.get('attn_full', {}).get('total'),
+diff --git a/tests/test_nb_arm.py b/tests/test_nb_arm.py
+new file mode 100644
+index 0000000..5c6856b
+--- /dev/null
++++ b/tests/test_nb_arm.py
+@@ -0,0 +1,252 @@
++"""[D22]/[A22] arm NB (patch 0036): arm A with every binarized kernel on HGQ2 kbi learned-width
++weights, configured as the jsc150 `xfm` weight quantizer.
++
++CPU, synthetic inputs, small. Runs under `python -m unittest` or pytest. Covers: the builder
++branch and its jsc150 values; the builder raises on an unknown weight type; the NB gate; one
++training step with gradients on the widths; EBOPs bill the real weight bits (equal to binary
++pricing at 1 bit, 0 at 0 bits); widths reach 0 under EBOPs pressure; reload round trip; the
++init kernels equal arm A's (pairing prerequisite); arm A configs and builds unchanged.
++"""
++import copy
++import hashlib
++import json
++import os
++import sys
++import tempfile
++import unittest
++from pathlib import Path
++
++os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
++os.environ.setdefault('TF_CPP_MIN_LOG_LEVEL', '3')
++TREE = Path(__file__).resolve().parents[1]
++sys.path.insert(0, str(TREE))
++CAMP = TREE / 'campaigns' / 'chang1002c'
++
++import numpy as np  # noqa: E402
++import keras  # noqa: E402
++
++from bnhgq2 import ablation, qat  # noqa: E402
++from bnhgq2.compat import apply_keras_compat  # noqa: E402
++from bnhgq2.ebops_calc import compute_ebops  # noqa: E402
++
++apply_keras_compat()
++
++# The jsc150 xfm weight quantizer as dumped on the pin (hgq2 0.1.9), written out independently
++# of qat.JSC150_XFM_WEIGHT so a change to either is caught.
++JSC150_DUMP = {'k': 1.0, 'b': 4.0, 'i': 0.0, 'overflow_mode': 'SAT_SYM', 'round_mode': 'RND',
++               'bc': (0.0, 23.0), 'br_l1': 1e-8, 'ir_l1': 1e-8}
++
++
++def a_config(seed=1):
++    return json.loads((CAMP / 'configs' / f'chang1002c-a-n64-s{seed}.json').read_text())
++
++
++def nb_config(seed=1):
++    cfg = copy.deepcopy(a_config(seed))
++    cfg['quant']['weight'] = 'kbi_learnable'
++    cfg['name'] = cfg['name'].replace('-a-', '-nb-')
++    return cfg
++
++
++def sample(n=64, seed=0):
++    return np.random.default_rng(seed).standard_normal((n, 64, 3)).astype('float32')
++
++
++class BuildTests(unittest.TestCase):
++    def setUp(self):
++        keras.backend.clear_session()
++
++    def test_builds_with_jsc150_weight_quantizer(self):
++        cfg = nb_config()
++        model, _ = qat.build_qat_model(cfg, seed=1)
++        layers = qat.kbi_weight_layers(model)
++        self.assertEqual(set(layers), ablation.expected_binary_layers(cfg))
++        self.assertEqual(qat.effective_weight_values(model), {})
++        for name, layer in layers.items():
++            q = layer.kq.quantizer
++            self.assertEqual(tuple(q._b.shape), tuple(layer._kernel.shape), name)   # per weight
++            self.assertTrue(q._b.trainable and q._i.trainable, name)
++            self.assertEqual(np.unique(np.asarray(q._k)).tolist(), [JSC150_DUMP['k']])
++            self.assertEqual(np.unique(np.asarray(q._b)).tolist(), [JSC150_DUMP['b']])
++            self.assertEqual(np.unique(np.asarray(q._i)).tolist(), [JSC150_DUMP['i']])
++            self.assertEqual((q.overflow_mode, q.round_mode),
++                             (JSC150_DUMP['overflow_mode'], JSC150_DUMP['round_mode']))
++            self.assertEqual((q.b_constraint.min_value, q.b_constraint.max_value), JSC150_DUMP['bc'])
++            self.assertIsNone(q.i_constraint)
++            self.assertEqual(q.b_regularizer.get_config()['l1'], JSC150_DUMP['br_l1'])
++            self.assertEqual(q.i_regularizer.get_config()['l1'], JSC150_DUMP['ir_l1'])
++            # biases stay float, as in arm A
++            if layer.bq is not None:
++                self.assertTrue(getattr(layer.bq.quantizer, '__dummy__', False), name)
++        record = ablation.nb_weight_gate(model, cfg)
++        self.assertEqual(set(record), set(layers))
++        for r in record.values():
++            self.assertEqual((r['zero_bits_fraction'], r['mean_bits']), (0.0, 4.0))
++            self.assertGreater(r['distinct_values'], 2)        # not binary
++        ablation.binary_gate(model, cfg)                        # dispatches to the NB gate
++
++    def test_activation_quantizers_identical_to_a(self):
++        from bnhgq2.ebops_target import activation_quantizers
++
++        def describe(model):
++            return [(n, type(q).__name__, q.overflow_mode, q.trainable,
++                     tuple(np.asarray(q._i).shape), float(np.asarray(q._i).ravel()[0]),
++                     float(np.asarray(getattr(q, '_f', getattr(q, '_b', None))).ravel()[0]))
++                    for n, q in activation_quantizers(model)]
++        a, _ = qat.build_qat_model(a_config(), seed=1)
++        keras.backend.clear_session()
++        nb, _ = qat.build_qat_model(nb_config(), seed=1)
++        self.assertEqual(describe(a), describe(nb))
++
++    def test_unknown_weight_type_raises(self):
++        cfg = a_config()
++        cfg['quant']['weight'] = 'kbi_learned'
++        with self.assertRaises(ValueError):
++            qat.build_qat_model(cfg, seed=1)
++
++    def test_not_the_static_int8_quantizer(self):
++        """[A22]: NB never falls back to the w8a8 grid. At init (b 4, i 0) the kbi grid 2^-4 is a
++        subset of the int8 grid 2^-5 by construction, so the check is structural (kbi, trainable,
++        per weight) plus: with 8 fractional bits the NB kernel leaves the int8 grid."""
++        model, _ = qat.build_qat_model(nb_config(), seed=1)
++        layer = model.get_layer('bit_block_0_ffn_fc1')
++        q = layer.kq.quantizer
++        self.assertEqual(type(q).__name__, 'FixedPointQuantizerKBI')
++        q._b.assign(np.full(q._b.shape, 8.0, 'float32'))
++        values = np.asarray(layer.kq(layer._kernel, training=False))
++        self.assertFalse(qat.on_static_int8_grid(values))
++        self.assertGreater(np.unique(values).size, 2)
++
++
++class TrainingTests(unittest.TestCase):
++    def setUp(self):
++        keras.backend.clear_session()
++
++    def test_one_train_step_moves_weights_and_widths(self):
++        cfg = nb_config()
++        cfg['train']['batch'] = 32
++        model, _ = ablation.matching_initialization(cfg, sample(256), 1)
++        optimizer = ablation.optimizer_for(cfg, model)
++        x = sample(64, seed=3)
++        y = keras.utils.to_categorical(np.arange(64) % 5, 5).astype('float32')
++        layers = qat.kbi_weight_layers(model)
++        b_before = {n: np.asarray(l.kq.quantizer._b).copy() for n, l in layers.items()}
++        k_before = {n: np.asarray(l._kernel).copy() for n, l in layers.items()}
++        width_vars = [l.kq.quantizer._b for l in layers.values()] + [l.kq.quantizer._i for l in layers.values()]
++        trainable_ids = {id(v) for v in model.trainable_variables}
++        self.assertTrue(all(id(v) in trainable_ids for v in width_vars))
++        step = ablation.make_epoch_step(model, optimizer, x, y, cfg)
++        loss, ce, kd, acc = [float(v) for v in step(np.arange(64, dtype='int32')).numpy()]
++        self.assertTrue(np.isfinite([loss, ce, kd, acc]).all())
++        moved_b = sum(not np.array_equal(b_before[n], np.asarray(l.kq.quantizer._b)) for n, l in layers.items())
++        moved_k = sum(not np.array_equal(k_before[n], np.asarray(l._kernel)) for n, l in layers.items())
++        self.assertEqual(moved_k, len(layers))
++        self.assertGreater(moved_b, 0)
++
++    def test_widths_reach_zero_under_ebops_pressure(self):
++        """A layer under EBOPs pressure alone (no task loss): every weight width goes to 0, the
++        kernel is exactly 0 and the layer costs 0 EBOPs. Binary weights cannot do this."""
++        from hgq.config import LayerConfigScope
++        from hgq.layers import QEinsumDense
++        keras.utils.set_random_seed(0)
++        with LayerConfigScope(enable_ebops=True, beta0=1e-2):
++            x = keras.Input((8, 3))
++            layer = QEinsumDense('btc,cd->btd', (8, 4), name='probe', kq_conf=qat._kbi_learnable_kq(),
++                                 iq_conf=qat._free_act(8, 2, 1e-8, heterogeneous_axis=(-1,), overflow='WRAP'),
++                                 bq_conf=None)
++            model = keras.Model(x, layer(x))
++        data = sample(32, seed=5)[:, :8, :]
++        optimizer = keras.optimizers.Adam(0.5)
++        import tensorflow as tf
++        b = layer.kq.quantizer._b
++        for _ in range(60):
++            with tf.GradientTape() as tape:
++                model(data, training=True)
++                loss = tf.add_n(model.losses)
++            grads = tape.gradient(loss, [b])
++            optimizer.apply_gradients(zip(grads, [b]))
++        self.assertTrue(np.all(np.asarray(layer.kq.quantizer.bits) == 0))
++        self.assertTrue(np.all(np.asarray(layer.kq(layer._kernel, training=False)) == 0))
++        compute_ebops(model, data)
++        self.assertEqual(int(layer.ebops), 0)
++
++
++class EbopsTests(unittest.TestCase):
++    def setUp(self):
++        keras.backend.clear_session()
++
++    def _pair(self):
++        x = sample(256)
++        a, _ = ablation.matching_initialization(a_config(), x, 1)
++        keras.backend.clear_session()
++        nb, _ = ablation.matching_initialization(nb_config(), x, 1)
++        return a, nb, x
++
++    def test_kernel_hashes_equal_a_at_init(self):
++        """[A22] pairing prerequisite: equal latent kernels/biases after matching_initialization."""
++        x = sample(256)
++        _, ea = ablation.matching_initialization(a_config(), x, 1)
++        keras.backend.clear_session()
++        _, en = ablation.matching_initialization(nb_config(), x, 1)
++        self.assertEqual(ea['kernel_hashes'], en['kernel_hashes'])
++        self.assertEqual(ea['matched_projection_count'], en['matched_projection_count'])
++
++    def test_weight_bits_billed(self):
++        a, nb, x = self._pair()
++        ea, en = compute_ebops(a, x)['total'], compute_ebops(nb, x)['total']
++        self.assertGreater(en, ea)                     # 4-bit weights cost more than 1-bit ones
++        # input_proj sees the raw input in both models, so its traced input widths are equal and
++        # its cost isolates the weight term: binary pricing at 1 bit, twice that at 2 bits.
++        # (Downstream layers see different activations, so their traced ranges differ.)
++        def set_bits(bits):
++            for layer in qat.kbi_weight_layers(nb).values():
++                q = layer.kq.quantizer
++                q._b.assign(np.full(q._b.shape, bits, 'float32'))
++        set_bits(1)
++        a_in = compute_ebops(a, x)['per_layer']['input_proj']
++        self.assertEqual(compute_ebops(nb, x)['per_layer']['input_proj'], a_in)
++        set_bits(2)
++        self.assertEqual(compute_ebops(nb, x)['per_layer']['input_proj'], 2 * a_in)
++        layer = nb.get_layer('bit_block_0_ffn_fc1')    # a pruned kernel costs nothing
++        before = compute_ebops(nb, x)['per_layer']['bit_block_0_ffn_fc1']
++        layer.kq.quantizer._b.assign(np.zeros(layer.kq.quantizer._b.shape, 'float32'))
++        after = compute_ebops(nb, x)['per_layer']['bit_block_0_ffn_fc1']
++        self.assertGreater(before, 0)
++        self.assertEqual(after, 0)
++        self.assertTrue(np.all(np.asarray(layer.kq(layer._kernel, training=False)) == 0))
++
++    def test_reload_round_trip(self):
++        cfg = nb_config()
++        model, _ = qat.build_qat_model(cfg, seed=1)
++        x = sample(32)
++        compute_ebops(model, x)
++        with tempfile.TemporaryDirectory() as d:
++            path = Path(d) / 'm.keras'
++            model.save(path)
++            loaded = keras.models.load_model(path, compile=False)
++        self.assertEqual(ablation.stored_state_ebops(model, loaded)['total'], ablation.saved_ebops(model))
++        ablation.binary_gate(loaded, cfg)
++        np.testing.assert_array_equal(np.asarray(model(x, training=False)), np.asarray(loaded(x, training=False)))
++
++
++class ArmAUnchangedTests(unittest.TestCase):
++    def test_a_config_files_unchanged(self):
++        """Every chang1002c config is byte-identical to the hash its config map records."""
++        cmap = json.loads((CAMP / 'config_map.json').read_text())
++        for row in cmap['rows']:
++            path = TREE / row['new']['file']
++            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), row['new']['sha256'], path.name)
++            self.assertNotEqual(json.loads(path.read_text())['quant']['weight'], 'kbi_learnable')
++        self.assertEqual(len(cmap['rows']), 58)
++
++    def test_a_model_has_no_learned_weight_widths(self):
++        keras.backend.clear_session()
++        cfg = a_config()
++        model, _ = qat.build_qat_model(cfg, seed=1)
++        self.assertEqual(qat.kbi_weight_layers(model), {})
++        self.assertFalse(ablation.is_nb(cfg))
++        ablation.binary_gate(model, cfg)
++
++
++if __name__ == '__main__':
++    unittest.main()

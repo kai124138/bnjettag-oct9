@@ -1,0 +1,184 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "annotations": {
+            "nrp.ai/username": "http://cilogon.org/serverE/users/442700"
+        },
+        "creationTimestamp": "2026-09-18T16:39:07Z",
+        "generation": 1,
+        "labels": {
+            "app": "kai-engram-preflight"
+        },
+        "name": "kai-engram-preflight-a10364ed-r2",
+        "namespace": "cms-ml",
+        "resourceVersion": "14850813481",
+        "uid": "3f258846-5190-4441-bc79-a04b23f2761b"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 3600,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+            "matchLabels": {
+                "batch.kubernetes.io/controller-uid": "3f258846-5190-4441-bc79-a04b23f2761b"
+            }
+        },
+        "suspend": false,
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "kai-engram-preflight",
+                    "batch.kubernetes.io/controller-uid": "3f258846-5190-4441-bc79-a04b23f2761b",
+                    "batch.kubernetes.io/job-name": "kai-engram-preflight-a10364ed-r2",
+                    "controller-uid": "3f258846-5190-4441-bc79-a04b23f2761b",
+                    "job-name": "kai-engram-preflight-a10364ed-r2"
+                }
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "preference": {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "In",
+                                            "values": [
+                                                "gpn-fiona-mizzou-8.rnet.missouri.edu"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "weight": 100
+                            }
+                        ],
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "kubernetes.io/hostname",
+                                            "operator": "NotIn",
+                                            "values": [
+                                                "nautilus-ext-gpu01.fullerton.edu",
+                                                "k8s-chase-ci-07.calit2.optiputer.net",
+                                                "ren-gp-argo-01.madren.org"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "args": [
+                            "set -euo pipefail\nexport KERAS_BACKEND=tensorflow MPLBACKEND=Agg TF_FORCE_GPU_ALLOW_GROWTH=true\nexport OMP_NUM_THREADS=2 TF_NUM_INTRAOP_THREADS=2 TF_NUM_INTEROP_THREADS=1 OPENBLAS_NUM_THREADS=1\nmkdir -p /work/code\necho 'a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792  /cmcode/hgq2.tar.gz' | sha256sum -c -\ntar -xzf /cmcode/hgq2.tar.gz -C /work/code --strip-components=1\nexport PYTHONPATH=/work/code BNHGQ2_CODE_SHA256=a10364eda9f4e5b8fbdfe1b4eadbae7b60006362bc9f493cafb056e74dedc792\n\nexport CUDA_VISIBLE_DEVICES=-1 WANDB_MODE=disabled TF_CPP_MIN_LOG_LEVEL=2\npip install -q --no-cache-dir -r /work/code/requirements-cpu.txt\npython -u /work/code/run_engram.py preflight --out /data/engram-study-20260918/preflight/synthetic-a10364ed\npython -u /work/code/ops/preflight_production.py\n"
+                        ],
+                        "command": [
+                            "bash",
+                            "-c"
+                        ],
+                        "image": "python:3.12",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "preflight",
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "ephemeral-storage": "8Gi",
+                                "memory": "8Gi"
+                            },
+                            "requests": {
+                                "cpu": "2",
+                                "ephemeral-storage": "8Gi",
+                                "memory": "8Gi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/cmcode",
+                                "name": "code",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/work",
+                                "name": "work"
+                            },
+                            {
+                                "mountPath": "/data",
+                                "name": "persistent"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "nodeSelector": {
+                    "kubernetes.io/arch": "amd64"
+                },
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "terminationGracePeriodSeconds": 180,
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "kai-engram-code-a10364eda9"
+                        },
+                        "name": "code"
+                    },
+                    {
+                        "emptyDir": {
+                            "sizeLimit": "24Gi"
+                        },
+                        "name": "work"
+                    },
+                    {
+                        "name": "persistent",
+                        "persistentVolumeClaim": {
+                            "claimName": "kai-data"
+                        }
+                    }
+                ]
+            }
+        },
+        "ttlSecondsAfterFinished": 604800
+    },
+    "status": {
+        "completionTime": "2026-09-18T16:49:00Z",
+        "conditions": [
+            {
+                "lastProbeTime": "2026-09-18T16:49:00Z",
+                "lastTransitionTime": "2026-09-18T16:49:00Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "SuccessCriteriaMet"
+            },
+            {
+                "lastProbeTime": "2026-09-18T16:49:00Z",
+                "lastTransitionTime": "2026-09-18T16:49:00Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "Complete"
+            }
+        ],
+        "ready": 0,
+        "startTime": "2026-09-18T16:39:07Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+    }
+}

@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+"""[A14] EBOPs accounting cross-check on a REPRO-CHANG checkpoint (CPU job; not run locally).
+
+python campaigns/chang0926/ebops_crosscheck.py --checkpoint <xfm-n64 .keras from ParetoFront> \
+    --inputs <x.npy: Chang-preprocessed inputs, gated + standardized, (n, 64, 3)> [--n 256]
+
+Chang's ParetoFront file name carries `ebops=<FreeEBOPs>`, HGQ2's in-training counter
+(layer `_ebops` state from the last training step). This script loads the checkpoint with
+hgq2 0.1.9 under TensorFlow and recomputes EBOPs with our `bnhgq2.ebops_calc.compute_ebops`
+(HGQ2 `trace_minmax` on the first n input rows, the same call and n the runner uses), then
+reports ours / theirs and the per-layer totals. `trace_minmax` re-traces WRAP integer bits
+from the inputs, so the ratio depends on the inputs being Chang's preprocessing.
+
+Locally (2026-09-27) there is no xfm-n64 checkpoint and no Chang-preprocessed input file,
+so the check is staged, not run. If loading fails (JAX-saved file, a layer absent from
+0.1.9), the error is the finding: record it in [L2] with the accounting differences listed
+in STUDY [A14].
+"""
+import argparse
+import json
+import os
+import re
+from pathlib import Path
+import sys
+
+os.environ.setdefault('KERAS_BACKEND', 'tensorflow')
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+import numpy as np
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--checkpoint', type=Path, required=True)
+    parser.add_argument('--inputs', type=Path, required=True)
+    parser.add_argument('--n', type=int, default=256)
+    args = parser.parse_args()
+    import keras
+    import hgq  # noqa: F401  (registers the HGQ2 layers for deserialization)
+    from bnhgq2.compat import apply_keras_compat
+    from bnhgq2.ebops_calc import compute_ebops
+    apply_keras_compat()
+    match = re.search(r'ebops=(\d+)', args.checkpoint.name)
+    theirs = int(match.group(1)) if match else None
+    model = keras.models.load_model(args.checkpoint, compile=False)
+    x = np.load(args.inputs, mmap_mode='r')[:args.n].astype('float32')
+    ours = compute_ebops(model, x)
+    report = {'checkpoint': str(args.checkpoint), 'n_trace': int(len(x)),
+              'ebops_filename_freeebops': theirs, 'ebops_ours_trace_minmax': ours['total'],
+              'ratio_ours_over_theirs': (ours['total'] / theirs) if theirs else None,
+              'per_layer': ours['per_layer']}
+    print('EBOPS_CROSSCHECK', json.dumps(report), flush=True)
+
+
+if __name__ == '__main__':
+    main()

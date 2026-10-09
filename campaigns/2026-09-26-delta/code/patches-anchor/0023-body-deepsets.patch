@@ -1,0 +1,161 @@
+From 69d2bc90d2fb26d7d5746d40e92fbc33a85c7c0e Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 09:30:01 -0700
+Subject: [PATCH 23/38] body-deepsets: wire newmods/deepsets.py (arch.body
+ deepsets, arch.deepsets_dims) into the builder and binary gate; newmods in
+ the source manifest (M006)
+
+---
+ code/bnhgq2/ablation.py   |  6 ++++++
+ code/bnhgq2/delta_keys.py | 36 ++++++++++++++++++++++++++++++++++++
+ code/newmods/deepsets.py  | 19 +++++++++++++++----
+ code/run_engram.py        |  2 +-
+ code/run_study.py         |  2 +-
+ 5 files changed, 59 insertions(+), 6 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index 8f3cc2f..2da95af 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -112,6 +112,9 @@ def _copy_latents(source, target, require=False):
+ 
+ def matching_initialization(cfg, sample, seed):
+     """Copy equal-shape kernels/biases/position tables; channel grids start identical."""
++    if cfg['arch'].get('body') == 'deepsets':  # Delta: binary Deep Sets body (newmods, M006)
++        from newmods.deepsets import deepsets_initialization
++        return deepsets_initialization(cfg, sample, seed)
+     init_from = cfg['experiment'].get('init_checkpoint')  # Delta: warm start from a checkpoint
+     source_model = keras.models.load_model(resolve_artifact(init_from)[0], compile=False) if init_from else None
+     baseline = copy.deepcopy(cfg)
+@@ -548,6 +551,9 @@ def restore_checkpoint(out, cfg, dataset_info):
+ def expected_binary_layers(cfg):
+     """Binary projections: all of them for binary_absmean, minus labelled per-layer overrides
+     (Delta quant.layer_weight_override); none for a non-binary baseline."""
++    if cfg.get('arch', {}).get('body') == 'deepsets':  # Delta: Deep Sets layer names
++        from newmods.deepsets import expected_binary_layers as deepsets_layers
++        return deepsets_layers(cfg)
+     if cfg.get('quant', {}).get('weight', 'binary_absmean') != 'binary_absmean':
+         return set()
+     return projection_layers(cfg) - set(cfg.get('quant', {}).get('layer_weight_override', {}))
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index c751ebd..b946eec 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -422,3 +422,39 @@ def _controller_strict(value, cfg):   # beta-schedule-s-runner: "none" etc. woul
+ 
+ 
+ REGISTRY['train.ebops.controller']['check'] = _controller_strict
++
++# body-deepsets (wiring of newmods/deepsets.py, new-files engineer; M006). The builder dispatch
++# is in ablation.matching_initialization and expected_binary_layers. Transformer-only Delta
++# options have no effect on this body, so they are refused with it. The transformer arch keys
++# the config must still carry (d_model, n_heads, n_layers, ffn_dim, pos_enc) are not read by it.
++for _key in ('arch.body', 'arch.deepsets_dims'):
++    UNWIRED.pop(_key, None)
++_DEEPSETS_EXCLUSIVE = ('quant.binary_center', 'quant.ste', 'quant.beta_mode', 'quant.channel_gain',
++                       'quant.layer_weight_override', 'arch.head_dims', 'arch.pre_block_act',
++                       'experiment.init_checkpoint')
++
++
++def _body(value, cfg):
++    if value != 'deepsets':
++        return 'only "deepsets" is implemented (the transformer is the default when absent)'
++    clash = [k for k in _DEEPSETS_EXCLUSIVE if lookup(cfg, k) is not None]
++    if clash:
++        return f'transformer-only options {clash} have no effect on the Deep Sets body'
++    if lookup(cfg, 'quant.weight') != 'binary_absmean':
++        return 'the Deep Sets body is built binary only'
++    if (lookup(cfg, 'experiment.distillation') or {}).get('attention_coefficient'):
++        return 'attention-map KD needs attention maps; the Deep Sets body has none'
++    if lookup(cfg, 'engram_study.module') is not None:
++        return 'the Engram memory module inserts into a transformer block'
++
++
++def _deepsets_dims(value, cfg):
++    if lookup(cfg, 'arch.body') != 'deepsets':
++        return 'read only with arch.body "deepsets"'
++    keys = {'phi', 'ctx', 'phi_post', 'rho', 'pool_scale'}
++    if not isinstance(value, dict) or set(value) - keys:
++        return f'must be a dict with keys from {sorted(keys)} (newmods.deepsets.dims_for checks the rest at build)'
++
++
++register('arch.body', 'body-deepsets', _body)
++register('arch.deepsets_dims', 'body-deepsets', _deepsets_dims)
+diff --git a/code/newmods/deepsets.py b/code/newmods/deepsets.py
+index 5b944d9..db37cdf 100644
+--- a/code/newmods/deepsets.py
++++ b/code/newmods/deepsets.py
+@@ -18,9 +18,11 @@ Deliberate deviations from the reference (they can move a number; stated, not hi
+     (arch.norm none), and so is this body.
+   * Weights are BitNet absmean binary (qat.bitnet_binary_ste via BitQEinsumDense/BitQDense),
+     not HGQ learned-width fixed point. Biases are float, as in the transformer (qat.py:398).
+-  * Activation quantizers are the anchor's (qat._free_act: learned widths, SAT, from the
+-    act_bits grid, MSE-calibrated), not the reference's WRAP datalane. When the anchor [A20]
+-    quantizer set lands, this builder must take its act_iq factory instead (WIRING.md).
++  * Activation quantizers are the anchor's (qat._free_act: learned widths from the act_bits
++    grid, MSE-calibrated) with the anchor's overflow: quant.act_overflow "WRAP" gives the [A20]
++    jsc150 datalane (i data-tracked, 0 bits reachable), absent/"SAT" the bundle quantizer; a
++    quant.i_decay_speed is applied as in qat.build_qat_model. quant.softmax_quant has no
++    effect (no attention in this body).
+   * Pooling layers carry no input quantizer (enable_iq=False), as the transformer's GAP.
+   * No positional encoding: the body is permutation invariant by construction.
+ 
+@@ -85,12 +87,19 @@ def build_deepsets_model(cfg: dict, seed: int, enable_ebops: bool = True):
+     granularity = Q.get('act_granularity', 'tensor')
+     if granularity not in ('tensor', 'channel'):
+         raise ValueError(f'Unsupported act_granularity: {granularity}')
++    overflow = str(Q.get('act_overflow', 'SAT')).upper()   # anchor [A20]
++    if overflow not in ('SAT', 'WRAP') or (overflow == 'WRAP' and act_calib != 'free'):
++        raise ValueError(f"{cfg['name']}: quant.act_overflow={overflow!r} (WRAP needs act_calib 'free')")
++    i_decay_speed = Q.get('i_decay_speed')   # anchor [D25]; validated by qat for the transformer
++    if i_decay_speed is not None and overflow != 'WRAP':
++        raise ValueError(f"{cfg['name']}: quant.i_decay_speed needs quant.act_overflow='WRAP'")
+     taps = {}
+ 
+     def act_iq(axes=(-1,)):
+         if act_calib == 'free':
+             return qat._free_act(ab, qat._PROV_I, float(Q.get('act_bw_l1', 1e-8)),
+-                                 heterogeneous_axis=axes if granularity == 'channel' else ())
++                                 heterogeneous_axis=axes if granularity == 'channel' else (),
++                                 overflow=overflow)
+         return qat._trainable_act(ab, qat._PROV_I) if act_calib == 'trainable' else qat._static_act(ab, qat._PROV_I)
+ 
+     def per_particle(name, units, x, n_out):
+@@ -125,6 +134,8 @@ def build_deepsets_model(cfg: dict, seed: int, enable_ebops: bool = True):
+             x = relu(name=f'ds_rho{i + 1}_act')(dense(f'ds_rho{i + 1}', units, x))
+         out = dense('ds_out', C, x)
+         model = keras.Model(x_in, out, name=cfg['name'])
++    if i_decay_speed is not None:
++        qat.set_i_decay_speed(model, float(i_decay_speed))
+     return model, taps
+ 
+ 
+diff --git a/code/run_engram.py b/code/run_engram.py
+index ba8b43d..3c0091a 100644
+--- a/code/run_engram.py
++++ b/code/run_engram.py
+@@ -44,7 +44,7 @@ def file_hash(path):
+ 
+ 
+ def source_manifest():
+-    paths = [Path(__file__).resolve(), *sorted((HERE / 'bnhgq2').glob('*.py'))]
++    paths = [Path(__file__).resolve(), *sorted((HERE / 'bnhgq2').glob('*.py')), *sorted((HERE / 'newmods').glob('*.py'))]
+     files = {str(p.relative_to(HERE)): file_hash(p) for p in paths}
+     versions = {name: importlib.metadata.version(name)
+                 for name in ('tensorflow', 'keras', 'hgq2', 'quantizers', 'numpy', 'scikit-learn')}
+diff --git a/code/run_study.py b/code/run_study.py
+index 0f872b9..20590ea 100644
+--- a/code/run_study.py
++++ b/code/run_study.py
+@@ -24,7 +24,7 @@ CAMPAIGN = Path(os.environ.get('BNJ_CAMPAIGN_DIR', str(HERE)))
+ 
+ 
+ def manifest():
+-    paths = sorted(HERE.glob('*.py')) + sorted((HERE / 'bnhgq2').glob('*.py'))
++    paths = sorted(HERE.glob('*.py')) + sorted((HERE / 'bnhgq2').glob('*.py')) + sorted((HERE / 'newmods').glob('*.py'))
+     result = {'files': {str(p.relative_to(HERE)): run_engram.file_hash(p) for p in paths},
+               'versions': {k: importlib.metadata.version(k) for k in
+                            ('tensorflow', 'keras', 'hgq2', 'quantizers', 'numpy', 'scikit-learn')}}
+-- 
+2.50.1 (Apple Git-155)
+

@@ -1,0 +1,18 @@
+[code] Fri Sep 11 00:54:46 UTC 2026 unpack code from ConfigMap kai-ebops-n8-code-9ab88f4911 (PVC-free)
+[code] configmap tar md5: aeb054bf3e51beef920ae05f46314c10
+[gate] configs/ebops-n8-20260910-control-w1a8.json + feature_indices + wandb_util present (ConfigMap kai-ebops-n8-code-9ab88f4911 is fresh)
+/cmcode/hgq2.tar.gz: OK
+[setup] Fri Sep 11 00:54:46 UTC 2026 pinned deps (mirror .venv-hgq2)
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+[gpu] Fri Sep 11 00:57:02 UTC 2026 nvidia-smi + TF backend assertion
+Tesla V100-SXM2-32GB, 32768 MiB
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789088223.383418      63 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+[gpu] TF sees [PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+wandb: [wandb.Api()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+[wandb] authentication OK
+[data] Fri Sep 11 00:57:10 UTC 2026 fetch HLS4ML LHC Jet 150p TRAIN split from Zenodo (~3 GB, PVC-free)

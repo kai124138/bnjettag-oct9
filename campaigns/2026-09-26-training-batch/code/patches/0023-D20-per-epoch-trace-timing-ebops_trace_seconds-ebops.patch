@@ -1,0 +1,76 @@
+From 1fc7d4af0136bb74e1737043e648d52906a0347e Mon Sep 17 00:00:00 2001
+From: Kai <kayamaguchi@ucsd.edu>
+Date: Sun, 27 Sep 2026 09:16:14 -0700
+Subject: [PATCH] D20: per-epoch trace timing (ebops_trace_seconds,
+ ebops_reload_check_seconds, ebops_trace_over_epoch) logged under
+ train.ebops_trace_sample, so the canary measures the trace's share of s_e;
+ absent key logs nothing new
+
+---
+ bnhgq2/ablation.py      | 9 ++++++++-
+ tests/test_d20_trace.py | 5 ++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/bnhgq2/ablation.py b/bnhgq2/ablation.py
+index c257805..259de3d 100644
+--- a/bnhgq2/ablation.py
++++ b/bnhgq2/ablation.py
+@@ -627,16 +627,20 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         # [D20] the in-training EBOPs (what HGQ2's FreeEBOPs would log: the stored
+         # layer.ebops of the last training step), read before the trace overwrites it.
+         in_training_ebops = model_ebops(model) if d20 else None
++        trace_start = time.monotonic()
+         cost = traced_ebops(model)
++        trace_seconds = time.monotonic() - trace_start
+         # Evaluate exactly the serialized artifact. Live compiled-model inference
+         # and fresh-load inference can choose different floating-point kernels.
+         candidate = out / 'validation_candidate.keras'
+         model.save(candidate)
+         validation_model = keras.models.load_model(candidate, compile=False)
++        check_start = time.monotonic()
+         if cfg['train'].get('ebops_reload_check', 'retrace') == 'stored':
+             verified_cost = stored_state_ebops(model, validation_model)
+         else:
+             verified_cost = traced_ebops(validation_model)
++        reload_check_seconds = time.monotonic() - check_start
+         assert verified_cost['total'] == cost['total'], 'Candidate cost changed after reload'
+         logits = np.asarray(validation_model.predict(xv, batch_size=cfg['train']['val_batch'], verbose=0))
+         if not np.isfinite(logits).all():
+@@ -718,7 +722,10 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         if d20:
+             logs.update(ebops_in_training=in_training_ebops, pid_ebops=float(pid._ebops),
+                         ebops_in_training_over_traced=in_training_ebops / max(cost['total'], 1),
+-                        ebops_trace_rows=int(len(trace_rows)))
++                        ebops_trace_rows=int(len(trace_rows)),
++                        # [D20] the trace's share of s_e, measured by every run (canary included)
++                        ebops_trace_seconds=trace_seconds, ebops_reload_check_seconds=reload_check_seconds,
++                        ebops_trace_over_epoch=(trace_seconds + reload_check_seconds) / max(elapsed, 1e-9))
+         if epoch_observer is not None:
+             diagnostics = epoch_observer(model, sample, epoch)
+             if set(diagnostics) & set(logs):
+diff --git a/tests/test_d20_trace.py b/tests/test_d20_trace.py
+index fc09222..2f6038c 100644
+--- a/tests/test_d20_trace.py
++++ b/tests/test_d20_trace.py
+@@ -53,6 +53,8 @@ def test_full_split_trace_drives_pid_and_reproduces(tmp_path):
+         assert r['ebops_trace_rows'] == len(xt)
+         assert r['pid_ebops'] == pytest.approx(r['ebops'], rel=1e-6)
+         assert r['ebops_in_training'] > 0 and r['ebops_in_training_over_traced'] > 0
++        assert r['ebops_trace_seconds'] > 0 and r['ebops_reload_check_seconds'] >= 0
++        assert 0 < r['ebops_trace_over_epoch'] < 1
+     # the last epoch's candidate is model_min_ebops or model_best; retrace it (reset) on the
+     # same rows: EBOPs equal to the logged value (the certification rule)
+     state = json.loads((tmp_path / 'ebops_budget.json').read_text())
+@@ -68,7 +70,8 @@ def test_absent_key_logs_nothing_new(tmp_path):
+     (xt, yt, xv, yv), info = arrays()
+     ablation.run_training(cfg, (xt, yt, xv, yv), info, tmp_path)
+     r = records(tmp_path)[0]
+-    assert not {'ebops_in_training', 'pid_ebops', 'ebops_trace_rows'} & set(r)
++    assert not {'ebops_in_training', 'pid_ebops', 'ebops_trace_rows', 'ebops_trace_seconds',
++                'ebops_reload_check_seconds', 'ebops_trace_over_epoch'} & set(r)
+ 
+ 
+ def test_prefix_trace_undercovers_full_split():
+-- 
+2.50.1 (Apple Git-155)
+

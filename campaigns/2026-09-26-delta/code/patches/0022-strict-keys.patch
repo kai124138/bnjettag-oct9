@@ -1,0 +1,133 @@
+From 4d7a7da5aeda6f565065ffcbae0562ed3dedbcd5 Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 09:28:48 -0700
+Subject: [PATCH 22/24] strict-keys: refuse, by name, any config key no code
+ path in the tree reads (review A1-v3)
+
+---
+ code/bnhgq2/delta_keys.py | 105 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 7e88bed..417362b 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -47,6 +47,7 @@ def is_active(cfg, key):
+ 
+ 
+ def validate(cfg):
++    strict_keys(cfg)
+     for key, entry in REGISTRY.items():
+         value = lookup(cfg, key, _MISSING)
+         if value is _MISSING:
+@@ -307,3 +308,107 @@ register('experiment.diagnostics', 'diag-sign-flips', _diagnostics, export_ok=Tr
+ 
+ # diag-beta-trajectory: per-layer effective beta and |latent|/absmean histogram (THEORY M3; Z08).
+ DIAGNOSTICS.add('beta_trajectory')
++
++# --------------------------------------------------------------------------- #
++# strict-keys (review A1-v3): refuse any config key no code path in this tree reads.
++# The allow-list is (a) the keys the screen runner reads, (b) provenance keys whose value
++# changes nothing, (c) keys the bundle configs carry but the runner never reads, pinned to the
++# values those 38 configs hold (any other value would be silently ignored), and (d) every key
++# a patch registers above. A key of an unwired module or a blocked slug is refused by name.
++# --------------------------------------------------------------------------- #
++READ_KEYS = {
++    'name', 'arch.n_part', 'arch.n_feat', 'arch.features', 'arch.d_model', 'arch.n_heads',
++    'arch.n_layers', 'arch.ffn_dim', 'arch.n_classes', 'arch.norm', 'arch.pos_enc',
++    'arch.pair_bias', 'arch.pair_bias_hidden',
++    'quant.act_bits', 'quant.act_calib', 'quant.act_bw_l1', 'quant.beta0', 'quant.act_granularity',
++    'quant.softmax_out_bits', 'quant.softmax_out_i',
++    'train.validation_split', 'train.split_seed', 'train.order_seed', 'train.epochs', 'train.batch',
++    'train.lr', 'train.warmup_epochs', 'train.decay_epochs', 'train.decay_power', 'train.beta2',
++    'train.weight_decay', 'train.clipvalue', 'train.val_batch', 'train.wandb_project',
++    'train.ebops.pid.target_ebops', 'train.ebops.pid.init_beta', 'train.ebops.pid.p',
++    'train.ebops.pid.i', 'train.ebops.pid.d', 'train.ebops.pid.warmup', 'train.ebops.pid.log',
++    'train.ebops.pid.min_beta', 'train.ebops.pid.max_beta', 'train.ebops.pid.damp_beta_on_target',
++    'experiment.seed', 'experiment.group', 'experiment.selection_metric', 'experiment.target_schedule',
++    'experiment.recovery_after_epochs', 'experiment.remote_every_epochs',
++    'engram_study.module', 'engram_study.memory_lr_multiplier', 'engram_study.memory_weight_decay',
++    'engram_study.max_logical_table_bytes', 'engram_study.max_replicated_table_bytes',
++    'engram_study.cost_convention', 'engram_study.wandb_entity', 'engram_study.wandb_project_access',
++    'hls.backend', 'hls.part', 'hls.clock_ns', 'hls.rf', 'hls.io',          # read by the exporters
++}
++PROVENANCE = {'era', 'experiment.arm', 'experiment.source_arm', 'engram_study.question',
++              'engram_study.status', 'train.data', 'constituent_study', 'delta_study'}
++INERT_PINNED = {   # carried by the bundle configs, read by no code path of the screen runner
++    'arch.pool': ('gap',), 'arch.ffn_act': ('relu',), 'arch.norm_placement': ('per_linear',),
++    'arch.softmax_free': (False,), 'arch.input_std': (True,),
++    'quant.act_policy': ('learned_per_tensor_width',), 'quant.calib_n': (8192,),
++    'train.clip_mode': ('value',), 'train.clipnorm': (1.0,), 'train.es_patience': (0,),
++    'train.jit_compile': (False,), 'train.ebops.enable': (True,), 'train.ebops.monitor_widths': (True,),
++    'train.ebops.front_dir': ('front',), 'train.ebops.metrics': (['val_macro_auc', 'ebops'],),
++    'train.ebops.sides': ([1, -1],), 'train.ebops.selection': ('max_accuracy',),
++    'train.ebops.stop_on_target': (False,), 'experiment.checkpoint_every_epochs': (1,),
++}
++VALUE_SETS = {'arch.norm': ('subln', 'none'), 'arch.pos_enc': ('learned', 'none'),
++              'quant.act_granularity': ('tensor', 'channel')}
++UNWIRED = {   # keys the Delta uses that this tree does not read yet (BLOCKED.md)
++    'arch.attn_kind': 'attn-linformer (blocked on [A20]) / attn-relu-over-n (blocked on [A20])',
++    'arch.linformer_k': 'attn-linformer (blocked on [A20])',
++    'quant.softmax_table_min_bits': 'softmax-table-min-bits (blocked on [A20])',
++    'quant.qk_min_bits': 'qk-stream-min-bits (blocked on [A20])',
++    'quant.ebops_group_weight': 'ebops-group-weight (blocked on [A20])',
++    'quant.pre_quant_shift': 'pre-quant-shift (blocked on [A20])',
++    'quant.act_f0': 'act-init-f0 (blocked on [A20])',
++    'quant.act_overflow': 'anchor [A20]', 'quant.softmax_quant': 'anchor [A20]',
++    'arch.mask_gated_keys': 'gated-key-mask (blocked on [A3]/[A4])',
++    'arch.derived_features': 'derived-input-features (blocked on [A3]/[A4])',
++    'data.std_scope': 'std-real-slots (blocked on [A3]/[A4])',
++    'arch.pt_gate_gev': 'pt-gate-threshold / anchor [A3]',
++    'train.lr_warmup_epochs': 'lr-schedule-variants (blocked on [A1])',
++    'train.lr_schedule': 'anchor [A1]', 'train.lr_cycle_epochs': 'anchor [A1]',
++    'train.lr_alpha': 'anchor [A1]', 'train.lr_alpha_epochs': 'anchor [A1]',
++    'train.lr_t_mul': 'anchor [A1]', 'train.lr_m_mul': 'anchor [A1]', 'train.lr_min_frac': 'train.py path only',
++    'train.optimizer': 'anchor [A2]', 'experiment.cost_before_auc': 'anchor [A13]',
++    'experiment.snapshot_every_epochs': 'anchor [A6]', 'arch.pos_enc_none_consume_rng': 'anchor [A17]',
++    'arch.body': 'body-deepsets (new module, not wired in this tree)',
++    'arch.deepsets_dims': 'body-deepsets (new module, not wired in this tree)',
++    'train.binary_optimizer': 'bop-optimizer (new module, not wired in this tree)',
++    'train.bop_gamma': 'bop-optimizer (new module, not wired in this tree)',
++    'train.bop_tau': 'bop-optimizer (new module, not wired in this tree)',
++}
++VALUE_UNWIRED = {('quant.act_granularity', 'element'): 'act-granularity-element (blocked on [A20])'}
++
++
++def _leaves(node, prefix=''):
++    for key, value in node.items():
++        path = prefix + key
++        if isinstance(value, dict) and path not in REGISTRY and path not in PROVENANCE \
++                and path not in UNWIRED and path != 'engram_study.module':
++            yield from _leaves(value, path + '.')
++        else:
++            yield path, value
++
++
++def strict_keys(cfg):
++    """Raise, naming the key, on any key no code path in this tree reads."""
++    name = cfg.get('name', '?')
++    for path, value in _leaves(cfg):
++        if path in REGISTRY or path in READ_KEYS or path in PROVENANCE:
++            if path in VALUE_SETS and value not in VALUE_SETS[path]:
++                why = VALUE_UNWIRED.get((path, value), 'no code path reads this value')
++                raise ValueError(f'{name}: {path}={value!r} is refused: {why}')
++            continue
++        if path in INERT_PINNED:
++            if value not in INERT_PINNED[path]:
++                raise ValueError(f'{name}: {path}={value!r} is refused: the screen runner never reads '
++                                 f'{path}, so only the bundle value {INERT_PINNED[path]} is accepted')
++            continue
++        why = UNWIRED.get(path, 'no code path in this tree reads it')
++        raise ValueError(f'{name}: config key {path} is refused: {why}')
++
++
++def _controller_strict(value, cfg):   # beta-schedule-s-runner: "none" etc. would silently run PID
++    if value not in ('pid', 'schedule'):
++        return 'the screen runner reads only "pid" (BetaPID) or "schedule"'
++    return _controller(value, cfg)
++
++
++REGISTRY['train.ebops.controller']['check'] = _controller_strict
+-- 
+2.50.1 (Apple Git-155)
+

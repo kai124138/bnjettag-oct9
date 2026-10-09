@@ -1,0 +1,346 @@
+{
+  "fetched_at": "2026-09-11T06:53:17.212358+00:00",
+  "runs": [
+    {
+      "id": "8dzauzyp",
+      "name": "ebops-n8-20260910-costfirst-b50-w1a8-s1",
+      "state": "finished",
+      "url": "https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/8dzauzyp",
+      "config": {
+        "lr": 0.0001,
+        "seed": 1,
+        "quant": {
+          "beta0": 0.0001,
+          "weight": "binary_absmean",
+          "calib_n": 8192,
+          "act_bits": 8,
+          "act_bw_l1": 1e-08,
+          "act_calib": "free",
+          "act_policy": "learned_per_tensor_width"
+        },
+        "smoke": false,
+        "params": 18657,
+        "weight": "binary_absmean",
+        "variant": "w1a8",
+        "act_bits": 8,
+        "arch_norm": "none",
+        "arch_pool": "gap",
+        "clip_mode": "value",
+        "arch_n_feat": 3,
+        "arch_n_part": 8,
+        "config_hash": "c452955e",
+        "jit_compile": false,
+        "train_ebops": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 0,
+            "max_beta": 0.01,
+            "min_beta": 0.0001,
+            "init_beta": 0.0001,
+            "target_ebops": 869591,
+            "damp_beta_on_target": 0
+          },
+          "sides": [
+            -1
+          ],
+          "enable": true,
+          "metrics": [
+            "ebops"
+          ],
+          "front_dir": "front",
+          "selection": "min_ebops",
+          "threshold": 869591,
+          "controller": "pid",
+          "beta_schedule": null,
+          "monitor_widths": true,
+          "stop_on_target": true
+        },
+        "arch_d_model": 32,
+        "arch_ffn_act": "relu",
+        "arch_ffn_dim": 64,
+        "arch_n_heads": 4,
+        "arch_pos_enc": "learned",
+        "decay_epochs": 0,
+        "ebops_budget": {
+          "pid": {
+            "d": 0,
+            "i": 0.05,
+            "p": 1,
+            "log": true,
+            "warmup": 0,
+            "max_beta": 0.01,
+            "min_beta": 0.0001,
+            "init_beta": 0.0001,
+            "target_ebops": 869591,
+            "damp_beta_on_target": 0
+          },
+          "selection": "min_ebops",
+          "controller": "pid",
+          "convention": "hgq2_trace_minmax",
+          "code_sha256": "7fa22af0e254567523addb2020733d201122e5b4fd1c06df260d2d6849398e85",
+          "target_ebops": 869591,
+          "initial_ebops": 1739182,
+          "initial_widths": {
+            "head_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "head_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "input_proj": {
+              "f": 4,
+              "i": 3,
+              "bits": 8,
+              "raw_f": 4,
+              "raw_i": 3,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wk": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wo": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wq": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_Wv": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc1": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_0_ffn_fc2": {
+              "f": 6,
+              "i": 1,
+              "bits": 8,
+              "raw_f": 6,
+              "raw_i": 1,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wk": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wo": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wq": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_Wv": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_ffn_fc2": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_0_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_ctx__in0": {
+              "f": 9,
+              "i": 1,
+              "bits": 10,
+              "raw_f": 9,
+              "raw_i": 1,
+              "width_trainable": false
+            },
+            "bit_block_1_attn_ctx__in1": {
+              "f": 1,
+              "i": 6,
+              "bits": 8,
+              "raw_f": 1,
+              "raw_i": 6,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_0_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in0": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            },
+            "bit_block_1_attn_scores__in1": {
+              "f": 5,
+              "i": 2,
+              "bits": 8,
+              "raw_f": 5,
+              "raw_i": 2,
+              "width_trainable": true
+            }
+          },
+          "stop_on_target": true
+        },
+        "arch_features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "arch_n_layers": 2,
+        "warmup_epochs": 0,
+        "arch_input_std": true,
+        "arch_n_classes": 5,
+        "arch_softmax_free": false,
+        "arch_norm_placement": "per_linear"
+      },
+      "summary": {
+        "_runtime": 536,
+        "_step": 7,
+        "_timestamp": 1789096960.613748,
+        "_wandb.runtime": 536,
+        "activation_bits/bit_block_0_attn_Wk": 4,
+        "activation_bits/bit_block_0_attn_Wo": 4,
+        "activation_bits/bit_block_0_attn_Wq": 4,
+        "activation_bits/bit_block_0_attn_Wv": 4,
+        "activation_bits/bit_block_0_attn_ctx__in0": 10,
+        "activation_bits/bit_block_0_attn_ctx__in1": 4,
+        "activation_bits/bit_block_0_attn_scores__in0": 4,
+        "activation_bits/bit_block_0_attn_scores__in1": 4,
+        "activation_bits/bit_block_0_ffn_fc1": 4,
+        "activation_bits/bit_block_0_ffn_fc2": 4,
+        "activation_bits/bit_block_1_attn_Wk": 4,
+        "activation_bits/bit_block_1_attn_Wo": 4,
+        "activation_bits/bit_block_1_attn_Wq": 4,
+        "activation_bits/bit_block_1_attn_Wv": 4,
+        "activation_bits/bit_block_1_attn_ctx__in0": 10,
+        "activation_bits/bit_block_1_attn_ctx__in1": 4,
+        "activation_bits/bit_block_1_attn_scores__in0": 4,
+        "activation_bits/bit_block_1_attn_scores__in1": 4,
+        "activation_bits/bit_block_1_ffn_fc1": 4,
+        "activation_bits/bit_block_1_ffn_fc2": 4,
+        "activation_bits/head_fc1": 5,
+        "activation_bits/head_fc2": 6,
+        "activation_bits/input_proj": 4,
+        "activation_bits_mean": 4.142857142857143,
+        "activation_width_sites_changed": 21,
+        "best_epoch": 7,
+        "best_val_macro_auc": 0.7972819475780893,
+        "beta": 0.0001,
+        "budget_met": true,
+        "categorical_accuracy": 0.5577499866485596,
+        "checkpoint": "model_best.keras",
+        "checkpoint_ebops": 847982,
+        "ebops": 847982,
+        "ebops_fraction_initial": 0.4875751933955158,
+        "epoch": 7,
+        "loss": 108.66311645507812,
+        "stopped_on_ebops_target": 1,
+        "target_ebops": 869591,
+        "val_macro_auc": 0.7972819475780893
+      },
+      "artifacts": [
+        {
+          "name": "model-ebops-n8-20260910-costfirst-b50-w1a8-s1:v0",
+          "type": "model",
+          "state": "COMMITTED",
+          "local_path": "/tmp/bnjettag-costfirst-analysis/8dzauzyp/artifact"
+        },
+        {
+          "name": "run-8dzauzyp-history:v0",
+          "type": "wandb-history",
+          "state": "COMMITTED"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+/cmcode/hgq2.tar.gz: OK
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+NVIDIA GeForce RTX 4090, 24564 MiB
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789202069.192078      68 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1789202069.233964      68 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789202070.546859      68 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+[gpu] TensorFlow GPU gate PASS
+wandb: [wandb.Api()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+[wandb] authentication PASS
+[run] index=1 config=ebops-n8-20260912-ablation-r1-channel-w1a8
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789202073.887662       1 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+I0000 00:00:1789202073.929685       1 cpu_feature_guard.cc:227] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1789202075.030910       1 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+W0000 00:00:1789202081.127881       1 gpu_bfc_allocator.cc:47] Overriding orig_value setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was false.
+I0000 00:00:1789202081.129435       1 gpu_device.cc:2043] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 22151 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 4090, pci bus id: 0000:e1:00.0, compute capability: 8.9
+I0000 00:00:1789202084.450175     112 service.cc:153] XLA service 0x778d54052e80 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1789202084.450202     112 service.cc:161]   StreamExecutor [0]: NVIDIA GeForce RTX 4090, Compute Capability 8.9 (Driver: 13.2.0; Runtime: 12.9.0; Toolkit: 12.5.0; DNN: 9.26.0)
+I0000 00:00:1789202084.532870     112 dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1789202084.693572     112 cuda_dnn.cc:461] Loaded cuDNN version 92600
+I0000 00:00:1789202084.880821     112 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789202085.742297     112 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789202086.551663     112 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789202087.220414     112 dot_search_space.cc:240] All configs were filtered out because none of them sufficiently match the hints. Maybe the hints set does not contain a good representative set of valid configs? Working around this by using the full hints set instead.
+I0000 00:00:1789202089.617158     112 device_compiler.h:208] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+[train] ebops-n8-20260912-ablation-r1-channel-w1a8 params=20715 resume_epoch=0 initial_ebops=1739182
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: kayamaguchi (kayamaguchi-uc-san-diego) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run 2f84bd301583
+wandb: Tracking run with wandb version 0.28.0
+wandb: Run data is saved locally in /wandb/run-20260912_083454-2f84bd301583
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run ebops-n8-20260912-ablation-r1-channel-w1a8-s1
+wandb: ⭐️ View project at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8
+wandb: 🚀 View run at https://wandb.ai/kayamaguchi-uc-san-diego/BNJetTag-EBOPs-N8/runs/2f84bd301583
+[epoch 1/1000] EBOPs=1739182 target=350000 beta=1e-07 AUC=0.746606 seconds=59.4 checkpoint=epoch-0001

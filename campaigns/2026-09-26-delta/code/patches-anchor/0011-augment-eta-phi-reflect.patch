@@ -1,0 +1,112 @@
+From 831613db61494f9b3b53c7b67642e4e9324481cf Mon Sep 17 00:00:00 2001
+From: "ml-engineer (scratch)" <scratch@localhost>
+Date: Sun, 27 Sep 2026 01:45:50 -0700
+Subject: [PATCH 11/38] augment-eta-phi-reflect: data.augment per-jet
+ eta_rel/phi_rel sign flips on training batches (M037)
+
+---
+ code/bnhgq2/ablation.py   | 34 ++++++++++++++++++++++++++++++----
+ code/bnhgq2/delta_keys.py | 15 +++++++++++++++
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/code/bnhgq2/ablation.py b/code/bnhgq2/ablation.py
+index ef9f25b..76be15d 100644
+--- a/code/bnhgq2/ablation.py
++++ b/code/bnhgq2/ablation.py
+@@ -248,7 +248,21 @@ def optimizer_for(cfg, model):
+     return optimizer
+ 
+ 
+-def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None):
++def reflection_columns(cfg):
++    """Delta (augment-eta-phi-reflect): feature columns whose sign is flipped per jet."""
++    augment = cfg.get('data', {}).get('augment') or {}
++    features = cfg['arch']['features']
++    return [features.index(name) for key, name in (('reflect_eta', 'etarel'), ('reflect_phi', 'phirel'))
++            if augment.get(key)]
++
++
++def reflection_signs(cfg, epoch, n):
++    """Per-jet +-1 per reflected column, from (order_seed, epoch) only: paired across arms."""
++    rng = np.random.default_rng(np.random.SeedSequence([cfg['train']['order_seed'], epoch, 0xA7]))
++    return rng.choice(np.array([-1., 1.], 'float32'), size=(n, len(reflection_columns(cfg))))
++
++
++def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_model=None, input_std=None):
+     x = tf.convert_to_tensor(xt, dtype=tf.float32)
+     y = tf.convert_to_tensor(yt, dtype=tf.float32)
+     teacher = tf.convert_to_tensor(teacher_logits if teacher_logits is not None else np.zeros_like(yt), dtype=tf.float32)
+@@ -274,16 +288,26 @@ def make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits=None, teacher_
+     weight_vars = tuple(v for v in all_vars if id(v) not in width_ids)
+     batch = int(cfg['train']['batch'])
+     n = len(xt)
++    columns = reflection_columns(cfg)
++    if columns:  # raw-space sign flip in standardized space: x -> -x - 2 mu / sigma (train only)
++        mu, sigma = np.asarray(input_std['mu'], 'float64'), np.asarray(input_std['sigma'], 'float64')
++        offsets = tf.constant([[-2. * mu[c] / sigma[c] for c in columns]], tf.float32)
++        placer = tf.constant(np.eye(xt.shape[-1], dtype='float32')[columns])   # (k, F)
+     latent_clip = cfg['quant'].get('latent_clip')  # Delta: clip binary latents after each step
+     clip_vars = [ly._kernel for ly in model.layers if isinstance(ly, (qat.BitQEinsumDense, qat.BitQDense))] if latent_clip else []
+ 
+     @tf.function(jit_compile=False)
+-    def epoch_step(order, frozen=False):
++    def epoch_step(order, frozen=False, signs=None):
+         variables = weight_vars if frozen else all_vars
+         totals = tf.zeros((4,), dtype=tf.float32)
+         for start in tf.range(0, n, batch):
+             idx = order[start:tf.minimum(start + batch, n)]
+             xb, yb = tf.gather(x, idx), tf.gather(y, idx)
++            if columns:
++                s = tf.gather(signs, idx)                                  # (b, k) in {-1, +1}
++                scale = 1. + tf.matmul(s - 1., placer)                     # 1 or -1 on flipped columns
++                shift = tf.matmul(tf.cast(s < 0, tf.float32) * offsets, placer)
++                xb = xb * scale[:, None, :] + shift[:, None, :]
+             with tf.GradientTape() as tape:
+                 logits, teacher_logits_b, student_maps, teacher_maps = forward(xb)
+                 ce = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=yb, logits=logits))
+@@ -863,7 +887,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+             wandb_run.summary.update(training_status_summary(state, selection_metric, stop_after, paused=True))
+             wandb_run.finish()
+         return state
+-    step = make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits, teacher_model=teacher_model)
++    step = make_epoch_step(model, optimizer, xt, yt, cfg, teacher_logits, teacher_model=teacher_model,
++                           input_std=data_info['input_std'])
+     epochs = cfg['train']['epochs']
+     reload_candidate = ValidationReloader()
+     rss_gate = rss_gate_from_env(epochs)
+@@ -875,7 +900,8 @@ def run_training(cfg, arrays, data_info, out, *, teacher_logits=None, remote=Fal
+         pid.target_ebops = training_target(cfg, epoch)
+         pid.on_epoch_begin(epoch, {})
+         order = np.random.default_rng(np.random.SeedSequence([cfg['train']['order_seed'], epoch])).permutation(len(xt)).astype('int32')
+-        loss, ce, kd, accuracy = [float(v) for v in step(order, state['recovery_frozen']).numpy()]
++        signs = (reflection_signs(cfg, epoch, len(xt)),) if reflection_columns(cfg) else ()
++        loss, ce, kd, accuracy = [float(v) for v in step(order, state['recovery_frozen'], *signs).numpy()]
+         if not np.isfinite([loss, ce, kd, accuracy]).all():
+             record_divergence(out, cfg, state, epoch, 'nonfinite training metrics',
+                               {'loss': loss, 'task_loss': ce, 'distillation_loss': kd,
+diff --git a/code/bnhgq2/delta_keys.py b/code/bnhgq2/delta_keys.py
+index 561755f..de11b87 100644
+--- a/code/bnhgq2/delta_keys.py
++++ b/code/bnhgq2/delta_keys.py
+@@ -199,3 +199,18 @@ def _distillation_with_maps(value, cfg):
+ 
+ 
+ REGISTRY['experiment.distillation']['check'] = _distillation_with_maps
++
++# augment-eta-phi-reflect: per-jet eta_rel / phi_rel sign flips on training batches only
++# (cards R13, P09; M037). Namespace note: the anchor [A3]/[A4] may also claim a `data` block.
++def _augment(value, cfg):
++    if not isinstance(value, dict) or not value or set(value) - {'reflect_eta', 'reflect_phi'}:
++        return 'must be {"reflect_eta": bool, "reflect_phi": bool}'
++    if not all(isinstance(v, bool) for v in value.values()) or not any(value.values()):
++        return 'values must be booleans, at least one true'
++    features = lookup(cfg, 'arch.features') or []
++    for key, name in (('reflect_eta', 'etarel'), ('reflect_phi', 'phirel')):
++        if value.get(key) and name not in features:
++            return f'{key} needs feature {name!r} in arch.features'
++
++
++register('data.augment', 'augment-eta-phi-reflect', _augment, export_ok=True)
+-- 
+2.50.1 (Apple Git-155)
+

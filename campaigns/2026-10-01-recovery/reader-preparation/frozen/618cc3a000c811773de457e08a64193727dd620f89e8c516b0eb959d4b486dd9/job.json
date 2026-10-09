@@ -1,0 +1,147 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "annotations": {
+      "bnjettag.io/launch-authorization": "pending-explicit-exception",
+      "bnjettag.io/recovery-bundle-sha256": "618cc3a000c811773de457e08a64193727dd620f89e8c516b0eb959d4b486dd9",
+      "bnjettag.io/recovery-scope": "finite-readonly-legacy-evidence"
+    },
+    "labels": {
+      "bnjettag.io/purpose": "evidence-recovery",
+      "user": "kai"
+    },
+    "name": "kai-recovery-ro-1001-618cc3a000",
+    "namespace": "cms-ml"
+  },
+  "spec": {
+    "activeDeadlineSeconds": 2100,
+    "backoffLimit": 0,
+    "completions": 1,
+    "parallelism": 1,
+    "template": {
+      "metadata": {
+        "annotations": {
+          "bnjettag.io/launch-authorization": "pending-explicit-exception",
+          "bnjettag.io/recovery-bundle-sha256": "618cc3a000c811773de457e08a64193727dd620f89e8c516b0eb959d4b486dd9",
+          "bnjettag.io/recovery-scope": "finite-readonly-legacy-evidence"
+        },
+        "labels": {
+          "bnjettag.io/purpose": "evidence-recovery",
+          "user": "kai"
+        }
+      },
+      "spec": {
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "nautilus-ext-gpu01.fullerton.edu"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "args": [
+              "--bundle",
+              "/reader/BUNDLE.json",
+              "--expected-bundle-sha256",
+              "618cc3a000c811773de457e08a64193727dd620f89e8c516b0eb959d4b486dd9"
+            ],
+            "command": [
+              "python3",
+              "-B",
+              "/reader/reader.py"
+            ],
+            "image": "docker.io/library/python@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "reader",
+            "resources": {
+              "limits": {
+                "cpu": "1",
+                "ephemeral-storage": "3Gi",
+                "memory": "512Mi"
+              },
+              "requests": {
+                "cpu": "100m",
+                "ephemeral-storage": "256Mi",
+                "memory": "256Mi"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              },
+              "readOnlyRootFilesystem": true
+            },
+            "volumeMounts": [
+              {
+                "mountPath": "/data",
+                "name": "data",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/reader",
+                "name": "code",
+                "readOnly": true
+              },
+              {
+                "mountPath": "/work",
+                "name": "scratch"
+              }
+            ]
+          }
+        ],
+        "enableServiceLinks": false,
+        "restartPolicy": "Never",
+        "securityContext": {
+          "runAsGroup": 1000,
+          "runAsNonRoot": true,
+          "runAsUser": 1000,
+          "seccompProfile": {
+            "type": "RuntimeDefault"
+          }
+        },
+        "terminationGracePeriodSeconds": 10,
+        "volumes": [
+          {
+            "name": "data",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data",
+              "readOnly": true
+            }
+          },
+          {
+            "configMap": {
+              "defaultMode": 292,
+              "name": "kai-recovery-ro-1001-618cc3a000-code"
+            },
+            "name": "code"
+          },
+          {
+            "emptyDir": {
+              "sizeLimit": "2304Mi"
+            },
+            "name": "scratch"
+          }
+        ]
+      }
+    },
+    "ttlSecondsAfterFinished": 3600
+  }
+}

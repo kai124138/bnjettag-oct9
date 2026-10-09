@@ -1,0 +1,286 @@
+{
+  "driver": "fold_r14n8.py",
+  "written": "2026-08-11T18:58:04",
+  "question": "does PipelineStyle=dataflow + parallelization_factor=2 actually fold this design, and what does the folded point cost in silicon?",
+  "article": "n8",
+  "config": "r14-l1x3-n8-w1a8",
+  "config_hash": "38a20c62",
+  "variant": "w1a8",
+  "seed": 3,
+  "beta_mode": "fx8",
+  "intervention": {
+    "pipeline_style": "dataflow",
+    "parallelization_factor": 2,
+    "parallelization_factor_softmax": 2,
+    "target_layers": "EinsumDense with n_free_data > 1 AND Softmax with n_outer > 1",
+    "expected_folded": 13,
+    "expected_softmax": 2,
+    "softmax_header_patch": "project-local nnet_activation.h: softmax_multidim n_outer UNROLL -> factor = parallelization_factor",
+    "rationale": "STATUS-2026-08-08 \u00a73.1: the top-level `#pragma HLS PIPELINE` force-unrolls every loop beneath it, which is why RF and PF were both inert. dataflow removes that region. v2 (log 2026-08-11): the pf1df wedge was the 2 Softmax nodes left at pf=n_outer under DATAFLOW \u2014 32 process clones each re-triggering the softmax inline/partition cycle; roll them with everything else."
+  },
+  "labelling": "FOLDED, DEPLOYABLE-CLASS POINT. Answers a different question from the RF=1 reference (latency ~ sum over layers, interval set by the slowest process). MUST NOT be tabulated against the RF=1 whole-model figures (STATUS \u00a72.3, \u00a73.2). Report the dataflow interval as found; do not substitute the RF=1 II=1.",
+  "gates": {
+    "A": "emitted firmware: top-level PIPELINE==0, DATAFLOW>=1, pf accounted on ALL pf lines (13 EinsumDense at pf=2 + 2 Softmax at pf=2, nothing else), softmax header patch present",
+    "B": "GATE1 reproduces the baseline to 1e-09; GATE2 bit-exact"
+  },
+  "status": "EMITTED \u2014 GATE A PASS, GATE B PASS \u2014 ready for mulder (not shipped)",
+  "baseline": {
+    "run_dir": "bnjettag/results/final/runs/38a20c62/w1a8-s3-r14n8",
+    "gate1_corr_scores": 0.9988158043665978,
+    "gate1_argmax_agreement": 0.97998046875,
+    "gate1_beta_mode": "fx8",
+    "gate2_max_abs_diff": 0.0,
+    "gate2_bit_exact": true,
+    "written": "2026-08-04T17:34:30"
+  },
+  "source": {
+    "checkpoint": "bnjettag/roc-results/r14/n8/_ckpt_dl/w1a8-s3/model_best.keras",
+    "input_std": "bnjettag/roc-results/r14/n8/_ckpt_dl/w1a8-s3/input_std.json",
+    "data_dir": "data/val",
+    "n_gate": 4096
+  },
+  "export": {
+    "norm_free": true,
+    "params": 30739,
+    "weight_export_max_abs_diff": 2.9802322387695312e-08
+  },
+  "gate1": {
+    "corr_scores": 0.9988158043665978,
+    "corr_logits": 0.9993752587548694,
+    "argmax_agreement": 0.97998046875,
+    "baseline_corr_scores": 0.9988158043665978,
+    "delta_vs_baseline": 0.0,
+    "tol": 1e-09,
+    "policy_bar": 0.997,
+    "policy_pass": true,
+    "reproduces_baseline": true,
+    "policy": "norm-free 0.997 (decisions.md 2026-08-04); reproduction bar is this driver's own \u2014 a scheduling change must not move numerics"
+  },
+  "folded_layers": {
+    "input_proj": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 3,
+      "n_free_kernel": 32
+    },
+    "bit_block_0_attn_Wq": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_0_attn_Wk": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_0_attn_Wv": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_0_attn_Wo": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_0_ffn_fc1": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 64
+    },
+    "bit_block_0_ffn_fc2": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 64,
+      "n_free_kernel": 32
+    },
+    "bit_block_1_attn_Wq": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_1_attn_Wk": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_1_attn_Wv": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_1_attn_Wo": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 32
+    },
+    "bit_block_1_ffn_fc1": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 32,
+      "n_free_kernel": 64
+    },
+    "bit_block_1_ffn_fc2": {
+      "n_free_data": 8,
+      "pf_before": 8,
+      "pf_after": 2,
+      "n_contract": 64,
+      "n_free_kernel": 32
+    }
+  },
+  "n_folded": 13,
+  "folded_softmax": {
+    "bit_block_0_attn_softmax": {
+      "n_outer": 32,
+      "pf_before": 32,
+      "pf_after": 2
+    },
+    "bit_block_1_attn_softmax": {
+      "n_outer": 32,
+      "pf_before": 32,
+      "pf_after": 2
+    }
+  },
+  "softmax_header_patch": {
+    "file": "firmware/nnet_utils/nnet_activation.h",
+    "patched_pragma": "#pragma HLS UNROLL factor = CONFIG_T::parallelization_factor"
+  },
+  "pragma_audit": {
+    "myproject_cpp_pragmas": [
+      "#pragma HLS ARRAY_RESHAPE variable=input_1 complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer83_out complete dim=0",
+      "#pragma HLS INTERFACE ap_vld port=input_1,layer83_out",
+      "#pragma HLS DATAFLOW",
+      "#pragma HLS ARRAY_PARTITION variable=layer3_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer5_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer6_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer7_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer8_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer9_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer11_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer13_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer16_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer17_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer18_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer19_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer21_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer24_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer26_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer28_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer29_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer30_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer31_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer33_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer34_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer36_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer38_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer39_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer40_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer41_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer42_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer43_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer45_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer47_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer50_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer51_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer52_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer53_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer55_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer58_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer60_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer62_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer63_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer64_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer65_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer67_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer68_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer70_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer72_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer73_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer74_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer76_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer78_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer79_out complete dim=0",
+      "#pragma HLS ARRAY_PARTITION variable=layer81_out complete dim=0"
+    ],
+    "pragma_counts": {
+      "DATAFLOW": 1,
+      "PIPELINE": 0,
+      "UNROLL": 0,
+      "ARRAY_PARTITION": 52,
+      "INLINE": 0
+    },
+    "parameters_h_pf_lines": [
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2;",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2;",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1",
+      "static const unsigned parallelization_factor = 2; // Only useful when n_inplace > 1"
+    ],
+    "pf_value_histogram": {
+      "2": 15
+    }
+  },
+  "gateA": {
+    "top_pipeline_zero": true,
+    "dataflow_present": true,
+    "pf_histogram": {
+      "2": 15
+    },
+    "pf_histogram_expected": {
+      "2": 15
+    },
+    "pf_histogram_ok": true,
+    "softmax_header_patch_ok": true,
+    "pass": true
+  },
+  "gate2": {
+    "csim": {
+      "n": 128,
+      "max_abs_diff": 0.0,
+      "mean_abs_diff": 0.0,
+      "bit_exact": true,
+      "corr": 1.0
+    },
+    "threshold": 0.997,
+    "policy_pass": true,
+    "bit_exact": true,
+    "baseline_bit_exact": true,
+    "macos_local_csim": true,
+    "reference": "export model predictions (as convert_final)"
+  },
+  "output_dir": "bnjettag/results/final/runs/38a20c62/w1a8-s3-r14n8-pf2sm2df/hls_prj_pf2sm2df",
+  "tarball": "bnjettag/results/final/runs/38a20c62/w1a8-s3-r14n8-pf2sm2df/hls_prj_pf2sm2df.tar.gz",
+  "mulder_cmd": "scp bnjettag/results/final/runs/38a20c62/w1a8-s3-r14n8-pf2sm2df/hls_prj_pf2sm2df.tar.gz mulder:~/bnjet_r14/ && ssh mulder 'cd ~/bnjet_r14 && ./mulder_csynth.sh hls_prj_pf2sm2df.tar.gz'"
+}

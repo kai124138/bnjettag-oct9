@@ -1,0 +1,68 @@
+diff --git a/bnhgq2/wandb_util.py b/bnhgq2/wandb_util.py
+index 7c1d518..6cc7c5b 100644
+--- a/bnhgq2/wandb_util.py
++++ b/bnhgq2/wandb_util.py
+@@ -63,14 +63,17 @@ def init_kwargs(*, name: str, job_type: str, config: dict | None = None,
+ # regime-A pilot, so it gets its own id key and its own group (not -canary, whose runs are
+ # pulled by name).
+ # pilot-c (option-(c) amendment, 2026-10-02): the replacement traced-only-PID pilot.
++# pilot-r1/r2/r3 (pilot program, 2026-10-05, campaigns/2026-10-05-pilot-program): one stage per
++# round, so a config name re-run in a later round gets its own run id and group.
+ STAGE_GROUP_SUFFIX = {"canary": "-canary", "pilot": "-canary", "pilot-b": "-pilot-b", "pilot-c": "-pilot-c",
++                      "pilot-r1": "-pilot-r1", "pilot-r2": "-pilot-r2", "pilot-r3": "-pilot-r3",
+                       "production": ""}
+ 
+ 
+ def run_stage(required: bool = False) -> str | None:
+     stage = os.environ.get("BNJ_STAGE", "").strip() or None
+     if stage is None and required:
+-        raise RuntimeError("BNJ_STAGE must be set (canary, pilot, pilot-b, pilot-c or production) for a tracked run")
++        raise RuntimeError("BNJ_STAGE must be set (canary, pilot, pilot-b, pilot-c, pilot-r1/2/3 or production) for a tracked run")
+     if stage is not None and stage not in STAGE_GROUP_SUFFIX:
+         raise ValueError(f"BNJ_STAGE={stage!r}; expected one of {sorted(STAGE_GROUP_SUFFIX)}")
+     return stage
+diff --git a/tests/test_pilot_stage.py b/tests/test_pilot_stage.py
+new file mode 100644
+index 0000000..9459585
+--- /dev/null
++++ b/tests/test_pilot_stage.py
+@@ -0,0 +1,39 @@
++"""Pilot program W&B stages (patch 0038): pilot-r1/r2/r3 key the run id and the group suffix."""
++import os
++import sys
++import unittest
++from pathlib import Path
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
++
++from bnhgq2.wandb_util import STAGE_GROUP_SUFFIX, run_stage, stage_group, stage_run_id  # noqa: E402
++
++
++class PilotStages(unittest.TestCase):
++    def test_group_and_id(self):
++        self.assertEqual(stage_group('chang-n64-20261005', 'pilot-r1'), 'chang-n64-20261005-pilot-r1')
++        ids = {stage_run_id('pilot1005-h1-e-350k-c-s1', s) for s in ('pilot-r1', 'pilot-r2', 'pilot-r3', 'production')}
++        self.assertEqual(len(ids), 4)
++
++    def test_existing_stages_unchanged(self):
++        self.assertEqual({k: STAGE_GROUP_SUFFIX[k] for k in ('canary', 'pilot', 'pilot-b', 'pilot-c', 'production')},
++                         {'canary': '-canary', 'pilot': '-canary', 'pilot-b': '-pilot-b', 'pilot-c': '-pilot-c',
++                          'production': ''})
++
++    def test_run_stage_accepts_rounds_only(self):
++        old = os.environ.get('BNJ_STAGE')
++        try:
++            os.environ['BNJ_STAGE'] = 'pilot-r1'
++            self.assertEqual(run_stage(required=True), 'pilot-r1')
++            os.environ['BNJ_STAGE'] = 'pilot-r4'
++            with self.assertRaises(ValueError):
++                run_stage(required=True)
++        finally:
++            if old is None:
++                os.environ.pop('BNJ_STAGE', None)
++            else:
++                os.environ['BNJ_STAGE'] = old
++
++
++if __name__ == '__main__':
++    unittest.main(verbosity=2)

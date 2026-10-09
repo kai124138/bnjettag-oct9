@@ -1,0 +1,76 @@
+{
+  "before": {
+    "protocol_sha256": "4b0b7bd8f5e2adc1b5990e9bb6a02c6977cf3a699ef3751d751de40cf1a6715c",
+    "config_sources": {
+      "local/jev-loops/lp-b6e0f34312734831b2060291f08a0155/arm-config.json": "6b70ee60d5070f5faf6ff2ae3854ac24875b3d3194dc0b1a0135b9165d65ac42"
+    },
+    "structural_valid": true,
+    "findings": [],
+    "drift": [],
+    "matches_snapshot": false,
+    "scientific_gate": "not_evaluated",
+    "launch_authorized": false,
+    "limitations": "Checks declared protocol fields, not training execution or dataset bytes."
+  },
+  "snapshot": {
+    "snapshot_path": "local/jev-protocols/e1d9155d7d843f5f02fd2d7dae74a6e828418c690284c6eae3783dc50489981a.json",
+    "sha256": "e1d9155d7d843f5f02fd2d7dae74a6e828418c690284c6eae3783dc50489981a",
+    "scientific_gate": "not_evaluated",
+    "launch_authorized": false,
+    "note": "Protocol snapshot only. Existing campaign freeze and handoff are still required."
+  },
+  "after": {
+    "protocol_sha256": "81c2b5d1821b7a09c16bbc92ddcb32d91830569e5655fae8aec4f47722a8738f",
+    "config_sources": {
+      "local/jev-loops/lp-b6e0f34312734831b2060291f08a0155/arm-config.json": "919ed89719e7a4898cfdc9aca6ac0283fd44783fc5b718740fb7dddfb342ee17"
+    },
+    "structural_valid": true,
+    "findings": [],
+    "drift": [
+      {
+        "field": "arms",
+        "before": [
+          {
+            "changed_factors": [],
+            "config_path": "local/jev-loops/lp-b6e0f34312734831b2060291f08a0155/arm-config.json",
+            "group": "baseline",
+            "name": "synthetic-baseline-s1",
+            "quantization": "binary",
+            "schedule": {
+              "batch_size": 16,
+              "epochs": 3,
+              "learning_rate": 0.0001,
+              "optimizer": "adam"
+            },
+            "seed": 1
+          }
+        ],
+        "after": [
+          {
+            "name": "synthetic-baseline-s1",
+            "group": "baseline",
+            "seed": 1,
+            "quantization": "binary",
+            "changed_factors": [],
+            "schedule": {
+              "epochs": 4,
+              "batch_size": 16,
+              "optimizer": "adam",
+              "learning_rate": 0.0001
+            },
+            "config_path": "local/jev-loops/lp-b6e0f34312734831b2060291f08a0155/arm-config.json"
+          }
+        ]
+      },
+      {
+        "field": "config_sources.local/jev-loops/lp-b6e0f34312734831b2060291f08a0155/arm-config.json",
+        "before": "6b70ee60d5070f5faf6ff2ae3854ac24875b3d3194dc0b1a0135b9165d65ac42",
+        "after": "919ed89719e7a4898cfdc9aca6ac0283fd44783fc5b718740fb7dddfb342ee17"
+      }
+    ],
+    "matches_snapshot": false,
+    "scientific_gate": "not_evaluated",
+    "launch_authorized": false,
+    "limitations": "Checks declared protocol fields, not training execution or dataset bytes."
+  }
+}

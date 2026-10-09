@@ -1,0 +1,338 @@
+{
+ "written": "2026-09-02T16:59:56",
+ "audit": {
+  "model_default_t": "ap_fixed<36,12>",
+  "weight_typedefs": {
+   "input_proj": "ap_fixed<24,0>",
+   "bit_block_0_ffn_fc1": "ap_fixed<24,0>",
+   "bit_block_0_ffn_fc2": "ap_fixed<24,0>",
+   "bit_block_1_ffn_fc1": "ap_fixed<24,0>",
+   "bit_block_1_ffn_fc2": "ap_fixed<24,0>",
+   "head_fc1": "ap_fixed<24,0>",
+   "head_fc2": "ap_fixed<24,1>"
+  },
+  "n_weight_typedefs": 7,
+  "bias_typedefs": {
+   "input_proj": "ap_fixed<32,1>",
+   "bit_block_0_ffn_fc1": "ap_fixed<30,-2>",
+   "bit_block_0_ffn_fc2": "ap_fixed<29,-3>",
+   "bit_block_1_ffn_fc1": "ap_fixed<30,-2>",
+   "bit_block_1_ffn_fc2": "ap_fixed<29,-3>",
+   "head_fc1": "ap_fixed<30,-2>",
+   "head_fc2": "ap_fixed<27,-4>"
+  },
+  "config_weight_t_kinds": [
+   "bit_block_0_ffn_fc1_weight_t",
+   "bit_block_0_ffn_fc2_weight_t",
+   "bit_block_1_ffn_fc1_weight_t",
+   "bit_block_1_ffn_fc2_weight_t",
+   "head_fc1_weight_t",
+   "head_fc2_weight_t",
+   "input_proj_weight_t",
+   "model_default_t"
+  ],
+  "n_model_default_weight_t": 8,
+  "n_model_default_bias_t": 16,
+  "weighted_cores": {
+   "input_proj": {
+    "core": "einsum_dense",
+    "weight_array": "w3",
+    "type": "input_proj_weight_t",
+    "n": 96
+   },
+   "bit_block_0_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w5",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w7",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w13",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w18",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_0_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w21",
+    "type": "bit_block_0_ffn_fc1_weight_t",
+    "n": 2048
+   },
+   "bit_block_0_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w24",
+    "type": "bit_block_0_ffn_fc2_weight_t",
+    "n": 2048
+   },
+   "bit_block_1_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w27",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w29",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w35",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w40",
+    "type": "model_default_t",
+    "n": 1024
+   },
+   "bit_block_1_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w43",
+    "type": "bit_block_1_ffn_fc1_weight_t",
+    "n": 2048
+   },
+   "bit_block_1_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w46",
+    "type": "bit_block_1_ffn_fc2_weight_t",
+    "n": 2048
+   },
+   "head_fc1": {
+    "core": "dense",
+    "weight_array": "w50",
+    "type": "head_fc1_weight_t",
+    "n": 1024
+   },
+   "head_fc2": {
+    "core": "dense",
+    "weight_array": "w53",
+    "type": "head_fc2_weight_t",
+    "n": 160
+   }
+  },
+  "n_einsum_dense": 13,
+  "n_dense": 2
+ },
+ "f6": {
+  "falsifier": "F6 -- emitted precision must represent the intended realization",
+  "intended_width": 24,
+  "model_default_t": "ap_fixed<36,12>",
+  "n_weighted_layers": 15,
+  "per_layer": {
+   "input_proj": {
+    "core": "einsum_dense",
+    "weight_array": "w3",
+    "container_typedef": "input_proj_weight_t",
+    "container": "ap_fixed<24,0>",
+    "container_width": 24,
+    "container_integer": 0,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w5",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w7",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w13",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w18",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w21",
+    "container_typedef": "bit_block_0_ffn_fc1_weight_t",
+    "container": "ap_fixed<24,0>",
+    "container_width": 24,
+    "container_integer": 0,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_0_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w24",
+    "container_typedef": "bit_block_0_ffn_fc2_weight_t",
+    "container": "ap_fixed<24,0>",
+    "container_width": 24,
+    "container_integer": 0,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wq": {
+    "core": "einsum_dense",
+    "weight_array": "w27",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wk": {
+    "core": "einsum_dense",
+    "weight_array": "w29",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wv": {
+    "core": "einsum_dense",
+    "weight_array": "w35",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_attn_Wo": {
+    "core": "einsum_dense",
+    "weight_array": "w40",
+    "container_typedef": "model_default_t",
+    "container": "ap_fixed<36,12>",
+    "container_width": 36,
+    "container_integer": 12,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_ffn_fc1": {
+    "core": "einsum_dense",
+    "weight_array": "w43",
+    "container_typedef": "bit_block_1_ffn_fc1_weight_t",
+    "container": "ap_fixed<24,0>",
+    "container_width": 24,
+    "container_integer": 0,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "bit_block_1_ffn_fc2": {
+    "core": "einsum_dense",
+    "weight_array": "w46",
+    "container_typedef": "bit_block_1_ffn_fc2_weight_t",
+    "container": "ap_fixed<24,0>",
+    "container_width": 24,
+    "container_integer": 0,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "head_fc1": {
+    "core": "dense",
+    "weight_array": "w50",
+    "container_typedef": "head_fc1_weight_t",
+    "container": "ap_fixed<24,0>",
+    "container_width": 24,
+    "container_integer": 0,
+    "container_frac": 24,
+    "grid": "ap_fixed<24,0>",
+    "grid_frac": 24,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   },
+   "head_fc2": {
+    "core": "dense",
+    "weight_array": "w53",
+    "container_typedef": "head_fc2_weight_t",
+    "container": "ap_fixed<24,1>",
+    "container_width": 24,
+    "container_integer": 1,
+    "container_frac": 23,
+    "grid": "ap_fixed<24,1>",
+    "grid_frac": 23,
+    "max_abs_truncation": 0.0,
+    "ok": true
+   }
+  },
+  "offenders": [],
+  "pass": true,
+  "rule": "container must hold every quantized weight EXACTLY (max|w - stored(w)| == 0); BitExact narrowing of a named typedef to the occupied range is NOT a failure, silent truncation is"
+ },
+ "model_precision_used": "fixed<36,12>"
+}

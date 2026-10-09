@@ -1,0 +1,127 @@
+{
+ "schema": 1,
+ "round": "D350",
+ "count": 2,
+ "scientific_keys": [
+  "campaign.pilot.budget",
+  "train.ebops.pid.target_ebops"
+ ],
+ "identity_keys": [
+  "campaign.pilot.arm",
+  "campaign.pilot.hypothesis",
+  "campaign.pilot.round",
+  "campaign.revision_of",
+  "campaign.study",
+  "experiment.arm",
+  "experiment.group",
+  "name"
+ ],
+ "unchanged": "every other flattened key equals the base config (exhaustive_flat_diff per row)",
+ "stop_epoch": "not a config key: run_pack.py <pack> <stop epoch> in the Job (pilot mechanism)",
+ "rows": [
+  {
+   "index": 0,
+   "name": "d350-baseline-e-350k-s1",
+   "base": {
+    "name": "pilot1005-h1-e-350k-c-s1",
+    "sha256": "2d0bff42ff5ca6589e5703f973e32bc9e572d16ec642f738f383286f346c3fc6",
+    "file": "campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json"
+   },
+   "sha256": "0e3c54548292595c07f6801c5f96666c01dc638fa899da1671db4dd9bc52b609",
+   "exhaustive_flat_diff": {
+    "changed": {
+     "campaign.pilot.arm": [
+      "A350-C",
+      "baseline-e-350k-s1"
+     ],
+     "campaign.pilot.hypothesis": [
+      "H1",
+      "baseline"
+     ],
+     "campaign.pilot.round": [
+      "R1",
+      "D350"
+     ],
+     "campaign.revision_of": [
+      "chang1002c-a-n64-s1",
+      "pilot1005-h1-e-350k-c-s1"
+     ],
+     "campaign.study": [
+      "campaigns/2026-10-05-pilot-program",
+      "campaigns/2026-10-08-discovery-350k"
+     ],
+     "experiment.arm": [
+      "pilot1005-h1-e-350k-c-s1",
+      "d350-baseline-e-350k-s1"
+     ],
+     "experiment.group": [
+      "chang-n64-20261005",
+      "discovery-350k-20261008"
+     ],
+     "name": [
+      "pilot1005-h1-e-350k-c-s1",
+      "d350-baseline-e-350k-s1"
+     ]
+    },
+    "removed": {},
+    "added": {}
+   }
+  },
+  {
+   "index": 1,
+   "name": "d350-reference-e-5m-s1",
+   "base": {
+    "name": "pilot1005-h1-e-350k-c-s1",
+    "sha256": "2d0bff42ff5ca6589e5703f973e32bc9e572d16ec642f738f383286f346c3fc6",
+    "file": "campaigns/pilot1005/configs/pilot1005-h1-e-350k-c-s1.json"
+   },
+   "sha256": "c0b6539502f6836940b0fd8c160d6db4f3c52ca57d09e3d281c9d1570679049b",
+   "exhaustive_flat_diff": {
+    "changed": {
+     "campaign.pilot.arm": [
+      "A350-C",
+      "reference-e-5m-s1"
+     ],
+     "campaign.pilot.budget": [
+      350000,
+      5000000
+     ],
+     "campaign.pilot.hypothesis": [
+      "H1",
+      "reference"
+     ],
+     "campaign.pilot.round": [
+      "R1",
+      "D350"
+     ],
+     "campaign.revision_of": [
+      "chang1002c-a-n64-s1",
+      "pilot1005-h1-e-350k-c-s1"
+     ],
+     "campaign.study": [
+      "campaigns/2026-10-05-pilot-program",
+      "campaigns/2026-10-08-discovery-350k"
+     ],
+     "experiment.arm": [
+      "pilot1005-h1-e-350k-c-s1",
+      "d350-reference-e-5m-s1"
+     ],
+     "experiment.group": [
+      "chang-n64-20261005",
+      "discovery-350k-20261008"
+     ],
+     "name": [
+      "pilot1005-h1-e-350k-c-s1",
+      "d350-reference-e-5m-s1"
+     ],
+     "train.ebops.pid.target_ebops": [
+      350000,
+      5000000
+     ]
+    },
+    "removed": {},
+    "added": {}
+   }
+  }
+ ]
+}

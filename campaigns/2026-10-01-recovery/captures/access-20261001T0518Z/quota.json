@@ -1,0 +1,86 @@
+{
+  "observed_at_utc": "2026-10-01T05:17:49.645332+00:00",
+  "command": [
+    "/home/kaimoe/.local/bin/kubectl",
+    "--context",
+    "nautilus",
+    "--request-timeout=25s",
+    "-n",
+    "cms-ml",
+    "get",
+    "resourcequota",
+    "-o",
+    "json"
+  ],
+  "exit_code": 0,
+  "source_stdout_sha256": "527881748800bdaca4da45a91685b803f43e1b75563e50df8a5de19a7fcc4025",
+  "data": [
+    {
+      "name": "a100-limit",
+      "hard": {
+        "limits.nvidia.com/a100": "24",
+        "requests.nvidia.com/a100": "24"
+      },
+      "used": {
+        "requests.nvidia.com/a100": "21"
+      }
+    },
+    {
+      "name": "gh200-limit",
+      "hard": {
+        "limits.nvidia.com/gh200": "0",
+        "requests.nvidia.com/gh200": "0"
+      },
+      "used": {
+        "requests.nvidia.com/gh200": "0"
+      }
+    },
+    {
+      "name": "h100-limit",
+      "hard": {
+        "limits.nvidia.com/h100": "0",
+        "requests.nvidia.com/h100": "0"
+      },
+      "used": {
+        "requests.nvidia.com/h100": "0"
+      }
+    },
+    {
+      "name": "h200-limit",
+      "hard": {
+        "limits.nvidia.com/h200": "0",
+        "requests.nvidia.com/h200": "0"
+      },
+      "used": {
+        "requests.nvidia.com/h200": "0"
+      }
+    },
+    {
+      "name": "high-priority-ban",
+      "hard": {
+        "pods": "0"
+      },
+      "used": {
+        "pods": "0"
+      }
+    },
+    {
+      "name": "low-priority-ban",
+      "hard": {
+        "pods": "0"
+      },
+      "used": {
+        "pods": "0"
+      }
+    },
+    {
+      "name": "reached-quota",
+      "hard": {
+        "pods": "200"
+      },
+      "used": {
+        "pods": "58"
+      }
+    }
+  ]
+}

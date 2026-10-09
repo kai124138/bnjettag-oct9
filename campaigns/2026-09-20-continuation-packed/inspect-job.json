@@ -1,0 +1,132 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "name": "kai-continuation-inspect-0920-r2",
+    "namespace": "cms-ml",
+    "labels": {
+      "app": "kai-continuation-inspect"
+    }
+  },
+  "spec": {
+    "backoffLimit": 0,
+    "activeDeadlineSeconds": 7200,
+    "ttlSecondsAfterFinished": 86400,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "kai-continuation-inspect"
+        }
+      },
+      "spec": {
+        "restartPolicy": "Never",
+        "automountServiceAccountToken": false,
+        "nodeSelector": {
+          "kubernetes.io/arch": "amd64"
+        },
+        "affinity": {
+          "nodeAffinity": {
+            "requiredDuringSchedulingIgnoredDuringExecution": {
+              "nodeSelectorTerms": [
+                {
+                  "matchExpressions": [
+                    {
+                      "key": "kubernetes.io/hostname",
+                      "operator": "NotIn",
+                      "values": [
+                        "nautilus-ext-gpu01.fullerton.edu",
+                        "ren-gp-argo-01.madren.org"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "containers": [
+          {
+            "name": "inspect",
+            "image": "python:3.12",
+            "command": [
+              "python",
+              "-u",
+              "-c",
+              "import json, pathlib, hashlib, tarfile, time\nP=pathlib.Path\nrecords=[]\nfor label,campaign in [('arch','batch20260917'),('attn','batch20260918'),('engram','engram')]:\n    bundle=P('/bundles')/label/'hgq2.tar.gz'\n    digest=hashlib.sha256(bundle.read_bytes()).hexdigest()\n    target=P('/work')/label; target.mkdir(parents=True,exist_ok=True)\n    with tarfile.open(bundle) as t: t.extractall(target,filter='data')\n    code=target/'hgq2'\n    for cfgp in sorted((code/'configs'/campaign).glob('*.json')):\n        cfg=json.loads(cfgp.read_text())\n        if 'experiment' not in cfg: continue\n        arm=cfg['experiment']['arm']\n        if label=='engram' and arm not in [f'engram-e{i:02d}-s1' for i in range(4)]: continue\n        root=P('/data/engram-study-20260918') if label=='engram' else P('/data/batch20260917')/('n'+str(cfg['arch']['n_part']))\n        run=root/'runs'/arm\n        latest=json.loads((run/'latest.json').read_text())\n        state=json.loads((run/'checkpoints'/latest['checkpoint']/'state.json').read_text())\n        cfgsha=hashlib.sha256(json.dumps(cfg, sort_keys=True).encode()).hexdigest()\n        assert cfg['train']['epochs']==1000,(arm,'configured schedule')\n        assert state['config_sha256']==cfgsha,(arm,'config mismatch')\n        if label=='engram':\n            manifest=json.loads((run/'source_manifest.json').read_text())\n            assert state['code_sha256']==manifest['sha256'],(arm,'engram source mismatch')\n            for name,sha in manifest['files'].items(): assert hashlib.sha256((code/name).read_bytes()).hexdigest()==sha,(arm,name)\n        else: assert state['code_sha256']==digest,(arm,'code mismatch')\n        assert not (run/'COMPLETE.json').exists(),(arm,'COMPLETE exists')\n        row=dict(label=label,arm=arm,run=str(run),bundle_sha256=digest,latest=latest,state=state,config_sha256=cfgsha,files=[p.name for p in run.iterdir()])\n        if label=='engram': row['source_manifest']=manifest\n        records.append(row)\nassert len(records)==31,len(records)\nP('/work/pvc-state.json').write_text(json.dumps(records,indent=2))\nprint('PREFLIGHT_ALL_PASS '+json.dumps([{'arm':r['arm'],'epoch':r['state']['completed_epochs']} for r in records]),flush=True)\ntime.sleep(3600)\n"
+            ],
+            "resources": {
+              "requests": {
+                "cpu": "1",
+                "memory": "2Gi",
+                "ephemeral-storage": "2Gi"
+              },
+              "limits": {
+                "cpu": "1",
+                "memory": "2Gi",
+                "ephemeral-storage": "2Gi"
+              }
+            },
+            "volumeMounts": [
+              {
+                "name": "persistent",
+                "mountPath": "/data",
+                "readOnly": true
+              },
+              {
+                "name": "work",
+                "mountPath": "/work"
+              },
+              {
+                "name": "arch",
+                "mountPath": "/bundles/arch",
+                "readOnly": true
+              },
+              {
+                "name": "attn",
+                "mountPath": "/bundles/attn",
+                "readOnly": true
+              },
+              {
+                "name": "engram",
+                "mountPath": "/bundles/engram",
+                "readOnly": true
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "persistent",
+            "persistentVolumeClaim": {
+              "claimName": "kai-data"
+            }
+          },
+          {
+            "name": "work",
+            "emptyDir": {
+              "sizeLimit": "2Gi"
+            }
+          },
+          {
+            "name": "arch",
+            "configMap": {
+              "name": "kai-batch0917-code-ddd3761d2a"
+            }
+          },
+          {
+            "name": "attn",
+            "configMap": {
+              "name": "kai-batch0918-code-774a2d4d18"
+            }
+          },
+          {
+            "name": "engram",
+            "configMap": {
+              "name": "kai-engram-code-a10364eda9"
+            }
+          }
+        ]
+      }
+    }
+  }
+}

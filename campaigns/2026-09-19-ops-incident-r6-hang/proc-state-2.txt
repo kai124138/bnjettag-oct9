@@ -1,0 +1,131 @@
+Sat Sep 19 19:51:12 UTC 2026
+--- threads pid1 (tid name state wchan utime stime)
+1 python S futex_wait_queue 113129 3257 syscall=
+100 cuda00001400006 S do_poll.constprop.0 0 0 syscall=
+101 tf_cuda_driver S futex_wait_queue 0 0 syscall=
+102 python S ep_poll 1214 250 syscall=
+163 tf_graph_runner S futex_wait_queue 0 0 syscall=
+164 python S futex_wait_queue 0 0 syscall=
+165 python S futex_wait_queue 0 0 syscall=
+166 python S futex_wait_queue 0 0 syscall=
+167 python S futex_wait_queue 0 0 syscall=
+168 cuda-EvtHandlr S do_poll.constprop.0 4412 7151 syscall=
+169 python S do_poll.constprop.0 1219 2052 syscall=
+170 python S futex_wait_queue 94180 6302 syscall=
+171 python S hrtimer_nanosleep 973945 390340 syscall=
+172 tf_Compute S futex_wait_queue 2218341 42204 syscall=
+173 tf_Compute S futex_wait_queue 2224185 41902 syscall=
+253 python S hrtimer_nanosleep 8 7 syscall=
+261 tf_Compute S futex_wait_queue 0 0 syscall=
+262 tf_Compute S futex_wait_queue 0 0 syscall=
+263 tf_Compute S futex_wait_queue 0 0 syscall=
+264 tf_Compute S futex_wait_queue 0 0 syscall=
+265 tf_Compute S futex_wait_queue 0 0 syscall=
+266 tf_Compute S futex_wait_queue 0 0 syscall=
+267 tf_Compute S futex_wait_queue 0 0 syscall=
+268 tf_Compute S futex_wait_queue 0 0 syscall=
+269 tf_Compute S futex_wait_queue 0 0 syscall=
+270 tf_Compute S futex_wait_queue 0 0 syscall=
+275 tf_Compute S futex_wait_queue 0 0 syscall=
+516 python S futex_wait_queue 434 18 syscall=
+559 tf_Compute S futex_wait_queue 814 1281 syscall=
+93 python S futex_wait_queue 13 0 syscall=
+94 python S futex_wait_queue 13 0 syscall=
+95 python S futex_wait_queue 13 0 syscall=
+97 python S futex_wait_queue 13 0 syscall=
+98 python S futex_wait_queue 13 0 syscall=
+99 python S futex_wait_queue 13 0 syscall=
+--- fds pid1
+      1   
+      1 23 -> /data/ebops-n8-20260912-ablation/runs/r6-distill/run.lock
+      1 0 -> /dev/null
+      4 10 -> /dev/nvidia-uvm
+     21 11 -> /dev/nvidia0
+      2 17 -> /dev/nvidiactl
+      1 32 -> /wandb/run-20260915_083509-b01b23c8027b/logs/debug.log
+      5 16 -> anon_inode:[eventfd]
+      1 24 -> anon_inode:[eventpoll]
+      1 1 -> pipe:[2452498440]
+      1 2 -> pipe:[2452498441]
+      2 4 -> pipe:[2452503580]
+      2 6 -> pipe:[2452503581]
+      2 77 -> pipe:[2452505831]
+      2 80 -> pipe:[2452505832]
+      1 47 -> socket:[2452473657]
+      1 30 -> socket:[2452473660]
+      1 28 -> socket:[2452473665]
+      1 50 -> socket:[2452473671]
+      1 64 -> socket:[2452473675]
+      1 49 -> socket:[2452473679]
+      1 29 -> socket:[2452473683]
+      1 68 -> socket:[2452473686]
+      1 59 -> socket:[2452486710]
+      1 57 -> socket:[2452486716]
+      1 58 -> socket:[2452486719]
+      1 15 -> socket:[2452503588]
+      1 46 -> socket:[2452503694]
+      1 35 -> socket:[2452503700]
+      1 53 -> socket:[2452503705]
+      1 34 -> socket:[2452503709]
+      1 56 -> socket:[2452503713]
+      1 54 -> socket:[2452503718]
+      1 42 -> socket:[2452503724]
+      1 40 -> socket:[2452503728]
+      1 33 -> socket:[2452503733]
+      1 25 -> socket:[2452505701]
+      1 26 -> socket:[2452505702]
+      1 27 -> socket:[2452505703]
+      1 52 -> socket:[2452505766]
+      1 31 -> socket:[2452505769]
+      1 37 -> socket:[2452505773]
+      1 43 -> socket:[2452505779]
+      1 51 -> socket:[2452505785]
+      1 36 -> socket:[2452505790]
+      1 39 -> socket:[2452505794]
+      1 48 -> socket:[2452505798]
+      1 38 -> socket:[2452505802]
+      1 45 -> socket:[2452505805]
+      1 44 -> socket:[2452505810]
+      1 41 -> socket:[2452505814]
+--- tcp
+  sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode                                                     
+   0: 4EA8F40A:DBB6 CF18B3C0:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452503709 1 0000000000000000 26 4 0 10 -1                
+   1: 4EA8F40A:9AFE 1B010322:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452473679 1 0000000000000000 20 4 0 10 -1                
+   2: 4EA8F40A:C428 CFA3FB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452473660 1 0000000000000000 26 4 0 10 -1                
+   3: 4EA8F40A:A8C6 DBD7FB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452486710 1 0000000000000000 20 4 0 10 -1                
+   4: 4EA8F40A:AD1E CF8AFA8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505779 1 0000000000000000 23 4 0 10 -1                
+   5: 4EA8F40A:A350 CF7AFDAC:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505814 1 0000000000000000 26 4 0 10 -1                
+   6: 4EA8F40A:DC68 CF3AFDAC:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505790 1 0000000000000000 24 4 0 10 -1                
+   7: 4EA8F40A:878A 1BAA9022:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452486716 1 0000000000000000 20 4 0 10 -1                
+   8: 4EA8F40A:A3A8 CF9BB2C0:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452486719 1 0000000000000000 26 4 0 10 -1                
+   9: 4EA8F40A:C138 CFA7FB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505798 1 0000000000000000 26 4 18 10 -1               
+  10: 4EA8F40A:AC0A 1B2DFB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452503713 1 0000000000000000 20 4 0 10 -1                
+  11: 4EA8F40A:877C 1BAA9022:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505794 1 0000000000000000 20 4 0 10 -1                
+  12: 4EA8F40A:A348 CF7AFDAC:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452503705 1 0000000000000000 26 4 0 10 -1                
+  13: 4EA8F40A:D83E 1B029922:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452473675 1 0000000000000000 20 4 0 10 -1                
+  14: 4EA8F40A:CE7C CF73FDAC:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452473665 1 0000000000000000 26 4 0 10 -1                
+  15: 4EA8F40A:8B2E CF9CFDAC:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505785 1 0000000000000000 23 4 0 10 -1                
+  16: 4EA8F40A:C6CC CF6FFB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505805 1 0000000000000000 26 4 0 10 -1                
+  17: 4EA8F40A:8336 CF8BFDAC:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452473683 1 0000000000000000 26 4 0 10 -1                
+  18: 4EA8F40A:A258 1BAB9022:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505773 1 0000000000000000 20 4 0 10 -1                
+  19: 4EA8F40A:83EC 1B29FB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505766 1 0000000000000000 20 4 0 10 -1                
+  20: 4EA8F40A:DB16 CF12B3C0:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452503724 1 0000000000000000 26 4 0 10 -1                
+  21: 4EA8F40A:B206 CF68B16C:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452473686 1 0000000000000000 24 4 20 10 -1               
+  22: 4EA8F40A:9B08 1B010322:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505810 1 0000000000000000 20 4 0 10 -1                
+  23: 4EA8F40A:B040 65FA0822:01BB 01 00000000:00000000 02:00000562 00000000     0        0 2538322923 2 0000000000000000 20 4 29 10 -1               
+  24: 4EA8F40A:8B8A CFD0C2AD:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452503728 1 0000000000000000 23 4 0 10 -1                
+  25: 4EA8F40A:83DE 1B29FB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452503700 1 0000000000000000 20 4 0 10 -1                
+  26: 4EA8F40A:8798 1BAA9022:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505802 1 0000000000000000 20 4 0 10 -1                
+  27: 4EA8F40A:BD1A 1BDAFB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452503694 1 0000000000000000 20 4 0 10 -1                
+  28: 4EA8F40A:83F8 1B29FB8E:01BB 08 00000000:00000001 00:00000000 00000000     0        0 2452505769 1 0000000000000000 20 4 0 10 -1                
+--- pyspy
+--- io again
+rchar: 13186614925
+wchar: 13463690104
+syscr: 5814380
+syscw: 7219301
+read_bytes: 223412224
+write_bytes: 14526849024
+cancelled_write_bytes: 10719232
+voluntary_ctxt_switches:	1214639
+nonvoluntary_ctxt_switches:	8212

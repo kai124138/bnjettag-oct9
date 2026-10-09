@@ -1,0 +1,2143 @@
+{
+  "checked_at": "2026-09-22T06:46:02.609460+00:00",
+  "runs": [
+    {
+      "run": "engram-e00-s1",
+      "checkpoint": "epoch-0675",
+      "state": {
+        "completed_epochs": 675,
+        "best_feasible": null,
+        "lowest": {
+          "epoch": 226,
+          "val_macro_auc": 0.6286232845912874,
+          "val_categorical_accuracy": 0.23615322580645162,
+          "ebops": 721173
+        },
+        "best_auc": {
+          "epoch": 47,
+          "val_macro_auc": 0.8811096471894115,
+          "val_categorical_accuracy": 0.6447096774193548,
+          "ebops": 2534369
+        },
+        "code_sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc",
+        "config_sha256": "97b3f6b7ae0fe5a730401117484603092b8b766dd120db53e4bfe4f987ccea44",
+        "data_sha256": "6cb6cbcfc7c1d5454dc289e3a91f7961b375474479112e56c34e3a1a65d15b79"
+      },
+      "config": {
+        "name": "engram-e00-s1",
+        "era": 2,
+        "arch": {
+          "n_part": 16,
+          "n_feat": 3,
+          "features": [
+            "pt",
+            "etarel",
+            "phirel"
+          ],
+          "d_model": 32,
+          "n_heads": 4,
+          "n_layers": 2,
+          "ffn_dim": 32,
+          "n_classes": 5,
+          "pool": "gap",
+          "ffn_act": "relu",
+          "norm": "none",
+          "norm_placement": "per_linear",
+          "pos_enc": "learned",
+          "softmax_free": false,
+          "input_std": true
+        },
+        "quant": {
+          "weight": "binary_absmean",
+          "act_bits": 8,
+          "act_policy": "learned_per_tensor_width",
+          "calib_n": 8192,
+          "act_calib": "free",
+          "act_bw_l1": 1e-08,
+          "beta0": 1e-07,
+          "act_granularity": "channel",
+          "softmax_out_bits": 10,
+          "softmax_out_i": 1
+        },
+        "train": {
+          "data": "data/train",
+          "validation_split": 0.2,
+          "epochs": 1000,
+          "batch": 256,
+          "lr": 2e-05,
+          "warmup_epochs": 1,
+          "decay_epochs": 999,
+          "decay_power": 1.0,
+          "beta2": 0.98,
+          "weight_decay": 0.01,
+          "clip_mode": "value",
+          "clipvalue": 1.0,
+          "clipnorm": 1.0,
+          "es_patience": 0,
+          "wandb_project": "BNJetTag-Engram-Experimental",
+          "ebops": {
+            "enable": true,
+            "monitor_widths": true,
+            "controller": "pid",
+            "beta_schedule": null,
+            "front_dir": "front",
+            "metrics": [
+              "val_macro_auc",
+              "ebops"
+            ],
+            "sides": [
+              1,
+              -1
+            ],
+            "pid": {
+              "init_beta": 1e-07,
+              "p": 1.0,
+              "i": 0.05,
+              "d": 0.0,
+              "warmup": 10,
+              "log": true,
+              "min_beta": 1e-10,
+              "max_beta": 0.001,
+              "damp_beta_on_target": 0.0,
+              "target_ebops": 350000
+            },
+            "selection": "max_accuracy",
+            "stop_on_target": false
+          },
+          "jit_compile": false,
+          "split_seed": 1,
+          "order_seed": 20260912,
+          "val_batch": 1024
+        },
+        "hls": {
+          "backend": "Vitis",
+          "part": "xcvu13p-flga2577-2-e",
+          "clock_ns": 2.5,
+          "rf": 1,
+          "io": "io_parallel"
+        },
+        "experiment": {
+          "arm": "engram-e00-s1",
+          "group": "engram-screen",
+          "seed": 1,
+          "selection_metric": "val_categorical_accuracy",
+          "checkpoint_every_epochs": 1,
+          "remote_every_epochs": 25
+        },
+        "engram_study": {
+          "module": null,
+          "question": "Two-block reference",
+          "memory_lr_multiplier": 5.0,
+          "memory_weight_decay": 0.0,
+          "wandb_entity": "kayamaguchi-uc-san-diego",
+          "wandb_project_access": "PRIVATE",
+          "max_logical_table_bytes": 65536,
+          "max_replicated_table_bytes": 524288,
+          "cost_convention": "native_hgq2_plus_custom_estimate",
+          "status": "experimental; training ready, HLS unsupported"
+        }
+      },
+      "source_manifest": {
+        "files": {
+          "run_engram.py": "1d6d64832d7d880aac59826590de7b48ba2cd4bfd4772fc81a2f2c8d594587a2",
+          "bnhgq2/__init__.py": "9ade8d2c6d17aa146626864038d3ee54a7969535b1dd8bed62d5507887e0aa2a",
+          "bnhgq2/ablation.py": "2e5f6fbef42cc61d971bbc9e7fb06dea9b14cf6e68fc415a9adb6d536ec92909",
+          "bnhgq2/binarize.py": "700c3ef632e1319033331f331a47265dac7627850da1466990272784ea225f4c",
+          "bnhgq2/build.py": "847eafb77dfb2310753afe7b143036206fb6e12103795845da2bb5e2d780a5f9",
+          "bnhgq2/compat.py": "0df1e2949f7c814ca5fa74bcfe84af2f051a1e05482fb165e64542a9b4bf4fce",
+          "bnhgq2/config.py": "aeaabc5a221f588a2ab2b893ae7e86ebc46a8a45b8cd158d81699a2df0b20b20",
+          "bnhgq2/convert.py": "556c34f0c52ba505743bce637ddb0a2ab3e6a0f8634a0b6a42e6316ac80195bf",
+          "bnhgq2/data.py": "070153d60ff2f43c1886cac3d6d8516f6eb467dd2770c8623747cc7fea0769d1",
+          "bnhgq2/ebops_calc.py": "57b48827b4ced02c8c5db927e8cbfaf20310c0797ce8d461c16c669f56d0703e",
+          "bnhgq2/ebops_target.py": "0601d5109bcb8d9e8073bd04b6b82cb82d9bf5145e3044e25e3a20dec88b0817",
+          "bnhgq2/engram.py": "cceb2a85f233aa8baa35572cf54f4d6727293ee480ec4ced63d7f1edf059a77c",
+          "bnhgq2/extract.py": "c45938b35b9e836f92f43d04ad146e67f1797068a2e8ec2fb544bf90ef5ba0b6",
+          "bnhgq2/gold.py": "72745faf6027982cbb79eec191e35c5d814f85f4a1ed4505ec767baec84600b4",
+          "bnhgq2/monolith.py": "f8c2392d2f45fd33d33a9d8dfb025e9dffa0d963913f71089f55c653b8b3affa",
+          "bnhgq2/port.py": "039ed4836e0315659bb8bb93e0f5314e31c572a9b358a9e75329392281fbaa02",
+          "bnhgq2/qat.py": "d3f2c42b621b14aa7eeadaf13325a88b4aa5072c8b7578b9a01c481bb8b4d2bd",
+          "bnhgq2/store.py": "8d6fc320154205a9c923e4aa67813d01c3516352f90cf9c5fc0fdbf7b2067cd8",
+          "bnhgq2/subln.py": "6300c547a37f894cf6a387e4cb36120ca29bb0900f221f5df2c690de70109a5a",
+          "bnhgq2/train.py": "154657bb3bb6afa232d78830313583e1c5f74f955084a882dc0da4d90b231118",
+          "bnhgq2/verify.py": "c0f9e4b991b468a2f1bbe65a88af87111d7306ac050f124c4bd866b28c17db8e",
+          "bnhgq2/wandb_util.py": "29abe7d7be7be3f329968954c98ce663e314a0b3a7fdb3710f277df45444a8a5"
+        },
+        "versions": {
+          "tensorflow": "2.21.0",
+          "keras": "3.15.0",
+          "hgq2": "0.1.9",
+          "quantizers": "1.2.2",
+          "numpy": "2.5.0",
+          "scikit-learn": "1.9.0"
+        },
+        "sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc"
+      },
+      "cost_contract": {
+        "module": null,
+        "target": 350000,
+        "convention": "native_hgq2_plus_custom_estimate",
+        "selection": "highest validation accuracy under augmented arithmetic and memory budgets",
+        "hardware_validated": false
+      },
+      "data_info": {
+        "n_train": 496000,
+        "n_val": 124000,
+        "n_files": 62,
+        "n_part": 16,
+        "features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "split_seed": 1,
+        "order_seed": 20260912,
+        "validation_split": 0.2,
+        "permutation_sha256": "90b091cef669dfeec9b220c85ab7b86d028871817d9ced55b8945134c2fbcc8a",
+        "input_std": {
+          "mu": [
+            55.19329071044922,
+            2.3444097678293474e-05,
+            -4.2816795939870644e-06
+          ],
+          "sigma": [
+            69.17374420166016,
+            0.07424260675907135,
+            0.07433399558067322
+          ],
+          "computed_from": "train split only"
+        },
+        "train_sha256": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+        "val_sha256": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+        "array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        },
+        "raw_source": "/data/hls4ml_lhc_jet/train/train",
+        "raw_files": [
+          {
+            "name": "jetImage_0_150p_0_10000.h5",
+            "size": 48473320
+          },
+          {
+            "name": "jetImage_0_150p_10000_20000.h5",
+            "size": 48012928
+          },
+          {
+            "name": "jetImage_0_150p_20000_30000.h5",
+            "size": 48234123
+          },
+          {
+            "name": "jetImage_0_150p_30000_40000.h5",
+            "size": 48116877
+          },
+          {
+            "name": "jetImage_0_150p_40000_50000.h5",
+            "size": 48145343
+          },
+          {
+            "name": "jetImage_0_150p_50000_60000.h5",
+            "size": 48055191
+          },
+          {
+            "name": "jetImage_0_150p_60000_70000.h5",
+            "size": 48151345
+          },
+          {
+            "name": "jetImage_0_150p_70000_80000.h5",
+            "size": 48089729
+          },
+          {
+            "name": "jetImage_0_150p_80000_90000.h5",
+            "size": 48075017
+          },
+          {
+            "name": "jetImage_1_150p_0_10000.h5",
+            "size": 48458590
+          },
+          {
+            "name": "jetImage_1_150p_10000_20000.h5",
+            "size": 48243881
+          },
+          {
+            "name": "jetImage_1_150p_20000_30000.h5",
+            "size": 47996464
+          },
+          {
+            "name": "jetImage_1_150p_30000_40000.h5",
+            "size": 47960741
+          },
+          {
+            "name": "jetImage_1_150p_40000_50000.h5",
+            "size": 48071997
+          },
+          {
+            "name": "jetImage_1_150p_50000_60000.h5",
+            "size": 48264893
+          },
+          {
+            "name": "jetImage_1_150p_60000_70000.h5",
+            "size": 48147567
+          },
+          {
+            "name": "jetImage_1_150p_70000_80000.h5",
+            "size": 48136975
+          },
+          {
+            "name": "jetImage_1_150p_80000_90000.h5",
+            "size": 47944448
+          },
+          {
+            "name": "jetImage_2_150p_0_10000.h5",
+            "size": 48289735
+          },
+          {
+            "name": "jetImage_2_150p_10000_20000.h5",
+            "size": 47968659
+          },
+          {
+            "name": "jetImage_2_150p_20000_30000.h5",
+            "size": 48031367
+          },
+          {
+            "name": "jetImage_2_150p_30000_40000.h5",
+            "size": 47861602
+          },
+          {
+            "name": "jetImage_2_150p_40000_50000.h5",
+            "size": 47870607
+          },
+          {
+            "name": "jetImage_2_150p_50000_60000.h5",
+            "size": 48302575
+          },
+          {
+            "name": "jetImage_2_150p_60000_70000.h5",
+            "size": 48087337
+          },
+          {
+            "name": "jetImage_2_150p_70000_80000.h5",
+            "size": 48156626
+          },
+          {
+            "name": "jetImage_2_150p_80000_90000.h5",
+            "size": 48075966
+          },
+          {
+            "name": "jetImage_3_150p_0_10000.h5",
+            "size": 48205310
+          },
+          {
+            "name": "jetImage_3_150p_10000_20000.h5",
+            "size": 48250499
+          },
+          {
+            "name": "jetImage_3_150p_20000_30000.h5",
+            "size": 48243112
+          },
+          {
+            "name": "jetImage_3_150p_30000_40000.h5",
+            "size": 48215660
+          },
+          {
+            "name": "jetImage_3_150p_40000_50000.h5",
+            "size": 48177646
+          },
+          {
+            "name": "jetImage_3_150p_60000_70000.h5",
+            "size": 47625863
+          },
+          {
+            "name": "jetImage_3_150p_70000_80000.h5",
+            "size": 48148138
+          },
+          {
+            "name": "jetImage_3_150p_80000_90000.h5",
+            "size": 48055704
+          },
+          {
+            "name": "jetImage_4_150p_0_10000.h5",
+            "size": 48099203
+          },
+          {
+            "name": "jetImage_4_150p_10000_20000.h5",
+            "size": 48059064
+          },
+          {
+            "name": "jetImage_4_150p_20000_30000.h5",
+            "size": 48200972
+          },
+          {
+            "name": "jetImage_4_150p_30000_40000.h5",
+            "size": 48324574
+          },
+          {
+            "name": "jetImage_4_150p_40000_50000.h5",
+            "size": 48173083
+          },
+          {
+            "name": "jetImage_4_150p_50000_60000.h5",
+            "size": 47978950
+          },
+          {
+            "name": "jetImage_4_150p_60000_70000.h5",
+            "size": 47841221
+          },
+          {
+            "name": "jetImage_4_150p_70000_80000.h5",
+            "size": 47898688
+          },
+          {
+            "name": "jetImage_4_150p_80000_90000.h5",
+            "size": 48313451
+          },
+          {
+            "name": "jetImage_5_150p_0_10000.h5",
+            "size": 48000496
+          },
+          {
+            "name": "jetImage_5_150p_10000_20000.h5",
+            "size": 48143548
+          },
+          {
+            "name": "jetImage_5_150p_20000_30000.h5",
+            "size": 48209277
+          },
+          {
+            "name": "jetImage_5_150p_30000_40000.h5",
+            "size": 47999938
+          },
+          {
+            "name": "jetImage_5_150p_40000_50000.h5",
+            "size": 47996158
+          },
+          {
+            "name": "jetImage_5_150p_50000_60000.h5",
+            "size": 48523937
+          },
+          {
+            "name": "jetImage_5_150p_60000_70000.h5",
+            "size": 47800725
+          },
+          {
+            "name": "jetImage_5_150p_70000_80000.h5",
+            "size": 48020882
+          },
+          {
+            "name": "jetImage_5_150p_80000_90000.h5",
+            "size": 47911827
+          },
+          {
+            "name": "jetImage_6_150p_0_10000.h5",
+            "size": 48020754
+          },
+          {
+            "name": "jetImage_6_150p_10000_20000.h5",
+            "size": 48096654
+          },
+          {
+            "name": "jetImage_6_150p_20000_30000.h5",
+            "size": 48333197
+          },
+          {
+            "name": "jetImage_6_150p_30000_40000.h5",
+            "size": 48214684
+          },
+          {
+            "name": "jetImage_6_150p_40000_50000.h5",
+            "size": 48123986
+          },
+          {
+            "name": "jetImage_6_150p_50000_60000.h5",
+            "size": 48193944
+          },
+          {
+            "name": "jetImage_6_150p_60000_70000.h5",
+            "size": 47989756
+          },
+          {
+            "name": "jetImage_6_150p_70000_80000.h5",
+            "size": 47980425
+          },
+          {
+            "name": "jetImage_6_150p_80000_90000.h5",
+            "size": 48376835
+          }
+        ],
+        "code_sha256": "ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d",
+        "engram_array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        }
+      },
+      "complete_record_present": false,
+      "artifact_status": {
+        "engram_result.json": {
+          "exists": false
+        },
+        "validation_predictions.npz": {
+          "exists": false
+        },
+        "memory_tables.npz": {
+          "exists": false
+        },
+        "memory_tokenizer.json": {
+          "exists": false
+        }
+      },
+      "latest_metrics": {
+        "epoch": 674,
+        "ebops": 721213,
+        "beta": 0.001,
+        "val_macro_auc": 0.6310342032573848,
+        "val_categorical_accuracy": 0.3393951612903226,
+        "epoch_seconds": 128.68599850003375
+      }
+    },
+    {
+      "run": "engram-e01-s1",
+      "checkpoint": "epoch-1000",
+      "state": {
+        "completed_epochs": 1000,
+        "best_feasible": null,
+        "lowest": {
+          "epoch": 997,
+          "val_macro_auc": 0.6589661913158992,
+          "val_categorical_accuracy": 0.33449193548387096,
+          "ebops": 362158
+        },
+        "best_auc": {
+          "epoch": 50,
+          "val_macro_auc": 0.8718123842251755,
+          "val_categorical_accuracy": 0.6278467741935484,
+          "ebops": 1315593
+        },
+        "code_sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc",
+        "config_sha256": "98a642711c6f179ca667badc75514de507698a676630734ed10efc7bb50107c9",
+        "data_sha256": "6cb6cbcfc7c1d5454dc289e3a91f7961b375474479112e56c34e3a1a65d15b79"
+      },
+      "config": {
+        "name": "engram-e01-s1",
+        "era": 2,
+        "arch": {
+          "n_part": 16,
+          "n_feat": 3,
+          "features": [
+            "pt",
+            "etarel",
+            "phirel"
+          ],
+          "d_model": 32,
+          "n_heads": 4,
+          "n_layers": 1,
+          "ffn_dim": 32,
+          "n_classes": 5,
+          "pool": "gap",
+          "ffn_act": "relu",
+          "norm": "none",
+          "norm_placement": "per_linear",
+          "pos_enc": "learned",
+          "softmax_free": false,
+          "input_std": true
+        },
+        "quant": {
+          "weight": "binary_absmean",
+          "act_bits": 8,
+          "act_policy": "learned_per_tensor_width",
+          "calib_n": 8192,
+          "act_calib": "free",
+          "act_bw_l1": 1e-08,
+          "beta0": 1e-07,
+          "act_granularity": "channel",
+          "softmax_out_bits": 10,
+          "softmax_out_i": 1
+        },
+        "train": {
+          "data": "data/train",
+          "validation_split": 0.2,
+          "epochs": 1000,
+          "batch": 256,
+          "lr": 2e-05,
+          "warmup_epochs": 1,
+          "decay_epochs": 999,
+          "decay_power": 1.0,
+          "beta2": 0.98,
+          "weight_decay": 0.01,
+          "clip_mode": "value",
+          "clipvalue": 1.0,
+          "clipnorm": 1.0,
+          "es_patience": 0,
+          "wandb_project": "BNJetTag-Engram-Experimental",
+          "ebops": {
+            "enable": true,
+            "monitor_widths": true,
+            "controller": "pid",
+            "beta_schedule": null,
+            "front_dir": "front",
+            "metrics": [
+              "val_macro_auc",
+              "ebops"
+            ],
+            "sides": [
+              1,
+              -1
+            ],
+            "pid": {
+              "init_beta": 1e-07,
+              "p": 1.0,
+              "i": 0.05,
+              "d": 0.0,
+              "warmup": 10,
+              "log": true,
+              "min_beta": 1e-10,
+              "max_beta": 0.001,
+              "damp_beta_on_target": 0.0,
+              "target_ebops": 350000
+            },
+            "selection": "max_accuracy",
+            "stop_on_target": false
+          },
+          "jit_compile": false,
+          "split_seed": 1,
+          "order_seed": 20260912,
+          "val_batch": 1024
+        },
+        "hls": {
+          "backend": "Vitis",
+          "part": "xcvu13p-flga2577-2-e",
+          "clock_ns": 2.5,
+          "rf": 1,
+          "io": "io_parallel"
+        },
+        "experiment": {
+          "arm": "engram-e01-s1",
+          "group": "engram-screen",
+          "seed": 1,
+          "selection_metric": "val_categorical_accuracy",
+          "checkpoint_every_epochs": 1,
+          "remote_every_epochs": 25
+        },
+        "engram_study": {
+          "module": null,
+          "question": "One-block compute-saving control",
+          "memory_lr_multiplier": 5.0,
+          "memory_weight_decay": 0.0,
+          "wandb_entity": "kayamaguchi-uc-san-diego",
+          "wandb_project_access": "PRIVATE",
+          "max_logical_table_bytes": 65536,
+          "max_replicated_table_bytes": 524288,
+          "cost_convention": "native_hgq2_plus_custom_estimate",
+          "status": "experimental; training ready, HLS unsupported"
+        }
+      },
+      "source_manifest": {
+        "files": {
+          "run_engram.py": "1d6d64832d7d880aac59826590de7b48ba2cd4bfd4772fc81a2f2c8d594587a2",
+          "bnhgq2/__init__.py": "9ade8d2c6d17aa146626864038d3ee54a7969535b1dd8bed62d5507887e0aa2a",
+          "bnhgq2/ablation.py": "2e5f6fbef42cc61d971bbc9e7fb06dea9b14cf6e68fc415a9adb6d536ec92909",
+          "bnhgq2/binarize.py": "700c3ef632e1319033331f331a47265dac7627850da1466990272784ea225f4c",
+          "bnhgq2/build.py": "847eafb77dfb2310753afe7b143036206fb6e12103795845da2bb5e2d780a5f9",
+          "bnhgq2/compat.py": "0df1e2949f7c814ca5fa74bcfe84af2f051a1e05482fb165e64542a9b4bf4fce",
+          "bnhgq2/config.py": "aeaabc5a221f588a2ab2b893ae7e86ebc46a8a45b8cd158d81699a2df0b20b20",
+          "bnhgq2/convert.py": "556c34f0c52ba505743bce637ddb0a2ab3e6a0f8634a0b6a42e6316ac80195bf",
+          "bnhgq2/data.py": "070153d60ff2f43c1886cac3d6d8516f6eb467dd2770c8623747cc7fea0769d1",
+          "bnhgq2/ebops_calc.py": "57b48827b4ced02c8c5db927e8cbfaf20310c0797ce8d461c16c669f56d0703e",
+          "bnhgq2/ebops_target.py": "0601d5109bcb8d9e8073bd04b6b82cb82d9bf5145e3044e25e3a20dec88b0817",
+          "bnhgq2/engram.py": "cceb2a85f233aa8baa35572cf54f4d6727293ee480ec4ced63d7f1edf059a77c",
+          "bnhgq2/extract.py": "c45938b35b9e836f92f43d04ad146e67f1797068a2e8ec2fb544bf90ef5ba0b6",
+          "bnhgq2/gold.py": "72745faf6027982cbb79eec191e35c5d814f85f4a1ed4505ec767baec84600b4",
+          "bnhgq2/monolith.py": "f8c2392d2f45fd33d33a9d8dfb025e9dffa0d963913f71089f55c653b8b3affa",
+          "bnhgq2/port.py": "039ed4836e0315659bb8bb93e0f5314e31c572a9b358a9e75329392281fbaa02",
+          "bnhgq2/qat.py": "d3f2c42b621b14aa7eeadaf13325a88b4aa5072c8b7578b9a01c481bb8b4d2bd",
+          "bnhgq2/store.py": "8d6fc320154205a9c923e4aa67813d01c3516352f90cf9c5fc0fdbf7b2067cd8",
+          "bnhgq2/subln.py": "6300c547a37f894cf6a387e4cb36120ca29bb0900f221f5df2c690de70109a5a",
+          "bnhgq2/train.py": "154657bb3bb6afa232d78830313583e1c5f74f955084a882dc0da4d90b231118",
+          "bnhgq2/verify.py": "c0f9e4b991b468a2f1bbe65a88af87111d7306ac050f124c4bd866b28c17db8e",
+          "bnhgq2/wandb_util.py": "29abe7d7be7be3f329968954c98ce663e314a0b3a7fdb3710f277df45444a8a5"
+        },
+        "versions": {
+          "tensorflow": "2.21.0",
+          "keras": "3.15.0",
+          "hgq2": "0.1.9",
+          "quantizers": "1.2.2",
+          "numpy": "2.5.0",
+          "scikit-learn": "1.9.0"
+        },
+        "sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc"
+      },
+      "cost_contract": {
+        "module": null,
+        "target": 350000,
+        "convention": "native_hgq2_plus_custom_estimate",
+        "selection": "highest validation accuracy under augmented arithmetic and memory budgets",
+        "hardware_validated": false
+      },
+      "data_info": {
+        "n_train": 496000,
+        "n_val": 124000,
+        "n_files": 62,
+        "n_part": 16,
+        "features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "split_seed": 1,
+        "order_seed": 20260912,
+        "validation_split": 0.2,
+        "permutation_sha256": "90b091cef669dfeec9b220c85ab7b86d028871817d9ced55b8945134c2fbcc8a",
+        "input_std": {
+          "mu": [
+            55.19329071044922,
+            2.3444097678293474e-05,
+            -4.2816795939870644e-06
+          ],
+          "sigma": [
+            69.17374420166016,
+            0.07424260675907135,
+            0.07433399558067322
+          ],
+          "computed_from": "train split only"
+        },
+        "train_sha256": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+        "val_sha256": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+        "array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        },
+        "raw_source": "/data/hls4ml_lhc_jet/train/train",
+        "raw_files": [
+          {
+            "name": "jetImage_0_150p_0_10000.h5",
+            "size": 48473320
+          },
+          {
+            "name": "jetImage_0_150p_10000_20000.h5",
+            "size": 48012928
+          },
+          {
+            "name": "jetImage_0_150p_20000_30000.h5",
+            "size": 48234123
+          },
+          {
+            "name": "jetImage_0_150p_30000_40000.h5",
+            "size": 48116877
+          },
+          {
+            "name": "jetImage_0_150p_40000_50000.h5",
+            "size": 48145343
+          },
+          {
+            "name": "jetImage_0_150p_50000_60000.h5",
+            "size": 48055191
+          },
+          {
+            "name": "jetImage_0_150p_60000_70000.h5",
+            "size": 48151345
+          },
+          {
+            "name": "jetImage_0_150p_70000_80000.h5",
+            "size": 48089729
+          },
+          {
+            "name": "jetImage_0_150p_80000_90000.h5",
+            "size": 48075017
+          },
+          {
+            "name": "jetImage_1_150p_0_10000.h5",
+            "size": 48458590
+          },
+          {
+            "name": "jetImage_1_150p_10000_20000.h5",
+            "size": 48243881
+          },
+          {
+            "name": "jetImage_1_150p_20000_30000.h5",
+            "size": 47996464
+          },
+          {
+            "name": "jetImage_1_150p_30000_40000.h5",
+            "size": 47960741
+          },
+          {
+            "name": "jetImage_1_150p_40000_50000.h5",
+            "size": 48071997
+          },
+          {
+            "name": "jetImage_1_150p_50000_60000.h5",
+            "size": 48264893
+          },
+          {
+            "name": "jetImage_1_150p_60000_70000.h5",
+            "size": 48147567
+          },
+          {
+            "name": "jetImage_1_150p_70000_80000.h5",
+            "size": 48136975
+          },
+          {
+            "name": "jetImage_1_150p_80000_90000.h5",
+            "size": 47944448
+          },
+          {
+            "name": "jetImage_2_150p_0_10000.h5",
+            "size": 48289735
+          },
+          {
+            "name": "jetImage_2_150p_10000_20000.h5",
+            "size": 47968659
+          },
+          {
+            "name": "jetImage_2_150p_20000_30000.h5",
+            "size": 48031367
+          },
+          {
+            "name": "jetImage_2_150p_30000_40000.h5",
+            "size": 47861602
+          },
+          {
+            "name": "jetImage_2_150p_40000_50000.h5",
+            "size": 47870607
+          },
+          {
+            "name": "jetImage_2_150p_50000_60000.h5",
+            "size": 48302575
+          },
+          {
+            "name": "jetImage_2_150p_60000_70000.h5",
+            "size": 48087337
+          },
+          {
+            "name": "jetImage_2_150p_70000_80000.h5",
+            "size": 48156626
+          },
+          {
+            "name": "jetImage_2_150p_80000_90000.h5",
+            "size": 48075966
+          },
+          {
+            "name": "jetImage_3_150p_0_10000.h5",
+            "size": 48205310
+          },
+          {
+            "name": "jetImage_3_150p_10000_20000.h5",
+            "size": 48250499
+          },
+          {
+            "name": "jetImage_3_150p_20000_30000.h5",
+            "size": 48243112
+          },
+          {
+            "name": "jetImage_3_150p_30000_40000.h5",
+            "size": 48215660
+          },
+          {
+            "name": "jetImage_3_150p_40000_50000.h5",
+            "size": 48177646
+          },
+          {
+            "name": "jetImage_3_150p_60000_70000.h5",
+            "size": 47625863
+          },
+          {
+            "name": "jetImage_3_150p_70000_80000.h5",
+            "size": 48148138
+          },
+          {
+            "name": "jetImage_3_150p_80000_90000.h5",
+            "size": 48055704
+          },
+          {
+            "name": "jetImage_4_150p_0_10000.h5",
+            "size": 48099203
+          },
+          {
+            "name": "jetImage_4_150p_10000_20000.h5",
+            "size": 48059064
+          },
+          {
+            "name": "jetImage_4_150p_20000_30000.h5",
+            "size": 48200972
+          },
+          {
+            "name": "jetImage_4_150p_30000_40000.h5",
+            "size": 48324574
+          },
+          {
+            "name": "jetImage_4_150p_40000_50000.h5",
+            "size": 48173083
+          },
+          {
+            "name": "jetImage_4_150p_50000_60000.h5",
+            "size": 47978950
+          },
+          {
+            "name": "jetImage_4_150p_60000_70000.h5",
+            "size": 47841221
+          },
+          {
+            "name": "jetImage_4_150p_70000_80000.h5",
+            "size": 47898688
+          },
+          {
+            "name": "jetImage_4_150p_80000_90000.h5",
+            "size": 48313451
+          },
+          {
+            "name": "jetImage_5_150p_0_10000.h5",
+            "size": 48000496
+          },
+          {
+            "name": "jetImage_5_150p_10000_20000.h5",
+            "size": 48143548
+          },
+          {
+            "name": "jetImage_5_150p_20000_30000.h5",
+            "size": 48209277
+          },
+          {
+            "name": "jetImage_5_150p_30000_40000.h5",
+            "size": 47999938
+          },
+          {
+            "name": "jetImage_5_150p_40000_50000.h5",
+            "size": 47996158
+          },
+          {
+            "name": "jetImage_5_150p_50000_60000.h5",
+            "size": 48523937
+          },
+          {
+            "name": "jetImage_5_150p_60000_70000.h5",
+            "size": 47800725
+          },
+          {
+            "name": "jetImage_5_150p_70000_80000.h5",
+            "size": 48020882
+          },
+          {
+            "name": "jetImage_5_150p_80000_90000.h5",
+            "size": 47911827
+          },
+          {
+            "name": "jetImage_6_150p_0_10000.h5",
+            "size": 48020754
+          },
+          {
+            "name": "jetImage_6_150p_10000_20000.h5",
+            "size": 48096654
+          },
+          {
+            "name": "jetImage_6_150p_20000_30000.h5",
+            "size": 48333197
+          },
+          {
+            "name": "jetImage_6_150p_30000_40000.h5",
+            "size": 48214684
+          },
+          {
+            "name": "jetImage_6_150p_40000_50000.h5",
+            "size": 48123986
+          },
+          {
+            "name": "jetImage_6_150p_50000_60000.h5",
+            "size": 48193944
+          },
+          {
+            "name": "jetImage_6_150p_60000_70000.h5",
+            "size": 47989756
+          },
+          {
+            "name": "jetImage_6_150p_70000_80000.h5",
+            "size": 47980425
+          },
+          {
+            "name": "jetImage_6_150p_80000_90000.h5",
+            "size": 48376835
+          }
+        ],
+        "code_sha256": "ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d",
+        "engram_array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        }
+      },
+      "complete_record_present": true,
+      "artifact_status": {
+        "engram_result.json": {
+          "exists": false
+        },
+        "validation_predictions.npz": {
+          "exists": false
+        },
+        "memory_tables.npz": {
+          "exists": false
+        },
+        "memory_tokenizer.json": {
+          "exists": false
+        }
+      },
+      "latest_metrics": {
+        "epoch": 999,
+        "ebops": 362158,
+        "beta": 0.00013426425969336248,
+        "val_macro_auc": 0.6450247175049784,
+        "val_categorical_accuracy": 0.3344032258064516,
+        "epoch_seconds": 64.59671954717487
+      }
+    },
+    {
+      "run": "engram-e02-s1",
+      "checkpoint": "epoch-1000",
+      "state": {
+        "completed_epochs": 1000,
+        "best_feasible": null,
+        "lowest": {
+          "epoch": 997,
+          "val_macro_auc": 0.8291755310270068,
+          "val_categorical_accuracy": 0.5444677419354839,
+          "ebops": 380009
+        },
+        "best_auc": {
+          "epoch": 58,
+          "val_macro_auc": 0.8824757127857529,
+          "val_categorical_accuracy": 0.6463790322580645,
+          "ebops": 1255696
+        },
+        "code_sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc",
+        "config_sha256": "351edc301c7d50aa159f44dd9a5384fceb61b3ddf9ec481cedb668121b559806",
+        "data_sha256": "6cb6cbcfc7c1d5454dc289e3a91f7961b375474479112e56c34e3a1a65d15b79"
+      },
+      "config": {
+        "name": "engram-e02-s1",
+        "era": 2,
+        "arch": {
+          "n_part": 16,
+          "n_feat": 3,
+          "features": [
+            "pt",
+            "etarel",
+            "phirel"
+          ],
+          "d_model": 32,
+          "n_heads": 4,
+          "n_layers": 1,
+          "ffn_dim": 32,
+          "n_classes": 5,
+          "pool": "gap",
+          "ffn_act": "relu",
+          "norm": "none",
+          "norm_placement": "per_linear",
+          "pos_enc": "learned",
+          "softmax_free": false,
+          "input_std": true
+        },
+        "quant": {
+          "weight": "binary_absmean",
+          "act_bits": 8,
+          "act_policy": "learned_per_tensor_width",
+          "calib_n": 8192,
+          "act_calib": "free",
+          "act_bw_l1": 1e-08,
+          "beta0": 1e-07,
+          "act_granularity": "channel",
+          "softmax_out_bits": 10,
+          "softmax_out_i": 1
+        },
+        "train": {
+          "data": "data/train",
+          "validation_split": 0.2,
+          "epochs": 1000,
+          "batch": 256,
+          "lr": 2e-05,
+          "warmup_epochs": 1,
+          "decay_epochs": 999,
+          "decay_power": 1.0,
+          "beta2": 0.98,
+          "weight_decay": 0.01,
+          "clip_mode": "value",
+          "clipvalue": 1.0,
+          "clipnorm": 1.0,
+          "es_patience": 0,
+          "wandb_project": "BNJetTag-Engram-Experimental",
+          "ebops": {
+            "enable": true,
+            "monitor_widths": true,
+            "controller": "pid",
+            "beta_schedule": null,
+            "front_dir": "front",
+            "metrics": [
+              "val_macro_auc",
+              "ebops"
+            ],
+            "sides": [
+              1,
+              -1
+            ],
+            "pid": {
+              "init_beta": 1e-07,
+              "p": 1.0,
+              "i": 0.05,
+              "d": 0.0,
+              "warmup": 10,
+              "log": true,
+              "min_beta": 1e-10,
+              "max_beta": 0.001,
+              "damp_beta_on_target": 0.0,
+              "target_ebops": 350000
+            },
+            "selection": "max_accuracy",
+            "stop_on_target": false
+          },
+          "jit_compile": false,
+          "split_seed": 1,
+          "order_seed": 20260912,
+          "val_batch": 1024
+        },
+        "hls": {
+          "backend": "Vitis",
+          "part": "xcvu13p-flga2577-2-e",
+          "clock_ns": 2.5,
+          "rf": 1,
+          "io": "io_parallel"
+        },
+        "experiment": {
+          "arm": "engram-e02-s1",
+          "group": "engram-screen",
+          "seed": 1,
+          "selection_metric": "val_categorical_accuracy",
+          "checkpoint_every_epochs": 1,
+          "remote_every_epochs": 25
+        },
+        "engram_study": {
+          "module": {
+            "bins": 8,
+            "table_size": 512,
+            "heads": 1,
+            "orders": [
+              1
+            ],
+            "gate": "none",
+            "value_bits": 8,
+            "key_bits": 8,
+            "query_bits": 8,
+            "gate_bits": 4,
+            "input_bits": 16,
+            "input_integer": 6,
+            "residual_bits": 24,
+            "insert_after": "bit_block_0_add_attn",
+            "hash_seed": 17
+          },
+          "question": "One block + tuple memory, no gate",
+          "memory_lr_multiplier": 5.0,
+          "memory_weight_decay": 0.0,
+          "wandb_entity": "kayamaguchi-uc-san-diego",
+          "wandb_project_access": "PRIVATE",
+          "max_logical_table_bytes": 65536,
+          "max_replicated_table_bytes": 524288,
+          "cost_convention": "native_hgq2_plus_custom_estimate",
+          "status": "experimental; training ready, HLS unsupported"
+        }
+      },
+      "source_manifest": {
+        "files": {
+          "run_engram.py": "1d6d64832d7d880aac59826590de7b48ba2cd4bfd4772fc81a2f2c8d594587a2",
+          "bnhgq2/__init__.py": "9ade8d2c6d17aa146626864038d3ee54a7969535b1dd8bed62d5507887e0aa2a",
+          "bnhgq2/ablation.py": "2e5f6fbef42cc61d971bbc9e7fb06dea9b14cf6e68fc415a9adb6d536ec92909",
+          "bnhgq2/binarize.py": "700c3ef632e1319033331f331a47265dac7627850da1466990272784ea225f4c",
+          "bnhgq2/build.py": "847eafb77dfb2310753afe7b143036206fb6e12103795845da2bb5e2d780a5f9",
+          "bnhgq2/compat.py": "0df1e2949f7c814ca5fa74bcfe84af2f051a1e05482fb165e64542a9b4bf4fce",
+          "bnhgq2/config.py": "aeaabc5a221f588a2ab2b893ae7e86ebc46a8a45b8cd158d81699a2df0b20b20",
+          "bnhgq2/convert.py": "556c34f0c52ba505743bce637ddb0a2ab3e6a0f8634a0b6a42e6316ac80195bf",
+          "bnhgq2/data.py": "070153d60ff2f43c1886cac3d6d8516f6eb467dd2770c8623747cc7fea0769d1",
+          "bnhgq2/ebops_calc.py": "57b48827b4ced02c8c5db927e8cbfaf20310c0797ce8d461c16c669f56d0703e",
+          "bnhgq2/ebops_target.py": "0601d5109bcb8d9e8073bd04b6b82cb82d9bf5145e3044e25e3a20dec88b0817",
+          "bnhgq2/engram.py": "cceb2a85f233aa8baa35572cf54f4d6727293ee480ec4ced63d7f1edf059a77c",
+          "bnhgq2/extract.py": "c45938b35b9e836f92f43d04ad146e67f1797068a2e8ec2fb544bf90ef5ba0b6",
+          "bnhgq2/gold.py": "72745faf6027982cbb79eec191e35c5d814f85f4a1ed4505ec767baec84600b4",
+          "bnhgq2/monolith.py": "f8c2392d2f45fd33d33a9d8dfb025e9dffa0d963913f71089f55c653b8b3affa",
+          "bnhgq2/port.py": "039ed4836e0315659bb8bb93e0f5314e31c572a9b358a9e75329392281fbaa02",
+          "bnhgq2/qat.py": "d3f2c42b621b14aa7eeadaf13325a88b4aa5072c8b7578b9a01c481bb8b4d2bd",
+          "bnhgq2/store.py": "8d6fc320154205a9c923e4aa67813d01c3516352f90cf9c5fc0fdbf7b2067cd8",
+          "bnhgq2/subln.py": "6300c547a37f894cf6a387e4cb36120ca29bb0900f221f5df2c690de70109a5a",
+          "bnhgq2/train.py": "154657bb3bb6afa232d78830313583e1c5f74f955084a882dc0da4d90b231118",
+          "bnhgq2/verify.py": "c0f9e4b991b468a2f1bbe65a88af87111d7306ac050f124c4bd866b28c17db8e",
+          "bnhgq2/wandb_util.py": "29abe7d7be7be3f329968954c98ce663e314a0b3a7fdb3710f277df45444a8a5"
+        },
+        "versions": {
+          "tensorflow": "2.21.0",
+          "keras": "3.15.0",
+          "hgq2": "0.1.9",
+          "quantizers": "1.2.2",
+          "numpy": "2.5.0",
+          "scikit-learn": "1.9.0"
+        },
+        "sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc"
+      },
+      "cost_contract": {
+        "module": {
+          "convention": "engram_structural_bitops_v1_estimate",
+          "estimated_bitops": 17920,
+          "components": {
+            "encoder_comparisons": 5632,
+            "hash_addressing": 0,
+            "table_reduction_adds": 0,
+            "query_key_dot": 0,
+            "gate_affine_clip": 0,
+            "gate_value_products": 0,
+            "residual_adds": 12288
+          },
+          "logical_table_bits": 131072,
+          "logical_table_bytes": 16384,
+          "table_read_bits_per_jet": 4096,
+          "vector_reads_per_jet": 16,
+          "independent_addresses_per_bank_per_jet": 16,
+          "two_read_port_replicas_for_whole_jet_ii1": 8,
+          "replicated_table_bytes_estimate": 131072,
+          "threshold_storage_bits": 336,
+          "encoder_comparisons_per_jet": 352,
+          "hash_words_per_jet": 0,
+          "exact_tuple_addressing": true,
+          "unpriced_operations": [
+            "round/saturate quantizers",
+            "validity masks and multiplexers",
+            "control and wiring",
+            "physical memory block rounding/routing"
+          ],
+          "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+        },
+        "target": 350000,
+        "convention": "native_hgq2_plus_custom_estimate",
+        "selection": "highest validation accuracy under augmented arithmetic and memory budgets",
+        "hardware_validated": false
+      },
+      "data_info": {
+        "n_train": 496000,
+        "n_val": 124000,
+        "n_files": 62,
+        "n_part": 16,
+        "features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "split_seed": 1,
+        "order_seed": 20260912,
+        "validation_split": 0.2,
+        "permutation_sha256": "90b091cef669dfeec9b220c85ab7b86d028871817d9ced55b8945134c2fbcc8a",
+        "input_std": {
+          "mu": [
+            55.19329071044922,
+            2.3444097678293474e-05,
+            -4.2816795939870644e-06
+          ],
+          "sigma": [
+            69.17374420166016,
+            0.07424260675907135,
+            0.07433399558067322
+          ],
+          "computed_from": "train split only"
+        },
+        "train_sha256": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+        "val_sha256": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+        "array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        },
+        "raw_source": "/data/hls4ml_lhc_jet/train/train",
+        "raw_files": [
+          {
+            "name": "jetImage_0_150p_0_10000.h5",
+            "size": 48473320
+          },
+          {
+            "name": "jetImage_0_150p_10000_20000.h5",
+            "size": 48012928
+          },
+          {
+            "name": "jetImage_0_150p_20000_30000.h5",
+            "size": 48234123
+          },
+          {
+            "name": "jetImage_0_150p_30000_40000.h5",
+            "size": 48116877
+          },
+          {
+            "name": "jetImage_0_150p_40000_50000.h5",
+            "size": 48145343
+          },
+          {
+            "name": "jetImage_0_150p_50000_60000.h5",
+            "size": 48055191
+          },
+          {
+            "name": "jetImage_0_150p_60000_70000.h5",
+            "size": 48151345
+          },
+          {
+            "name": "jetImage_0_150p_70000_80000.h5",
+            "size": 48089729
+          },
+          {
+            "name": "jetImage_0_150p_80000_90000.h5",
+            "size": 48075017
+          },
+          {
+            "name": "jetImage_1_150p_0_10000.h5",
+            "size": 48458590
+          },
+          {
+            "name": "jetImage_1_150p_10000_20000.h5",
+            "size": 48243881
+          },
+          {
+            "name": "jetImage_1_150p_20000_30000.h5",
+            "size": 47996464
+          },
+          {
+            "name": "jetImage_1_150p_30000_40000.h5",
+            "size": 47960741
+          },
+          {
+            "name": "jetImage_1_150p_40000_50000.h5",
+            "size": 48071997
+          },
+          {
+            "name": "jetImage_1_150p_50000_60000.h5",
+            "size": 48264893
+          },
+          {
+            "name": "jetImage_1_150p_60000_70000.h5",
+            "size": 48147567
+          },
+          {
+            "name": "jetImage_1_150p_70000_80000.h5",
+            "size": 48136975
+          },
+          {
+            "name": "jetImage_1_150p_80000_90000.h5",
+            "size": 47944448
+          },
+          {
+            "name": "jetImage_2_150p_0_10000.h5",
+            "size": 48289735
+          },
+          {
+            "name": "jetImage_2_150p_10000_20000.h5",
+            "size": 47968659
+          },
+          {
+            "name": "jetImage_2_150p_20000_30000.h5",
+            "size": 48031367
+          },
+          {
+            "name": "jetImage_2_150p_30000_40000.h5",
+            "size": 47861602
+          },
+          {
+            "name": "jetImage_2_150p_40000_50000.h5",
+            "size": 47870607
+          },
+          {
+            "name": "jetImage_2_150p_50000_60000.h5",
+            "size": 48302575
+          },
+          {
+            "name": "jetImage_2_150p_60000_70000.h5",
+            "size": 48087337
+          },
+          {
+            "name": "jetImage_2_150p_70000_80000.h5",
+            "size": 48156626
+          },
+          {
+            "name": "jetImage_2_150p_80000_90000.h5",
+            "size": 48075966
+          },
+          {
+            "name": "jetImage_3_150p_0_10000.h5",
+            "size": 48205310
+          },
+          {
+            "name": "jetImage_3_150p_10000_20000.h5",
+            "size": 48250499
+          },
+          {
+            "name": "jetImage_3_150p_20000_30000.h5",
+            "size": 48243112
+          },
+          {
+            "name": "jetImage_3_150p_30000_40000.h5",
+            "size": 48215660
+          },
+          {
+            "name": "jetImage_3_150p_40000_50000.h5",
+            "size": 48177646
+          },
+          {
+            "name": "jetImage_3_150p_60000_70000.h5",
+            "size": 47625863
+          },
+          {
+            "name": "jetImage_3_150p_70000_80000.h5",
+            "size": 48148138
+          },
+          {
+            "name": "jetImage_3_150p_80000_90000.h5",
+            "size": 48055704
+          },
+          {
+            "name": "jetImage_4_150p_0_10000.h5",
+            "size": 48099203
+          },
+          {
+            "name": "jetImage_4_150p_10000_20000.h5",
+            "size": 48059064
+          },
+          {
+            "name": "jetImage_4_150p_20000_30000.h5",
+            "size": 48200972
+          },
+          {
+            "name": "jetImage_4_150p_30000_40000.h5",
+            "size": 48324574
+          },
+          {
+            "name": "jetImage_4_150p_40000_50000.h5",
+            "size": 48173083
+          },
+          {
+            "name": "jetImage_4_150p_50000_60000.h5",
+            "size": 47978950
+          },
+          {
+            "name": "jetImage_4_150p_60000_70000.h5",
+            "size": 47841221
+          },
+          {
+            "name": "jetImage_4_150p_70000_80000.h5",
+            "size": 47898688
+          },
+          {
+            "name": "jetImage_4_150p_80000_90000.h5",
+            "size": 48313451
+          },
+          {
+            "name": "jetImage_5_150p_0_10000.h5",
+            "size": 48000496
+          },
+          {
+            "name": "jetImage_5_150p_10000_20000.h5",
+            "size": 48143548
+          },
+          {
+            "name": "jetImage_5_150p_20000_30000.h5",
+            "size": 48209277
+          },
+          {
+            "name": "jetImage_5_150p_30000_40000.h5",
+            "size": 47999938
+          },
+          {
+            "name": "jetImage_5_150p_40000_50000.h5",
+            "size": 47996158
+          },
+          {
+            "name": "jetImage_5_150p_50000_60000.h5",
+            "size": 48523937
+          },
+          {
+            "name": "jetImage_5_150p_60000_70000.h5",
+            "size": 47800725
+          },
+          {
+            "name": "jetImage_5_150p_70000_80000.h5",
+            "size": 48020882
+          },
+          {
+            "name": "jetImage_5_150p_80000_90000.h5",
+            "size": 47911827
+          },
+          {
+            "name": "jetImage_6_150p_0_10000.h5",
+            "size": 48020754
+          },
+          {
+            "name": "jetImage_6_150p_10000_20000.h5",
+            "size": 48096654
+          },
+          {
+            "name": "jetImage_6_150p_20000_30000.h5",
+            "size": 48333197
+          },
+          {
+            "name": "jetImage_6_150p_30000_40000.h5",
+            "size": 48214684
+          },
+          {
+            "name": "jetImage_6_150p_40000_50000.h5",
+            "size": 48123986
+          },
+          {
+            "name": "jetImage_6_150p_50000_60000.h5",
+            "size": 48193944
+          },
+          {
+            "name": "jetImage_6_150p_60000_70000.h5",
+            "size": 47989756
+          },
+          {
+            "name": "jetImage_6_150p_70000_80000.h5",
+            "size": 47980425
+          },
+          {
+            "name": "jetImage_6_150p_80000_90000.h5",
+            "size": 48376835
+          }
+        ],
+        "code_sha256": "ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d",
+        "engram_array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        }
+      },
+      "complete_record_present": true,
+      "artifact_status": {
+        "engram_result.json": {
+          "exists": true,
+          "modified_at_utc": "2026-09-18T23:05:31.557059+00:00",
+          "completed_epochs": 100,
+          "checkpoint": "model_min_ebops.keras",
+          "checkpoint_sha256": "f6309c700d4a727c3c126dcdec077adff00cc215fd60c346bf1e915103b9e9b8",
+          "budget_met": false,
+          "validation_accuracy": 0.6102983870967742,
+          "validation_macro_auc": 0.86945815285001
+        },
+        "validation_predictions.npz": {
+          "exists": true,
+          "modified_at_utc": "2026-09-18T23:05:30.038064+00:00"
+        },
+        "memory_tables.npz": {
+          "exists": true,
+          "modified_at_utc": "2026-09-18T23:05:30.757061+00:00"
+        },
+        "memory_tokenizer.json": {
+          "exists": true,
+          "modified_at_utc": "2026-09-18T23:05:30.954061+00:00"
+        }
+      },
+      "latest_metrics": {
+        "epoch": 999,
+        "ebops": 380009,
+        "beta": 0.00040524275796062124,
+        "val_macro_auc": 0.8321664888397728,
+        "val_categorical_accuracy": 0.5454758064516129,
+        "epoch_seconds": 28.955265723867342,
+        "memory/logical_table_bytes": 16384.0,
+        "memory/table_read_bits_per_jet": 4096.0,
+        "memory/valid_lookup_fraction": 0.999267578125,
+        "memory/effective_value_nonzero_fraction": 0.98760986328125,
+        "memory/residual_nonzero_fraction": 0.9886009650623014,
+        "memory/residual_rms": 0.7232023553181787,
+        "memory/hidden_rms": 0.23253134714454413,
+        "memory/residual_to_hidden_rms": 3.110128437301092
+      }
+    },
+    {
+      "run": "engram-e03-s1",
+      "checkpoint": "epoch-1000",
+      "state": {
+        "completed_epochs": 1000,
+        "best_feasible": null,
+        "lowest": {
+          "epoch": 515,
+          "val_macro_auc": 0.8068430315419335,
+          "val_categorical_accuracy": 0.5198145161290323,
+          "ebops": 440510
+        },
+        "best_auc": {
+          "epoch": 53,
+          "val_macro_auc": 0.8807463624090541,
+          "val_categorical_accuracy": 0.6398709677419355,
+          "ebops": 1349663
+        },
+        "code_sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc",
+        "config_sha256": "53a673588e4356dd278d5c307d24bd7f71d15bfb5397223cf0596d58960189c1",
+        "data_sha256": "6cb6cbcfc7c1d5454dc289e3a91f7961b375474479112e56c34e3a1a65d15b79"
+      },
+      "config": {
+        "name": "engram-e03-s1",
+        "era": 2,
+        "arch": {
+          "n_part": 16,
+          "n_feat": 3,
+          "features": [
+            "pt",
+            "etarel",
+            "phirel"
+          ],
+          "d_model": 32,
+          "n_heads": 4,
+          "n_layers": 1,
+          "ffn_dim": 32,
+          "n_classes": 5,
+          "pool": "gap",
+          "ffn_act": "relu",
+          "norm": "none",
+          "norm_placement": "per_linear",
+          "pos_enc": "learned",
+          "softmax_free": false,
+          "input_std": true
+        },
+        "quant": {
+          "weight": "binary_absmean",
+          "act_bits": 8,
+          "act_policy": "learned_per_tensor_width",
+          "calib_n": 8192,
+          "act_calib": "free",
+          "act_bw_l1": 1e-08,
+          "beta0": 1e-07,
+          "act_granularity": "channel",
+          "softmax_out_bits": 10,
+          "softmax_out_i": 1
+        },
+        "train": {
+          "data": "data/train",
+          "validation_split": 0.2,
+          "epochs": 1000,
+          "batch": 256,
+          "lr": 2e-05,
+          "warmup_epochs": 1,
+          "decay_epochs": 999,
+          "decay_power": 1.0,
+          "beta2": 0.98,
+          "weight_decay": 0.01,
+          "clip_mode": "value",
+          "clipvalue": 1.0,
+          "clipnorm": 1.0,
+          "es_patience": 0,
+          "wandb_project": "BNJetTag-Engram-Experimental",
+          "ebops": {
+            "enable": true,
+            "monitor_widths": true,
+            "controller": "pid",
+            "beta_schedule": null,
+            "front_dir": "front",
+            "metrics": [
+              "val_macro_auc",
+              "ebops"
+            ],
+            "sides": [
+              1,
+              -1
+            ],
+            "pid": {
+              "init_beta": 1e-07,
+              "p": 1.0,
+              "i": 0.05,
+              "d": 0.0,
+              "warmup": 10,
+              "log": true,
+              "min_beta": 1e-10,
+              "max_beta": 0.001,
+              "damp_beta_on_target": 0.0,
+              "target_ebops": 350000
+            },
+            "selection": "max_accuracy",
+            "stop_on_target": false
+          },
+          "jit_compile": false,
+          "split_seed": 1,
+          "order_seed": 20260912,
+          "val_batch": 1024
+        },
+        "hls": {
+          "backend": "Vitis",
+          "part": "xcvu13p-flga2577-2-e",
+          "clock_ns": 2.5,
+          "rf": 1,
+          "io": "io_parallel"
+        },
+        "experiment": {
+          "arm": "engram-e03-s1",
+          "group": "engram-screen",
+          "seed": 1,
+          "selection_metric": "val_categorical_accuracy",
+          "checkpoint_every_epochs": 1,
+          "remote_every_epochs": 25
+        },
+        "engram_study": {
+          "module": {
+            "bins": 8,
+            "table_size": 512,
+            "heads": 1,
+            "orders": [
+              1
+            ],
+            "gate": "hard",
+            "value_bits": 8,
+            "key_bits": 8,
+            "query_bits": 8,
+            "gate_bits": 4,
+            "input_bits": 16,
+            "input_integer": 6,
+            "residual_bits": 24,
+            "insert_after": "bit_block_0_add_attn",
+            "hash_seed": 17
+          },
+          "question": "One block + context-gated tuple memory",
+          "memory_lr_multiplier": 5.0,
+          "memory_weight_decay": 0.0,
+          "wandb_entity": "kayamaguchi-uc-san-diego",
+          "wandb_project_access": "PRIVATE",
+          "max_logical_table_bytes": 65536,
+          "max_replicated_table_bytes": 524288,
+          "cost_convention": "native_hgq2_plus_custom_estimate",
+          "status": "experimental; training ready, HLS unsupported"
+        }
+      },
+      "source_manifest": {
+        "files": {
+          "run_engram.py": "1d6d64832d7d880aac59826590de7b48ba2cd4bfd4772fc81a2f2c8d594587a2",
+          "bnhgq2/__init__.py": "9ade8d2c6d17aa146626864038d3ee54a7969535b1dd8bed62d5507887e0aa2a",
+          "bnhgq2/ablation.py": "2e5f6fbef42cc61d971bbc9e7fb06dea9b14cf6e68fc415a9adb6d536ec92909",
+          "bnhgq2/binarize.py": "700c3ef632e1319033331f331a47265dac7627850da1466990272784ea225f4c",
+          "bnhgq2/build.py": "847eafb77dfb2310753afe7b143036206fb6e12103795845da2bb5e2d780a5f9",
+          "bnhgq2/compat.py": "0df1e2949f7c814ca5fa74bcfe84af2f051a1e05482fb165e64542a9b4bf4fce",
+          "bnhgq2/config.py": "aeaabc5a221f588a2ab2b893ae7e86ebc46a8a45b8cd158d81699a2df0b20b20",
+          "bnhgq2/convert.py": "556c34f0c52ba505743bce637ddb0a2ab3e6a0f8634a0b6a42e6316ac80195bf",
+          "bnhgq2/data.py": "070153d60ff2f43c1886cac3d6d8516f6eb467dd2770c8623747cc7fea0769d1",
+          "bnhgq2/ebops_calc.py": "57b48827b4ced02c8c5db927e8cbfaf20310c0797ce8d461c16c669f56d0703e",
+          "bnhgq2/ebops_target.py": "0601d5109bcb8d9e8073bd04b6b82cb82d9bf5145e3044e25e3a20dec88b0817",
+          "bnhgq2/engram.py": "cceb2a85f233aa8baa35572cf54f4d6727293ee480ec4ced63d7f1edf059a77c",
+          "bnhgq2/extract.py": "c45938b35b9e836f92f43d04ad146e67f1797068a2e8ec2fb544bf90ef5ba0b6",
+          "bnhgq2/gold.py": "72745faf6027982cbb79eec191e35c5d814f85f4a1ed4505ec767baec84600b4",
+          "bnhgq2/monolith.py": "f8c2392d2f45fd33d33a9d8dfb025e9dffa0d963913f71089f55c653b8b3affa",
+          "bnhgq2/port.py": "039ed4836e0315659bb8bb93e0f5314e31c572a9b358a9e75329392281fbaa02",
+          "bnhgq2/qat.py": "d3f2c42b621b14aa7eeadaf13325a88b4aa5072c8b7578b9a01c481bb8b4d2bd",
+          "bnhgq2/store.py": "8d6fc320154205a9c923e4aa67813d01c3516352f90cf9c5fc0fdbf7b2067cd8",
+          "bnhgq2/subln.py": "6300c547a37f894cf6a387e4cb36120ca29bb0900f221f5df2c690de70109a5a",
+          "bnhgq2/train.py": "154657bb3bb6afa232d78830313583e1c5f74f955084a882dc0da4d90b231118",
+          "bnhgq2/verify.py": "c0f9e4b991b468a2f1bbe65a88af87111d7306ac050f124c4bd866b28c17db8e",
+          "bnhgq2/wandb_util.py": "29abe7d7be7be3f329968954c98ce663e314a0b3a7fdb3710f277df45444a8a5"
+        },
+        "versions": {
+          "tensorflow": "2.21.0",
+          "keras": "3.15.0",
+          "hgq2": "0.1.9",
+          "quantizers": "1.2.2",
+          "numpy": "2.5.0",
+          "scikit-learn": "1.9.0"
+        },
+        "sha256": "11a8ac5523b79230e3fce9406f0816a531af8e291e6985141494fe46bc2c1ebc"
+      },
+      "cost_contract": {
+        "module": {
+          "convention": "engram_structural_bitops_v1_estimate",
+          "estimated_bitops": 78496,
+          "components": {
+            "encoder_comparisons": 5632,
+            "hash_addressing": 0,
+            "table_reduction_adds": 0,
+            "query_key_dot": 43184,
+            "gate_affine_clip": 1008,
+            "gate_value_products": 16384,
+            "residual_adds": 12288
+          },
+          "logical_table_bits": 262144,
+          "logical_table_bytes": 32768,
+          "table_read_bits_per_jet": 8192,
+          "vector_reads_per_jet": 16,
+          "independent_addresses_per_bank_per_jet": 16,
+          "two_read_port_replicas_for_whole_jet_ii1": 8,
+          "replicated_table_bytes_estimate": 262144,
+          "threshold_storage_bits": 336,
+          "encoder_comparisons_per_jet": 352,
+          "hash_words_per_jet": 0,
+          "exact_tuple_addressing": true,
+          "unpriced_operations": [
+            "round/saturate quantizers",
+            "validity masks and multiplexers",
+            "control and wiring",
+            "physical memory block rounding/routing"
+          ],
+          "hardware_status": "unimplemented; no timing, resource, or II guarantee"
+        },
+        "target": 350000,
+        "convention": "native_hgq2_plus_custom_estimate",
+        "selection": "highest validation accuracy under augmented arithmetic and memory budgets",
+        "hardware_validated": false
+      },
+      "data_info": {
+        "n_train": 496000,
+        "n_val": 124000,
+        "n_files": 62,
+        "n_part": 16,
+        "features": [
+          "pt",
+          "etarel",
+          "phirel"
+        ],
+        "split_seed": 1,
+        "order_seed": 20260912,
+        "validation_split": 0.2,
+        "permutation_sha256": "90b091cef669dfeec9b220c85ab7b86d028871817d9ced55b8945134c2fbcc8a",
+        "input_std": {
+          "mu": [
+            55.19329071044922,
+            2.3444097678293474e-05,
+            -4.2816795939870644e-06
+          ],
+          "sigma": [
+            69.17374420166016,
+            0.07424260675907135,
+            0.07433399558067322
+          ],
+          "computed_from": "train split only"
+        },
+        "train_sha256": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+        "val_sha256": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+        "array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        },
+        "raw_source": "/data/hls4ml_lhc_jet/train/train",
+        "raw_files": [
+          {
+            "name": "jetImage_0_150p_0_10000.h5",
+            "size": 48473320
+          },
+          {
+            "name": "jetImage_0_150p_10000_20000.h5",
+            "size": 48012928
+          },
+          {
+            "name": "jetImage_0_150p_20000_30000.h5",
+            "size": 48234123
+          },
+          {
+            "name": "jetImage_0_150p_30000_40000.h5",
+            "size": 48116877
+          },
+          {
+            "name": "jetImage_0_150p_40000_50000.h5",
+            "size": 48145343
+          },
+          {
+            "name": "jetImage_0_150p_50000_60000.h5",
+            "size": 48055191
+          },
+          {
+            "name": "jetImage_0_150p_60000_70000.h5",
+            "size": 48151345
+          },
+          {
+            "name": "jetImage_0_150p_70000_80000.h5",
+            "size": 48089729
+          },
+          {
+            "name": "jetImage_0_150p_80000_90000.h5",
+            "size": 48075017
+          },
+          {
+            "name": "jetImage_1_150p_0_10000.h5",
+            "size": 48458590
+          },
+          {
+            "name": "jetImage_1_150p_10000_20000.h5",
+            "size": 48243881
+          },
+          {
+            "name": "jetImage_1_150p_20000_30000.h5",
+            "size": 47996464
+          },
+          {
+            "name": "jetImage_1_150p_30000_40000.h5",
+            "size": 47960741
+          },
+          {
+            "name": "jetImage_1_150p_40000_50000.h5",
+            "size": 48071997
+          },
+          {
+            "name": "jetImage_1_150p_50000_60000.h5",
+            "size": 48264893
+          },
+          {
+            "name": "jetImage_1_150p_60000_70000.h5",
+            "size": 48147567
+          },
+          {
+            "name": "jetImage_1_150p_70000_80000.h5",
+            "size": 48136975
+          },
+          {
+            "name": "jetImage_1_150p_80000_90000.h5",
+            "size": 47944448
+          },
+          {
+            "name": "jetImage_2_150p_0_10000.h5",
+            "size": 48289735
+          },
+          {
+            "name": "jetImage_2_150p_10000_20000.h5",
+            "size": 47968659
+          },
+          {
+            "name": "jetImage_2_150p_20000_30000.h5",
+            "size": 48031367
+          },
+          {
+            "name": "jetImage_2_150p_30000_40000.h5",
+            "size": 47861602
+          },
+          {
+            "name": "jetImage_2_150p_40000_50000.h5",
+            "size": 47870607
+          },
+          {
+            "name": "jetImage_2_150p_50000_60000.h5",
+            "size": 48302575
+          },
+          {
+            "name": "jetImage_2_150p_60000_70000.h5",
+            "size": 48087337
+          },
+          {
+            "name": "jetImage_2_150p_70000_80000.h5",
+            "size": 48156626
+          },
+          {
+            "name": "jetImage_2_150p_80000_90000.h5",
+            "size": 48075966
+          },
+          {
+            "name": "jetImage_3_150p_0_10000.h5",
+            "size": 48205310
+          },
+          {
+            "name": "jetImage_3_150p_10000_20000.h5",
+            "size": 48250499
+          },
+          {
+            "name": "jetImage_3_150p_20000_30000.h5",
+            "size": 48243112
+          },
+          {
+            "name": "jetImage_3_150p_30000_40000.h5",
+            "size": 48215660
+          },
+          {
+            "name": "jetImage_3_150p_40000_50000.h5",
+            "size": 48177646
+          },
+          {
+            "name": "jetImage_3_150p_60000_70000.h5",
+            "size": 47625863
+          },
+          {
+            "name": "jetImage_3_150p_70000_80000.h5",
+            "size": 48148138
+          },
+          {
+            "name": "jetImage_3_150p_80000_90000.h5",
+            "size": 48055704
+          },
+          {
+            "name": "jetImage_4_150p_0_10000.h5",
+            "size": 48099203
+          },
+          {
+            "name": "jetImage_4_150p_10000_20000.h5",
+            "size": 48059064
+          },
+          {
+            "name": "jetImage_4_150p_20000_30000.h5",
+            "size": 48200972
+          },
+          {
+            "name": "jetImage_4_150p_30000_40000.h5",
+            "size": 48324574
+          },
+          {
+            "name": "jetImage_4_150p_40000_50000.h5",
+            "size": 48173083
+          },
+          {
+            "name": "jetImage_4_150p_50000_60000.h5",
+            "size": 47978950
+          },
+          {
+            "name": "jetImage_4_150p_60000_70000.h5",
+            "size": 47841221
+          },
+          {
+            "name": "jetImage_4_150p_70000_80000.h5",
+            "size": 47898688
+          },
+          {
+            "name": "jetImage_4_150p_80000_90000.h5",
+            "size": 48313451
+          },
+          {
+            "name": "jetImage_5_150p_0_10000.h5",
+            "size": 48000496
+          },
+          {
+            "name": "jetImage_5_150p_10000_20000.h5",
+            "size": 48143548
+          },
+          {
+            "name": "jetImage_5_150p_20000_30000.h5",
+            "size": 48209277
+          },
+          {
+            "name": "jetImage_5_150p_30000_40000.h5",
+            "size": 47999938
+          },
+          {
+            "name": "jetImage_5_150p_40000_50000.h5",
+            "size": 47996158
+          },
+          {
+            "name": "jetImage_5_150p_50000_60000.h5",
+            "size": 48523937
+          },
+          {
+            "name": "jetImage_5_150p_60000_70000.h5",
+            "size": 47800725
+          },
+          {
+            "name": "jetImage_5_150p_70000_80000.h5",
+            "size": 48020882
+          },
+          {
+            "name": "jetImage_5_150p_80000_90000.h5",
+            "size": 47911827
+          },
+          {
+            "name": "jetImage_6_150p_0_10000.h5",
+            "size": 48020754
+          },
+          {
+            "name": "jetImage_6_150p_10000_20000.h5",
+            "size": 48096654
+          },
+          {
+            "name": "jetImage_6_150p_20000_30000.h5",
+            "size": 48333197
+          },
+          {
+            "name": "jetImage_6_150p_30000_40000.h5",
+            "size": 48214684
+          },
+          {
+            "name": "jetImage_6_150p_40000_50000.h5",
+            "size": 48123986
+          },
+          {
+            "name": "jetImage_6_150p_50000_60000.h5",
+            "size": 48193944
+          },
+          {
+            "name": "jetImage_6_150p_60000_70000.h5",
+            "size": 47989756
+          },
+          {
+            "name": "jetImage_6_150p_70000_80000.h5",
+            "size": 47980425
+          },
+          {
+            "name": "jetImage_6_150p_80000_90000.h5",
+            "size": 48376835
+          }
+        ],
+        "code_sha256": "ddd3761d2a566790b42a1c55c036727df624e58a6f65305c1aeca3d05365584d",
+        "engram_array_sha256": {
+          "x_train": "280a7825a961e748bc883b83763ed5c8d929fd6e5336c709bcdf6a256451edeb",
+          "y_train": "7931f8cd78cd4ce57d887a31ff89d9d2e9069ff02b7445c1c6701e55f9724eba",
+          "x_val": "f33b2d3debcd1ac048935617fe913be328935fadf41d962e8b214cba252a2ca5",
+          "y_val": "97dedf586443a035071a6ec1ef25acae6841bb0890fa3dfd801c6a3d72ec234e"
+        }
+      },
+      "complete_record_present": true,
+      "artifact_status": {
+        "engram_result.json": {
+          "exists": true,
+          "modified_at_utc": "2026-09-19T01:31:42.239614+00:00",
+          "completed_epochs": 100,
+          "checkpoint": "model_min_ebops.keras",
+          "checkpoint_sha256": "c24430788612f0350c344a16b0d5c86aaf243ea77a919e9c8735833645bc2874",
+          "budget_met": false,
+          "validation_accuracy": 0.6018467741935484,
+          "validation_macro_auc": 0.8639880318540216
+        },
+        "validation_predictions.npz": {
+          "exists": true,
+          "modified_at_utc": "2026-09-19T01:31:41.663553+00:00"
+        },
+        "memory_tables.npz": {
+          "exists": true,
+          "modified_at_utc": "2026-09-19T01:31:42.017591+00:00"
+        },
+        "memory_tokenizer.json": {
+          "exists": true,
+          "modified_at_utc": "2026-09-19T01:31:42.067596+00:00"
+        }
+      },
+      "latest_metrics": {
+        "epoch": 999,
+        "ebops": 440525,
+        "beta": 0.001,
+        "val_macro_auc": 0.8202621796068055,
+        "val_categorical_accuracy": 0.5254596774193548,
+        "epoch_seconds": 64.11107408208773,
+        "memory/logical_table_bytes": 32768.0,
+        "memory/table_read_bits_per_jet": 8192.0,
+        "memory/valid_lookup_fraction": 0.999267578125,
+        "memory/effective_value_nonzero_fraction": 0.99151611328125,
+        "memory/residual_nonzero_fraction": 0.9734455167358905,
+        "memory/residual_rms": 0.4678496763012784,
+        "memory/hidden_rms": 0.2540107187901897,
+        "memory/residual_to_hidden_rms": 1.8418501334493584,
+        "memory/gate_mean": 0.5045199394226074,
+        "memory/gate_std": 0.02333579584956169,
+        "memory/gate_half_fraction": 0.9638407036403616,
+        "memory/gate_saturation_fraction": 0.0,
+        "memory/query_clipped_fraction": 0.0,
+        "memory/gate_hist_0": 0.0,
+        "memory/gate_hist_1": 0.0,
+        "memory/gate_hist_2": 0.0,
+        "memory/gate_hist_3": 0.0,
+        "memory/gate_hist_4": 0.9638407036403616,
+        "memory/gate_hist_5": 0.03615929635963841,
+        "memory/gate_hist_6": 0.0,
+        "memory/gate_hist_7": 0.0,
+        "memory/gate_hist_8": 0.0
+      }
+    }
+  ],
+  "job_status": {
+    "active": 1,
+    "failed": 21,
+    "failedIndexes": "1-3",
+    "ready": 1,
+    "startTime": "2026-09-20T22:03:20Z",
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+  },
+  "cluster_checked_at": "2026-09-22T06:46:03.173509+00:00"
+}
